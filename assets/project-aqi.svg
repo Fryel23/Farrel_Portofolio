@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 460" role="img" aria-label="Conceptual cover illustration for the Cirebon air quality research, the shapes are illustrative and do not show real measurements">
+  <defs>
+    <linearGradient id="aqiFill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#DBEAFE" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#DBEAFE" stop-opacity="0.05"/>
+    </linearGradient>
+  </defs>
+
+  <!-- card -->
+  <rect x="0" y="0" width="800" height="460" fill="#FFFFFF"/>
+  <rect x="1.5" y="1.5" width="797" height="457" fill="none" stroke="#E2E8F0" stroke-width="3"/>
+
+  <!-- top safe zone (0–96px) kept clear for UI overlay chips -->
+
+  <!-- header -->
+  <rect x="40" y="122" width="12" height="12" fill="#2563EB" transform="rotate(45 46 128)"/>
+  <text x="64" y="134" font-family="ui-monospace, Consolas, monospace" font-size="16" font-weight="700" letter-spacing="2" fill="#0F172A">AIR QUALITY INDEX · TRENDS</text>
+  <text x="64" y="158" font-family="ui-monospace, Consolas, monospace" font-size="10" letter-spacing="2" fill="#64748B">CIREBON · 2021–2024 · RESEARCH IN PROGRESS</text>
+
+  <!-- abstract plot area, deliberately unlabelled axes: the shapes are
+       illustrative and carry no fabricated values -->
+  <g stroke="#E2E8F0" stroke-width="1.5">
+    <line x1="96" y1="196" x2="760" y2="196"/>
+    <line x1="96" y1="238" x2="760" y2="238"/>
+    <line x1="96" y1="280" x2="760" y2="280"/>
+    <line x1="96" y1="322" x2="760" y2="322"/>
+    <line x1="96" y1="364" x2="760" y2="364"/>
+  </g>
+  <line x1="96" y1="364" x2="760" y2="364" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="40" y="284" font-family="ui-monospace, Consolas, monospace" font-size="9" letter-spacing="2" fill="#94A3B8" transform="rotate(-90 40 284)">ILLUSTRATIVE</text>
+
+  <!-- placeholder trend shapes, no fabricated findings -->
+  <path d="M96 312 L186 284 L276 296 L366 252 L456 268 L546 230 L636 242 L726 208 L760 216 L760 364 L96 364 Z" fill="url(#aqiFill)"/>
+  <path d="M96 312 L186 284 L276 296 L366 252 L456 268 L546 230 L636 242 L726 208 L760 216" fill="none" stroke="#2563EB" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M96 336 L186 330 L276 340 L366 316 L456 324 L546 302 L636 312 L726 284 L760 290" fill="none" stroke="#94A3B8" stroke-width="2.5" stroke-dasharray="7 6" stroke-linecap="round"/>
+
+  <g fill="#FFFFFF" stroke="#2563EB" stroke-width="3">
+    <circle cx="96" cy="312" r="5"/><circle cx="276" cy="296" r="5"/>
+    <circle cx="456" cy="268" r="5"/><circle cx="636" cy="242" r="5"/><circle cx="760" cy="216" r="5"/>
+  </g>
+
+  <!-- honesty annotation -->
+  <g>
+    <rect x="486" y="190" width="254" height="62" rx="8" fill="#FFFFFF" stroke="#2563EB" stroke-width="2" stroke-dasharray="5 4"/>
+    <text x="502" y="213" font-family="ui-monospace, Consolas, monospace" font-size="10" letter-spacing="1" fill="#1E3A8A">CONCEPTUAL VISUALIZATION</text>
+    <text x="502" y="230" font-family="ui-monospace, Consolas, monospace" font-size="10" letter-spacing="1" fill="#1E3A8A">NOT REAL MEASUREMENTS</text>
+    <line x1="636" y1="242" x2="620" y2="252" stroke="#2563EB" stroke-width="2" stroke-dasharray="4 4"/>
+  </g>
+
+  <!-- x labels: research scope years, not data points -->
+  <g font-family="ui-monospace, Consolas, monospace" font-size="11" fill="#475569" text-anchor="middle">
+    <text x="96" y="388">2021</text>
+    <text x="317" y="388">2022</text>
+    <text x="538" y="388">2023</text>
+    <text x="760" y="388">2024</text>
+  </g>
+
+  <!-- footer chips -->
+  <g font-family="ui-monospace, Consolas, monospace" font-size="11" fill="#475569">
+    <rect x="40" y="410" width="84" height="28" rx="14" fill="none" stroke="#CBD5E1" stroke-width="1.5"/>
+    <text x="82" y="428" text-anchor="middle">Python</text>
+    <rect x="136" y="410" width="150" height="28" rx="14" fill="none" stroke="#CBD5E1" stroke-width="1.5"/>
+    <text x="211" y="428" text-anchor="middle">pandas: learning</text>
+  </g>
+  <text x="760" y="428" text-anchor="end" font-family="ui-monospace, Consolas, monospace" font-size="9" letter-spacing="1" fill="#94A3B8">STATUS: IN PROGRESS</text>
+</svg>
