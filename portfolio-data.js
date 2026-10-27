@@ -34,9 +34,9 @@ window.PORTFOLIO_DATA = {
     // document.title is kept in sync with the <title> in index.html.
     // The <title>/<meta description> in index.html are the only intended
     // duplicates (needed for SEO/social even before JS runs); see README.
-    siteTitle: 'Farrel Islami Putra · Data, Software & Learning Archive',
+    siteTitle: 'Farrel Islami Putra · Data, Software & Learning Notes',
     siteDescription:
-      'The personal portfolio of Farrel Islami Putra, an Informatics Engineering student at UNIKOM exploring data, software, AI, databases, and IoT.'
+      'Catatan belajar Farrel Islami Putra, mahasiswa Informatika UNIKOM. Soal data, pola, software, dan hal-hal yang belum selesai dipelajari.'
   },
 
   links: {
@@ -53,9 +53,9 @@ window.PORTFOLIO_DATA = {
     // Each entry is one masked display line. Keep lines short so they never clip.
     headline: ['Curiosity,', 'grounded in data.'],
     headlineAccent: 'data.',
-    headlineTail: 'Exploring data. Understanding systems. Learning by building.',
+    headlineTail: 'Kadang bingung, kadang berhasil. Ini catatan prosesnya.',
     description:
-      "I'm Farrel Islami Putra, an Informatics Engineering student at UNIKOM developing foundations in data analysis while exploring software, AI, databases, and IoT. This portfolio is an evolving archive of what I study, research, and build.",
+      'Saya Farrel Islami Putra, mahasiswa S1 Teknik Informatika 2026 di Universitas Komputer Indonesia. Saya tertarik pada teknologi karena ingin tahu cara kerjanya, terutama yang bisa dipakai untuk menyelesaikan masalah sehari-hari. Fokus utama saya adalah tentang data, tapi saya juga penasaran dengan software dan sistem yang lebih luas. Portofolio ini bukan tempat memamerkan yang sudah selesai, melainkan tempat dari apa yang sedang saya pelajari.',
     primaryCta: { label: 'Explore the work', href: '#work' },
     docsCta: { label: 'View documentation', href: 'https://drive.google.com/drive/folders/1YaoRkFvdlk29vdRAFQxj5ypVD-7WDtTl?usp=drive_link' },
     note: 'DATA · SOFTWARE · AI · DATABASES · IOT',
@@ -94,7 +94,7 @@ window.PORTFOLIO_DATA = {
     heading: ['How my interests', 'connect.'],
     headingAccentWord: 'connect.',
     intro:
-      'Data sits at the centre; the rest grows around it. Select a node to read where each area actually stands today.',
+      'Data ada di tengah; sisanya tumbuh di sekitar itu. Pilih satu titik untuk membaca di mana posisi saya saat ini.',
     hint: 'SELECT A NODE: CLICK, TAP, OR USE KEYBOARD TAB + ENTER',
     panelTitle: 'FIELD NOTES',
     nodes: [
@@ -103,7 +103,7 @@ window.PORTFOLIO_DATA = {
         name: 'DATA',
         status: 'Primary focus',
         detail:
-          'The centre of the map. Currently applied in the Cirebon air-quality research: collecting, cleaning, and exploring real open data.',
+          'Inti dari peta ini. Sedang dipraktikkan dalam penelitian kualitas udara Cirebon: mengumpulkan, membersihkan, dan mencari pola dari data terbuka. Saya suka bagian di mana data mulai bercerita.',
         x: 50, y: 46
       },
       {
@@ -111,7 +111,7 @@ window.PORTFOLIO_DATA = {
         name: 'SOFTWARE',
         status: 'Exploring',
         detail:
-          'Hand-built HTML, CSS, and JavaScript: this portfolio is the practice ground, plus C++ and Python coursework.',
+          'HTML, CSS, dan JavaScript yang ditulis tangan: portofolio ini adalah tempat latihannya. Tapi jujur, kode saya masih sering berantakan, dan saya sedang belajar merapikannya.',
         x: 22, y: 20
       },
       {
@@ -119,7 +119,7 @@ window.PORTFOLIO_DATA = {
         name: 'AI',
         status: 'Future interest',
         detail:
-          'A direction, not a claim. Machine learning becomes an active area once the data foundations are stronger.',
+          'Sebuah arah, bukan klaim. Machine learning akan jadi area yang serius setelah fondasi data saya lebih kuat.',
         x: 78, y: 20
       },
       {
@@ -127,7 +127,7 @@ window.PORTFOLIO_DATA = {
         name: 'DATABASE SYSTEMS',
         status: 'Exploring',
         detail:
-          'SQL fundamentals and how data is modelled, queried, and stored, studied alongside the data analysis practice.',
+          'Dasar-dasar SQL dan bagaimana data dimodelkan, ditanyakan, dan disimpan. Masih dipelajari berdampingan dengan analisis data.',
         x: 22, y: 74
       },
       {
@@ -135,7 +135,7 @@ window.PORTFOLIO_DATA = {
         name: 'IoT',
         status: 'Future interest',
         detail:
-          'Curiosity about connected systems and sensors, where physical devices produce the data I like to analyse.',
+          'Rasa penasaran tentang sistem terhubung dan sensor, di mana perangkat fisik menghasilkan data yang suka saya analisis.',
         x: 78, y: 74
       }
     ]
@@ -149,7 +149,7 @@ window.PORTFOLIO_DATA = {
     heading: ['The project', 'archive.'],
     headingAccentWord: 'archive.',
     aside:
-      'One in-progress research project, and space reserved for what comes next. Every entry is real and honestly labelled, no filler, no inflated counts.',
+      'Satu proyek penelitian yang masih berjalan, satu ide yang tertunda, dan satu rencana kecil untuk ke depan. Semua ditulis apa adanya.',
     countLabel: 'PROJECTS',
     // Hero search is a section navigator (V5.3); the gallery empty state
     // can now only be reached through the category filters.
@@ -213,7 +213,7 @@ window.PORTFOLIO_DATA = {
       tag: 'Research / Data Analysis',
       status: 'IN PROGRESS',
       description:
-        "An ongoing research project investigating air-quality trends in Cirebon City from 2021 to 2024. I'm preparing the research paper and developing Python workflows to process the source data for analysis. The study is still in progress; findings and conclusions have not yet been published.",
+        'Proyek yang sedang berjalan. Saya sedang membersihkan data kualitas udara Cirebon dan mencoba melihat polanya. Ada satu hal yang saya sadari saat mengolahnya: data tahun 2023 punya banyak nilai kosong, dan itu sedikit mengubah cara saya melihat tren. Temuan dan kesimpulan belum ada, karena penelitiannya masih berlangsung.',
       // Only tools actually in use for the project right now.
       stack: ['Python', 'pandas (learning)'],
       image: 'assets/project-aqi.svg',
@@ -229,12 +229,12 @@ window.PORTFOLIO_DATA = {
     {
       kicker: 'NEXT IN THE ARCHIVE',
       title: 'Reserved slot / 02',
-      text: 'A future research or data project will live here once it has real, verifiable work to show.'
+      text: 'Ide yang saya tunda: sistem untuk menyaring berita internet dan memperkirakan dampaknya pada ekonomi, seperti harga barang atau saham. Saya berhenti di tengah jalan karena sadar belum punya cukup ilmu untuk mendapatkan dan mengolah informasinya. Suatu hari nanti akan dilanjutkan.'
     },
     {
       kicker: 'COMING SOON',
       title: 'Reserved slot / 03',
-      text: 'Reserved for upcoming coursework, experiments, or collaborations. Not a finished project yet.'
+      text: 'Rencana terdekat: membuat sistem rekomendasi saham Indonesia berskala kecil. Datanya akan diambil dari yfinance, dengan beberapa indikator sederhana. Belum dimulai, tapi sudah dipikirkan.'
     }
   ],
 
@@ -247,16 +247,16 @@ window.PORTFOLIO_DATA = {
     headingAccentWord: 'default.',
     stamp: { top: 'RIGOROUS WITH', bold: 'DETAILS' },
     lead:
-      "I'm an Informatics Engineering student at UNIKOM with a primary interest in data and a broader curiosity about software, AI, databases, and connected systems.",
+      'Saya memilih Informatika karena ingin tahu cara kerja teknologi, terutama yang bisa dipakai untuk menyelesaikan masalah sehari-hari. Di UNIKOM saya merasa punya ruang untuk mengeksplorasi hal-hal baru, dan itu yang membuat saya terus termotivasi untuk belajar. Saya suka belajar dari hal-hal dasar, bukan cuma praktiknya saja.',
     body:
-      "I enjoy learning how things work at a fundamental level, investigating questions independently, and using evidence to make sense of complex problems. This portfolio is an evolving archive of what I study, research, build, and learn along the way, curious across disciplines, rigorous with details.",
+      'Ketertarikan saya pada data datang dari kebiasaan sederhana: saya suka melihat pola. Bagi saya, data itu bukan cuma kumpulan informasi. Di baliknya ada cerita, dan dari cerita itu saya bisa membuat teori atau sekadar berandai-andai tentang apa yang mungkin terjadi. Itu bagian yang paling saya nikmati. Biasanya saya belajar di perpustakaan, kafe, atau di kamar sambil dengerin musik. Kalau ada konteks yang tidak saya pahami, saya akan searching, dan sering keterusan sampai ke konteks lain yang sebenarnya tidak sedang saya cari.',
     /* Field notes (5.3.1): short, honest snippets rendered as sticky notes
        next to the about copy. Keep each entry one line. */
     notes: [
-      'Currently exploring: Python for data analysis',
-      'Preferred editor: Zed',
-      'Learning in public, one commit at a time',
-      'Curious about how sensors become datasets'
+      'Sedang mendalami Python untuk analisis data',
+      'Editor andalan: Zed',
+      'Belajar di tempat yang berbeda-beda',
+      'Musik sepanjang hari'
     ],
     artwork: {
       image: 'assets/profile-card.svg',
@@ -302,36 +302,36 @@ window.PORTFOLIO_DATA = {
         phase: 'PHASE 01',
         title: 'Foundations',
         description:
-          'Python and C++ fundamentals, computational thinking, and the habit of reading documentation properly.',
+          'Belajar Python dan C++ dari nol. Sempat bingung kenapa pointer di C++ harus ada.',
         detail:
-          'Two first-semester courses in Python and C++ basics, plus the working habit of reading official documentation before guessing at behaviour.',
+          'Jawabannya baru mengerti setelah baca dokumentasi berulang kali, bukan setelah nonton tutorial. Belajar logika komputasional dan pola pikir komputasional di kampus juga banyak membantu cara saya berpikir.',
         status: 'ONGOING'
       },
       {
         phase: 'PHASE 02',
         title: 'Web & software',
         description:
-          'Hand-coded HTML, CSS, and JavaScript: this portfolio is the practice ground, plus coursework in programming.',
+          'Portofolio ini buktinya: HTML, CSS, dan JavaScript yang ditulis tangan.',
         detail:
-          'This very portfolio is the evidence: hand-written HTML, CSS, and JavaScript, versioned in git, with no page builders and no templates.',
+          'Tapi dari sini juga saya sadar bahwa menulis program yang efisien itu susah. Kode saya masih berantakan, dan saya sedang berusaha memahami kenapa sebuah algoritma lebih baik dari yang lain.',
         status: 'PRACTICING'
       },
       {
         phase: 'PHASE 03',
         title: 'Data',
         description:
-          'Data collection, cleaning, and exploratory analysis in Python, applied right now in the Cirebon air-quality research.',
+          'Mengolah data kualitas udara Cirebon. Sedang di tahap pembersihan data.',
         detail:
-          'The Cirebon AQI study in practice: sourcing the open dataset, cleaning it with Python workflows, and exploring 2021 to 2024 trends before writing any conclusion.',
+          'Ada data yang kosong, ada format yang aneh. Di sinilah saya belajar bahwa sebagian besar waktu di data science itu bukan membangun model, tapi merapikan data.',
         status: 'ACTIVE · AQI STUDY'
       },
       {
         phase: 'PHASE 04',
         title: 'Ahead',
         description:
-          "Deeper work in AI/ML, database systems, and IoT & robotics, the direction I'm aiming for next.",
+          'Rencana ke depan: merapikan cara menulis program, memahami algoritma dan struktur data lebih dalam.',
         detail:
-          'Database systems coursework comes next, then a first careful step into machine learning and connected devices once the data foundations hold.',
+          'Serta mulai melirik machine learning dan sistem terhubung setelah fondasi data saya cukup kuat.',
         status: 'PLANNED'
       }
     ]
@@ -341,7 +341,7 @@ window.PORTFOLIO_DATA = {
     kicker: '04 / EDUCATION',
     heading: ['Informatics', 'Engineering.'],
     body:
-      'Undergraduate student at Universitas Komputer Indonesia (UNIKOM), started in 2026. Building foundations in programming, data, and intelligent systems, one course, one project, one experiment at a time.',
+      'Mahasiswa Informatika di Universitas Komputer Indonesia (UNIKOM), mulai tahun 2026. Mata kuliah yang sedang dijalani antara lain Logika Komputasional, Pemrograman Web, Kalkulus, Algoritma dan Struktur Data, Sistem Cerdas Kolaboratif, dan Pola Pikir Komputasional. Sejauh ini tidak ada yang benar-benar mustahil, tapi Algoritma dan Struktur Data masih butuh perhatian lebih.',
     /* V6.6 Fase 7.1: joined with · by script.js into the coursework line. */
     coursework: ['Data Structures', 'Databases', 'Discrete Math'],
     foot: 'STARTED IN 2026'
@@ -355,7 +355,7 @@ window.PORTFOLIO_DATA = {
     heading: ['Proof of work,', 'in progress.'],
     headingAccentWord: 'progress.',
     intro:
-      'Certificates, awards, and publications will be archived here as they are actually earned. Each entry with its issuer, date, and a verification link. Nothing is listed before it exists.',
+      'Sertifikat, penghargaan, dan publikasi akan diarsipkan di sini saat benar-benar didapatkan. Tidak ada yang ditampilkan sebelum ada buktinya.',
     emptySlots: ['CERTIFICATE', 'AWARD', 'PUBLICATION'],
     emptyLabel: 'COMING SOON',
     emptyNote: 'RESERVED FOR FUTURE ENTRIES',
@@ -385,7 +385,7 @@ window.PORTFOLIO_DATA = {
     heading: ["Let's stay", 'connected.'],
     headingAccentWord: 'connected.',
     intro:
-      'Profiles and archives that are officially mine. The documentation drive collects evidence of work, research, and learning as it happens.',
+      'Profil dan arsip yang memang milik saya. Folder dokumentasi di Google Drive menyimpan bukti pekerjaan, penelitian, dan proses belajar.',
     footnote: 'OPEN A PROFILE ↗',
     footnoteSub: 'VERIFIED LINKS ONLY.',
     items: [
@@ -425,7 +425,7 @@ window.PORTFOLIO_DATA = {
   contact: {
     kicker: 'SAY HELLO',
     heading: 'Prefer email? Both inboxes are open.',
-    note: 'Questions, feedback, or collaboration ideas are welcome.',
+    note: 'Ada pertanyaan, masukan, atau ide kolaborasi? Silakan kirim email.',
     copyLabel: 'Copy',
     copyOk: 'Email address copied to clipboard.',
     copyFail: 'Copy is not available here. Please copy the address manually.',
@@ -447,7 +447,7 @@ window.PORTFOLIO_DATA = {
     },
     nameSolid: 'FARREL',
     nameOutline: 'ISLAMI PUTRA',
-    note: 'An archive of code, data, and things still to come.',
+    note: 'Arsip tentang kode, data, dan hal-hal yang masih akan datang.',
     copyright: '© {year} · PERSONAL ARCHIVE'
   },
 
@@ -668,7 +668,7 @@ window.PORTFOLIO_DATA = {
     kicker: '05 / OFF-SCREEN',
     heading: ['After hours.', 'Still curious.'],
     headingAccentWord: 'curious.',
-    intro: 'What I do when I am not staring at a terminal.',
+    intro: 'Yang saya lakukan saat tidak sedang menatap terminal.',
     pixelLabel: 'UNIT 01 · DESK LOOP',
     hobbies: [
       { label: 'Badminton', detail: '2x a month', icon: 'shuttlecock' },
@@ -699,7 +699,7 @@ window.PORTFOLIO_DATA = {
     kicker: '06 / OPEN SOURCE PULSE',
     heading: ['Commits,', 'not claims.'],
     headingAccentWord: 'claims.',
-    intro: 'Public activity from GitHub, fetched live and cached for one hour.',
+    intro: 'Aktivitas publik dari GitHub, diambil langsung dan di-cache selama satu jam.',
     username: 'Fryel32',
     profileUrl: 'https://github.com/Fryel32',
     cacheKey: 'fryel32-github-stats-v1',
@@ -725,7 +725,7 @@ window.PORTFOLIO_DATA = {
     kicker: '08 / A SMALL COMPANION',
     heading: ['Someone is', 'hanging around.'],
     headingAccentWord: 'around.',
-    intro: 'A tiny pixel companion that follows the archive. Summon it if you want company.',
+    intro: 'Teman piksel kecil yang mengikuti arsip ini. Panggil kalau ingin ditemani.',
     summonLabel: 'Summon companion',
     dismissLabel: 'Dismiss companion',
     petName: 'Kok',

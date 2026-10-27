@@ -1,4 +1,4 @@
-# Farrel Islami Putra · Data, Software & Learning Archive
+# Farrel Islami Putra · Data, Software & Learning Notes
 
 Personal editorial portfolio: **Blue / White / Slate**, motion-led, hand-coded.
 No frameworks, no page builders, no admin panel. Content is managed through
@@ -870,6 +870,46 @@ are untouched.
   on the next cache refresh or first successful fetch.
 - The opening overlay is the only animation allowed to delay the hero; all
   other V6.6 additions are static DOM or Category B listeners.
+
+## V6.7: Humanized Text & Bilingual Refinement
+
+V6.7 is a copy-only release: every approved string is replaced word for
+word with a more human, honest, natural Indonesian-English mix. No layout,
+CSS, animation, function, JavaScript logic, ID, class, or DOM structure was
+touched. Game Deck (`#games`) text and visuals stay 100% original, all V6.6
+features keep working, the closing motto is unchanged, and emails, links,
+and `aria-label`s are untouched. There is no em dash (U+2014) anywhere;
+middle dots, slashes, and plain hyphens remain the separators.
+
+### What changed (all strings)
+
+1. **Metadata.** Title and meta/og description (index.html + `meta`) are now
+   `Farrel Islami Putra · Data, Software & Learning Notes` plus the new
+   Indonesian learning-notes description.
+2. **Hero.** Tail and description rewritten in Indonesian; eyebrow,
+   headline lines, and both CTA labels already matched and stay as-is.
+3. **Project archive.** Gallery aside, the AQI project description, and
+   both reserved-slot texts now tell the real story (running research,
+   the postponed news-impact idea, the small stock-recommendation plan).
+4. **About.** Lead, body, and the four field notes are the new approved
+   strings; static `#about-lead` / `#about-body` fallbacks updated too.
+5. **Curiosity Map.** Intro plus all five node details are Indonesian;
+   the honest statuses (`Primary focus`, `Exploring`, `Future interest`)
+   stay English.
+6. **Journey & education.** All four phase summaries + accordion details
+   and the education body are new; phase statuses
+   (`ONGOING`, `PRACTICING`, `ACTIVE · AQI STUDY`, `PLANNED`) stay English.
+7. **Sections.** Off-screen intro, GitHub intro, credentials intro,
+   companion intro, social intro, contact note, and closing note are the
+   new approved strings; all card labels, footnotes, handles, and URLs
+   stay as they were.
+
+### Honest notes
+
+- `index.html` static fallbacks were synchronized with the data file so a
+  no-JS visit and search engines read the same text.
+- Screenshots and checks: see `VERIFICATION.md` (V6.7 section) and
+  `../tests/shots-v6-7/`.
 
 ## Accessibility & responsiveness
 

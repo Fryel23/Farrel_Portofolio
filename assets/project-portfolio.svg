@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 460" role="img" aria-label="Hand-coded portfolio website illustration">
+  <!-- card -->
+  <rect x="0" y="0" width="800" height="460" fill="#FFFFFF"/>
+  <rect x="1.5" y="1.5" width="797" height="457" fill="none" stroke="#E2E8F0" stroke-width="3"/>
+
+  <!-- top safe zone (0–96px) kept clear for UI overlay chips -->
+
+  <!-- header -->
+  <rect x="40" y="122" width="12" height="12" fill="#2563EB" transform="rotate(45 46 128)"/>
+  <text x="64" y="134" font-family="ui-monospace, Consolas, monospace" font-size="16" font-weight="700" letter-spacing="2" fill="#0F172A">PORTFOLIO WEBSITE — THIS ARCHIVE</text>
+  <text x="64" y="158" font-family="ui-monospace, Consolas, monospace" font-size="10" letter-spacing="2" fill="#64748B">FRONT-END CASE STUDY · NO FRAMEWORKS · NO PAGE BUILDERS</text>
+
+  <!-- browser window -->
+  <rect x="40" y="176" width="720" height="196" rx="14" fill="#F8FAFC" stroke="#0F172A" stroke-width="2.5"/>
+  <line x1="40" y1="214" x2="760" y2="214" stroke="#0F172A" stroke-width="2.5"/>
+  <circle cx="68" cy="195" r="7" fill="#2563EB"/>
+  <circle cx="92" cy="195" r="7" fill="#93C5FD"/>
+  <circle cx="116" cy="195" r="7" fill="#CBD5E1"/>
+  <rect x="330" y="182" width="200" height="24" rx="12" fill="#E2E8F0"/>
+  <text x="430" y="198" text-anchor="middle" font-family="ui-monospace, Consolas, monospace" font-size="10" fill="#475569">file://archive/index.html</text>
+
+  <!-- hero headline blocks -->
+  <rect x="72" y="232" width="250" height="24" rx="5" fill="#0F172A"/>
+  <rect x="72" y="264" width="196" height="24" rx="5" fill="#0F172A"/>
+  <rect x="72" y="296" width="120" height="24" rx="5" fill="#2563EB"/>
+  <rect x="72" y="336" width="280" height="9" rx="4" fill="#E2E8F0"/>
+  <rect x="72" y="352" width="236" height="9" rx="4" fill="#E2E8F0"/>
+
+  <!-- mini pixel frame -->
+  <g transform="rotate(-6 560 268)">
+    <rect x="484" y="232" width="160" height="114" fill="#CBD5E1" stroke="#0F172A" stroke-width="2.5"/>
+    <rect x="493" y="241" width="142" height="96" fill="#FFFFFF"/>
+    <g fill="#DBEAFE">
+      <rect x="501" y="249" width="12" height="12"/><rect x="525" y="249" width="12" height="12"/>
+      <rect x="573" y="249" width="12" height="12"/><rect x="501" y="273" width="12" height="12"/>
+      <rect x="597" y="273" width="12" height="12"/><rect x="525" y="297" width="12" height="12"/>
+      <rect x="573" y="297" width="12" height="12"/>
+    </g>
+    <rect x="549" y="285" width="12" height="12" fill="#2563EB"/>
+    <rect x="525" y="273" width="12" height="12" fill="#1E3A8A"/>
+  </g>
+
+  <!-- motion path -->
+  <path d="M370 268 C 430 268, 430 318, 466 318" fill="none" stroke="#93C5FD" stroke-width="2.5" stroke-dasharray="6 6"/>
+  <circle cx="466" cy="318" r="5" fill="#2563EB"/>
+
+  <!-- cursor -->
+  <path d="M436 336 L436 364 L444 357 L450 370 L456 367 L450 354 L460 353 Z" fill="#0F172A" stroke="#FFFFFF" stroke-width="1.5"/>
+
+  <!-- footer chips -->
+  <g font-family="ui-monospace, Consolas, monospace" font-size="11" fill="#475569">
+    <rect x="40" y="396" width="150" height="28" rx="14" fill="none" stroke="#CBD5E1" stroke-width="1.5"/>
+    <text x="115" y="414" text-anchor="middle">HTML · CSS · JS</text>
+    <rect x="202" y="396" width="150" height="28" rx="14" fill="none" stroke="#CBD5E1" stroke-width="1.5"/>
+    <text x="277" y="414" text-anchor="middle">GSAP + LENIS</text>
+    <rect x="364" y="396" width="150" height="28" rx="14" fill="none" stroke="#CBD5E1" stroke-width="1.5"/>
+    <text x="439" y="414" text-anchor="middle">NO BUILD STEP</text>
+  </g>
+  <text x="760" y="414" text-anchor="end" font-family="ui-monospace, Consolas, monospace" font-size="9" letter-spacing="1" fill="#94A3B8">CASE STUDY: THIS SITE</text>
+</svg>

@@ -1086,3 +1086,119 @@ Spec: `PROMPT-EKSEKUSI-V6.5.md`. Baseline: V6.4 (backup in `backup-v6.4/`).
 - Long-session memory profiling: NOT RUN (no profiler in this
   environment); the per-frame `clearRect` + central loop design removes
   the known accumulation risks.
+
+---
+
+# V6.7 HUMANIZED TEXT & BILINGUAL REFINEMENT: EXECUTION REPORT
+
+Spec: `upload/PROMPT_EKSEKUSI_V6.7.md`. Copy-only release: approved strings
+replaced word for word; zero structure, CSS, animation, logic, ID, class,
+DOM, href, email, or aria-label changes.
+
+## 0. Fase 0: backup and baseline
+
+- Backup of the five application files to `backup-v6.6/`: DONE.
+- `node --check script.js` PASS, `node --check portfolio-data.js` PASS,
+  `node --check generative-ambient.js` PASS.
+- Baseline em-dash grep (U+2014) across all application files: EMPTY.
+- Checkpoint commit: `chore: v6.7 baseline`.
+
+## 1. Fase 1 to 13: string replacement
+
+- Fase 1 metadata: `<title>`, `meta description`, `og:title`,
+  `og:description` (index.html) + `meta.siteTitle` / `meta.siteDescription`
+  (data) = `Farrel Islami Putra · Data, Software & Learning Notes` + the
+  new Indonesian description. PASS.
+- Fase 2 hero: `headlineTail` + `description` replaced; eyebrow, headline,
+  CTA labels already matched and untouched. Static `#hero-tail` /
+  `#hero-subtitle` fallbacks synchronized. PASS.
+- Fase 3 archive: `gallery.aside`, `projects[0].description`,
+  `comingSoon[0].text`, `comingSoon[1].text` replaced; kickers/titles of
+  reserved slots untouched; static `#gallery-aside` synced. PASS.
+- Fase 4 about: `lead`, `body`, 4 `notes` replaced; static `#about-lead` /
+  `#about-body` synced as the spec explicitly requires. PASS.
+- Fase 5 curiosity map: `intro` + all five node `detail`s replaced;
+  statuses stay English; static `#curiosity-intro` and
+  `#curiosity-panel-detail` (data node default) synced. PASS.
+- Fase 6 journey + education: all 4 phase `description`s (summaries) and
+  `detail`s + `education.body` replaced; statuses `ONGOING`, `PRACTICING`,
+  `ACTIVE · AQI STUDY`, `PLANNED` stay English; static `#education-body`
+  synced. PASS.
+- Fase 7 off-screen: `intro` replaced; hobby array and details
+  (`2x a month`, `Python experiments`, `2 hours a day`, `All day`) kept;
+  `frameLabel` kept. Static `#offscreen-intro` synced. PASS.
+- Fase 8 github: `intro` replaced; card labels kept. Static
+  `#github-intro` synced. PASS.
+- Fase 9 credentials: `intro` replaced; V6.6 labels (`SAMPLE FORMAT`,
+  `NOT AN ENTRY`, `COMING SOON`) kept. Static `#credentials-intro` synced.
+  PASS.
+- Fase 10 companion: `intro` replaced; tooltips, button labels, habitat
+  texts kept. Static `#companion-intro` synced. PASS.
+- Fase 11 social: `intro` replaced; footnote and handles/URLs kept. Static
+  `#social-intro` synced. PASS.
+- Fase 12 contact: `note` replaced; `heading` already matched; emails,
+  `Copy` labels, aria-labels kept. Static `.contact-note` synced. PASS.
+- Fase 13 closing: `note` replaced; motto text byte-identical; footer
+  labels (`DESIGNED & CODED BY HAND`, `NO PAGE BUILDERS, NO TEMPLATES`,
+  `BACK TO TOP ↑`, `ARCHIVE / CLOSED`) kept. Static closing `<p>` synced.
+  PASS.
+
+## 2. Syntax + em dash audit (post)
+
+- `node --check script.js` PASS, `node --check portfolio-data.js` PASS,
+  `node --check generative-ambient.js` PASS.
+- `rg` U+2014 across `index.html`, `styles.css`, `script.js`,
+  `portfolio-data.js`, `generative-ambient.js`: EMPTY. CLEAN.
+- Leftover old-text sweep (26 distinct old English strings) across
+  index.html + portfolio-data.js + script.js: EMPTY. CLEAN.
+
+## 3. Structure untouched (proven by diff)
+
+- `git diff --stat baseline..HEAD`: only `portfolio/index.html` (38 lines)
+  and `portfolio/portfolio-data.js` (72 lines) changed.
+- `styles.css`, `script.js`, `generative-ambient.js`: zero diff.
+- All `id="..."` values: identical (diff empty). All `class="..."`
+  values + counts: identical. All `aria-label` values: identical. All
+  `href` values: identical.
+- Game Deck block in `portfolio-data.js`: zero diff (11 games, all stats
+  and jokes byte-identical).
+
+## 4. Visual + functional sweep (Agent Browser, live)
+
+- Wrapper route `/` at 1440x900: header label
+  `Portfolio V6.7 Humanized Text & Bilingual Refinement`, new document
+  title, iframe loads `/portfolio/index.html`, Download button present.
+- Fresh tab: opening overlay visibly appears (label, measure line, SKIP)
+  then finishes; session flag set once; second load in the same session
+  does not replay it (reload with a restored scroll position skips it via
+  the designed scroll-skip, which also proves the skip path).
+- Hero 1440x900 + 390x844: new tail/description render; no horizontal
+  overflow (`scrollWidth == innerWidth == 390`).
+- Gallery: new aside; AQI card shows the new Indonesian description;
+  both reserved slots show their new stories.
+- Curiosity Map: new intro; default panel detail = new DATA text with
+  English `Primary focus`; clicking SOFTWARE swaps to its new detail with
+  English `Exploring`; 5 nodes interactive.
+- Journey accordion: 4 toggles; opening PHASE 01 reveals the new detail;
+  summaries render in the list.
+- Education card: new Indonesian body.
+- Game Deck: `INSERT COIN` loads 11 original cards (Valorant stats and
+  notes byte-identical, e.g. `Kena kepala / sisanya doa`); button flips to
+  `EJECT COIN`. Untouched. PASS.
+- V6.6 features: hobby chips update `CURRENTLY` + `LAST LOGGED`
+  (BADMINTON + HH:MM row); credentials sample card (`SAMPLE FORMAT` /
+  `NOT AN ENTRY`) and `0 ENTRI TERVERIFIKASI` timeline intact; companion
+  summons (pet visible, toggle flips to `Dismiss companion`).
+- Console: no errors from the portfolio (only the Next.js wrapper dev
+  notices). Page errors: none.
+- Screenshots: `tests/shots-v6-7/` (opening, hero 1440, wrapper, hero 390,
+  work 390, about 1440, closing 1440).
+
+## 5. Not run / honest limits
+
+- Lighthouse / LCP: NOT RUN (tooling unavailable in this sandbox).
+- Live `prefers-reduced-motion` flip mid-session: NOT RUN (unchanged from
+  V6.5/V6.6; motion guards untouched by this release).
+- Spotify Now Playing live poll and GitHub REST live fetch depend on
+  external networks; in this sandbox they may show their honest fallback.
+  This is a network limit, not a V6.7 regression (code untouched).
