@@ -18,7 +18,14 @@
  */
 'use strict';
 
-window.PORTFOLIO_DATA = {
+/**
+ * content.js: sumber data statis global portofolio (migrasi Astro V7.0).
+ * Pengganti portfolio-data.js: diimpor sebagai modul ES6 oleh skrip
+ * src/scripts/*.js. Isi data identik dengan V6.7; hanya path aset
+ * (menjadi /assets/...) dan tautan antar halaman (#work -> /work)
+ * yang menyesuaikan arsitektur Hub-and-Spoke.
+ */
+export const DATA = {
   /* ------------------------------------------------------------------ */
   /* Identity + site metadata                                            */
   /* ------------------------------------------------------------------ */
@@ -56,7 +63,7 @@ window.PORTFOLIO_DATA = {
     headlineTail: 'Kadang bingung, kadang berhasil. Ini catatan prosesnya.',
     description:
       'Saya Farrel Islami Putra, mahasiswa S1 Teknik Informatika 2026 di Universitas Komputer Indonesia. Saya tertarik pada teknologi karena ingin tahu cara kerjanya, terutama yang bisa dipakai untuk menyelesaikan masalah sehari-hari. Fokus utama saya adalah tentang data, tapi saya juga penasaran dengan software dan sistem yang lebih luas. Portofolio ini bukan tempat memamerkan yang sudah selesai, melainkan tempat dari apa yang sedang saya pelajari.',
-    primaryCta: { label: 'Explore the work', href: '#work' },
+    primaryCta: { label: 'Explore the work', href: '/work' },
     docsCta: { label: 'View documentation', href: 'https://drive.google.com/drive/folders/1YaoRkFvdlk29vdRAFQxj5ypVD-7WDtTl?usp=drive_link' },
     note: 'DATA · SOFTWARE · AI · DATABASES · IOT',
     sticker: { top: 'Stay curious.', bottom: 'Stay rigorous.' },
@@ -216,7 +223,7 @@ window.PORTFOLIO_DATA = {
         'Proyek yang sedang berjalan. Saya sedang membersihkan data kualitas udara Cirebon dan mencoba melihat polanya. Ada satu hal yang saya sadari saat mengolahnya: data tahun 2023 punya banyak nilai kosong, dan itu sedikit mengubah cara saya melihat tren. Temuan dan kesimpulan belum ada, karena penelitiannya masih berlangsung.',
       // Only tools actually in use for the project right now.
       stack: ['Python', 'pandas (learning)'],
-      image: 'assets/project-aqi.svg',
+      image: '/assets/project-aqi.svg',
       link: 'https://opendata.cirebonkota.go.id/dataset/data-kualitas-udara',
       linkLabel: 'Open dataset source'
     }
@@ -259,7 +266,7 @@ window.PORTFOLIO_DATA = {
       'Musik sepanjang hari'
     ],
     artwork: {
-      image: 'assets/profile-card.svg',
+      image: '/assets/profile-card.svg',
       alt: 'Illustrated personal file card of Farrel Islami Putra',
       label: { small: 'PERSONAL FILE', strong: 'NO. 0032 / FIP', foot: 'COLLECTED & IN PROGRESS' }
     }
@@ -367,7 +374,7 @@ window.PORTFOLIO_DATA = {
          date: '2026',              // optional, '' when unknown
          type: 'Certificate',       // Certificate / Award / Competition / Publication / …
          description: 'One honest line about relevance.',   // optional
-         image: 'assets/credentials/my-certificate.jpg',    // optional
+         image: '/assets/credentials/my-certificate.jpg',    // optional
          proofUrl: 'https://official-verification-url',     // required for a Verify button
          credentialId: 'PUBLIC-ID-IF-ANY'                    // optional
        }

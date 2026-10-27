@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/global.css';
+import '../../styles/work.css';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('work');
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const isReserved = d.status === 'RESERVED';
+const number = String(1).padStart(2, '0');
+---
+
+<BaseLayout title={`${d.title} · Farrel Islami Putra`} description={d.description} pageKey="work-detail">
+  <article class="case-study" aria-labelledby="case-title">
+    <div class="case-study-inner">
+      <p class="section-kicker">{d.kicker || `${number} / CASE STUDY`}</p>
+      <h1 class="case-study-title" id="case-title">
+        <span class="line-mask"><span class="line">{d.title}</span></span>
+      </h1>
+      <div class="case-study-meta">
+        <span class="case-meta-item"><span class="mini-label">CATEGORY</span>{d.category}</span>
+        <span class="case-meta-item"><span class="mini-label">TAG</span>{d.tag}</span>
+        <span class="case-meta-item"><span class="mini-label">STATUS</span><span class="project-status">{d.status}</span></span>
+        {
+          d.stack && d.stack.length > 0 && (
+            <span class="case-meta-item">
+              <span class="mini-label">STACK</span>
+              <span class="project-stack">
+                {d.stack.map((tech) => (
+                  <span class="stack-chip">{tech}</span>
+                ))}
+              </span>
+            </span>
+          )
+        }
+      </div>
+
+      {
+        !isReserved && d.image && (
+          <div class="case-study-cover">
+            <img src={d.image} alt={`${d.title}: project cover illustration`} loading="eager" decoding="async" />
+          </div>
+        )
+      }
+
+      <div class="case-study-body prose-archive">
+        <Content />
+      </div>
+
+      <div class="case-study-actions">
+        {
+          d.link && /^https?:\/\//i.test(d.link) && (
+            <a class="button button-primary" href={d.link} target="_blank" rel="noopener noreferrer">
+              {d.linkLabel || 'View project'} <span aria-hidden="true">↗</span>
+            </a>
+          )
+        }
+        <a class="button button-outline" href="/work">Back to the archive <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<script>
+  import '../../scripts/global.js';
+</script>

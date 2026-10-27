@@ -1,0 +1,1515 @@
+/* ==========================================================================
+   ARCHIVE.CSS · Farrel Islami Putra · Editorial Portfolio (Astro V7.0)
+   Blue / White / Slate · Contemporary Editorial · Motion-led
+   Game Deck, Off-screen, GitHub, Credentials, Companion.
+   Diekstrak otomatis dari styles.css V6.7. Isi aturan tidak diubah.
+   ========================================================================== */
+
+/* 09. CREDENTIALS ---------------------------------------------------------- */
+.credentials-section {
+  background: var(--bg);
+  position: relative;
+  padding: 96px clamp(22px, 7vw, 110px) 66px;
+  border-top: 1px solid var(--border-soft);
+  overflow: hidden;
+}
+
+
+.credentials-inner { z-index: 1; }
+
+
+.credentials-section .section-heading { align-items: flex-start; }
+
+
+.credential-grid {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+/* Reserved empty-state frames: future slots, not earned credentials. */
+.credential-slot {
+  min-height: 210px;
+  border: 1.5px dashed var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; padding: 20px; text-align: center;
+  cursor: default;
+}
+
+
+.credential-slot-type {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.14em;
+  color: var(--blue-deep);
+  background: var(--blue-pale);
+  border-radius: 999px; padding: 5px 11px;
+}
+
+
+.credential-slot-label {
+  font-family: var(--mono); font-size: 13px; letter-spacing: 0.1em;
+  color: var(--text-3);
+}
+
+
+.credential-slot-note {
+  font-family: var(--mono); font-size: 7.5px; letter-spacing: 0.1em;
+  color: var(--text-3); opacity: 0.75;
+}
+
+/* Real credential cards: used once entries exist in portfolio-data.js. */
+.credential-card {
+  border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+  background: var(--surface); overflow: hidden;
+  display: flex; flex-direction: column;
+  transition: transform var(--hover) var(--ease), border-color var(--hover) var(--ease),
+              box-shadow var(--hover) var(--ease);
+}
+
+
+.credential-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--blue);
+  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.10);
+}
+
+
+.credential-card img {
+  width: 100%; height: 170px; object-fit: contain; object-position: center;
+  background: var(--surface-2); border-bottom: 1px solid var(--border-soft);
+  padding: 10px;
+}
+
+
+.credential-body { padding: 15px 16px 17px; display: flex; flex-direction: column; gap: 7px; flex: 1; }
+
+
+.credential-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+
+.credential-type {
+  font-family: var(--mono); font-size: 8px; letter-spacing: 0.1em;
+  color: var(--blue-deep); background: var(--blue-pale);
+  border-radius: 999px; padding: 4px 9px;
+}
+
+
+.credential-date { font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.08em; color: var(--text-3); }
+
+
+.credential-body h3 { font-size: 15.5px; line-height: 1.25; letter-spacing: -0.03em; font-weight: 600; }
+
+
+.credential-issuer { font-size: 11.5px; color: var(--ink); font-weight: 500; margin: 0; }
+
+
+.credential-desc { font-size: 11px; line-height: 1.55; color: var(--text-2); margin: 0; }
+
+
+.credential-id { font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.06em; color: var(--text-3); margin: 0; }
+
+
+.credential-proof {
+  margin-top: auto; padding-top: 12px;
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.08em;
+  color: var(--blue); text-transform: uppercase;
+}
+
+/* Preview button: opens the native <dialog> with the full image. */
+.credential-preview {
+  margin-top: 4px; align-self: flex-start;
+  display: inline-flex; align-items: center; gap: 7px;
+  border: 1px solid var(--border-strong); background: var(--surface);
+  color: var(--ink); border-radius: 999px; padding: 7px 12px;
+  font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: border-color var(--micro) var(--ease), color var(--micro) var(--ease),
+              transform var(--micro) var(--ease);
+}
+
+
+.credential-preview:hover { border-color: var(--blue); color: var(--blue); transform: translateY(-1px); }
+
+
+.credentials-footnote {
+  display: flex; justify-content: space-between; gap: 10px;
+  margin-top: 30px; padding-top: 16px;
+  border-top: 1px solid var(--border-soft);
+  color: var(--text-3); font-family: var(--mono); font-size: 8px; letter-spacing: 0.08em;
+}
+
+/* --- V6.6 Fase 2: entry requirements column, sample card, timeline ------- */
+/* 2.1 Two-column layout: the admission rules sit left of the grid,
+   aligned with the reserved slots. <= 900px the column stacks above. */
+.credential-columns {
+  display: grid; grid-template-columns: 220px minmax(0, 1fr);
+  gap: 26px; align-items: start;
+}
+
+
+.credential-requirements { min-width: 0; }
+
+
+.credential-req-list { list-style: none; margin: 14px 0 0; padding: 0; }
+
+
+.credential-req-list li {
+  display: grid; gap: 2px;
+  padding: 9px 0;
+  border-top: 1px solid var(--border-soft);
+}
+
+
+.credential-req-list li:first-child { border-top: 0; padding-top: 0; }
+
+
+.credential-req-note {
+  margin: 12px 0 0;
+  font-family: var(--mono); font-size: 8px; letter-spacing: 0.06em;
+  line-height: 1.7; color: var(--text-3);
+}
+
+
+@media (max-width: 900px) {
+
+.credential-columns { grid-template-columns: 1fr; }
+}
+
+/* 2.2 Sample card: clearly labelled format demo, never a real entry.
+   No buttons, no dialog, no tab stops; dashed border and dimmed. */
+.credential-card--sample {
+  border-style: dashed;
+  opacity: 0.65;
+  cursor: default;
+}
+
+
+.credential-card--sample:hover {
+  transform: none;
+  border-color: var(--border-strong);
+  box-shadow: none;
+}
+
+
+.credential-sample-image {
+  height: 170px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border-soft);
+  display: grid; place-items: center;
+}
+
+
+.credential-sample-image span {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.22em;
+  color: var(--text-3);
+}
+
+
+.credential-sample-actions {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-top: 4px;
+  pointer-events: none;
+}
+
+/* 2.3 Verification timeline: one quiet measure line with the live count
+   of real entries. Static by design (reduced motion: nothing moves). */
+.credential-timeline {
+  position: relative;
+  margin-top: 34px;
+  height: 44px;
+  pointer-events: none;
+}
+
+
+@media (max-width: 700px) {
+
+.credential-timeline { height: 40px; margin-top: 26px; }
+}
+
+/* 11f. CREDENTIAL PREVIEW DIALOG (12.6) ------------------------------------- */
+.credential-dialog {
+  border: 0; padding: 0; border-radius: var(--radius);
+  max-width: min(880px, 92vw); width: 100%;
+  background: var(--surface); color: var(--ink);
+  box-shadow: 0 40px 90px rgba(2, 6, 23, 0.4);
+}
+
+
+.credential-dialog::backdrop { background: rgba(15, 23, 42, 0.62); }
+
+
+.credential-dialog-inner { position: relative; padding: clamp(16px, 2.5vw, 24px); }
+
+
+.credential-dialog-figure {
+  margin: 0; background: var(--surface-2);
+  border: 1px solid var(--border-soft); border-radius: var(--radius-sm);
+  max-height: 60vh; overflow: auto;
+  display: grid; place-items: center; padding: 12px;
+}
+
+
+.credential-dialog-figure img {
+  max-width: 100%; max-height: 54vh; object-fit: contain;
+}
+
+
+.credential-dialog-meta { padding-top: 16px; display: flex; flex-direction: column; gap: 7px; }
+
+
+.credential-dialog-meta h3 { font-size: 19px; letter-spacing: -0.03em; line-height: 1.2; font-weight: 600; }
+
+
+.credential-dialog-issuer { font-size: 12.5px; color: var(--ink); font-weight: 500; margin: 0; }
+
+
+.credential-dialog-id { font-family: var(--mono); font-size: 9px; letter-spacing: 0.06em; color: var(--text-3); margin: 0; }
+
+
+.credential-dialog .credential-proof { margin-top: 8px; }
+
+/* 4.4 Grain + vignette: editorial paper texture over the whole page.
+   V5.3 §4.1: light sections read at about 0.06; dark sections add their
+   own faint local layer (15.10) to land near 0.08 in total. */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.06;
+  mix-blend-mode: multiply;
+}
+
+/* 4.5 Pixel dust: particles repelled by the pointer around the card */
+.pixel-dust {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: var(--blue);
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 1;
+  border-radius: 1px;
+}
+
+
+.pixel-dust:nth-child(2n) { background: var(--blue-deep); width: 2px; height: 2px; }
+
+
+.pixel-dust:nth-child(3n) { background: var(--blue-soft); opacity: 0.25; }
+
+/* 12. RESPONSIVENESS --------------------------------------------------------- */
+@media (max-width: 1050px) {
+
+.credential-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+.credential-slot { min-height: 180px; }
+}
+
+
+@media (max-width: 700px) {
+
+.credentials-section { padding-top: 72px; padding-bottom: 48px; }
+
+.credential-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+.credential-slot { min-height: 160px; }
+
+.credentials-footnote { flex-direction: column; gap: 6px; }
+}
+
+
+@media (max-width: 420px) {
+
+.credential-grid { grid-template-columns: 1fr; }
+
+.credential-slot { min-height: 140px; gap: 8px; }
+}
+
+/* 13. REDUCED MOTION --------------------------------------------------------- */
+/* Motion initial states are applied by JavaScript, so content is fully
+   visible even when every animation is disabled or fails to load.
+   Components that animate to a "finished" state render that state here. */
+@media (prefers-reduced-motion: reduce) {
+/* 4.5 Pixel dust: decorative particles off entirely */
+.pixel-dust { display: none; }
+}
+
+/* 14.1 GAME DECK (#games) -------------------------------------------------- */
+.games-section {
+  background: var(--night); color: var(--text-on-dark);
+  padding: 92px clamp(22px, 7vw, 110px) 66px;
+  overflow: hidden; position: relative;
+}
+
+
+.games-inner { z-index: 1; }
+
+
+.games-section .geo { position: absolute; }
+
+
+.deck-console { margin-top: 6px; }
+
+
+.deck-controls { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-bottom: 16px; }
+
+
+.deck-button {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: var(--night-card); color: var(--text-on-dark);
+  border: 1px solid var(--line-on-dark); border-radius: 999px;
+  padding: 14px 22px; font-family: var(--mono); font-size: 11px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  transition: border-color var(--micro) var(--ease), transform var(--micro) var(--ease),
+              box-shadow var(--micro) var(--ease), color var(--micro) var(--ease);
+}
+
+
+.deck-button:hover { border-color: var(--blue-soft); color: var(--blue-soft); transform: translateY(-2px); box-shadow: 0 0 24px color-mix(in srgb, var(--blue) 30%, transparent); }
+
+
+.deck-button:active { transform: translateY(0); }
+
+
+.deck-button[aria-expanded="true"] { border-color: var(--blue-soft); color: var(--blue-soft); }
+
+
+.deck-button[aria-busy="true"] { opacity: 0.72; }
+
+
+.deck-coin { width: 13px; height: 13px; border-radius: 50%; border: 2px solid var(--blue-soft); position: relative; flex-shrink: 0; }
+
+
+.deck-coin::after { content: ""; position: absolute; left: 50%; top: 1.5px; bottom: 1.5px; width: 1.5px; transform: translateX(-50%); background: var(--blue-soft); }
+
+
+.deck-hint { font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.14em; color: var(--text-on-dark-2); margin: 0; }
+
+/* Dead screen (idle state): night card, dashed frame, scanline + vignette */
+.deck-screen { position: relative; min-height: 220px; border-radius: var(--radius); overflow: hidden; }
+
+
+.deck-screen--off {
+  background: var(--night-card);
+  border: 1px dashed var(--line-on-dark);
+  display: grid; place-items: center;
+}
+
+
+.deck-screen--off::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.028) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse at center, transparent 52%, rgba(0, 0, 0, 0.38));
+}
+
+
+.deck-off-label { display: flex; flex-direction: column; align-items: center; gap: 9px; text-align: center; padding: 20px; }
+
+
+.deck-no-signal { font-family: var(--mono); font-size: 15px; letter-spacing: 0.34em; color: var(--text-3); }
+
+
+.deck-no-signal-sub { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; color: var(--text-on-dark-2); opacity: 0.72; }
+
+
+.deck-screen--glitch, .deck-screen--active {
+  background: var(--night-card);
+  border: 1px solid var(--line-on-dark);
+}
+
+
+.deck-screen--active { padding: 18px; }
+
+
+.deck-noscript { margin-top: 10px; color: var(--blue-soft); }
+
+
+.deck-footnote {
+  display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+  margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line-on-dark);
+  font-family: var(--mono); font-size: 8px; letter-spacing: 0.12em;
+  color: var(--text-on-dark-2);
+}
+
+/* Game cards */
+.deck-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: 14px; perspective: 900px;
+}
+
+
+.game-card {
+  position: relative; min-width: 0;
+  display: flex; flex-direction: column; gap: 11px;
+  background: color-mix(in srgb, var(--night) 55%, var(--night-card));
+  border: 1px solid var(--line-on-dark);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  transition: transform var(--hover) var(--ease), border-color var(--hover) var(--ease),
+              box-shadow var(--hover) var(--ease);
+}
+
+/* Rarity tiers: legendary = strong themed glow, rare = medium, common = slate */
+.game-card[data-rarity="legendary"] {
+  border-color: color-mix(in srgb, var(--game-color, var(--blue-soft)) 55%, transparent);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--game-color, var(--blue-soft)) 24%, transparent);
+}
+
+
+.game-card[data-rarity="rare"] {
+  border-color: color-mix(in srgb, var(--game-color, var(--blue-soft)) 38%, transparent);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--game-color, var(--blue-soft)) 13%, transparent);
+}
+
+
+.game-card:hover, .game-card:focus-visible {
+  transform: translateY(-6px);
+  border-color: var(--game-color, var(--blue-soft));
+  box-shadow: 0 0 24px color-mix(in srgb, var(--game-color, var(--blue-soft)) 35%, transparent);
+  outline: none;
+}
+
+/* V6.4 §2.5.2: the head is a two-column flex row - text column and the
+   56px pixel scene, top-aligned so long names wrap in place. */
+.game-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+
+
+.game-name { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
+
+
+.game-status {
+  font-family: var(--mono); font-size: 8px; letter-spacing: 0.1em;
+  padding: 4px 8px; border-radius: 999px; border: 1px solid var(--line-on-dark);
+  color: var(--text-on-dark-2); white-space: nowrap;
+}
+
+
+.game-status--playing { color: var(--blue-soft); border-color: color-mix(in srgb, var(--blue-soft) 55%, transparent); }
+
+
+.game-card-meta {
+  display: flex; align-items: center; gap: 9px; flex-wrap: wrap;
+  font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.1em;
+  color: var(--text-on-dark-2);
+}
+
+
+.game-stats { display: flex; flex-direction: column; gap: 7px; margin-top: auto; }
+
+/* 14.2 OFF-SCREEN (#offscreen) ---------------------------------------------- */
+.offscreen-section { padding-top: 116px; padding-bottom: 100px; overflow: hidden; position: relative; }
+
+
+.offscreen-layout {
+  display: grid; grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: 28px; align-items: start;
+}
+
+
+.pixel-stage {
+  margin: 0; display: grid; place-items: center; gap: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong); border-radius: var(--radius);
+  padding: 30px 22px 16px; position: relative;
+}
+
+
+.pixel-stage::before, .pixel-stage::after {
+  content: ""; position: absolute; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--border-strong);
+}
+
+
+.pixel-stage::before { top: 9px; left: 9px; }
+
+
+.pixel-stage::after { top: 9px; right: 9px; }
+
+
+.pixel-pet {
+  /* The pixel palette now lives on :root (V6.3) so every pixel SVG on
+     the page resolves the same tokens. */
+  width: min(280px, 82%); height: auto; image-rendering: pixelated;
+}
+
+
+.pixel-stage-label { font-family: var(--mono); font-size: 8px; letter-spacing: 0.16em; color: var(--text-3); }
+
+
+.hobby-chips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
+
+/* V6.6 Fase 4.3: chip is now a wrapper div (grid 1fr 24px). The press
+   area is button.hobby-chip-main; the jump anchor a.hobby-link sits in
+   its own column with a dashed divider. Padding moved to the button. */
+.hobby-chip {
+  display: grid; grid-template-columns: minmax(0, 1fr) 24px; align-items: center;
+  min-width: 0;
+  background: var(--surface); border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm); padding: 0;
+  overflow: hidden;
+  transition: border-color var(--micro) var(--ease), transform var(--micro) var(--ease),
+              box-shadow var(--micro) var(--ease);
+}
+
+
+.hobby-chip:hover { border-color: var(--blue); transform: translateY(-3px); box-shadow: 4px 4px 0 var(--blue-pale); }
+
+
+.hobby-chip-main {
+  display: flex; align-items: center; gap: 11px; min-width: 0;
+  padding: 12px 8px 12px 14px;
+  background: transparent; border: 0; text-align: left; cursor: pointer; width: 100%;
+  font: inherit; color: inherit;
+}
+
+
+.hobby-chip-main:focus-visible { outline: 2px solid var(--blue); outline-offset: -2px; }
+
+
+.hobby-link {
+  display: grid; place-items: center;
+  padding: 12px 8px;
+  font-family: var(--mono); font-size: 12px;
+  color: var(--blue);
+  border-left: 1px dashed var(--border-soft);
+  transition: background var(--micro) var(--ease), color var(--micro) var(--ease);
+}
+
+
+.hobby-link:hover { background: var(--surface-2); color: var(--blue-hover); }
+
+
+.hobby-link:focus-visible { outline: 2px solid var(--blue); outline-offset: -2px; }
+
+
+.hobby-icon {
+  width: 32px; height: 32px; flex-shrink: 0; display: grid; place-items: center;
+  background: var(--blue-pale); color: var(--blue-deep); border-radius: 9px;
+}
+
+
+.hobby-icon svg { width: 17px; height: 17px; }
+
+
+.hobby-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+
+
+.hobby-label { font-size: 13px; font-weight: 600; }
+
+
+.hobby-detail { font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.06em; color: var(--text-3); }
+
+/* V6.6 Fase 4.1: CURRENTLY status row above the chips. */
+.hobby-current {
+  display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap;
+  margin: 16px 0 0;
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em;
+  color: var(--text-3);
+}
+
+
+.hobby-current-value { color: var(--blue); font-weight: 500; }
+
+/* V6.6 Fase 4.2: last-logged log, at most three rows, newest on top. */
+.hobby-log { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border-soft); }
+
+
+.hobby-log-label {
+  margin: 0 0 8px;
+  font-family: var(--mono); font-size: 8px; letter-spacing: 0.14em;
+  color: var(--text-3);
+}
+
+
+.hobby-log-list { list-style: none; margin: 0; padding: 0; }
+
+
+.hobby-log-list li {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--border-soft);
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em;
+}
+
+
+.spotify-frame {
+  border: 1px solid var(--border-strong); border-radius: var(--radius);
+  background: var(--surface); overflow: hidden;
+}
+
+
+.spotify-frame-top {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 12px 16px; border-bottom: 1px solid var(--border-soft);
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em; color: var(--text-2);
+}
+
+
+.spotify-live { color: var(--blue); font-size: 8px; letter-spacing: 0.1em; }
+
+
+.spotify-frame iframe { display: block; border: 0; width: 100%; height: 352px; }
+
+
+.spotify-frame-link {
+  display: flex; justify-content: flex-end; align-items: center; gap: 6px;
+  padding: 11px 16px; border-top: 1px solid var(--border-soft);
+  font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.14em; color: var(--blue);
+  transition: color var(--micro) var(--ease);
+}
+
+
+.spotify-frame-link:hover { color: var(--blue-hover); }
+
+/* 14.4 GITHUB ACTIVITY (#github) ---------------------------------------------- */
+.github-section {
+  background: var(--night); color: var(--text-on-dark);
+  padding: 92px clamp(22px, 7vw, 110px) 72px;
+  overflow: hidden; position: relative;
+}
+
+
+.github-inner { z-index: 1; }
+
+
+.github-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+
+
+.github-card {
+  display: flex; flex-direction: column; gap: 7px; min-width: 0; min-height: 132px;
+  background: var(--surface); color: var(--ink);
+  border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+  padding: 20px 18px 16px;
+  transition: transform var(--hover) var(--ease), border-color var(--hover) var(--ease);
+}
+
+
+.github-card:hover { transform: translateY(-4px); border-color: var(--blue); }
+
+
+.github-card-value {
+  font-size: clamp(30px, 3.4vw, 44px); font-weight: 700; line-height: 1;
+  letter-spacing: -0.03em; font-variant-numeric: tabular-nums;
+}
+
+
+.github-card-label { font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.14em; color: var(--text-3); }
+
+
+.github-langs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 5px; }
+
+
+.github-lang-chip {
+  font-family: var(--mono); font-size: 9px; padding: 5px 9px; border-radius: 999px;
+  border: 1px solid var(--border-strong); background: var(--surface-2); color: var(--ink);
+}
+
+
+.github-fallback {
+  margin-top: 16px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--text-on-dark-2);
+}
+
+
+.github-fallback a { color: var(--blue-soft); border-bottom: 1px solid currentColor; padding-bottom: 1px; }
+
+
+.github-pulse { display: flex; gap: 6px; margin-top: 18px; }
+
+
+.github-pulse span { width: 8px; height: 8px; border-radius: 2px; background: var(--blue-soft); opacity: 0.25; }
+
+
+.github-note {
+  display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+  margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line-on-dark);
+  font-family: var(--mono); font-size: 8px; letter-spacing: 0.12em; color: var(--text-on-dark-2);
+}
+
+/* --- V6.6 Fase 8.2: recent repositories list ------------------------------- */
+/* Rendered by script.js from the live GitHub payload (3 most recently
+   updated public repos). Links are real html_url anchors, always
+   target="_blank" rel="noopener noreferrer". */
+.github-repos { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line-on-dark); }
+
+
+.github-repos-label {
+  margin: 0 0 4px;
+  font-family: var(--mono); font-size: 8px; letter-spacing: 0.14em;
+  color: var(--text-on-dark-2);
+}
+
+
+.github-repos-list { list-style: none; margin: 0; padding: 0; }
+
+
+.github-repos-list li {
+  display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: baseline;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.04em;
+  padding: 6px 0;
+}
+
+
+.github-repos-list a { color: var(--blue-soft); overflow-wrap: anywhere; }
+
+
+.github-repos-list a:hover { text-decoration: underline; }
+
+
+.github-repos-list span { color: var(--text-on-dark-2); opacity: 0.7; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* 14.5 COMPANION (#companion + floating pet, V4 §8) ---------------------------- */
+.companion-section { padding-top: 112px; padding-bottom: 92px; overflow: hidden; position: relative; }
+
+
+.companion-inner { position: relative; z-index: 1; }
+
+
+.companion-intro { max-width: 560px; font-size: 15px; color: var(--text-2); margin: 2px 0 26px; }
+
+
+.companion-toggle[aria-pressed="true"] { border-color: var(--blue); color: var(--blue); }
+
+
+.companion-note {
+  display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+  margin-top: 30px; padding-top: 12px; border-top: 1px solid var(--border-soft);
+  font-family: var(--mono); font-size: 8px; letter-spacing: 0.12em; color: var(--text-3);
+}
+
+
+#data-rain {
+  position: fixed; inset: 0; z-index: 9999; pointer-events: none;
+  opacity: 0.92; transition: opacity 0.4s ease;
+}
+
+
+#data-rain.is-fading { opacity: 0; }
+
+
+@media (max-width: 980px) {
+
+.offscreen-layout { grid-template-columns: 1fr; }
+
+.github-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+
+@media (max-width: 700px) {
+
+.games-section { padding-top: 76px; padding-bottom: 54px; }
+
+.github-section { padding-top: 76px; padding-bottom: 56px; }
+
+.offscreen-section { padding-top: 84px; padding-bottom: 70px; }
+
+.companion-section { padding-top: 84px; padding-bottom: 70px; }
+
+.deck-screen--active { padding: 12px; }
+
+.game-card { padding: 14px; }
+
+.spotify-frame iframe { height: 320px; }
+
+.github-card { min-height: 118px; padding: 16px 14px 13px; }
+}
+
+
+@media (max-width: 420px) {
+/* V6.6 Fase 4: hobby chips stay 2 columns at 390px per spec; each chip
+     is a compact button + 24px arrow column, so both fit without clipping. */
+.github-grid { grid-template-columns: 1fr; }
+}
+
+/* 14.8 REDUCED MOTION (V4) -------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+
+.game-card:hover, .game-card:focus-visible { transform: none; box-shadow: none; border-color: var(--game-color, var(--blue-soft)); }
+
+.game-card[data-rarity="legendary"], .game-card[data-rarity="rare"] { box-shadow: none; }
+
+.deck-button:hover { transform: none; box-shadow: none; }
+
+.hobby-chip:hover { transform: none; box-shadow: none; }
+
+.github-card:hover { transform: none; }
+
+#data-rain { display: none; }
+}
+
+/* 15.3 ARCADE CABINET (4.3): spotlight, scanlines, joystick, A/B buttons */
+.games-section::before {
+  content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: min(760px, 86%); height: 360px; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse at top center,
+    rgba(37, 99, 235, 0.16), rgba(37, 99, 235, 0.05) 46%, transparent 72%);
+}
+
+
+.games-inner { position: relative; z-index: 1; }
+
+
+.deck-console { position: relative; }
+
+
+.deck-screen--active::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 2;
+  background: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.02) 0 1px, transparent 1px 4px);
+}
+
+
+.arcade-joystick {
+  position: absolute; top: 20px; left: 20px; width: 32px; height: 32px;
+  opacity: 0.3; pointer-events: none; image-rendering: pixelated; z-index: 0;
+}
+
+
+.arcade-buttons {
+  position: absolute; right: 22px; bottom: 54px; width: 62px; height: 31px;
+  opacity: 0.3; pointer-events: none; image-rendering: pixelated; z-index: 0;
+}
+
+
+.pixel-pet { position: relative; z-index: 1; }
+
+
+.pet-habitat {
+  position: relative; margin: 30px auto 26px; max-width: 760px;
+  border: 1px dashed var(--border-strong); border-radius: var(--radius);
+  background: var(--surface); padding: 30px 18px 16px;
+}
+
+
+.pet-habitat-label {
+  position: absolute; top: 10px; left: 14px;
+  font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.18em;
+  color: var(--text-3);
+}
+
+/* V5.3 §4.9: honest status chip so the wider habitat keeps a support
+   panel presence next to the scene (idle vs summoned). */
+.pet-habitat-status {
+  position: absolute; top: 10px; right: 14px;
+  font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.18em;
+  color: var(--blue-deep); background: var(--blue-pale);
+  padding: 4px 8px; border-radius: 999px;
+}
+
+
+.pet-habitat-scene {
+  position: relative; height: 212px; border-radius: 10px;
+  overflow: hidden; background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+}
+
+
+.companion-section .companion-inner { position: relative; z-index: 1; }
+
+/* 15.6 GITHUB OPEN SOURCE PULSE (4.6): skeleton texture + terminal frame */
+.github-section { overflow: hidden; }
+
+
+.github-inner { position: relative; }
+
+
+.github-skeleton {
+  position: absolute; top: 26px; right: 2%; width: 280px; height: 98px;
+  pointer-events: none; z-index: 0; opacity: 0.9;
+}
+
+
+.github-brackets {
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+  margin-top: 28px; font-family: var(--mono); font-size: 9px;
+  letter-spacing: 0.24em; color: rgba(147, 197, 253, 0.55); pointer-events: none;
+}
+
+
+.github-brackets::before, .github-brackets::after {
+  font-size: 15px; color: rgba(147, 197, 253, 0.4); letter-spacing: 0;
+}
+
+
+.github-brackets::before { content: "["; }
+
+
+.github-brackets::after { content: "]"; }
+
+
+.github-tooltip {
+  position: fixed; left: 0; top: 0; z-index: 120; max-width: 250px;
+  background: #0F172A; color: #E2E8F0; border: 1px solid #334155;
+  border-radius: 6px; padding: 8px 11px;
+  font-family: var(--mono); font-size: 10.5px; line-height: 1.55;
+  box-shadow: 0 14px 34px rgba(2, 6, 23, 0.4); pointer-events: none;
+}
+
+
+.github-tooltip-line { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* 15.7 ENGRAVED CREDENTIAL ARCHIVE (4.7): rulers, plates, label, stamp */
+.credential-grid { position: relative; }
+
+
+.credential-ruler {
+  position: absolute; left: 0; right: 0; height: 10px; pointer-events: none;
+  background: repeating-linear-gradient(90deg, var(--border-strong) 0 1px, transparent 1px 20px)
+    bottom left / 100% 6px no-repeat;
+}
+
+
+.credential-ruler--top {
+  top: -24px; border-top: 1px solid var(--border-strong);
+  background-position: top left;
+}
+
+
+.credential-ruler--bottom {
+  bottom: -24px; border-bottom: 1px solid var(--border-strong);
+  background-position: bottom left;
+}
+
+
+.credential-plate {
+  position: absolute; width: 15px; height: 15px;
+  border: 1px solid var(--border-strong); background: var(--surface);
+  pointer-events: none;
+}
+
+
+.credential-plate:nth-of-type(1) { top: -8px; left: -8px; }
+
+
+.credential-plate:nth-of-type(2) { top: -8px; right: -8px; }
+
+
+.credential-plate:nth-of-type(3) { bottom: -8px; left: -8px; }
+
+
+.credential-plate:nth-of-type(4) { bottom: -8px; right: -8px; }
+
+
+.credential-plate-label {
+  position: absolute; top: -46px; left: 50%; transform: translateX(-50%);
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.24em;
+  color: var(--text-3); background: var(--bg);
+  padding: 3px 12px; white-space: nowrap; pointer-events: none;
+}
+
+
+.credential-stamp {
+  /* V6.6 Fase 2.4: pulled inside the grid frame so the stamp can never
+     clip at the section edge on any viewport (was top -16 / right -10). */
+  position: absolute; top: 12px; right: 12px; z-index: 2;
+  transform: rotate(-8deg);
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em;
+  color: var(--blue); border: 2px dashed var(--blue);
+  background: rgba(219, 234, 254, 0.4); border-radius: 4px;
+  padding: 8px 12px; pointer-events: none; opacity: 0.85;
+}
+
+/* 15.9 HOBBY CHIP BUTTON RESET (5.3 / V6.6 Fase 4.3): the press area is
+   button.hobby-chip-main inside the .hobby-chip wrapper div now */
+.hobby-chip-main {
+  appearance: none; -webkit-appearance: none;
+  font-family: inherit; color: inherit; text-align: left; cursor: pointer;
+}
+
+
+.hobby-chip-main:focus-visible {
+  outline: 2px solid var(--blue); outline-offset: 2px;
+}
+
+
+@media (max-width: 1000px) {
+
+.games-section::before { width: 80%; }
+
+.pet-habitat { max-width: 640px; }
+}
+
+
+@media (max-width: 700px) {
+
+.credential-ruler, .credential-plate-label { display: none; }
+
+.credential-stamp { top: 8px; right: 8px; padding: 6px 9px; font-size: 9px; }
+
+.github-skeleton { opacity: 0.45; width: 200px; height: 70px; }
+
+.arcade-buttons { bottom: 46px; right: 12px; width: 46px; height: 23px; }
+
+.arcade-joystick { width: 24px; height: 24px; left: 12px; }
+
+.pet-habitat-scene { height: 168px; }
+
+.pet-habitat-status { font-size: 7.5px; letter-spacing: 0.14em; }
+}
+
+/* 15.12 REDUCED MOTION (8.2): decoration stays, loops do not */
+@media (prefers-reduced-motion: reduce) {
+
+.github-tooltip { transition: none; }
+
+.deck-screen--active::after { background: none; }
+}
+
+/* ======================================================================
+ * 17. V6.4: PIXEL SCENES + ENTRANCE PROPS + DESKTOP LAYERS
+ * ==================================================================== */
+/* --- V6.4 §2.5: per-game pixel scene ------------------------------------ */
+/* In-flow right column of the card head: 56px desktop / 48px mobile,
+   16x16 viewBox scaled up with crispEdges + pixelated rendering. The
+   scene replaces the old absolute .game-pixel-character (removed), so
+   the head/meta no longer reserve any padding rail. */
+.game-card { overflow: hidden; }
+
+
+.game-head-text {
+  display: flex; flex-direction: column; gap: 4px;
+  min-width: 0; flex: 1;
+}
+
+
+.game-head-text .game-name { word-break: break-word; }
+
+
+.game-pixel-scene {
+  position: relative;
+  flex-shrink: 0;
+  width: 56px; height: 56px;
+  border: 1px solid var(--line-on-dark);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--night);
+  image-rendering: pixelated;
+}
+
+
+.game-pixel-scene svg { display: block; width: 100%; height: 100%; }
+
+/* Per-game border tint from the game's own themeColor accent. */
+.game-pixel-scene--valorant { border-color: color-mix(in srgb, #FF4655 40%, var(--line-on-dark)); }
+
+
+.game-pixel-scene--hades-ii { border-color: color-mix(in srgb, #20E3B2 40%, var(--line-on-dark)); }
+
+
+.game-pixel-scene--dark-souls-iii { border-color: color-mix(in srgb, #E25822 40%, var(--line-on-dark)); }
+
+
+.game-pixel-scene--hearts-of-iron-iv { border-color: color-mix(in srgb, #8B5A2B 40%, var(--line-on-dark)); }
+
+
+.game-pixel-scene--minecraft { border-color: color-mix(in srgb, #57874E 40%, var(--line-on-dark)); }
+
+
+.game-pixel-scene--age-of-empires-iv { border-color: color-mix(in srgb, #D4AF37 40%, var(--line-on-dark)); }
+
+
+.game-pixel-scene--total-war-warhammer-iii { border-color: color-mix(in srgb, #990000 40%, var(--line-on-dark)); }
+
+
+.game-pixel-scene--red-dead-redemption-ii { border-color: color-mix(in srgb, #E51A1A 40%, var(--line-on-dark)); }
+
+
+.game-pixel-scene--ghost-of-tsushima { border-color: color-mix(in srgb, #C41E3A 40%, var(--line-on-dark)); }
+
+
+.game-pixel-scene--the-last-of-us-part-i { border-color: color-mix(in srgb, #3B443A 55%, var(--line-on-dark)); }
+
+
+.game-pixel-scene--outlast-ii { border-color: color-mix(in srgb, #39FF14 40%, var(--line-on-dark)); }
+
+/* TLOU dim vignette + Outlast night-vision tint sit on the wrapper so
+   no extra rect burns the 20-rect budget. */
+.game-pixel-scene--the-last-of-us-part-i::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.55);
+}
+
+
+.game-pixel-scene--outlast-ii::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: color-mix(in srgb, var(--px-lime) 12%, transparent);
+  mix-blend-mode: screen;
+}
+
+/* --- V6.4 §2.6: loop animations, always steps() for the pixel feel ------
+   Rect loops use the individual translate/rotate properties (not
+   transform) so they compose with GSAP entrance transforms, and
+   fill-opacity (not opacity) so they compose with GSAP entrance fades. */
+.game-pixel-scene rect { transform-box: fill-box; transform-origin: center; }
+
+
+.game-pixel-scene--valorant .val-muzzle { animation: val-muzzle-flash 1.5s steps(1) infinite; }
+
+
+.game-pixel-scene--valorant .val-casing { animation: val-casing-drop 2s steps(4) infinite; }
+
+
+.game-pixel-scene--hades-ii .hades-rune { animation: hades-rune-spin 2s steps(4) infinite; }
+
+
+.game-pixel-scene--hades-ii .hades-torch { animation: px-torch-flicker 0.9s steps(1) infinite; }
+
+
+.game-pixel-scene--dark-souls-iii .ds3-torch { animation: px-torch-flicker 1.1s steps(1) infinite; }
+
+
+.game-pixel-scene--minecraft .mc-torch { animation: px-torch-flicker 0.8s steps(1) infinite; }
+
+
+.game-pixel-scene--dark-souls-iii .ds3-sword { animation: ds3-sword-sway 2.2s steps(2) infinite; }
+
+
+.game-pixel-scene--hearts-of-iron-iv .hoi4-arrow { animation: hoi4-arrow-move 2.4s steps(4) infinite; }
+
+
+.game-pixel-scene--minecraft .mc-crack { animation: mc-crack-blink 1.6s steps(2) infinite; }
+
+
+.game-pixel-scene--age-of-empires-iv .aoe-banner { animation: aoe-banner-sway 1.8s steps(2) infinite; }
+
+
+.game-pixel-scene--total-war-warhammer-iii .tw-lava-flicker { animation: tw-lava-flicker 1.2s steps(1) infinite; }
+
+
+.game-pixel-scene--red-dead-redemption-ii .rdr-dust { animation: rdr-dust-drift 3s steps(4) infinite; }
+
+
+.game-pixel-scene--ghost-of-tsushima .got-leaf { animation: got-leaf-fall 2.8s steps(4) infinite; }
+
+
+.game-pixel-scene--the-last-of-us-part-i .tlou-flashlight { animation: tlou-flashlight-flicker 2s steps(1) infinite; }
+
+
+.game-pixel-scene--outlast-ii .out-noise { animation: out-noise-flicker 1.5s steps(1) infinite; }
+
+/* Mobile scene size (spec 2.1): 48px below 700px. */
+@media (max-width: 700px) {
+
+.game-pixel-scene { width: 48px; height: 48px; }
+}
+
+/* --- V6.4 Fase 3: temporary entrance props ------------------------------ */
+/* Created and removed by script.js; every one carries .deck-temp so the
+   deck state machine can sweep them at every boundary. */
+.deck-temp { position: absolute; pointer-events: none; z-index: 3; }
+
+
+.deck-flash { inset: 0; background: rgba(255, 255, 255, 0.85); z-index: 7; }
+
+
+.deck-flash--local { inset: auto; width: 18px; height: 10px; background: var(--px-gold); box-shadow: 0 0 10px rgba(212, 175, 55, 0.9); }
+
+
+.deck-darken { inset: 0; background: rgba(5, 8, 16, 0.92); z-index: 6; }
+
+
+.deck-dust { width: 4px; height: 4px; background: var(--px-gold); }
+
+
+.deck-dust--rdr { background: color-mix(in srgb, var(--px-gold) 70%, var(--px-ivory)); }
+
+
+.deck-slash { left: 8%; right: 8%; top: 46%; height: 2px; background: var(--px-ivory); transform-origin: center; }
+
+
+.deck-slash--got { background: #FFFFFF; }
+
+
+.deck-ember { inset: 0; mix-blend-mode: screen; }
+
+
+.deck-line { left: 10%; right: 10%; height: 1.5px; background: var(--border-strong); }
+
+
+.deck-line--top { top: 14%; }
+
+
+.deck-line--bottom { bottom: 14%; }
+
+
+.deck-marker { width: 7px; height: 7px; background: var(--game-color, var(--blue-soft)); border: 1px solid var(--px-ivory); }
+
+
+.deck-arrow { width: 16px; height: 2px; background: var(--px-python-blue); }
+
+
+.deck-arrow--b { background: var(--px-pink); }
+
+
+.deck-paper {
+  inset: 0;
+  background: repeating-linear-gradient(0deg,
+    rgba(212, 175, 55, 0.10) 0 1px, transparent 1px 9px);
+}
+
+
+.deck-dirt { width: 5px; height: 5px; background: var(--px-wood); }
+
+
+.deck-wash { inset: 0; background: color-mix(in srgb, var(--px-python-blue) 45%, transparent); }
+
+
+.deck-lava { width: 4px; height: 4px; background: var(--px-pink); box-shadow: 0 0 6px rgba(255, 0, 127, 0.5); }
+
+
+.deck-splatter { width: 26px; height: 18px; border-radius: 40% 55% 45% 60%; }
+
+
+.deck-splatter--tlou { width: 30px; height: 22px; }
+
+
+.deck-leaf { width: 6px; height: 6px; background: var(--px-pink); }
+
+
+.deck-gleam { width: 3px; height: 14px; background: #FFFFFF; }
+
+
+.deck-vignette { inset: 0; box-shadow: inset 0 0 42px rgba(0, 0, 0, 0.85); }
+
+
+.deck-nightvision { inset: 0; background: color-mix(in srgb, var(--px-lime) 30%, transparent); }
+
+
+.deck-scan { left: 0; right: 0; top: 30%; height: 2px; background: rgba(244, 244, 249, 0.7); }
+
+
+.deck-scan--out { background: color-mix(in srgb, var(--px-lime) 60%, transparent); }
+
+
+.deck-artifact {
+  width: 30px; height: 8px;
+  background: repeating-linear-gradient(0deg,
+    var(--px-lime) 0 2px, transparent 2px 4px);
+}
+
+
+.deck-sunset { left: 0; right: 0; bottom: 0; height: 40%;
+  background: linear-gradient(to top, rgba(229, 90, 43, 0.35), transparent); }
+
+/* V6.4 §2.5.2 reduced-motion contract: loops stop on the first frame,
+   the scene itself stays visible. */
+@media (prefers-reduced-motion: reduce) {
+
+.game-pixel-scene svg * { animation: none !important; }
+}
+
+/* --- V6.3 §4.5: eject helper props (created and removed by script.js) --- */
+.deck-eject-sweep {
+  position: absolute; left: 0; right: 0; top: 0;
+  height: 3px; z-index: 5; pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--blue-soft), transparent);
+}
+
+
+.deck-crt-line {
+  position: absolute; left: 6%; right: 6%; top: 50%;
+  height: 2px; margin-top: -1px; z-index: 6;
+  background: var(--ivory, #F4F4F9);
+  opacity: 0; pointer-events: none;
+  box-shadow: 0 0 12px rgba(244, 244, 249, 0.8);
+}
+
+
+.deck-console { position: relative; }
+
+/* 5.4 Game Deck: pixel starfield + right-angle cable. */
+.ornament-games-starfield { inset: 0; opacity: 0.35; color: var(--blue-soft); }
+
+
+.ornament-games-starfield svg { width: 100%; height: 100%; display: block; }
+
+
+.ornament-games-cable {
+  left: 3%; bottom: 6%; width: 130px; height: auto;
+  opacity: 0.25; color: var(--blue-deep);
+}
+
+/* 5.5 Off-screen habitat: pixel plant + second poster (wall accent). */
+.ornament-habitat-plant {
+  bottom: 8%; left: 8%; width: 32px; height: 32px; opacity: 0.9;
+}
+
+
+.ornament-habitat-poster2 {
+  top: 11%; right: 9%; width: 36px; height: auto; opacity: 0.85;
+}
+
+/* 5.6 GitHub: pulse line + terminal prompt. V6.4 §5.4 extends the
+   pulse line to 60% width. */
+.ornament-github-pulse {
+  top: 15%; left: 5%; width: 60%; height: auto;
+  opacity: 0.25; color: var(--blue-soft);
+}
+
+
+.ornament-github-terminal {
+  top: 9%; right: 5%;
+  opacity: 0.2; font-family: var(--mono); font-size: 9px;
+  letter-spacing: 0.08em; color: var(--blue-soft);
+}
+
+/* 5.7 Credentials: circular watermark behind the grid. */
+.ornament-credentials-watermark {
+  inset: 0; display: grid; place-items: center;
+  opacity: 0.04; color: var(--blue);
+}
+
+
+.ornament-credentials-watermark svg { width: min(420px, 80%); height: auto; display: block; }
+
+
+.ornament-credentials-watermark text { font-family: var(--mono); }
+
+
+.ornament-habitat-rug {
+  bottom: 5%; left: 50%; transform: translateX(-50%);
+  width: 60%; height: 20px;
+  background: repeating-linear-gradient(90deg,
+    var(--px-blue) 0 6px, var(--px-navy) 6px 12px);
+  opacity: 0.4;
+}
+
+/* Reduced motion: every ornament stays visible; only reveal animations
+   are skipped (script.js never runs them under the preference). */
+@media (prefers-reduced-motion: reduce) {
+
+.ornament-games-starfield { opacity: 0.35; }
+
+.ornament-games-cable { opacity: 0.25; }
+
+.ornament-github-pulse { opacity: 0.25; }
+
+.ornament-github-terminal { opacity: 0.2; }
+
+.ornament-credentials-watermark { opacity: 0.04; }
+
+.ornament-habitat-plant { opacity: 0.9; }
+
+.ornament-habitat-poster2 { opacity: 0.85; }
+}
+
+/* Mobile density: the noisiest accents are hidden below 700px; the
+   quiet ones stay because they cost nothing. */
+@media (max-width: 700px) {
+
+.ornament-github-pulse { top: 8%; width: 55%; }
+
+.ornament-credentials-watermark svg { width: min(280px, 88%); }
+}
+
+/* ==========================================================================
+   V6.5: THE SCIENTIFIC ARCHIVE · GENERATIVE AMBIENT GEOMETRY
+   Fase 4: per-section ornaments + canvases, Fase 5: guards.
+   All decorative layers: aria-hidden in the DOM, pointer-events none,
+   hidden below 900px and under prefers-reduced-motion. Effective opacities
+   stay inside the 0.04-0.15 ornament band (canvas-internal alpha x CSS
+   canvas opacity; SVG wrapper opacity x SVG element opacity).
+   ========================================================================== */
+/* --- Layering fix: the offscreen grid must stay behind its content ------ */
+/* .offscreen-layout is static in flow, so without this the positioned
+   ambient canvas would paint above it (positioned elements paint above
+   static content). The heading is already positioned and comes after the
+   canvas in source order, so it is safe. */
+.offscreen-section .offscreen-layout { position: relative; z-index: 1; }
+
+
+.credentials-section { isolation: isolate; }
+
+
+.ambient-canvas--offscreen {
+  opacity: 0.55;
+  -webkit-mask-image: radial-gradient(ellipse 85% 78% at center, #000 30%, transparent 95%);
+  mask-image: radial-gradient(ellipse 85% 78% at center, #000 30%, transparent 95%);
+}
+
+
+.ambient-canvas--companion { opacity: 0.6; }
+
+/* ======================================================================
+   V7.0: ARCHIVE HUB (Fase 4.5) - grid kartu tautan besar, gaya
+   editorial yang sama dengan komponen kartu lain (border tegas,
+   shadow offset biru pada hover, tipografi arsip).
+   ====================================================================== */
+.archive-hub-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.archive-hub-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  padding: 22px 20px 18px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color var(--micro) var(--ease), transform var(--micro) var(--ease),
+              box-shadow var(--micro) var(--ease);
+}
+
+.archive-hub-card:hover,
+.archive-hub-card:focus-visible {
+  border-color: var(--blue);
+  transform: translateY(-3px);
+  box-shadow: 6px 6px 0 var(--blue-pale);
+}
+
+.archive-hub-card-kicker {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: var(--text-3);
+}
+
+.archive-hub-card-title {
+  font-family: var(--font);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0;
+}
+
+.archive-hub-card-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-2);
+  margin: 0;
+}
+
+.archive-hub-card-cta {
+  margin-top: auto;
+  padding-top: 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--blue);
+}
+
+.archive-hub-footnote {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 26px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: var(--text-3);
+}
+
+@media (max-width: 900px) {
+  .archive-hub-grid { grid-template-columns: 1fr; }
+}

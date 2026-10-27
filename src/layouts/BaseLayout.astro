@@ -1,0 +1,89 @@
+---
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  pageKey?: string;
+}
+
+const {
+  title = 'Farrel Islami Putra · Data, Software & Learning Notes',
+  description =
+    'Catatan belajar Farrel Islami Putra, mahasiswa Informatika UNIKOM. Soal data, pola, software, dan hal-hal yang belum selesai dipelajari.',
+  pageKey = '',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" data-page={pageKey}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#F8FAFC" />
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <div class="page-progress" aria-hidden="true"><span id="progress-bar"></span></div>
+
+    <Header />
+
+    <!-- V6.6 Fase 9: archive opening experience. Disembunyikan di markup:
+         JavaScript yang melepas `hidden` hanya saat overlay harus tampil
+         (sekali per sesi, motion diizinkan). Tanpa JS = tanpa overlay,
+         halaman langsung tampil. Bisa dilewati: klik, Escape, scroll,
+         atau tombol SKIP. -->
+    <div class="archive-opening" id="archive-opening" hidden aria-hidden="true">
+      <div class="opening-inner">
+        <p class="opening-label opening-label--top">FIP · PERSONAL ARCHIVE</p>
+        <div class="opening-rule">
+          <span class="opening-rule-line"></span>
+          <span class="opening-rule-ticks" aria-hidden="true"></span>
+          <span class="opening-rule-end">READY</span>
+        </div>
+        <p class="opening-label opening-label--bottom">EST. 2026 · VOL. 01</p>
+      </div>
+      <button class="opening-skip" type="button">SKIP</button>
+    </div>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <!-- Area status untuk umpan balik copy email (12.7) -->
+    <div class="copy-toast" id="copy-toast" role="status" aria-live="polite"></div>
+
+    <!-- V4 §8: page pet mengapung. Tersembunyi sampai dipanggil dari
+         section Companion; script.js menyalin SVG pixel-art ke tombol. -->
+    <div class="companion-pet" id="companion-pet" hidden>
+      <span class="companion-tooltip" id="companion-tooltip" role="status" aria-live="polite" hidden></span>
+      <button class="companion-pet-button" id="companion-pet-button" type="button" aria-label="Companion: Kok. Click to say hi."></button>
+    </div>
+
+    <!-- Tekstur grain (4.4): dekorasi murni, aria-hidden, pointer-events none. -->
+    <svg class="grain-overlay" aria-hidden="true" focusable="false">
+      <filter id="grain-filter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"></feTurbulence>
+        <feColorMatrix type="saturate" values="0"></feColorMatrix>
+      </filter>
+      <rect width="100%" height="100%" filter="url(#grain-filter)"></rect>
+    </svg>
+  </body>
+</html>

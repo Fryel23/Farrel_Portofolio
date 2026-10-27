@@ -1,0 +1,84 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/archive.css';
+---
+
+<BaseLayout title="Game Deck · Farrel Islami Putra" pageKey="archive-play">
+  <!-- ============ GAME DECK (V4 §5) ============ -->
+  <section class="games-section" id="games" aria-labelledby="games-heading">
+    <div class="desktop-frame desktop-frame--tl" aria-hidden="true"></div>
+    <div class="desktop-frame desktop-frame--br" aria-hidden="true"></div>
+    <div class="section-inner games-inner">
+      <div class="section-heading section-heading-light">
+        <div>
+          <p class="section-kicker" id="games-kicker">03 / INSERT COIN</p>
+          <h2 class="display-heading" id="games-heading">
+            <span class="line-mask"><span class="line">Press <em>start.</em></span></span>
+            <span class="line-mask"><span class="line">See what I play.</span></span>
+          </h2>
+        </div>
+        <p class="heading-aside" id="games-intro">A self-reported deck of games I actually play. Stats are casual, not competitive.</p>
+      </div>
+
+      <div class="deck-console">
+        <div class="ornament ornament-games-starfield" aria-hidden="true">
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none" focusable="false">
+            <rect x="5" y="10" width="1" height="1" fill="currentColor" />
+            <rect x="20" y="25" width="1" height="1" fill="currentColor" />
+            <rect x="35" y="15" width="1" height="1" fill="currentColor" />
+            <rect x="50" y="30" width="1" height="1" fill="currentColor" />
+            <rect x="65" y="20" width="1" height="1" fill="currentColor" />
+            <rect x="80" y="35" width="1" height="1" fill="currentColor" />
+            <rect x="90" y="45" width="1" height="1" fill="currentColor" />
+            <rect x="10" y="55" width="1" height="1" fill="currentColor" />
+            <rect x="30" y="65" width="1" height="1" fill="currentColor" />
+            <rect x="45" y="75" width="1" height="1" fill="currentColor" />
+            <rect x="60" y="60" width="1" height="1" fill="currentColor" />
+            <rect x="75" y="80" width="1" height="1" fill="currentColor" />
+            <rect x="88" y="70" width="1" height="1" fill="currentColor" />
+            <rect x="15" y="90" width="1" height="1" fill="currentColor" />
+          </svg>
+        </div>
+        <div class="ornament ornament-games-cable" aria-hidden="true">
+          <svg viewBox="0 0 100 40" focusable="false">
+            <path d="M 5 20 L 40 20 L 40 30 L 50 30 L 50 35 L 95 35" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" />
+          </svg>
+        </div>
+        <div class="deck-controls">
+          <button class="deck-button" id="deck-button" type="button" aria-expanded="false" aria-controls="deck-region" aria-busy="false">
+            <span class="deck-coin" aria-hidden="true"></span>
+            <span class="deck-button-label" id="deck-button-label">INSERT COIN</span>
+          </button>
+          <p class="deck-hint" id="deck-hint">CLICK INSERT COIN TO LOAD THE DECK</p>
+        </div>
+        <div class="deck-screen deck-screen--off" id="deck-region" role="region" aria-label="Game deck">
+          <div class="deck-off-label">
+            <span class="deck-no-signal">NO SIGNAL</span>
+            <span class="deck-no-signal-sub">INSERT COIN TO CONTINUE</span>
+          </div>
+          <div class="deck-grid" id="deck-grid" hidden></div>
+        </div>
+        <svg class="arcade-joystick" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+          <rect x="7" y="1" width="2" height="2" fill="#93C5FD" />
+          <rect x="6" y="3" width="4" height="2" fill="#60A5FA" />
+          <rect x="7" y="5" width="2" height="6" fill="#3B82F6" />
+          <rect x="4" y="11" width="8" height="2" fill="#2563EB" />
+          <rect x="2" y="13" width="12" height="2" fill="#1E3A8A" />
+        </svg>
+        <svg class="arcade-buttons" viewBox="0 0 32 16" aria-hidden="true" focusable="false">
+          <rect x="1" y="5" width="10" height="10" fill="#2563EB" />
+          <rect x="2" y="6" width="8" height="3" fill="#60A5FA" />
+          <rect x="20" y="5" width="10" height="10" fill="#EF4444" />
+          <rect x="21" y="6" width="8" height="3" fill="#FCA5A5" />
+        </svg>
+        <noscript><p class="deck-hint deck-noscript">ENABLE JAVASCRIPT TO LOAD THE GAME DECK.</p></noscript>
+        <p class="deck-footnote"><span>SELF-REPORTED CASUAL METRICS</span><span>NOT COMPETITIVE DATA</span></p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import '../../scripts/global.js';
+  import '../../scripts/archive.js';
+</script>

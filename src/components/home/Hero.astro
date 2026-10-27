@@ -1,0 +1,116 @@
+---
+/* Hero homepage: markup identik dengan V6.7, hanya tautan antar
+   section yang menjadi rute halaman (CTA + scroll cue -> /work). */
+---
+
+<section class="hero section-shell" aria-labelledby="hero-title">
+  <div class="geo geo-two" aria-hidden="true"></div>
+  <div class="geo geo-three geo-blue" aria-hidden="true"></div>
+
+  <!-- V5 §4.2 Observatory: garis pengukur tepi tipis dengan label arsip.
+       Dekorasi murni; disembunyikan CSS pada viewport kecil. -->
+  <div class="hero-ruler" aria-hidden="true">
+    <span class="hero-ruler-label">00 / START</span>
+    <span class="hero-ruler-line"></span>
+    <span class="hero-ruler-label hero-ruler-label--bottom">01 / WORK</span>
+  </div>
+
+  <div class="hero-copy">
+    <div class="eyebrow"><span class="eyebrow-dot"></span><span id="hero-eyebrow">INFORMATICS ENGINEERING · UNIKOM · EST. 2026</span></div>
+    <h1 class="hero-title" id="hero-title">
+      <span class="line-mask"><span class="line">Curiosity,</span></span>
+      <span class="line-mask"><span class="line">grounded in <em>data.</em><sup class="sparkle" aria-hidden="true">✳</sup></span></span>
+    </h1>
+    <p class="hero-tail" id="hero-tail">Kadang bingung, kadang berhasil. Ini catatan prosesnya.</p>
+    <p class="hero-description" id="hero-subtitle">Saya Farrel Islami Putra, mahasiswa S1 Teknik Informatika 2026 di Universitas Komputer Indonesia. Saya tertarik pada teknologi karena ingin tahu cara kerjanya, terutama yang bisa dipakai untuk menyelesaikan masalah sehari-hari. Fokus utama saya adalah tentang data, tapi saya juga penasaran dengan software dan sistem yang lebih luas. Portofolio ini bukan tempat memamerkan yang sudah selesai, melainkan tempat dari apa yang sedang saya pelajari.</p>
+    <div class="hero-actions">
+      <!-- V5.3 Global Archive Navigator: pencarian hero kini menavigasi
+           antar halaman arsip (allowlist). Input tidak pernah dirender
+           sebagai HTML: script memakai createElement/textContent saja. -->
+      <div class="archive-search-wrap">
+        <form class="search-box" id="project-search" role="search" aria-label="Search the archive sections">
+          <label class="sr-only" for="search-input">Search the archive: jump to a section by keyword</label>
+          <input id="search-input" type="search" placeholder="Search the archive…" autocomplete="off" maxlength="80"
+                 role="combobox" aria-expanded="false" aria-controls="archive-suggestions"
+                 aria-autocomplete="list" aria-haspopup="listbox" />
+          <button type="submit" aria-label="Search the archive">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.4"></circle><path d="m16 16 4.2 4.2"></path></svg>
+          </button>
+        </form>
+        <div class="archive-suggestions" id="archive-suggestions" role="listbox" aria-label="Archive destinations" hidden></div>
+        <p class="archive-search-hint" id="archive-search-hint" aria-hidden="true" hidden>ARROW KEYS TO CHOOSE · ENTER TO GO · ESC TO CLOSE</p>
+        <p class="archive-search-note" id="archive-search-note" role="status" aria-live="polite" hidden></p>
+      </div>
+      <a class="button button-primary" id="hero-cta" href="/work">Explore the work <span aria-hidden="true">↗</span></a>
+      <a class="button button-outline" id="hero-docs" href="https://drive.google.com/drive/folders/1YaoRkFvdlk29vdRAFQxj5ypVD-7WDtTl?usp=drive_link" target="_blank" rel="noopener noreferrer">View documentation <span aria-hidden="true">↗</span></a>
+    </div>
+    <div class="hero-note"><span class="note-square" aria-hidden="true">✦</span><span id="hero-note">DATA · SOFTWARE · AI · DATABASES · IOT</span></div>
+  </div>
+
+  <div class="hero-visual">
+    <!-- V6.3 §5.1: ornamen crosshair orbital. Piring dekoratif di belakang
+         atlas; reduced motion membuatnya statis. -->
+    <div class="ornament ornament-hero-crosshair" aria-hidden="true">
+      <svg viewBox="0 0 120 120" focusable="false">
+        <circle cx="60" cy="60" r="40" fill="none" stroke="currentColor" stroke-width="1" opacity="0.6"></circle>
+        <circle cx="60" cy="60" r="55" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.4"></circle>
+        <line x1="0" y1="60" x2="120" y2="60" stroke="currentColor" stroke-width="1" opacity="0.6"></line>
+        <line x1="60" y1="0" x2="60" y2="120" stroke="currentColor" stroke-width="1" opacity="0.6"></line>
+      </svg>
+      <span class="ornament-label">PLATE / 01</span>
+    </div>
+    <!-- Data Atlas: medan vektor dekoratif (12.1). Statis secara default;
+         JS menambah entrance + respons pointer hanya saat motion OK. -->
+    <div class="data-atlas" aria-hidden="true">
+      <svg viewBox="0 0 560 540" preserveAspectRatio="xMidYMid slice" focusable="false">
+        <g class="atlas-grid">
+          <path d="M40 0 V540 M120 0 V540 M200 0 V540 M280 0 V540 M360 0 V540 M440 0 V540 M520 0 V540" />
+          <path d="M0 60 H560 M0 150 H560 M0 240 H560 M0 330 H560 M0 420 H560 M0 500 H560" />
+          <path d="M0 0 L560 540" class="atlas-diagonal" />
+        </g>
+        <g class="atlas-paths">
+          <path class="atlas-path atlas-path-a" d="M60 480 C 150 420, 130 300, 240 260 S 420 240, 500 130" />
+          <path class="atlas-path atlas-path-b" d="M80 120 C 170 150, 220 210, 300 240 S 470 330, 515 420" />
+        </g>
+        <g class="atlas-nodes">
+          <g class="atlas-node" transform="translate(240,260)"><circle r="4" /><circle r="10" class="atlas-ring" /></g>
+          <g class="atlas-node" transform="translate(300,240)"><circle r="3" /><circle r="9" class="atlas-ring" /></g>
+          <g class="atlas-node" transform="translate(500,130)"><circle r="4" /><circle r="10" class="atlas-ring" /></g>
+          <g class="atlas-node" transform="translate(80,120)"><circle r="3" /></g>
+          <g class="atlas-node" transform="translate(515,420)"><circle r="3" /></g>
+          <g class="atlas-cross" transform="translate(150,380)"><path d="M-7 0 H7 M0 -7 V7" /></g>
+          <g class="atlas-cross" transform="translate(430,320)"><path d="M-5 0 H5 M0 -5 V5" /></g>
+          <rect class="atlas-tick" x="456" y="126" width="88" height="1" />
+          <rect class="atlas-tick" x="543" y="86" width="1" height="88" />
+        </g>
+        <text class="atlas-label atlas-corner" x="14" y="26">FIELD / 01</text>
+        <text class="atlas-label atlas-label-a" x="214" y="236">OBSERVATION</text>
+        <text class="atlas-label atlas-label-b" x="440" y="108">DATA POINT</text>
+        <text class="atlas-label atlas-label-c" x="30" y="516">PATTERN</text>
+        <text class="atlas-label atlas-axis" x="14" y="62">STRUCTURE · SIGNAL · CURIOSITY</text>
+      </svg>
+    </div>
+
+    <div class="floating-tool tool-one" aria-hidden="true">Py</div>
+    <div class="floating-tool tool-two" aria-hidden="true">JS</div>
+    <div class="floating-tool tool-three" aria-hidden="true">SQL</div>
+    <div class="pixel-frame" id="pixel-frame">
+      <div class="pixel-card">
+        <div class="profile-topline"><span>STUDENT PROFILE</span><span class="status-dot">● OPEN TO LEARN</span></div>
+        <div class="profile-brand-row">
+          <div class="profile-emblem">FIP</div>
+          <div class="profile-meta">
+            <strong>Farrel Islami Putra</strong>
+            <span>Informatics Eng. @ UNIKOM</span>
+            <small>DATA · SOFTWARE · AI · IOT</small>
+          </div>
+        </div>
+        <div class="profile-bottom"><span>PERSONAL ARCHIVE / 01</span><span class="tiny-arrow" aria-hidden="true">↗</span></div>
+      </div>
+    </div>
+    <div class="hero-sticker">Stay curious.<br />Stay <b>rigorous.</b></div>
+    <span class="visual-caption">FIG. 01 · LEARNER PROFILE</span>
+  </div>
+
+  <a class="scroll-cue" href="/work"><span class="scroll-line" aria-hidden="true"></span> SCROLL TO EXPLORE</a>
+</section>

@@ -1,0 +1,65 @@
+---
+/* Header sitewide. Navigasi kini antar halaman (Hub-and-Spoke V7.0):
+   tidak ada lagi data-section / scroll spy. Status aktif diset saat
+   build lewat aria-current="page" + class "active". */
+const path = Astro.url.pathname;
+const normalize = (p: string) => {
+  const cleaned = p.replace(/\/+$/, '');
+  return cleaned === '' ? '/' : cleaned;
+};
+const here = normalize(path);
+const NAV = [
+  { href: '/', label: 'Home' },
+  { href: '/work', label: 'Work' },
+  { href: '/archive/play', label: 'Games' },
+  { href: '/about', label: 'About' },
+  { href: '/connect', label: 'Contact' },
+];
+---
+
+<header class="site-header" id="top">
+  <a href="/" class="brand-mark" aria-label="Farrel Islami Putra · kembali ke beranda">
+    <span class="brand-icon">FIP</span>
+    <span class="brand-name">PORTFOLIO / ARCHIVE</span>
+  </a>
+  <nav class="main-nav" aria-label="Main navigation">
+    {
+      NAV.map((item) => {
+        const active = normalize(item.href) === here;
+        return (
+          <a
+            href={item.href}
+            class:list={['nav-link', { active }]}
+            aria-current={active ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        );
+      })
+    }
+  </nav>
+  <!-- V4 §6.5: indikator Now Playing, diisi script dari endpoint Spotify.
+       Tersembunyi sampai data nyata datang; tidak pernah dipalsukan. -->
+  <a class="now-playing" id="now-playing" hidden>
+    <span class="now-playing-art"><img id="now-playing-img" alt="" width="24" height="24" hidden /></span>
+    <span class="now-playing-dot" aria-hidden="true"></span>
+    <span class="now-playing-text" id="now-playing-text" aria-live="polite"></span>
+  </a>
+  <button class="menu-dots" id="menu-dots" aria-label="Open quick menu" aria-expanded="false" aria-controls="quick-menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="quick-menu" id="quick-menu" hidden>
+    <span class="quick-now-playing" id="quick-now-playing" hidden></span>
+    <a href="/work">Selected projects</a>
+    <a href="/archive/play">Game deck</a>
+    <a href="/about">About the creator</a>
+    <a href="/archive/off-screen">Off-screen hobbies</a>
+    <a href="/archive">GitHub activity</a>
+    <a href="/about#journey">Learning journey</a>
+    <a href="/archive/credentials">Milestones &amp; credentials</a>
+    <a href="/archive/off-screen#companion">Meet the companion</a>
+    <a href="/connect#contact">Say hello</a>
+    <a href="https://github.com/Fryel32" target="_blank" rel="noopener noreferrer">GitHub profile ↗</a>
+    <a href="https://drive.google.com/drive/folders/1YaoRkFvdlk29vdRAFQxj5ypVD-7WDtTl?usp=drive_link" target="_blank" rel="noopener noreferrer">Documentation archive ↗</a>
+  </div>
+</header>

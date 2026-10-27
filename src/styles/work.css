@@ -1,0 +1,447 @@
+/* ==========================================================================
+   WORK.CSS · Farrel Islami Putra · Editorial Portfolio (Astro V7.0)
+   Blue / White / Slate · Contemporary Editorial · Motion-led
+   Project grid, filter, kartu proyek (halaman /work).
+   Diekstrak otomatis dari styles.css V6.7. Isi aturan tidak diubah.
+   ========================================================================== */
+
+/* 06. PROJECT GALLERY ---------------------------------------------------- */
+.gallery-section {
+  background: var(--night); color: var(--text-on-dark);
+  position: relative;
+  margin-top: 0;
+  padding: 92px clamp(22px, 7vw, 110px) 40px;
+  overflow: hidden;
+}
+
+
+.gallery-curve {
+  height: 74px; position: absolute; left: -4%; right: -4%; top: -48px;
+  background: var(--night);
+  border-radius: 55% 45% 0 0 / 85% 100% 0 0;
+  transform: rotate(-2deg);
+}
+
+
+.filter-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 18px;
+  padding: 13px 0;
+  border-top: 1px solid var(--line-on-dark);
+  border-bottom: 1px solid var(--line-on-dark);
+  color: var(--text-on-dark-2); font-size: 9px;
+}
+
+
+.filter-controls { display: flex; gap: 7px; flex-wrap: wrap; }
+
+
+.filter-button {
+  background: transparent; color: var(--text-on-dark);
+  border: 1px solid var(--line-on-dark);
+  padding: 9px 14px; border-radius: 999px;
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.06em;
+  transition: background var(--micro) var(--ease), color var(--micro) var(--ease),
+              border-color var(--micro) var(--ease);
+}
+
+
+.filter-button:hover { border-color: var(--blue-soft); color: var(--blue-soft); }
+
+
+.filter-button.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+
+
+.project-grid {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px; margin: 26px 0 45px;
+  perspective: 1000px; /* drawer lift (5.2.1) needs depth on the grid */
+}
+
+
+.project-card {
+  position: relative; min-width: 0;
+  display: flex; flex-direction: column;
+  border-radius: var(--radius); overflow: hidden;
+  background: var(--night-card); border: 1px solid var(--line-on-dark);
+  transform-origin: bottom center;
+  transition: transform var(--hover) var(--ease),
+              border-color var(--hover) var(--ease),
+              box-shadow var(--hover) var(--ease);
+}
+
+/* Archive drawer hover (5.2.1): the card lifts like a drawer pulled from
+   a cabinet; a fold line slides across it. Shadow reads on the dark
+   gallery, so the guide's slate shadow is deepened for this surface. */
+.project-card:hover {
+  transform: translateY(-10px) rotateX(-2deg);
+  border-color: var(--blue-soft);
+  box-shadow: 0 22px 44px rgba(2, 6, 23, 0.55);
+}
+
+
+.project-card::before {
+  content: "";
+  position: absolute;
+  left: 20px; right: 20px; top: 50%;
+  height: 1px;
+  background: var(--blue-soft);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--hover) var(--ease);
+  z-index: 2;
+  pointer-events: none;
+}
+
+
+.project-card:hover::before,
+.project-card:focus-within::before { transform: scaleX(1); }
+
+/* Keyboard equivalent of the hover lift (12.3) */
+.project-card:focus-within { transform: translateY(-10px) rotateX(-2deg); border-color: var(--blue-soft); box-shadow: 0 22px 44px rgba(2, 6, 23, 0.55); }
+
+
+.project-card:focus-within .project-cover img { transform: scale(1.04); }
+
+
+.project-link:focus-visible .project-link-arrow { transform: translate(2px, -2px); background: var(--blue-soft); }
+
+
+.project-cover { height: 235px; position: relative; overflow: hidden; background: var(--surface-2); isolation: isolate; }
+
+/* V6.3 §3.1.2: clip layer for the directional hover reveal. The default
+   clip is fully open so the image is always visible without JS, without
+   GSAP, and under reduced motion; only the hover reveal ever closes it. */
+.project-cover-inner {
+  position: absolute; inset: 0;
+  overflow: hidden;
+  isolation: isolate;
+  clip-path: inset(0 0 0 0);
+}
+
+
+.project-cover img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  transition: transform 500ms var(--ease);
+}
+
+
+.project-card:hover .project-cover img { transform: scale(1.04); }
+
+
+.project-cover::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgba(2, 6, 23, 0.35));
+  pointer-events: none;
+}
+
+
+.project-tag {
+  position: absolute; z-index: 2; top: 12px; left: 12px;
+  background: var(--surface); color: var(--ink);
+  border-radius: 999px; padding: 5px 9px;
+  font-family: var(--mono); font-size: 8px; text-transform: uppercase; letter-spacing: 0.08em;
+}
+
+
+.project-number {
+  position: absolute; z-index: 2; right: 12px; top: 12px;
+  font-family: var(--mono); font-size: 9px; color: var(--ink);
+}
+
+
+.project-info { padding: 16px 15px; flex: 1; display: flex; flex-direction: column; }
+
+
+.project-info h3 { font-size: 17px; line-height: 1.15; letter-spacing: -0.04em; font-weight: 600; margin: 0 0 9px; }
+
+
+.project-info .project-desc { font-size: 12px; line-height: 1.6; color: var(--text-on-dark-2); margin: 0 0 14px; flex: 1; }
+
+
+.project-stack { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 16px; }
+
+
+.project-foot {
+  display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid var(--line-on-dark); padding-top: 12px; min-height: 34px;
+}
+
+
+.project-status { font-size: 9px; color: var(--text-on-dark-2); display: inline-flex; align-items: center; gap: 8px; }
+
+
+.project-status::before { content: "●"; color: var(--blue-soft); font-size: 8px; }
+
+
+.project-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.08em;
+  color: var(--text-on-dark); text-transform: uppercase;
+}
+
+
+.project-link .project-link-arrow {
+  display: grid; place-items: center;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--surface); color: var(--ink); font-size: 13px;
+  transition: transform var(--micro) var(--ease), background var(--micro) var(--ease), color var(--micro) var(--ease);
+}
+
+
+.project-link:hover .project-link-arrow { transform: translate(2px, -2px); background: var(--blue-soft); }
+
+
+.gallery-bottom-line {
+  border-top: 1px solid var(--line-on-dark);
+  display: flex; justify-content: space-between;
+  padding-top: 16px; color: var(--text-on-dark-2); font-size: 9px;
+}
+
+
+.empty-state {
+  padding: 30px; text-align: center; color: var(--text-on-dark-2);
+  border: 1px dashed rgba(255, 255, 255, 0.35); border-radius: var(--radius-sm);
+  font-size: 13px;
+}
+
+/* Reserved "coming soon" slots: quiet, non-clickable, unmistakably
+   placeholders. No hover motion, no arrow, no fake CTA. */
+.project-card--reserved {
+  border: 1px dashed rgba(148, 163, 184, 0.45);
+  background: transparent;
+  padding: 22px 20px;
+  justify-content: center;
+  gap: 12px;
+  cursor: default;
+}
+
+
+.project-card--reserved:hover { transform: none; border-color: rgba(148, 163, 184, 0.45); }
+
+
+.credential-proof .project-link-arrow {
+  display: grid; place-items: center;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--blue-pale); color: var(--blue-deep); font-size: 12px;
+  transition: transform var(--micro) var(--ease), background var(--micro) var(--ease);
+}
+
+
+.credential-proof:hover .project-link-arrow { transform: translate(2px, -2px); background: var(--blue-soft); }
+
+/* 12. RESPONSIVENESS --------------------------------------------------------- */
+@media (max-width: 1050px) {
+
+.project-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+
+@media (max-width: 700px) {
+
+.gallery-section { padding-top: 76px; }
+
+.filter-row { align-items: flex-start; flex-direction: column; }
+
+.filter-button { padding: 8px 11px; font-size: 8px; }
+
+.project-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 11px; }
+
+.project-cover { height: 190px; }
+
+.project-info { padding: 13px 12px; }
+
+.project-info h3 { font-size: 15px; }
+}
+
+
+@media (max-width: 420px) {
+
+.project-grid { grid-template-columns: 1fr; }
+
+.project-cover { height: 200px; }
+}
+
+/* 13. REDUCED MOTION --------------------------------------------------------- */
+/* Motion initial states are applied by JavaScript, so content is fully
+   visible even when every animation is disabled or fails to load.
+   Components that animate to a "finished" state render that state here. */
+@media (prefers-reduced-motion: reduce) {
+/* 5.2.1 Drawer hover: colour feedback stays, movement does not */
+.project-card:hover,
+  .project-card:focus-within { transform: none; box-shadow: none; }
+
+.project-card::before { display: none; }
+}
+
+/* V6.5 §2.1: the Archive (#work) and the Game Deck (#games) share the
+   --night surface. The transition-ribbon that used to separate them was
+   transparent, so the --bg body colour showed through as a hard white
+   line. The ribbon is removed from index.html; this rule fuses the two
+   dark sections into one continuous surface, separated only by a hair
+   line in the on-dark palette. Ribbons between light sections remain. */
+.gallery-section + .games-section {
+  border-top: 1px solid var(--line-on-dark);
+  margin-top: 0;
+}
+
+/* 15.2 GALLERY BLUEPRINT (4.2): faint 40px grid, masked toward edges */
+.gallery-section::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  -webkit-mask-image: radial-gradient(ellipse 72% 62% at 50% 44%, #000 38%, transparent 100%);
+  mask-image: radial-gradient(ellipse 72% 62% at 50% 44%, #000 38%, transparent 100%);
+}
+
+
+.gallery-inner { position: relative; }
+
+
+.gallery-ruler {
+  display: flex; gap: 26px; margin: -6px 0 16px;
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.22em;
+  color: rgba(255, 255, 255, 0.38); pointer-events: none;
+}
+
+
+.gallery-ruler span { position: relative; padding-left: 12px; }
+
+
+.gallery-ruler span::before {
+  content: ""; position: absolute; left: 0; top: 50%; width: 8px; height: 1px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+
+@media (max-width: 700px) {
+
+.gallery-section::before { opacity: 0.5; }
+}
+
+/* 5.2 Gallery: Truchet tile field + archive stamp. V6.4 §5.2 widens
+   the mask so the field fills the section. */
+.ornament-gallery-truchet {
+  inset: 0;
+  opacity: 0.04; color: var(--blue-soft);
+  -webkit-mask-image: radial-gradient(ellipse 80% 90% at center, #000 40%, transparent 95%);
+  mask-image: radial-gradient(ellipse 80% 90% at center, #000 40%, transparent 95%);
+}
+
+
+.ornament-gallery-stamp {
+  bottom: 24px; right: 24px;
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em;
+  color: rgba(147, 197, 253, 0.55);
+  border: 1px dashed rgba(147, 197, 253, 0.35);
+  padding: 6px 10px;
+  transform: rotate(-6deg);
+}
+
+/* Reduced motion: every ornament stays visible; only reveal animations
+   are skipped (script.js never runs them under the preference). */
+@media (prefers-reduced-motion: reduce) {
+
+.ornament-gallery-truchet { opacity: 0.04; }
+}
+
+/* ======================================================================
+   V7.0: CASE STUDY (Fase 4.3) - halaman detail proyek yang bersih dan
+   fokus, memakai token design yang sama dengan kartu proyek.
+   ====================================================================== */
+.case-study {
+  background: var(--bg);
+  min-height: 100vh;
+  padding: 120px 24px 80px;
+}
+
+.case-study-inner {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.case-study-title {
+  font-family: var(--font);
+  font-size: clamp(34px, 6vw, 58px);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 10px 0 0;
+}
+
+.case-study-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 28px;
+  align-items: center;
+  margin-top: 24px;
+  padding: 16px 0;
+  border-top: 1px solid var(--border-soft);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.case-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--text-2);
+}
+
+.case-study-cover {
+  margin-top: 28px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.case-study-cover img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.case-study-body {
+  margin-top: 30px;
+  max-width: 720px;
+}
+
+.prose-archive p {
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--text-2);
+  margin: 0 0 16px;
+}
+
+.prose-archive h2 {
+  font-family: var(--font);
+  font-size: 20px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin: 30px 0 12px;
+}
+
+.prose-archive ul {
+  margin: 0 0 16px;
+  padding-left: 20px;
+}
+
+.prose-archive li {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-2);
+  margin-bottom: 6px;
+}
+
+.case-study-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-soft);
+}
