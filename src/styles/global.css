@@ -68,6 +68,15 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 
+/* V7.1 Fase 1.1 + V7.2 Fase 1: sticky footer. Dokumen setinggi penuh
+   dan body flex column, agar halaman pendek (mis. /connect) tidak
+   menyisakan ruang putih kosong di bawah footer. */
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 96px;
@@ -75,7 +84,10 @@ html {
 
 
 body {
-  margin: 0;
+  /* Tambahan V7.2: Flexbox Sticky Footer */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font);
@@ -83,6 +95,18 @@ body {
   line-height: 1.6;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+}
+
+
+/* V7.2 Fase 1: main mengisi sisa ruang di atas footer; footer tidak
+   boleh mengecil. Flexbox murni, tanpa trik absolute atau margin manual. */
+main {
+  flex: 1 0 auto;
+}
+
+
+.site-footer {
+  flex-shrink: 0;
 }
 
 
@@ -589,6 +613,22 @@ body::after {
   pointer-events: none;
   z-index: 0;
   background: radial-gradient(ellipse at center, transparent 60%, rgba(15, 23, 42, 0.04) 100%);
+}
+
+
+/* V7.1 Fase 1.2: grain SVG lives in BaseLayout on every page. The rule was
+   lost to archive.css during the V7.0 extraction, so on non-archive pages
+   the svg rendered as a grey box in the page flow. Pinned here sitewide as
+   a fixed, non-interactive texture layer (identical to the V6.7 rule). */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.06;
+  mix-blend-mode: multiply;
 }
 
 

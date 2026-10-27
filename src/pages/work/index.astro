@@ -1,12 +1,22 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/work/ProjectCard.astro';
+import ReservedCard from '../../components/work/ReservedCard.astro';
+import { getCollection } from 'astro:content';
 import '../../styles/home.css';
 import '../../styles/work.css';
 
-/* Fase 4.2: halaman /work. Filter kategori + grid semua proyek.
-   Grid awal dirender statis dari Content Collections (fallback tanpa JS
-   identik); interaksi filter tetap memakai renderProjects() dari
-   work.js yang membaca DATA (perilaku V6.7 dipertahankan penuh). */
+/* Fase 4.2 + perbaikan V7.2 Fase 2: halaman /work. Filter kategori + grid
+   semua proyek. Grid awal KINI dirender statis saat build dari Content
+   Collections (kartu + slot reserved tampil sejak HTML, tanpa menunggu
+   JavaScript), dengan state awal filter "All". Interaksi filter tetap
+   memakai renderProjects() dari work.js yang mengganti isi grid dengan
+   markup identik (perilaku V6.7 dipertahankan penuh). */
+const entries = await getCollection('work');
+/* Proyek nyata dulu, lalu slot reserved (urutan sama dengan DATA:
+   reserved hanya tampil di view All dan tidak pernah dihitung). */
+const projects = entries.filter((e) => e.data.status !== 'RESERVED');
+const reserved = entries.filter((e) => e.data.status === 'RESERVED');
 ---
 
 <BaseLayout title="Work · Farrel Islami Putra" pageKey="work">
@@ -48,7 +58,15 @@ import '../../styles/work.css';
       </div>
 
       <div class="project-grid" id="project-grid" aria-live="polite">
-        <p class="reserved-text">Grid proyek dirender oleh JavaScript dari data arsip.</p>
+        {/* V7.2: kartu dirender statis saat build. Tanpa atribut href agar
+            tautan kartu identik dengan hasil renderProjects() dari work.js
+            (tautan dataset eksternal, bukan "Read case study"). */}
+        {projects.map((entry, index) => (
+          <ProjectCard project={{ ...entry.data }} index={index} />
+        ))}
+        {reserved.map((entry) => (
+          <ReservedCard slot={{ title: entry.data.title, kicker: entry.data.kicker, description: entry.data.description }} />
+        ))}
       </div>
       <div class="empty-state" id="empty-state" hidden>No projects match this filter. Reserved slots return with the All work view.</div>
 

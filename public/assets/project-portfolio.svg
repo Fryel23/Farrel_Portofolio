@@ -7,7 +7,7 @@
 
   <!-- header -->
   <rect x="40" y="122" width="12" height="12" fill="#2563EB" transform="rotate(45 46 128)"/>
-  <text x="64" y="134" font-family="ui-monospace, Consolas, monospace" font-size="16" font-weight="700" letter-spacing="2" fill="#0F172A">PORTFOLIO WEBSITE — THIS ARCHIVE</text>
+  <text x="64" y="134" font-family="ui-monospace, Consolas, monospace" font-size="16" font-weight="700" letter-spacing="2" fill="#0F172A">PORTFOLIO WEBSITE · THIS ARCHIVE</text>
   <text x="64" y="158" font-family="ui-monospace, Consolas, monospace" font-size="10" letter-spacing="2" fill="#64748B">FRONT-END CASE STUDY · NO FRAMEWORKS · NO PAGE BUILDERS</text>
 
   <!-- browser window -->
