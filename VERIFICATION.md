@@ -299,3 +299,137 @@ termasuk simulasi JavaScript diblokir penuh (network route abort).
    memakai komponen yang sudah ada (ProjectCard/ReservedCard, class sama).
 2. Tidak ada kelas CSS yang dipakai GSAP yang dihapus.
 3. Semua komentar kode yang ditambahkan berbahasa Indonesia.
+
+---
+
+# VERIFICATION · V7.3 MOBILE NAVIGATION & RESPONSIVE FIXES
+
+Laporan verifikasi mandiri sesuai `PROMPT_V7.3_MOBILE_RESPONSIVE.md`.
+Semua pengujian dijalankan pada hasil `bun run build` (11 halaman) yang
+disajikan lewat `astro preview`, diukur dengan browser headless (Chromium)
+pada 390x844, 768x900, dan 1440x900 (regresi desktop).
+
+## Ringkasan status
+
+| Item | Status |
+| --- | --- |
+| FASE 1. Hamburger + drawer (Header.astro + global.css) | PASS |
+| FASE 2. Logika mobile menu (global.js, vanilla) | PASS |
+| FASE 3. Anti-tumpuk homepage (home/global/work/connect.css) | PASS |
+| Regresi desktop 1440px (desain tidak berubah) | PASS |
+| Sticky footer (warisan V7.1/V7.2) | PASS |
+| Em dash (U+2014) | PASS - grep KOSONG |
+
+## Bukti per Fase
+
+### FASE 1: Markup + CSS (Checkpoint 1, viewport 390x844)
+- `#mobile-menu-toggle`: `display: block` di 390px dan 768px; `display: none`
+  di 1440px. Ditempatkan sebelum `.menu-dots` sesuai spesifikasi.
+- `.menu-dots`: `display: none` di mobile; `.main-nav`: `display: none`
+  (aturan 980px yang sudah ada, dipertahankan).
+- Drawer tertutup by default (`hidden`); saat dibuka terukur:
+  `position: fixed`, rect 390x844 (menutupi seluruh viewport dari atas ke
+  bawah), `background: rgb(248, 250, 252)` = `var(--bg)`, animasi
+  `mobile-drawer-in` 0.32s (slide-in dari atas), `z-index: 60` di dalam
+  konteks header, `.mobile-menu-inner` `overflow-y: auto`.
+- Isi laci: 6 tautan utama (Home, Work, Games, About, GitHub, Contact -
+  dirender dari array NAV yang sama dengan nav desktop, lengkap
+  `aria-current` + garis bawah biru untuk halaman aktif; GitHub dan
+  Documentation archive berlabel panah eksternal) + `hr.mobile-menu-divider`
+  + label mono "DEEP DIVE" + 4 tautan deep dive (Off-screen hobbies,
+  Milestones & credentials, Meet the companion, Documentation archive).
+  Total 10 tautan, href terverifikasi satu per satu.
+- Laci menutupi `.companion-pet`: `elementFromPoint` di tengah pet
+  mengembalikan `mobile-menu-inner` (pet tersampul). Mekanismenya:
+  di <=980px header naik ke `z-index: 95` (di atas pet z-90) dan
+  `backdrop-filter` dilepas - properti tersebut menjadikan header
+  containing block bagi descendants `position: fixed`, yang akan mengunci
+  laci ke kotak header 67px, bukan ke viewport. Keduanya hanya berlaku di
+  media query, desktop tetap `z-index: 20` + `blur(8px)` (terverifikasi).
+- Kill-switch `@media (min-width: 981px) { .mobile-menu-drawer
+  { display: none !important } }` mencegah laci dirender di desktop
+  walaupun state `hidden` tertinggal saat rotasi/resize.
+
+### FASE 2: Logika Vanilla JS (Checkpoint 2)
+- Klik hamburger: drawer `hidden=false`, `aria-expanded="true"`,
+  `document.body.style.overflow="hidden"` (scroll latar terkunci).
+- Klik tombol close: drawer `hidden=true`, `aria-expanded="false"`,
+  overflow dikembalikan ke `""`.
+- Escape: drawer tertutup + `document.activeElement === toggle`
+  (fokus kembali ke hamburger; fokus tidak pernah hilang).
+- Klik tautan "Work" di laci: navigasi ke `/work`, drawer tertutup
+  (`hidden=true`), overflow dibersihkan.
+- Tanpa library baru: hanya `qs`/`qsa`/`doc` yang sudah ada di core.js;
+  fungsi `initMobileMenu()` didaftarkan di `bootPage.interactions`
+  berdampingan dengan `initQuickMenu`.
+
+### FASE 3: Anti-tumpuk homepage (Checkpoint 3, 390x844)
+- `body { overflow-x: hidden }` terverifikasi; `window.scrollTo(50,0)`
+  menghasilkan `scrollX = 0` (horizontal scroll terkunci).
+- `.hero` di 390px: `grid-template-columns: 1fr` (satu track 335.4px),
+  `padding-top: 20px`, `padding-bottom: 40px`, `min-height: auto`
+  (computed 0), `overflow: visible` - teks di atas, visual di bawah.
+- `.hero-visual`: `min-height: 350px`, `margin-top: 20px`, centered.
+- `.floating-tool`: `display: none` (Py/JS/SQL tidak tampil di mobile).
+- `.pixel-frame`: width 301.9px (90%, max-width 320px tercapai),
+  margin auto (terpusat), transform terukur `rotate(-3deg)`.
+- `.hero-sticker`: `right: 0`, `top: -20px`, transform terukur
+  `scale(0.8) rotate(5deg)`; geometri: stickerTop 751 vs noteBottom 750 -
+  tidak bertumpuk dengan konten di atasnya.
+- `.data-atlas`: `inset: 0`, `opacity: 0.5`, `pointer-events: none`
+  (latar samar di dalam kotak visual, tidak lagi melebar keluar layar).
+- Catatan teknis: tween entrance GSAP (home.js `gsap.set('#pixel-frame',
+  { rotate: -14 })` -> `.to({ rotate: -7 })`) menulis inline transform
+  yang mengalahkan CSS biasa (terukur sebelum perbaikan: frame kembali
+  -7deg, sticker scale 1). Nilai spesifikasi dipatok via `!important`
+  ter-scope <=700px tanpa menyentuh JS; opacity entrance GSAP tetap
+  berjalan, desktop tetap dianimasikan penuh (-7deg terverifikasi).
+- `.project-grid` di 390px (homepage `#work` dan halaman `/work`):
+  `grid-template-columns: 1fr` (satu track), kartu full-width, tidak
+  ada kartu terpotong (screenshot).
+- `.social-grid` di `/connect` 390px: `1fr`, 4 kartu tersusun vertikal.
+- `.section-heading` (kolom di mobile) + `.heading-stamp` + ornamen
+  galeri diverifikasi visual: tidak ada teks yang menabrak dekorasi.
+- Sisa elemen yang menyentuh tepi hanya dekorasi (`.geo-two`,
+  `.gallery-curve`, `.social-pattern`, scanline) yang terpotong rapi oleh
+  `overflow-x: hidden` - tidak ada konten nyata yang keluar layar.
+
+## Regresi
+
+- Desktop 1440x900: nav horizontal 6 tautan + Now Playing + menu-dots
+  tampil; hamburger `display: none`; drawer `display: none`; header
+  `backdrop-filter: blur(8px)` dan `z-index: 20` utuh; `.hero` dua kolom
+  (712px + 526px) `overflow: hidden` `min-height: 600px`; pixel frame
+  470px `rotate(-7deg)` (GSAP); sticker `rotate(10deg)`; floating tools
+  tampil; `.project-grid` 3 kolom. Desain desktop identik pra-V7.3.
+- Tablet 768x900: hamburger `block`, nav+dots `none`, drawer terbuka
+  penuh 768x900; hero masih dua kolom (override satu kolom hanya <=700px
+  sesuai blok spesifikasi); floating tools masih tampil di 768px.
+- Sticky footer: `/connect` di viewport 1440x2000 (halaman pendek)
+  `footerBottom = 2000 = vh`, gap 0; halaman panjang footer terdorong
+  natural (gap negatif = konten melebihi viewport).
+- Tidak ada page error baru; peringatan GSAP yang sudah ada sebelumnya
+  (pre-existing, di luar cakupan) tidak bertambah.
+
+## VALIDASI MANDIRI V7.3
+
+- `bun run build`: 11 halaman, tanpa error (setelah tiap fase + final).
+- `node --check` (salinan .mjs): 8 file JS OK (about, archive, connect,
+  core, generative-ambient, global, home, work), fail = 0.
+- grep em dash U+2014 seluruh proyek (minus node_modules/.astro): KOSONG.
+
+## Kepatuhan Batasan Absolut V7.3
+
+1. **Desain desktop tidak berubah**: semua aturan baru berada di dalam
+   `@media (max-width: 980px)` / `(max-width: 700px)`; satu-satunya aturan
+   di luar media query adalah `#mobile-menu-toggle { display: none }`
+   (elemen baru yang memang tidak boleh tampil di desktop) dan kill-switch
+   `min-width: 981px` yang justru menjaga desktop. Terverifikasi 1440px.
+2. **Vanilla JS murni, tanpa library baru**: `initMobileMenu()` memakai
+   addEventListener + classList-free hidden attribute sesuai spesifikasi.
+3. **Estetika yang sudah ada**: laci memakai token yang sama (`var(--bg)`,
+   `var(--surface)`, `var(--border-strong)`, `var(--border-soft)`,
+   `var(--blue)`, `var(--mono)`), tombol bulat 40px/34px senada
+   `.menu-dots`, label mono letter-spacing untuk "DEEP DIVE", garis
+   hairline antar tautan.
+4. **Tanpa em dash (U+2014)**: grep seluruh proyek KOSONG.

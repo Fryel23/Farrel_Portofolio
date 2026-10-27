@@ -244,7 +244,9 @@
 
 .filter-button { padding: 8px 11px; font-size: 8px; }
 
-.project-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 11px; }
+/* V7.3 Fase 3: satu kolom di layar sempit agar tidak ada kartu yang
+   terpotong atau bertabrakan. */
+.project-grid { grid-template-columns: 1fr; gap: 11px; }
 
 .project-cover { height: 190px; }
 

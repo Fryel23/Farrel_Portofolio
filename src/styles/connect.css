@@ -406,7 +406,9 @@
 
 .social-intro { max-width: 440px; }
 
-.social-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+/* V7.3 Fase 3: satu kolom di layar sempit agar kartu tidak saling
+   menabrak. */
+.social-grid { grid-template-columns: 1fr; }
 
 .social-card { min-height: 165px; }
 

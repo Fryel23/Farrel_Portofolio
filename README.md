@@ -1,9 +1,17 @@
-# Farrel Islami Putra · Editorial Portfolio (Astro V7.2)
+# Farrel Islami Putra · Editorial Portfolio (Astro V7.3)
 
 Portofolio pribadi berbasis **Astro 7** dengan arsitektur **Hub-and-Spoke (Pucuk-Cabang)**.
 Migrasi total dari versi monolitik satu halaman (HTML/CSS/JS murni, V6.7) sesuai
 `PROMPT_EKSEKUSI_V7.0_ASTRO_MIGRATION.md`. Desain visual, palet warna, tipografi,
 animasi GSAP, dan seluruh fitur interaktif dipertahankan identik.
+
+**V7.3 (Mobile Navigation & Responsive Fixes)** sesuai `PROMPT_V7.3_MOBILE_RESPONSIVE.md`:
+navigasi mobile yang sebelumnya hilang di bawah 980px kini digantikan **Mobile
+Hamburger Menu (laci navigasi)** yang menggabungkan 6 tautan utama + 4 tautan
+Deep Dive, ditambah perbaikan tata letak homepage mobile (hero satu kolom,
+floating tools disembunyikan, pixel frame/sticker dipatok nilai spesifikasi,
+Data Atlas menjadi latar samar, grid proyek & sosial satu kolom). Desain desktop
+tidak berubah sama sekali. Rincian verifikasi di `VERIFICATION.md`.
 
 **V7.2 (Audit & Final UI/Bug Fixes)** sesuai `PROMPT_EKSEKUSI_V7.2_AUDIT_FIXES.md`:
 audit hasil V7.1, sticky footer flexbox dikunci dalam bentuk spesifikasi
@@ -121,6 +129,45 @@ src/
   media query dipecah mengikuti rule). Halaman yang memakai komponen lintas
   berkas (mis. homepage memakai komponen About/Contact) memuat CSS halaman
   tersebut juga. Tidak ada satu pun nilai aturan yang diubah.
+
+## Catatan V7.3 (Mobile Navigation & Responsive)
+
+- **Hamburger drawer**: `#mobile-menu-toggle` (ikon 3 garis SVG) tampil hanya
+  di `@media (max-width: 980px)`; `.menu-dots` dan `.main-nav` disembunyikan di
+  rentang itu. Laci `#mobile-menu-drawer` (`position: fixed; inset: 0`, latar
+  `var(--bg)`, animasi slide-in `mobile-drawer-in` 0.32s) berisi 6 tautan utama
+  (dirender dari array `NAV` yang sama dengan nav desktop, lengkap status
+  aktif `aria-current`) + pemisah + label mono "DEEP DIVE" + 4 tautan deep dive.
+- **Logika (Vanilla JS)**: `initMobileMenu()` di `global.js` (Fase 2) - toggle
+  buka/tutup dengan `aria-expanded`, kunci scroll latar (`body overflow
+  hidden`) selagi terbuka, tutup otomatis saat tautan diklik, tutup via Escape
+  dengan fokus kembali ke tombol hamburger. Tanpa library baru.
+- **Dua jebakan teknis yang dibereskan** (semua di dalam media query, jadi
+  desktop tak tersentuh): (1) `backdrop-filter` header menjadikannya containing
+  block bagi descendants `position: fixed`, yang akan mengunci laci ke kotak
+  header - di mobile `backdrop-filter` dilepas; (2) `.companion-pet` berada di
+  `z-index: 90` root sedangkan header `z-index: 20` - di mobile header naik ke
+  `z-index: 95` agar laci menutupi pet. Kill-switch `min-width: 981px` mencegah
+  laci dirender di desktop walaupun state `hidden` tertinggal saat resize.
+- **Anti-tumpuk homepage (≤700px)**: `.hero` satu kolom (`padding 20px/40px`,
+  `min-height: auto`, `overflow: visible`), `.hero-visual` min-height 350px
+  terpusat, `.floating-tool` disembunyikan, `.pixel-frame` 90% max 320px dengan
+  `rotate(-3deg)`, `.hero-sticker` `scale(0.8) rotate(5deg)` di sudut,
+  `.data-atlas` `inset: 0; opacity: 0.5` (latar samar di dalam kotak visual).
+- **Catatan teknis `!important`**: tween entrance GSAP (home.js) menulis inline
+  transform yang selalu mengalahkan CSS biasa, sehingga nilai spesifikasi
+  `rotate(-3deg)` / `scale(0.8)` dipatok via `!important` ter-scope ≤700px -
+  tanpa menyentuh logika JS, dan animasi desktop tetap utuh.
+- **Grid satu kolom (≤700px)**: `.project-grid` (homepage + `/work`) dan
+  `.social-grid` (`/connect`) menjadi `grid-template-columns: 1fr` agar tidak
+  ada kartu terpotong. Aturan diedit di sumbernya (work.css, connect.css).
+- `body { overflow-x: hidden }` sudah ada sejak V7.1 dan diverifikasi:
+  horizontal scroll terkunci (sisa poke elemen dekoratif terpotong rapi).
+- Spasi antar section dan `.section-heading` (kolom di mobile) diverifikasi
+  tidak ada elemen teks yang menabrak ornamen/stamp.
+- **Batasan Absolut terpenuhi**: perubahan hanya pada viewport ≤980px, JS
+  vanilla tanpa library baru, estetika Editorial/Archive dipertahankan (token
+  warna, mono label, hairline border), tanpa em dash (U+2014).
 
 ## Catatan V7.1 (UI Cleanup)
 

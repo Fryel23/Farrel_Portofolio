@@ -285,9 +285,25 @@
 
 .hero-tail { font-size: 15px; }
 
-.hero-visual { min-height: 320px; margin-top: 32px; }
+/* V7.3 Fase 3: visual hero di bawah teks, tinggi cukup untuk pixel
+   frame, tetap satu kolom dan terpusat. */
+.hero-visual {
+  min-height: 350px;
+  margin-top: 20px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
 
-.pixel-frame { width: min(86%, 410px); }
+/* V7.3 Fase 3: sembunyikan floating tools di mobile agar rapi. */
+.floating-tool { display: none; }
+
+/* V7.3 Fase 3: pixel frame lebih kecil dan kemiringan dikurangi agar
+   tidak keluar batas layar. !important diperlukan karena tween entrance
+   GSAP (home.js) menulis inline transform yang selalu mengalahkan CSS
+   biasa; nilai spesifikasi rotate(-3deg) wajib menang di ponsel tanpa
+   menyentuh logika JS (desktop tetap dianimasikan GSAP). */
+.pixel-frame { width: 90%; max-width: 320px; transform: rotate(-3deg) !important; margin: 0 auto; }
 
 .pixel-card { min-height: 195px; }
 
@@ -295,11 +311,16 @@
 
 .profile-meta strong { font-size: 18px; }
 
-.hero-sticker { right: 2%; top: 0; }
+/* V7.3 Fase 3: sticker menempel ke tepi dan diperkecil agar tidak
+   bertumpuk dengan konten di atasnya. !important menang atas inline
+   transform GSAP (lihat catatan .pixel-frame di atas). */
+.hero-sticker { right: 0; top: -20px; transform: scale(0.8) rotate(5deg) !important; }
 
 .scroll-cue { display: none; }
-/* Data Atlas: fewer marks at small sizes, no illegible microcopy */
-.data-atlas { inset: -8% -6%; opacity: 0.85; }
+
+/* Data Atlas: V7.3 Fase 3 di ponsel atlas menjadi latar samar di dalam
+   kotak visual (inset 0), tidak lagi melebar keluar layar. */
+.data-atlas { inset: 0; opacity: 0.5; pointer-events: none; }
 
 .atlas-label-a, .atlas-label-b, .atlas-label-c { display: none; }
 }

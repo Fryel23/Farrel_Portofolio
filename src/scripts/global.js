@@ -439,6 +439,49 @@ function initQuickMenu() {
   });
 }
 
+/* V7.3 Fase 2: laci navigasi mobile (hamburger). Membuka/menutup drawer,
+   mengunci scroll latar belakang selagi terbuka, menutup otomatis saat
+   salah satu tautan diklik, dan menutup via Escape dengan mengembalikan
+   fokus ke tombol hamburger (fokus tidak pernah hilang). Vanilla JS
+   murni tanpa library baru, sesuai Batasan Absolut V7.3. */
+function initMobileMenu() {
+  const toggle = qs('#mobile-menu-toggle');
+  const drawer = qs('#mobile-menu-drawer');
+  const closeButton = qs('#mobile-menu-close');
+  if (!toggle || !drawer) return;
+
+  const toggleMenu = () => {
+    const isHidden = drawer.hidden;
+    drawer.hidden = !isHidden;
+    toggle.setAttribute('aria-expanded', String(isHidden));
+    if (isHidden) {
+      document.body.style.overflow = 'hidden'; // Mencegah scroll latar belakang
+    } else {
+      document.body.style.overflow = '';
+    }
+  };
+
+  toggle.addEventListener('click', toggleMenu);
+  if (closeButton) closeButton.addEventListener('click', toggleMenu);
+
+  // Tutup menu jika tautan diklik
+  qsa('a', drawer).forEach((link) => {
+    link.addEventListener('click', () => {
+      drawer.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    });
+  });
+
+  // Tutup menu dengan tombol Escape
+  doc.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !drawer.hidden) {
+      toggleMenu();
+      toggle.focus();
+    }
+  });
+}
+
 let progressTicking = false;
 function updateProgress() {
   progressTicking = false;
@@ -1244,7 +1287,7 @@ function startHeroGateGlobal() {
 
 bootPage({
   renders: [renderIdentity, buildHeadingTicks, buildArchiveSpines, buildAllAmbientDebris, buildV65Ornaments],
-  interactions: [initQuickMenu, initAnchors, initNowPlaying, initPageProgressBar, fallbackReveal],
+  interactions: [initMobileMenu, initQuickMenu, initAnchors, initNowPlaying, initPageProgressBar, fallbackReveal],
   motion: [
     initSmoothScroll,
     startHeroGateGlobal,
