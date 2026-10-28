@@ -566,23 +566,32 @@ function fallbackReveal() {
   targets.forEach((node) => observer.observe(node));
 }
 
-/* --- V9.0 FASE 3.2: ARCHIVE BOOT SEQUENCE -------------------------------- */
-/* Overlay pembuka sinematik berbasis <dialog> native (pengganti cover
-   editorial V6.6). Desain hasil 3 putaran revisi spek V9.0:
+/* --- V9.1 FASE 3: ENHANCED ARCHIVE BOOT SEQUENCE ------------------------ */
+/* Overlay pembuka sinematik berbasis <dialog> native. V9.1 meningkatkan
+   ritual V9.0 (yang terlalu cepat) menjadi pengalaman ~4.5s dengan
+   komposisi 4 lapis + choreography GSAP beat-by-beat:
    - Zero-FOUC: inline script di <head> sudah menandai html.opening-armed
      sebelum first paint; guard ini dilepas tepat setelah showModal().
    - Timer tunggal: satu variabel timeoutId; setiap penjadwalan ulang
-     wajib clearTimeout dulu (Batasan 5).
-   - Exactly-once asset settlement: Set `settled` + pasangan
-     load/error saling melepas listenernya (Batasan 3).
-   - No-assets branch dieksekusi LANGSUNG di luar forEach (Batasan 2).
-   - ::backdrop memudar serentak dengan wipe (Batasan 4).
+     wajib clearTimeout dulu (Batasan 5 V9.0).
+   - Exactly-once asset settlement: Set `settled` + pasangan load/error
+     saling melepas listenernya (Batasan 3 V9.0) - tetap dipertahankan,
+     kini bertugas mendeteksi KEGAGALAN aset (exit cepat) karena progress
+     visual sudah dimiliki counter choreography (bukan progres nyata,
+     sejalan dengan prinsip ticker dekoratif V9.1).
+   - PERUBAHAN V9.1: exit TIDAK lagi dipicu "semua aset selesai". Waktu
+     exit tunggal = timeout utama 3500ms (Batasan 2 V9.1) supaya
+     choreography selalu utuh (halaman depan memang tanpa img kritis;
+     perilaku lama akan memotong ritual di <1s). Aset gagal tetap
+     fast-fail ke CONTINUING... (Skenario 9), aset lambat tetap ditutup
+     timeout 3.5s dengan CONTINUING... (Skenario 8).
    - Kontrak callback hero: prepareHeroState setelah showModal(),
      animateHeroIn di REVEAL_AT; kedua callback pasti dipanggil tepat
-     satu kali di semua jalur (Batasan 6).
-   API registry mengikuti hasil audit core.js: timers adalah Set
-   (add/delete), listener lewat trackMotionListener, timeline exit
-   lewat trackEventTween. */
+     satu kali di semua jalur (Batasan 6 V9.0).
+   - Lifecycle (Batasan 8 V9.1): choreography + counter + pulse lewat
+     trackEventTween, ticker interval di motionRegistry.intervals,
+     quickTo debu kursor lewat trackQuickTo, listener lewat
+     trackMotionListener; exitSequence membersihkan semuanya idempoten. */
 const OPENING_SEEN_KEY = 'fip-opening-seen';
 
 export function initArchiveOpening(prepareHero, animateHero) {
@@ -634,6 +643,9 @@ export function initArchiveOpening(prepareHero, animateHero) {
   try { window.sessionStorage.setItem(OPENING_SEEN_KEY, '1'); } catch (error) { /* best effort */ }
 
   dialog.showModal();
+  /* Tombol lahir disabled (anti klik tidak sengaja, Batasan 2 V9.1);
+     focus() menjadi no-op dan fokus jatuh ke dialog itu sendiri sampai
+     choreography mengaktifkan tombol di 1.5s. */
   skipBtn.focus({ preventScroll: true });
 
   /* Hero disiapkan (tersembunyi, siap animasi) TAPI belum dianimasikan;
@@ -643,13 +655,14 @@ export function initArchiveOpening(prepareHero, animateHero) {
   /* Sekarang aman membuka guard FOUC: dialog sudah menutupi layar. */
   document.documentElement.classList.remove('opening-armed');
 
-  /* --- STATE (timer tunggal, Batasan 5) --- */
+  /* --- STATE (timer tunggal, Batasan 5) + KONSTANTA V9.1 --- */
   let isExiting = false;
   let heroAnimated = false;
   let timeoutId = null;
-  const EXIT_DURATION_MS = 800;
-  const REVEAL_AT_SEC = 0.5;
-  const TOTAL_TIMEOUT_MS = 2200; // 2200 + 800 = 3000ms total (Skenario 8)
+  /* Batasan 2 V9.1: total ~4.5s = 3.5s choreography + 1.0s wipe exit. */
+  const TOTAL_TIMEOUT_MS = 3500;
+  const EXIT_DURATION_MS = 1000;
+  const REVEAL_AT_SEC = 0.65; // hero mulai muncul di pertengahan wipe
 
   const clearMainTimer = () => {
     if (timeoutId) {
@@ -665,12 +678,202 @@ export function initArchiveOpening(prepareHero, animateHero) {
     animateHero();
   };
 
-  /* --- EXIT SEQUENCE (satu-satunya jalur keluar) --- */
+  /* --- LAYER 4: METADATA TICKER (dekoratif, teks statis) --- */
+  const tickerLines = [
+    '> LOADING FIELD NOTES / 001',
+    '> MOUNTING DATA ATLAS / 002',
+    '> INDEXING ARCHIVE / 003',
+    '> CALIBRATING SENSORS / 004'
+  ];
+  let tickerIndex = 0;
+  let tickerIntervalId = null;
+
+  const startTicker = () => {
+    tickerIntervalId = window.setInterval(() => {
+      tickerIndex = (tickerIndex + 1) % tickerLines.length;
+      const line = qs('#opening-ticker-line');
+      if (!line) return;
+      /* Tween pergantian dibuat asinkron dari callback interval,
+         jadi didaftarkan lewat trackEventTween (Batasan 8). */
+      trackEventTween(gsap.fromTo(line,
+        { opacity: 0, y: 6 },
+        { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' }));
+      line.textContent = tickerLines[tickerIndex];
+    }, 500);
+    if (motionRegistry.intervals) motionRegistry.intervals.add(tickerIntervalId);
+  };
+
+  const stopTicker = () => {
+    if (tickerIntervalId) {
+      window.clearInterval(tickerIntervalId);
+      if (motionRegistry.intervals) motionRegistry.intervals.delete(tickerIntervalId);
+      tickerIntervalId = null;
+    }
+  };
+
+  /* --- CHOREOGRAPHY TIMELINE (Batasan 4 V9.1, beat-by-beat) --- */
+  /* Semua layer dianimasikan dalam SATU timeline terlacak; exitSequence
+     meng-kill-nya dan men-snap visual ke keadaan akhir. */
+  const choreography = trackEventTween(gsap.timeline());
+
+  /* Posisi clip HARUS eksplisit inline: CSS produksi meminimasi
+     circle(150% at 50% 50%) menjadi circle(150%) (posisi default
+     dilepas minifier), dan GSAP membaca computed style - tanpa inline
+     set, interpolasi exit salah membaca posisi awal 0% sehingga iris
+     menyusut ke pojok kiri atas, bukan ke pusat. */
+  gsap.set('.opening-clip', { clipPath: 'circle(150% at 50% 50%)' });
+
+  choreography
+    /* Layer 1: Ambient (grain + vignette) */
+    .to('.opening-grain', { opacity: 0.04, duration: 0.5, ease: 'none' }, 0)
+    .to('.opening-vignette', { opacity: 1, duration: 0.5, ease: 'none' }, 0)
+
+    /* Layer 2: bracket stagger 0.1s + garis ukur menggambar diri 0.2s
+       + label sudut 0.4/0.6s */
+    .to('.opening-bracket', { opacity: 1, duration: 0.3, stagger: 0.1, ease: 'power2.out' }, 0)
+    .to('.opening-ruler--v', { scaleY: 1, opacity: 0.4, duration: 0.6, ease: 'power2.inOut', transformOrigin: 'top' }, 0.2)
+    .to('.opening-ruler--h', { scaleX: 1, opacity: 0.4, duration: 0.6, ease: 'power2.inOut', transformOrigin: 'left' }, 0.2)
+    .to('.opening-corner-label--tl', { opacity: 1, duration: 0.4, ease: 'none' }, 0.4)
+    .to('.opening-corner-label--br', { opacity: 1, duration: 0.4, ease: 'none' }, 0.6)
+
+    /* Layer 3: label fade-slide-up 0.8s, ring scale-in back.out 1.0s,
+       skip fade-in + aktif di 1.5s (>= jeda 800ms Batasan 2) */
+    .to('.opening-label', { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 0.8)
+    .fromTo('.opening-progress-wrap',
+      { scale: 0.8, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.6, ease: 'back.out(1.4)' }, 1.0)
+    .to('.opening-skip',
+      { opacity: 1, duration: 0.3, ease: 'none',
+        onStart: () => {
+          skipBtn.disabled = false;
+          /* Batasan 7 V9.1: satu-satunya elemen yang bisa di-fokus.
+             Saat tombol aktif, fokus (yang sampai detik ini berada di
+             dialog) dipindah ke tombol agar Tab langsung berputar di
+             dalam dialog. */
+          skipBtn.focus({ preventScroll: true });
+        } }, 1.5)
+
+    /* Layer 4: ticker fade-in + interval pergantian 500ms dimulai. */
+    .to('.opening-ticker', { opacity: 1, duration: 0.3, ease: 'none', onStart: startTicker }, 1.2);
+
+  /* Counter choreographed: 000 -> 100 selama 1.8s mulai 1.2s (selesai
+     3.0s), ring mengikuti, status INITIALIZING -> CALIBRATING (>=50)
+     -> READY. Ini pemilik visual progres - bukan progres aset nyata. */
+  const counterProxy = { val: 0 };
+  let pulseTween = null;
+  const counterTween = trackEventTween(gsap.to(counterProxy, {
+    val: 100, duration: 1.8, ease: 'power2.inOut', delay: 1.2,
+    onUpdate: () => {
+      const v = Math.round(counterProxy.val);
+      if (counter) counter.textContent = String(v).padStart(3, '0');
+      if (ringFill) ringFill.style.strokeDashoffset = String(289 * (1 - v / 100));
+      if (status && v >= 50 && status.textContent === 'INITIALIZING...') {
+        status.textContent = 'CALIBRATING...';
+      }
+    },
+    onComplete: () => {
+      if (status) status.textContent = 'READY';
+      /* Ring pulse 3.2s: scale 1 -> 1.12 -> 1. Tracked agar exitSequence
+         dapat membunuhnya di tengah jalan. */
+      pulseTween = trackEventTween(gsap.fromTo('.opening-progress-wrap',
+        { scale: 1 },
+        { scale: 1.12, duration: 0.25, yoyo: true, repeat: 1, ease: 'power2.out' }));
+    }
+  }));
+
+  /* --- MICRO-DELIGHT: partikel debu kursor (reuse motif .pixel-dust) --- */
+  /* 6 partikel kecil di sekitar ring yang mengikuti kursor perlahan
+     lewat gsap.quickTo (damped 0.22 sehingga tetap melayang di area
+     ring). Hanya fine pointer; semua quickTo + listener terlacak. */
+  let dustNodes = null;
+  let dustFns = null;
+  let dustMove = null;
+  const dustWrap = qs('.opening-progress-wrap');
+  if (finePointer && dustWrap) {
+    dustNodes = [];
+    dustFns = [];
+    const DAMPING = 0.22;
+    for (let i = 0; i < 6; i++) {
+      const particle = el('span', 'opening-dust');
+      particle.setAttribute('aria-hidden', 'true');
+      dustWrap.appendChild(particle);
+      gsap.set(particle, {
+        x: gsap.utils.random(-80, 80),
+        y: gsap.utils.random(-80, 80),
+        opacity: gsap.utils.random(0.18, 0.42)
+      });
+      dustNodes.push(particle);
+      dustFns.push({
+        xTo: trackQuickTo(gsap.quickTo(particle, 'x', { duration: 1.4, ease: 'power2.out' })),
+        yTo: trackQuickTo(gsap.quickTo(particle, 'y', { duration: 1.4, ease: 'power2.out' }))
+      });
+    }
+    dustMove = (event) => {
+      if (!dustWrap || !dustFns) return;
+      const rect = dustWrap.getBoundingClientRect();
+      const cx = (event.clientX - rect.left - rect.width / 2) * DAMPING;
+      const cy = (event.clientY - rect.top - rect.height / 2) * DAMPING;
+      dustFns.forEach((fn, index) => {
+        const spread = (index - 2.5) * 10;
+        fn.xTo(cx + spread);
+        fn.yTo(cy - spread * 0.6);
+      });
+    };
+    trackMotionListener(doc, 'pointermove', dustMove);
+  }
+
+  const removeDust = () => {
+    if (dustMove) {
+      doc.removeEventListener('pointermove', dustMove);
+      dustMove = null;
+    }
+    if (dustFns) {
+      dustFns.forEach((fn) => {
+        if (fn.xTo && fn.xTo.tween) fn.xTo.tween.kill();
+        if (fn.yTo && fn.yTo.tween) fn.yTo.tween.kill();
+      });
+      dustFns = null;
+    }
+    if (dustNodes) {
+      dustNodes.forEach((node) => { if (node.parentNode) node.parentNode.removeChild(node); });
+      dustNodes = null;
+    }
+  };
+
+  /* --- EXIT SEQUENCE (satu-satunya jalur keluar, idempoten) --- */
   const exitSequence = () => {
     if (isExiting) return;
     isExiting = true;
+
+    /* 1. Matikan seluruh sumber gerak V9.1 + timer utama V9.0. */
+    if (choreography) choreography.kill();
+    if (counterTween) counterTween.kill();
+    if (pulseTween) { pulseTween.kill(); pulseTween = null; }
+    stopTicker();
+    removeDust();
     clearMainTimer();
 
+    /* 2. Snap visual ke keadaan akhir (skip/Escape di tengah
+          choreography tetap meninggalkan ritual yang terbaca lengkap).
+          Status CONTINUING... (jalur gagal aset) tidak ditimpa. */
+    gsap.set('.opening-bracket', { opacity: 1 });
+    gsap.set('.opening-ruler--v', { scaleY: 1, opacity: 0.4, transformOrigin: 'top' });
+    gsap.set('.opening-ruler--h', { scaleX: 1, opacity: 0.4, transformOrigin: 'left' });
+    gsap.set('.opening-corner-label--tl, .opening-corner-label--br', { opacity: 1 });
+    gsap.set('.opening-label, .opening-skip', { opacity: 1, y: 0 });
+    gsap.set('.opening-progress-wrap', { scale: 1, opacity: 1 });
+    gsap.set('.opening-ticker', { opacity: 1 });
+    skipBtn.disabled = false;
+    if (counter) counter.textContent = '100';
+    if (ringFill) ringFill.style.strokeDashoffset = '0';
+    if (status && status.textContent !== 'CONTINUING...') status.textContent = 'READY';
+
+    /* 3. Wipe: circular reveal. clip-path circle pada .opening-clip
+          menyusut 150% -> 0% (1.0s power3.inOut) sementara ::backdrop
+          memudar 1s (CSS .is-wiping) dan dialog menjadi transparan,
+          sehingga hero terungkap DI TENGAH wipe (REVEAL_AT 0.65s),
+          bukan hanya setelah dialog.close(). Total exit 1.0s: total
+          keseluruhan 3.5 + 1.0 = 4.5s (Batasan 2). */
     dialog.classList.add('is-wiping');
     const tl = trackEventTween(gsap.timeline({
       onComplete: () => {
@@ -682,24 +885,17 @@ export function initArchiveOpening(prepareHero, animateHero) {
         dialog.removeEventListener('cancel', onCancel);
       }
     }));
-    tl.to(dialog, {
-      clipPath: 'inset(0 0 100% 0)',
-      duration: EXIT_DURATION_MS / 1000,
-      ease: 'power4.inOut'
-    }, 0);
-    /* Hero mulai muncul 0.5s ke dalam wipe 0.8s (Batasan 6). */
+    /* Frame + ambient memudar bersamaan (mereka di luar clip). */
+    tl.to('.opening-frame, .opening-grain, .opening-vignette',
+      { opacity: 0, duration: 0.4, ease: 'none' }, 0);
+    /* Circular reveal pada wrapper konten. */
+    tl.to('.opening-clip',
+      { clipPath: 'circle(0% at 50% 50%)', duration: EXIT_DURATION_MS / 1000, ease: 'power3.inOut' }, 0);
+    /* Hero mulai muncul 0.65s ke dalam wipe (Batasan 6). */
     tl.call(animateHeroOnce, null, REVEAL_AT_SEC);
   };
 
-  /* --- TIMEOUT UTAMA (dijadwalkan DULU, sebelum memproses aset) --- */
-  timeoutId = window.setTimeout(() => {
-    if (isExiting) return;
-    if (status) status.textContent = 'CONTINUING...';
-    exitSequence();
-  }, TOTAL_TIMEOUT_MS);
-  if (motionRegistry.timers) motionRegistry.timers.add(timeoutId);
-
-  /* --- ASSET TRACKING (Batasan 3 + 8) --- */
+  /* --- ASSET TRACKING (Batasan 3 + 8 V9.0, dipertahankan) --- */
   const images = qsa('img[data-opening-critical]');
   const total = images.length;
   let loaded = 0;
@@ -714,45 +910,37 @@ export function initArchiveOpening(prepareHero, animateHero) {
     checkAssets();
   };
 
+  /* V9.1: checkAssets hanya menangani KEGAGALAN (fast-fail, Skenario 9).
+     Kondisi "semua berhasil" TIDAK lagi keluar cepat: waktu exit tunggal
+     adalah timeout utama 3.5s agar choreography selalu utuh (lihat
+     komentar header). Tidak ada penulisan counter/ring di sini - visual
+     progres dimiliki counter choreography. */
   const checkAssets = () => {
     if (isExiting) return;
-
-    /* Kondisi gagal: jangan tunggu timeout, lanjutkan segera. */
     if (failed > 0) {
       clearMainTimer();
       if (status) status.textContent = 'CONTINUING...';
       exitSequence();
-      return;
-    }
-
-    /* Update ring + counter. */
-    const percent = total === 0 ? 100 : Math.round((loaded / total) * 100);
-    if (counter) counter.textContent = String(percent).padStart(3, '0');
-    if (ringFill) ringFill.style.strokeDashoffset = String(289 * (1 - percent / 100));
-
-    /* Semua berhasil: segera keluar tanpa menunggu 2.2s penuh. */
-    if (loaded === total) {
-      clearMainTimer();
-      if (status) status.textContent = 'READY';
-      exitSequence();
     }
   };
 
-  /* --- NO-ASSETS BRANCH (Batasan 2: DI LUAR LOOP, WAJIB) ---
-     Tanpa ini, landing tanpa img kritis akan menggantung sampai
-     timeout 2.2s karena checkAssets() hanya dipanggil dari dalam
-     loop yang tidak pernah berjalan. */
-  if (total === 0) {
-    clearMainTimer();
-    if (status) status.textContent = 'READY';
-    if (counter) counter.textContent = '100';
-    if (ringFill) ringFill.style.strokeDashoffset = '0';
-    /* Jeda napas singkat agar status READY terbaca, lalu wipe. */
-    timeoutId = window.setTimeout(() => {
-      if (!isExiting) exitSequence();
-    }, 400);
-    if (motionRegistry.timers) motionRegistry.timers.add(timeoutId);
-  } else {
+  /* --- TIMEOUT UTAMA (dijadwalkan SEBELUM listener aset dipasang) --- */
+  timeoutId = window.setTimeout(() => {
+    if (isExiting) return;
+    /* Skenario 8 (lambat): aset masih menggantung -> CONTINUING...
+       Jalur normal membiarkan READY dari counter tween terbaca. */
+    if (status && loaded < total) status.textContent = 'CONTINUING...';
+    exitSequence();
+  }, TOTAL_TIMEOUT_MS);
+  if (motionRegistry.timers) motionRegistry.timers.add(timeoutId);
+
+  /* --- NO-ASSETS BRANCH (Batasan 2 V9.0; diperbarui V9.1) ---
+     Halaman tanpa img kritis (termasuk halaman depan) tidak memasang
+     listener apa pun; choreography + counter choreographed + timeout
+     3.5s memegang seluruh garis waktu: counter tetap berjalan 000->100,
+     status READY di 3.0s, lalu wipe di 3.5s (Skenario 3 + 11). Tidak
+     ada lagi exit cepat 400ms karena itu memotong ritual V9.1. */
+  if (total > 0) {
     /* --- ASSET LOOP (deduplikasi tepat-satu) --- */
     images.forEach((img) => {
       if (settled.has(img)) return;

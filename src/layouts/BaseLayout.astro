@@ -79,24 +79,60 @@ const ogImageURL = new URL('/og-default.png', Astro.site);
 
     <Header />
 
-    <!-- V9.0 FASE 1: Archive Boot Sequence berbasis <dialog> native.
-         Default browser menutup dialog (tanpa atribut [open]) sehingga
-         tanpa JS = tanpa overlay, halaman langsung tampil. showModal()
-         memberi focus trap + Escape (event cancel) secara native.
-         Dibuka hanya oleh initArchiveOpening (global.js) pada kunjungan
-         pertama per sesi saat motion diizinkan. -->
+    <!-- V9.1 FASE 1: Archive Boot Sequence berbasis <dialog> native,
+         kini dengan komposisi 4 lapis (ENHANCED OPENING):
+         Layer 1 Ambient  -> grain + vignette (latar, di luar clip).
+         Layer 2 Frame    -> bracket sudut, garis ukur, label meta (di luar
+                             clip sehingga tetap terlihat selama exit dan
+                             memudar bersamaan, sesuai spek V9.1).
+         Layer 3 Center   -> ritual V9.0 (label, ring, counter, status,
+                             tombol masuk) di dalam .opening-clip.
+         Layer 4 Ticker   -> metadata mono ber-ganti tiap ~500ms.
+         .opening-clip adalah elemen yang menerima clip-path circle(...)
+         saat circular reveal exit; guard FOUC html.opening-armed tetap
+         sama dengan V9.0. Tombol skip lahir disabled agar tidak bisa
+         diklik tidak sengaja; choreography (global.js) mengaktifkannya
+         saat ia fade-in di 1.5s. -->
     <dialog class="archive-opening" id="archive-opening" aria-labelledby="opening-label">
-      <div class="opening-inner">
-        <p class="opening-label" id="opening-label">FIP · PERSONAL ARCHIVE</p>
-        <div class="opening-progress-wrap">
-          <svg class="opening-ring" viewBox="0 0 100 100" aria-hidden="true">
-            <circle class="ring-bg" cx="50" cy="50" r="46" />
-            <circle class="ring-fill" id="opening-ring-fill" cx="50" cy="50" r="46" />
-          </svg>
-          <div class="opening-counter" id="opening-counter" aria-hidden="true">000</div>
+      <!-- Layer 1: Ambient -->
+      <div class="opening-grain" aria-hidden="true"></div>
+      <div class="opening-vignette" aria-hidden="true"></div>
+
+      <!-- Layer 2: Archive Frame (dekoratif murni) -->
+      <div class="opening-frame" aria-hidden="true">
+        <div class="opening-bracket opening-bracket--tl"></div>
+        <div class="opening-bracket opening-bracket--tr"></div>
+        <div class="opening-bracket opening-bracket--bl"></div>
+        <div class="opening-bracket opening-bracket--br"></div>
+        <div class="opening-ruler opening-ruler--v"></div>
+        <div class="opening-ruler opening-ruler--h"></div>
+        <span class="opening-corner-label opening-corner-label--tl">FIP / ARCHIVE / VOL.01</span>
+        <span class="opening-corner-label opening-corner-label--br">-6.7322 / 108.5525</span>
+      </div>
+
+      <!-- Wrapper konten untuk circular reveal exit -->
+      <div class="opening-clip">
+        <!-- Layer 3: Center Ritual (dipertahankan dari V9.0) -->
+        <div class="opening-inner">
+          <p class="opening-label" id="opening-label">FIP · PERSONAL ARCHIVE</p>
+          <div class="opening-progress-wrap">
+            <svg class="opening-ring" viewBox="0 0 100 100" aria-hidden="true">
+              <circle class="ring-bg" cx="50" cy="50" r="46" />
+              <circle class="ring-fill" id="opening-ring-fill" cx="50" cy="50" r="46" />
+            </svg>
+            <div class="opening-counter" id="opening-counter" aria-hidden="true">000</div>
+          </div>
+          <p class="opening-status" id="opening-status">INITIALIZING...</p>
+          <button class="opening-skip" id="opening-skip" type="button" disabled
+                  aria-label="Enter the archive and skip the opening sequence">
+            [ ENTER ARCHIVE → ]
+          </button>
         </div>
-        <p class="opening-status" id="opening-status">INITIALIZING...</p>
-        <button class="opening-skip" id="opening-skip" type="button">[ ENTER ARCHIVE → ]</button>
+
+        <!-- Layer 4: Metadata Ticker (dekoratif, bukan progres nyata) -->
+        <div class="opening-ticker" aria-hidden="true">
+          <span class="opening-ticker-line" id="opening-ticker-line">&gt; LOADING FIELD NOTES / 001</span>
+        </div>
       </div>
     </dialog>
 

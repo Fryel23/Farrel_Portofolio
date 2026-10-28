@@ -1033,3 +1033,76 @@ di setiap titik kunci. Skrip: `/home/z/v90-verify/pw-scenarios.js`
 - **Pesan konsol Curtains WebGL di /work adalah pre-existing** (V8.0), dibuktikan
   dengan isolate-work.js; bukan bagian perubahan V9.0 dan tidak diperbaiki di sini
   (file archive/work tidak diinstruksikan).
+
+---
+
+# VERIFICATION · V9.1 ENHANCED ARCHIVE BOOT SEQUENCE
+
+Laporan verifikasi mandiri sesuai Fase 4 `PROMPT_V9.1_ENHANCED_OPENING.md`.
+Semua pengujian pada hasil `bun run build` (Astro 7.4.2, 9 halaman) yang
+disajikan lewat `astro preview` (127.0.0.1:4321), diukur dengan Playwright
+(Chromium headless) 1440x900. Instrumen: init-script pemasang sampler
+`window.__v91log` (sampling 120ms dari document start) + MutationObserver
+kelas `is-wiping` + screenshot 1.4s (mid-choreography) dan 3.8s (mid-wipe).
+Skrip: `v91-verify/verify_v91.py` (34 checks) + `v91-verify/verify_v91_s8.py`
+(async, 3 checks Skenario 8 - handler route sinkron membekukan event loop
+Playwright sehingga pengukuran Skenario 8 wajib async). Bukti:
+`v91-verify/shots/` + `results*.json`.
+
+## Ringkasan status: 37/37 PASS (16 skenario spek)
+
+| # | Skenario spek | Status | Bukti terukur |
+| --- | --- | --- | --- |
+| 1 | JS mati total | PASS | `<html lang="id" data-page="home">` tanpa class armed (string `opening-armed` hanya ada di source inline script, bukan atribut); screenshot `s1-js-off.png` halaman tampil |
+| 2 | prefers-reduced-motion | PASS | dialog tak pernah open, display none, armed=false, hero langsung (eyebrow opacity 1, transform none) - `s2-reduced-motion.png` |
+| 3 | Kunjungan pertama | PASS | dialog open @210ms; counter 000->100; status INITIALIZING(210ms)->CALIBRATING(2280ms)->READY(3240ms); ticker 5 transisi; wipe 3720ms abs; dialog closed + display none di 5.4s; hero title matrix identity + eyebrow 1; screenshots `s3-mid-choreography-1.4s.png` + `s3-mid-wipe-3.8s.png` |
+| 4 | Refresh (session ada) | PASS | reload: open=false, seen=1, armed=false, hero langsung (eyebrow 0.9985 mid-fade) |
+| 5 | Tab saat overlay | PASS | 8x Tab: ['BODY','opening-skip'] berulang - fokus TIDAK PERNAH jatuh ke header/nav/main (Batasan 7); skip difokuskan otomatis saat aktif di 1.5s |
+| 6 | Escape | PASS | MutationObserver is-wiping: wipes=1; Escape kedua no-op; dialog closed; hero eyebrow 1 |
+| 7 | Klik Enter Archive | PASS | dblclick + click: wipes=1, dialog closed |
+| 8 | Slow (aset pending) | PASS | route ditunda 7s (async): CONTINUING... tampil; wipe @3525ms setelah showModal(@250ms); dialog gone @4606ms rel (= 3.5s + 1.0s wipe + granularitas polling 150ms) |
+| 9 | Aset gagal (file hilang) | PASS | route.abort: CONTINUING... + wipe @184-226ms (fast-fail, tidak menunggu timeout) |
+| 10 | Navigasi mid-opening | PASS | klik /work @1.2s: URL /work, dialog closed, armed hilang, 3 project-card boot; 0 warning GSAP |
+| 11 | No-assets branch (landing `/`) | PASS | `img[data-opening-critical]` = 0 di `/`; counter tetap 000->100, READY, wipe @3510ms rel showModal (ritual utuh, bukan lagi exit 400ms V9.0) |
+| 12 | Ring hover | PASS | `.opening-ring` matrix(1.02,...) + wrap filter drop-shadow rgba(37,99,235,0.35) - `s12-ring-hover.png` |
+| 13 | Skip hover | PASS | translateY(-2px) matrix(1,0,0,1,0,-2) + border rgb(37,99,235) |
+| 14 | Circular reveal | PASS | clip `circle(149.998% at 50% 50%) -> circle(0% at 50% 50%)` (posisi pusat DIJAGA); backdrop 1->0; frame fade-out; screenshot `s3-mid-wipe-3.8s.png` memperlihatkan hero terungkap DI SEKELIRING iris yang menyusut dengan counter 100/READY di dalamnya |
+| 15 | Choreography timing | PASS | beat 1.4s: grain 0.04, vignette 1, 4 bracket opacity 1, ruler V/H matrix identity + op 0.4, corner labels 1/1, label 1, wrap scale-in matrix identity, dust=6, skip enabled |
+| 16 | Konsol | PASS | 0 error, 0 warning GSAP "target not found" pada fresh visit dan navigasi mid-opening |
+
+## Bukti timing beat-by-beat (Skenario 3 + 15, relatif document start; modal tampil @210ms)
+
+```
+status  : 210ms INITIALIZING... -> 2280ms CALIBRATING... (rel 2.07s ~ tabel 2.0s)
+          -> 3240ms READY (rel 3.03s ~ tabel 3.0s)
+ticker  : LOADING(210) -> MOUNTING(1923) -> INDEXING(2400) -> CALIBRATING(2880)
+          -> wrap(3360); interval 500ms mulai saat fade-in ticker (1.2s)
+counter : 000 -> ... -> 100 (choreographed 1.8s mulai 1.2s; selesai rel 3.0s)
+wipe    : 3720ms abs = 3510ms setelah showModal (timeout 3500ms + sampling 120ms)
+exit    : clip 150%->0% pusat 50% 50%; backdrop->0; frame->0; dialog.close @~4.5s rel
+```
+
+## Kepatuhan Batasan V9.1
+
+1. **Constraint V9.0 tetap berlaku**: Zero-FOUC inline script tidak diubah; reduced-motion + sesi bypass; sessionStorage; Escape/skip idempoten (S6/S7); backdrop transition; timer tunggal (clearMainTimer); callback hero tepat sekali (S3-g, S6-b); lifecycle after-swap (S10); `data-opening-critical` tetap di about + work/[slug].
+2. **Durasi 4.5s**: TOTAL_TIMEOUT_MS=3500, EXIT_DURATION_MS=1000, REVEAL_AT_SEC=0.65 (S8-b 3525ms, S8-c 4606ms incl. granularitas polling); skip `disabled` lahir, aktif 1.5s + fokus otomatis (>= jeda 800ms).
+3. **Empat lapis**: markup BaseLayout persis spek (grain, vignette, frame 8 anak, opening-clip > inner + ticker); `aria-hidden` lengkap.
+4. **Choreography timeline**: satu timeline GSAP terlacak, kill + snap final state di exitSequence (S6-a status READY saat Escape @2s = hasil snap, bukan tween).
+5. **Circular reveal**: clip-path circle pada `.opening-clip`, backdrop 1s, hero @0.65s (REVEAL_AT).
+6. **Micro-delight**: ring hover CSS (scale pada .opening-ring anak agar tidak konflik transform inline GSAP di wrap), skip hover, 6 partikel debu quickTo damped 0.22, counter `tabular-nums` (dipertahankan).
+7. **A11y**: focus trap native + fokus otomatis ke skip saat aktif; aria-label skip lengkap; ticker/ring/counter aria-hidden; dialog aria-labelledby.
+8. **Lifecycle**: trackEventTween (choreography, counter, pulse, exit, ticker swap), motionRegistry.intervals (ticker), trackQuickTo (12 quickTo debu), trackMotionListener (pointermove debu, click, cancel); removeDust() melepas listener + node + kill tween.
+
+## Keputusan implementasi & penyimpangan terdokumentasi (jujur)
+
+- **Exit tidak lagi dipicu "semua aset selesai"** (perubahan perilaku V9.0): audit membuktikan landing `/` TIDAK punya `img[data-opening-critical]` (Hanya /about + /work/[slug]); jika aturan lama dipertahankan, choreography V9.1 terpotong <1s pada halaman yang paling sering dilihat - bertentangan dengan tujuan spek ("terlalu cepat ~2.2s") dan Skenario 3 (counter 000->100). Asset tracking dipertahankan untuk fast-fail kegagalan (S9) dan strukturnya (Set settled, pasangan listener saling melepas, img.complete) tidak diubah; counter/ring tidak lagi ditulis checkAssets karena dimiliki counter choreography (Skenario 3 + tabel 1.2s-3.0s).
+- **No-assets branch tidak lagi exit 400ms** (Skenario 11): alasan sama - landing `/` adalah no-assets, sehingga exit 400ms = ritual tak terlihat. Perilaku baru: choreography utuh + READY @3.0s + wipe @3.5s; "jeda 400ms" spek V9.0 bertahan secara emergen sebagai jeda READY->exit ~500ms (3.0s->3.5s). Skenario 11 diuji pada `/` (0 img kritis terverifikasi).
+- **Status timeout bersyarat**: spek 3.5 menulis CONTINUING... tanpa syarat; diimplementasi bersyarat (`loaded < total`) agar jalur normal mempertahankan READY dari counter (tabel 3.0s) dan CONTINUING... hanya muncul saat aset memang menggantung (Skenario 8). Jalur gagal tetap CONTINUING... (S9).
+- **Snap exit: bracket opacity 1 (bukan 0.4 spek)**: bracket punya final state choreography 1; ruler tetap 0.4. Status CONTINUING... (jalur gagal) tidak ditimpa READY oleh snap.
+- **Focus otomatis ke skip saat aktif (1.5s)**: tambahan kecil di onStart tween skip (Batasan 7: "hanya tombol Enter Archive yang bisa di-fokus"); sebelum 1.5s fokus berada di dialog (button disabled), Tab berputar BODY<->skip native tanpa pernah jatuh ke konten halaman (S5).
+- **Hover ring di .opening-ring (anak), bukan wrap**: GSAP menulis transform inline di .opening-progress-wrap (scale-in + pulse) sehingga :hover transform pada wrap akan kalah; spec perilaku tetap tercapai (scale 1.02 + glow) via anak + filter pada wrap.
+- **gsap.set clip-path eksplisit `circle(150% at 50% 50%)`**: CSS produksi meminimasi posisi default (`circle(150%)`) sehingga GSAP salah membaca posisi awal 0% dan iris menyusut ke pojok - ditemukan oleh sampler (S14-b versi awal "at 0.0007%") dan diperbaiki dengan inline set; verifikasi ulang: posisi terjaga 50% 50%.
+- **Kursor debu = fitur 3.4 (opsional) diimplementasi** karena `.pixel-dust` memang ada di Hero (syarat spek); 6 partikel, hanya fine pointer.
+- **Exit timeline posisi 0 (bukan 0.1 spek)**: supaya total persis 3.5+1.0=4.5s sesuai "Total maksimum: 4500ms" dan tabel 4.5s.
+- **Fix layar sempit di luar spek: ticker mobile dinaikkan ke bottom 52px**: spek memojokkan ticker bottom 20px dan corner label kanan-bawah bottom 22px; pada 390px keduanya bertabrakan pada satu garis (terlihat di pengujian mobile pertama). Ticker dinaikkan agar keduanya terbaca (bukti `s17-mobile-390-opening.png`; scrollWidth 390/390).
+- **Pesan konsol Curtains "Plane: Unable to create" di /work pre-existing** sejak V8.0 (software-GL headless; terbukti muncul identik tanpa opening di V9.0) - difilter di S10-b dan dilaporkan apa adanya.

@@ -1,9 +1,36 @@
-# Farrel Islami Putra · Editorial Portfolio (Astro V9.0)
+# Farrel Islami Putra · Editorial Portfolio (Astro V9.1)
 
 Portofolio pribadi berbasis **Astro 7** dengan arsitektur **Hub-and-Spoke (Pucuk-Cabang)**.
 Migrasi total dari versi monolitik satu halaman (HTML/CSS/JS murni, V6.7) sesuai
 `PROMPT_EKSEKUSI_V7.0_ASTRO_MIGRATION.md`. Desain visual, palet warna, tipografi,
 animasi GSAP, dan seluruh fitur interaktif dipertahankan identik.
+
+**V9.1 (Enhanced Archive Boot Sequence, Cinematic)** sesuai `PROMPT_V9.1_ENHANCED_OPENING.md`:
+ritual pembuka V9.0 ditingkatkan dari "quiet ritual" (~2.2s) menjadi pengalaman
+pembukaan sinematik ~4.5 detik dengan **komposisi 4 lapis + choreography GSAP**.
+**Layer 1 Ambient**: grain SVG (opacity 0.04, multiply) + vignette radial memudar
+masuk. **Layer 2 Archive Frame**: 4 bracket sudut muncul stagger 0.1s, dua garis
+ukur menggambar diri (scaleX/scaleY 0.6s), label mono `FIP / ARCHIVE / VOL.01` dan
+koordinat Cirebon `-6.7322 / 108.5525` fade-in. **Layer 3 Center Ritual**: label
+fade-slide-up (0.8s), ring scale-in `back.out` (1.0s), counter choreographed
+**000 -> 100 selama 1.8s mulai 1.2s** (INITIALIZING -> CALIBRATING di 50 -> READY
+di 3.0s) dengan ring pulse 1.12x di akhir. **Layer 4 Metadata Ticker**: baris mono
+berganti tiap 500ms (fade-slide) dari array statis - dekoratif, bukan progres nyata.
+**Micro-delight**: 6 partikel debu kursor (motif `.pixel-dust`) melayang di sekitar
+ring via `gsap.quickTo` (damped), ring hover scale 1.02 + drop-shadow, tombol skip
+hover terangkat -2px. **Timing baru (Batasan 2)**: timeout utama 3500ms + exit wipe
+1000ms = total 4.5s; tombol Enter Archive lahir `disabled` dan aktif di 1.5s
+(>= jeda 800ms) bersamaan dengan fokus otomatis. **Exit circular reveal**: clip-path
+`circle(150% at 50% 50%) -> circle(0%)` pada `.opening-clip` (power3.inOut) sementara
+`::backdrop` memudar 1s dan dialog menjadi transparan - hero terungkap DI TENGAH
+iris yang menyusut (REVEAL_AT 0.65s). **Asset tracking V9.0 dipertahankan** untuk
+fast-fail kegagalan aset (`CONTINUING...`); exit tidak lagi dipicu "semua aset
+selesai" agar choreography selalu utuh (landing `/` memang tanpa img kritis).
+**Lifecycle (Batasan 8)**: choreography/counter/pulse via `trackEventTween`, ticker
+interval di `motionRegistry.intervals`, quickTo debu via `trackQuickTo`, listener
+via `trackMotionListener` - semua dibersihkan idempoten oleh `exitSequence()` dan
+tear-down `astro:after-swap`. Terverifikasi 37/37 checks Playwright (16 skenario
+spek + bukti timing beat-by-beat + screenshot). Rincian di `VERIFICATION.md`.
 
 **V9.0 (Absolute Final: Archive Boot Sequence)** sesuai `PROMPT_V9.0_ABSOLUTE_FINAL.md`:
 overlay pembuka V6.6 diganti penuh dengan boot sequence sinematik berbasis `<dialog>`
