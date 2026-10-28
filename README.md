@@ -1,9 +1,22 @@
-# Farrel Islami Putra · Editorial Portfolio (Astro V7.4)
+# Farrel Islami Putra · Editorial Portfolio (Astro V7.5)
 
 Portofolio pribadi berbasis **Astro 7** dengan arsitektur **Hub-and-Spoke (Pucuk-Cabang)**.
 Migrasi total dari versi monolitik satu halaman (HTML/CSS/JS murni, V6.7) sesuai
 `PROMPT_EKSEKUSI_V7.0_ASTRO_MIGRATION.md`. Desain visual, palet warna, tipografi,
 animasi GSAP, dan seluruh fitur interaktif dipertahankan identik.
+
+**V7.5 (Fix Game Deck Scroll Bug)** sesuai `PROMPT_V7.5_FIX_DECK_SCROLL.md`:
+memperbaiki bug kritis di `/archive/play` di mana roda mouse macet setelah
+menekan "INSERT COIN". Akar masalah: kartu game menambah tinggi halaman secara
+dinamis, tetapi `html { height: 100% }` membuat kotak `documentElement` tidak
+pernah berubah sehingga ResizeObserver bawaan Lenis (autoResize) diam saja;
+instance Lenis dan ScrollTrigger tetap memakai batas scroll lama (halaman 900px
+tidak punya ruang scroll sama sekali). Perbaikan hanya menyentuh
+`src/scripts/archive.js`: `lenis.resize()` + `window.ScrollTrigger.refresh()`
+dipanggil lewat `requestAnimationFrame` di tiga titik siklus deck
+(`finishOpen`, `closeDeckInstant`, `finishEject`) sehingga tinggi halaman selalu
+diukur ulang setelah DOM berubah. Logika animasi GSAP dan desain visual tidak
+berubah. Rincian verifikasi di `VERIFICATION.md`.
 
 **V7.4 (Cinematic View Transitions & Motion Lifecycle)** sesuai `PROMPT_V7.4_VIEW_TRANSITIONS.md`:
 navigasi antar halaman kini memakai **Astro View Transitions (`ClientRouter`)** sehingga

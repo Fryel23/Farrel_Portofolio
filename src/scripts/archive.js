@@ -1111,6 +1111,14 @@ function initGameDeck() {
     state = 'idle';
     busy = false;
     setBusy(false);
+
+    /* V7.5 FIX: Tinggi halaman menyusut karena kartu hilang. */
+    if (lenis) {
+      requestAnimationFrame(() => lenis.resize());
+    }
+    if (hasScrollTrigger) {
+      requestAnimationFrame(() => window.ScrollTrigger.refresh());
+    }
   }
 
   /* V6.4 §3.1 (Settle): shared finish step. Guarded by state so the
@@ -1138,6 +1146,15 @@ function initGameDeck() {
     busy = false;
     setBusy(false);
     openTimeline = null;
+
+    /* V7.5 FIX: Beri tahu Lenis & ScrollTrigger bahwa tinggi halaman
+       telah bertambah karena kartu game baru saja muncul. */
+    if (lenis) {
+      requestAnimationFrame(() => lenis.resize());
+    }
+    if (hasScrollTrigger) {
+      requestAnimationFrame(() => window.ScrollTrigger.refresh());
+    }
   }
 
   function openDeck() {
@@ -1249,6 +1266,14 @@ function initGameDeck() {
       sweep.remove();
       crtLine.remove();
       closeDeckInstant(); // stops any scramble, resets labels and aria
+
+      /* V7.5 FIX: Pastikan tinggi halaman diukur ulang setelah eject. */
+      if (lenis) {
+        requestAnimationFrame(() => lenis.resize());
+      }
+      if (hasScrollTrigger) {
+        requestAnimationFrame(() => window.ScrollTrigger.refresh());
+      }
     };
 
     const tl = gsap.timeline({ onComplete: finishEject });

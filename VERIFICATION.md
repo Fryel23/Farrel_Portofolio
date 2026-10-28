@@ -591,3 +591,85 @@ dieksekusi Fase demi Fase pada proyek Astro V7.3.
   (context reduce -> forceContentVisible) + blok CSS transisi.
 - Deploy Vercel nyata; GitHub/Spotify API live (rate limit sandbox, jalur
   fallback terverifikasi); Lighthouse.
+
+# LAPORAN V7.5 - FIX GAME DECK SCROLL BUG (LENIS & SCROLLTRIGGER)
+
+Laporan verifikasi `PROMPT_V7.5_FIX_DECK_SCROLL.md`. Pengujian pada hasil
+`bun run build` (Astro 7.4.2, 11 halaman) via `astro preview`, browser headless
+Chromium, viewport 1440x900 dan 390x844.
+
+## Akar masalah (analisis)
+
+- Saat deck tertutup, tinggi `/archive/play` tepat setinggi viewport
+  (terukur `h1: 900` pada viewport 900). Limit scroll Lenis saat boot = 0.
+- Setelah INSERT COIN, grid kartu menambah tinggi halaman menjadi 1708px.
+- `global.css` memakai `html { height: 100% }`, sehingga content-box
+  `documentElement` (yang diamati `contentResizeObserver` Lenis) tidak pernah
+  berubah ukuran; ResizeObserver bawaan Lenis (autoResize) tidak pernah
+  terpanggil dan limit scroll internal Lenis tetap 0 -> roda mouse macet.
+- ScrollTrigger juga memegang posisi start/end lama (terukur `stMaxEnd: 779`
+  sebelum membuka deck) sehingga trigger di bawah deck salah posisi.
+
+## FASE 1 - Perbaikan di src/scripts/archive.js (satu-satunya file kode yang disentuh)
+
+| Titik | Perubahan | Bukti |
+| --- | --- | --- |
+| 1.1 `finishOpen()` | blok V7.5 FIX setelah `openTimeline = null;` | lenis.resize() + ScrollTrigger.refresh() via requestAnimationFrame |
+| 1.2 `closeDeckInstant()` | blok V7.5 FIX setelah `setBusy(false);` | idem, tinggi menyusut diukur ulang |
+| 1.3 `finishEject()` | blok V7.5 FIX tepat setelah `closeDeckInstant();` | idem, jaring pengaman kedua setelah eject |
+
+Tidak ada logika animasi GSAP, selektor, timing, atau desain visual yang
+diubah; hanya tiga blok 8-baris yang ditambahkan.
+
+## Bukti browser (golden path, 1440x900)
+
+- Baseline (deck tertutup): `h1: 900`, `stMaxEnd: 779`, label INSERT COIN.
+- INSERT COIN -> finishOpen: 11 kartu, `aria-expanded=true`, label EJECT COIN,
+  tinggi halaman `h2: 1708`, dan `stMaxEnd` bergeser `779 -> 1666`
+  (bukti `window.ScrollTrigger.refresh()` benar-benar dieksekusi).
+- Uji scroll via 12 WheelEvent sintetis (deltaY total 18000):
+  `scrollY: 808` = `maxPossible: 808` (1708 - 900) -> scroll mencapai batas
+  bawah halaman baru dengan tepat. Dengan kode lama, limit Lenis = 0 membuat
+  scrollY terjebak di 0 (roda macet total). Inilah bukti `lenis.resize()`
+  memperbarui limit.
+- EJECT COIN -> finishEject: tinggi kembali `h3: 900`, label INSERT COIN,
+  `aria-expanded=false`, grid hidden.
+- Wheel up (12 event negatif): `scrollYAfterUp: 0` -> limit menyusut dengan
+  benar, tidak ada limit basi 808 yang bertahan.
+- Siklus kedua (INSERT lagi + wheel): `scrollY: 808` lagi -> state machine
+  stabil, tidak ada degradasi.
+- Screenshot `/tmp/v75-deck-open-1440.png`: deck penuh + footer terlihat di
+  dasar halaman tanpa white gap.
+- Console: hanya warning GSAP pre-existing milik halaman archive lain
+  (curiosity-panel, offscreen-layout, github-grid, companion-inner) yang sudah
+  terdokumentasi sejak V7.4; tidak bertambah, tidak ada page error.
+
+## Bukti browser (mobile 390x844)
+
+- INSERT COIN + wheel sintetis: tinggi 3307, `scrollY: 2463` =
+  `maxPossible: 2463` (3307 - 844) -> full scroll.
+- `docScrollW: 390 = vw` -> tanpa overflow horizontal.
+
+## VALIDASI MANDIRI V7.5
+
+1. `node --check` atas salinan `.mjs` src/scripts/archive.js: LOLOS.
+2. `grep` em dash (U+2014) seluruh `src/` + README + VERIFICATION: KOSONG.
+3. `bun run build`: 11 halaman sukses.
+
+## Kepatuhan Batasan Absolut V7.5
+
+1. **Hanya `src/scripts/archive.js`** yang diubah (kode aplikasi); README.md
+   dan VERIFICATION.md diperbarui sebagai dokumentasi, sesuai praktik V7.1-V7.4.
+2. **Logika animasi GSAP & desain visual tidak disentuh**: tidak ada tween,
+   timing, ease, atau selektor yang berubah; hanya pemanggilan ulang ukuran.
+3. **`requestAnimationFrame` dipakai** sebelum `lenis.resize()` dan
+   `window.ScrollTrigger.refresh()` di ketiga titik, sehingga DOM baru
+   selesai dirender sebelum diukur.
+
+## Catatan jujur
+
+- Blok di `finishEject()` redundan terhadap blok `closeDeckInstant()` yang
+  dipanggilnya (resize/refresh jalan dua kali dalam dua frame berturut-turut);
+  kedua operasi idempoten dan murah, kode dipertahankan persis sesuai spesifikasi.
+- Pengujian wheel memakai WheelEvent sintetis karena mouse wheel headless
+  tidak menyampaikan event asli (keterbatasan tooling yang sama sejak V7.4).
