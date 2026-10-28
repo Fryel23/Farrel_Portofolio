@@ -46,7 +46,7 @@ const number = String(1).padStart(2, '0');
 
       {
         !isReserved && d.image && (
-          <div class="case-study-cover">
+          <div class="case-study-cover" transition:name={`project-image-${entry.id}`}>
             <img src={d.image} alt={`${d.title}: project cover illustration`} loading="eager" decoding="async" />
           </div>
         )

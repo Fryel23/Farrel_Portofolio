@@ -1,4 +1,8 @@
 ---
+/* V7.4 Fase 1: ClientRouter (View Transitions bawaan Astro). Navigasi
+   antar halaman kini client-side tanpa reload penuh, tanpa flash layar
+   putih. Siklus hidup JavaScript menyesuaikan di core.js (astro:page-load). */
+import { ClientRouter } from 'astro:transitions';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 import '../styles/global.css';
@@ -35,6 +39,8 @@ const {
       href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <!-- V7.4 Fase 1: router transisi tampilan (wajib di dalam <head>). -->
+    <ClientRouter />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -61,7 +67,9 @@ const {
       <button class="opening-skip" type="button">SKIP</button>
     </div>
 
-    <main id="main">
+    <!-- V7.4 Fase 1: cross-fade halus pada setiap pergantian halaman;
+         header, footer, dan overlay opening berada di luar grup fade. -->
+    <main id="main" transition:animate="fade">
       <slot />
     </main>
 

@@ -383,9 +383,11 @@ export function renderIdentity() {
 /* V7.0: delegasi dokumen. Perilaku sama untuk link statis, dan link
    hasil render dinamis (hobi, SEE ALSO curiosity, kartu proyek) ikut
    ter-smooth-scroll karena render halaman berjalan setelah interaksi
-   global. */
+   global. V7.4: listener level dokumen dilacak (trackMotionListener)
+   supaya teardown navigasi ClientRouter melepasnya, tidak menumpuk
+   setiap kali boot berjalan lagi di halaman berikutnya. */
 function initAnchors() {
-  doc.addEventListener('click', (event) => {
+  trackMotionListener(doc, 'click', (event) => {
     const anchor = event.target.closest('a[href^="#"]');
     if (!anchor) return;
     const hash = anchor.getAttribute('href');
@@ -423,10 +425,12 @@ function initQuickMenu() {
       );
     }
   });
-  doc.addEventListener('click', (event) => {
+  /* V7.4: listener level dokumen dilacak agar terlepas saat teardown
+     navigasi (tidak menumpuk antar boot). */
+  trackMotionListener(doc, 'click', (event) => {
     if (!event.target.closest('#quick-menu') && !event.target.closest('#menu-dots')) closeQuickMenu();
   });
-  doc.addEventListener('keydown', (event) => {
+  trackMotionListener(doc, 'keydown', (event) => {
     if (event.key === 'Escape' && !menu.hidden) {
       closeQuickMenu();
       button.focus(); // focus never lost when closing via keyboard
@@ -473,8 +477,8 @@ function initMobileMenu() {
     });
   });
 
-  // Tutup menu dengan tombol Escape
-  doc.addEventListener('keydown', (event) => {
+  // Tutup menu dengan tombol Escape. V7.4: dilacak untuk teardown.
+  trackMotionListener(doc, 'keydown', (event) => {
     if (event.key === 'Escape' && !drawer.hidden) {
       toggleMenu();
       toggle.focus();
@@ -506,10 +510,9 @@ function requestProgress() {
    V6.4 §1.2.2: the globalTimeline pause/resume handler also lives
    here now (outside matchMedia) so a tab that is hidden exactly when
    the motion preference flips can never come back stuck on pause.
-   This listener is intentionally NOT tracked: it must survive every
-   matchMedia revert, and gsap.globalTimeline.play() is harmless while
-   no tween exists (and correct under reduce, where nothing animates
-   anyway because every reduced path avoids tweened motion). */
+   V7.4: kedua listener dilacak (trackMotionListener) sehingga mereka
+   tetap hidup melampaui revert matchMedia (intent V6.4 dipertahankan)
+   tetapi tetap terlepas saat teardown navigasi ClientRouter. */
 function initPageProgressBar() {
   const bar = qs('#progress-bar');
   if (bar) {
@@ -517,11 +520,11 @@ function initPageProgressBar() {
     bar.style.width = '100%';
     bar.style.transform = 'scaleX(0)';
   }
-  window.addEventListener('scroll', requestProgress, { passive: true });
+  trackMotionListener(window, 'scroll', requestProgress, { passive: true });
   updateProgress();
 
   if (hasGSAP) {
-    doc.addEventListener('visibilitychange', () => {
+    trackMotionListener(doc, 'visibilitychange', () => {
       if (doc.hidden) {
         gsap.globalTimeline.pause();
       } else {
@@ -550,6 +553,7 @@ function fallbackReveal() {
       );
     });
   }, { rootMargin: '0px 0px -12% 0px', threshold: 0.1 });
+  trackObserver(observer); // V7.4: observer ikut teardown navigasi
   targets.forEach((node) => observer.observe(node));
 }
 
@@ -618,8 +622,10 @@ function initArchiveOpening(onComplete) {
   const onScroll = () => { exitOverlay(true); };
 
   overlay.addEventListener('click', () => exitOverlay(true));
-  doc.addEventListener('keydown', onKey);
-  window.addEventListener('scroll', onScroll, { capture: true, passive: true });
+  /* V7.4: listener level dokumen/window dilacak supaya navigasi di
+     tengah-tengah opening (kasus jarang) tetap bersih saat teardown. */
+  trackMotionListener(doc, 'keydown', onKey);
+  trackMotionListener(window, 'scroll', onScroll, { capture: true, passive: true });
 
   // Entrance (9.3 steps a to e).
   gsap.to(topLabel, { opacity: 1, duration: 0.4, ease: 'power2.out' });
@@ -1183,23 +1189,28 @@ function initNowPlaying() {
 
   /* V6.3 §1.4: one interval id, started only while visible and stopped
      the moment the tab hides. The guard inside poll() stays as a safety
-     net for a page that boots while already hidden. */
+     net for a page that boots while already hidden.
+     V7.4: interval didaftarkan di motionRegistry.intervals supaya
+     teardown navigasi ClientRouter menghentikannya; visibilitychange
+     dilacak lewat trackMotionListener (tidak menumpuk antar boot). */
   let pollIntervalId = null;
 
   function startPolling() {
     if (pollIntervalId !== null) return;
     if (doc.hidden) return;
     pollIntervalId = window.setInterval(poll, pollMs);
+    motionRegistry.intervals.add(pollIntervalId);
   }
 
   function stopPolling() {
     if (pollIntervalId !== null) {
       window.clearInterval(pollIntervalId);
+      motionRegistry.intervals.delete(pollIntervalId);
       pollIntervalId = null;
     }
   }
 
-  doc.addEventListener('visibilitychange', () => {
+  trackMotionListener(doc, 'visibilitychange', () => {
     if (doc.hidden) {
       stopPolling();
     } else {
@@ -1279,14 +1290,26 @@ window.__FIP_OPENING_ACTIVE = false;
 
 function startHeroGateGlobal() {
   if (window.__FIP_OPENING_ACTIVE) {
-    window.addEventListener('fip:start-hero', () => initSectionMotion(), { once: true });
+    /* V7.4: listener jembatan hero dilacak agar terlepas saat teardown
+       navigasi (listener window bertahan lintas swap). */
+    trackMotionListener(window, 'fip:start-hero', () => initSectionMotion(), { once: true });
   } else {
     initSectionMotion();
   }
 }
 
 bootPage({
-  renders: [renderIdentity, buildHeadingTicks, buildArchiveSpines, buildAllAmbientDebris, buildV65Ornaments],
+  renders: [
+    renderIdentity,
+    buildHeadingTicks,
+    buildArchiveSpines,
+    buildAllAmbientDebris,
+    buildV65Ornaments,
+    /* V7.4 Fase 3: engine ambient generatif terpasang di level modul
+       (sekali per sesi). Setelah ClientRouter mengganti DOM, canvas
+       halaman baru harus di-mount ulang; no-op di halaman tanpa canvas. */
+    () => { if (window.GenerativeAmbient && typeof window.GenerativeAmbient.remount === 'function') window.GenerativeAmbient.remount(); },
+  ],
   interactions: [initMobileMenu, initQuickMenu, initAnchors, initNowPlaying, initPageProgressBar, fallbackReveal],
   motion: [
     initSmoothScroll,

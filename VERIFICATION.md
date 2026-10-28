@@ -433,3 +433,161 @@ pada 390x844, 768x900, dan 1440x900 (regresi desktop).
    `.menu-dots`, label mono letter-spacing untuk "DEEP DIVE", garis
    hairline antar tautan.
 4. **Tanpa em dash (U+2014)**: grep seluruh proyek KOSONG.
+
+---
+
+# LAPORAN V7.4 - CINEMATIC VIEW TRANSITIONS & MOTION LIFECYCLE
+
+Sesuai `PROMPT_V7.4_VIEW_TRANSITIONS.md` (112 baris, 3 Fase + 4 Batasan Absolut),
+dieksekusi Fase demi Fase pada proyek Astro V7.3.
+
+## Ringkasan status
+
+| Butir | Spesifikasi | Status |
+| --- | --- | --- |
+| Fase 1.1 | Impor `ClientRouter` dari `astro:transitions` | PASS |
+| Fase 1.2 | `<ClientRouter />` di dalam `<head>` | PASS |
+| Fase 1.3 | `transition:animate="fade"` pada `<main>` | PASS |
+| Fase 2.1 | `transition:name` unik pada cover kartu proyek | PASS |
+| Fase 2.2 | Nama identik pada cover case study (`[slug].astro`) | PASS |
+| Fase 2.3 | Nama dipertahankan pada render JavaScript (paritas) | PASS |
+| Fase 3.1 | Inisialisasi lewat `astro:page-load` (bukan hanya DOMContentLoaded) | PASS |
+| Fase 3.2 | Lenis di-reset/diinisialisasi ulang per navigasi | PASS |
+| Fase 3.3 | `ScrollTrigger.refresh()` di akhir inisialisasi | PASS |
+| Batasan 1 | `ClientRouter` bawaan Astro, tanpa Swup/Barba.js | PASS |
+| Batasan 2 | Lenis + GSAP ScrollTrigger tetap berfungsi di halaman tujuan | PASS |
+| Batasan 3 | Memakai `astro:page-load` sebagai kunci siklus hidup | PASS |
+| Batasan 4 | Tanpa em dash (U+2014) | PASS |
+
+## FASE 1 - CLIENT ROUTER & GLOBAL TRANSITIONS
+
+- `BaseLayout.astro`: impor `ClientRouter` dari `astro:transitions`,
+  `<ClientRouter />` di `<head>` (setelah font links), `<main id="main"
+  transition:animate="fade">`. Header, footer, overlay opening, companion,
+  grain berada di luar grup fade (per markup referensi spek).
+- Build 11 halaman sukses; HTML ter-build memuat meta
+  `astro-view-transitions-enabled` + fallback meta; `<main>` membawa scope
+  transisi (`data-astro-transition-scope`).
+- Browser headless (preview build): `typeof document.startViewTransition ===
+  "function"` (jalur native); klik "Contact" di nav -> URL dan `data-page`
+  berganti tanpa reload dokumen (state JS tetap hidup); tombol back browser
+  kembali ke halaman sebelumnya lewat router.
+
+## FASE 2 - MORPHING ELEMEN (PROJECT CARD -> CASE STUDY)
+
+- `ProjectCard.astro`: prop `id` (id entri collection) wajib diteruskan
+  pemanggil; `.project-cover` diberi `transition:name={\`project-image-${id}\`}`.
+  Label tautan internal dibakukan "Read case study".
+- `[slug].astro`: `.case-study-cover` diberi `transition:name` dengan pola yang
+  sama memakai `entry.id`.
+- `index.astro` + `work/index.astro`: meneruskan `id: entry.id` (+ `href` di
+  /work agar kartu statis dan hasil render JS identik).
+- `content.js`: `slug: 'aqi-cirebon'` pada projects[0] sebagai jembatan data
+  untuk render JS; `work.js` `projectCardMarkup` memasang
+  `cover.style.viewTransitionName = 'project-image-' + slug` dan merender
+  tautan internal "Read case study" -> `/work/<slug>` (paritas penuh statis vs JS).
+- Bukti terukur (preview build):
+  - HTML ter-build: `view-transition-name: project-image-aqi-cirebon` hadir di
+    index.html, work/index.html, dan work/aqi-cirebon/index.html.
+  - Setelah boot JS di home: computed `view-transition-name` kartu = nilai yang
+    sama; tautan kartu = `/work/aqi-cirebon` label "Read case study".
+  - Klik kartu -> `document.startViewTransition` terpanggil tepat satu kali
+    per navigasi (instrumentasi bersih: log `["VT:/"]`), `document.getAnimations()`
+    menunjukkan animasi transisi berjalan (11 animasi) lalu 0 setelah selesai,
+    mendarat di `/work/aqi-cirebon` dengan cover bernama sama.
+  - Arah balik (detail -> "Back to the archive" -> /work) juga memicu
+    `startViewTransition` (morph terbalik).
+  - Filter /work (3 -> 1 -> 3) tidak menghilangkan nama transisi (render JS
+    memasangnya kembali setiap render).
+- **Penyesuaian yang dilaporkan jujur**: kartu proyek nyata sebelumnya menaut ke
+  dataset eksternal (warisan V6.7 satu halaman; tidak ada jalur internal ke
+  halaman detail, sehingga morph spek mustahil terjadi). Sesuai tujuan Fase 2,
+  kartu ber-slug kini menaut ke case study; tautan dataset tetap tersedia di
+  halaman detail (tombol CTA). Slot reserved tetap tanpa tautan/nama transisi.
+
+## FASE 3 - PERBAIKAN SIKLUS HIDUP JAVASCRIPT
+
+- `core.js`:
+  - `bootPage()` kini mendaftar listener **`astro:page-load`**; boot berjalan
+    tepat satu kali per epoch navigasi (latch `bootedEpoch` per pemanggil).
+    Load awal tetap boot saat modul dieksekusi (perilaku lama, anti-delay),
+    `astro:page-load` yang menyusul ber-epoch sama sehingga tidak boot ganda.
+  - Opsi `resolve` untuk modul multi-halaman; dipakai `archive.js`
+    (`PAGE_BOOT[data-page]` dibaca ulang tiap muatan; sebelumnya dibaca sekali
+    saat eksekusi modul - bug laten untuk navigasi client-side).
+  - Teardown di **`astro:after-swap`**: revert SEMUA konteks
+    `gsap.matchMedia()` (dilacak di `motionContexts`; sebelumnya variabel
+    tunggal tertimpa oleh boot halaman - konteks global terlepas), registry
+    dibersihkan, safety-net `ScrollTrigger.getAll().forEach(kill)`,
+    `gsap.globalTimeline.clear()`, Lenis dihancurkan (dibuat ulang boot global).
+  - `ScrollTrigger.refresh()` di akhir `run()` (spek Fase 3).
+  - Registry: set `tickerCallbacks` baru (gsap.ticker di luar konteks, dipakai
+    data rain).
+- Konversi listener persisten ke `trackMotionListener` (terlepas saat teardown,
+  tidak menumpuk antar boot): delegasi anchor, quick menu (click+keydown),
+  drawer mobile (keydown), progress bar (scroll+visibilitychange), Now Playing
+  (visibilitychange + interval ke `motionRegistry.intervals`), gerbang hero
+  (`fip:start-hero`, global + home), listener opening (keydown+scroll), search
+  arsip (click), Konami (keydown), companion (visibilitychange), data rain
+  (visibilitychange+resize+ticker), tooltip GitHub (visibilitychange),
+  `fallbackReveal` observer (trackObserver).
+- `generative-ambient.js`: observer dibuat via factory (`ensureObserver`),
+  teardown mengosongkan daftar instance + memutus observer; handle publik
+  `remount()` dipanggil boot global tiap muatan halaman.
+- Bukti terukur (preview build, 1440x900):
+  - Multi-hop home -> about -> archive/play -> work -> connect ->
+    archive/off-screen -> home: SEMUA halaman boot (render + motion) pada
+    navigasi client-side: about 10 chip software/11 skill/4 journey/5 node
+    curiosity; play 11 kartu deck, INSERT COIN -> EJECT berfungsi; work filter
+    3-1-3; connect 4 kartu sosial + toast copy; off-screen 2 canvas ambient
+    ter-mount ulang (`__ambientInstance`, width > 0); home dust 14 + hero
+    opacity 1 (entrance berjalan ulang).
+  - Bebas akumulasi: ScrollTrigger home 25 -> 25 -> 25 (dua round trip penuh),
+    about 17 -> 17; dust tetap 14; quick menu buka/tutup + Escape normal
+    setelah 6 navigasi (indikator tidak ada listener ganda).
+  - Back/forward (popstate) boot benar; hard load di halaman dalam
+    (/archive/credentials) lalu navigasi ke /work memicu eksekusi pertama
+    work.js saat navigasi dan boot lengkap (3 kartu + 2 filter).
+  - Konami pada play via navigasi client-side: toast easter egg + data rain
+    berjalan dan membersihkan diri.
+- Catatan verifikasi: `agent-browser mouse wheel` tidak menyampaikan event
+  wheel ke halaman di lingkungan headless ini (scrollY tetap pada hard load
+  sebelum perubahan V7.4 apa pun); verifikasi Lenis memakai WheelEvent
+  sintetis (scroll 0 -> 600 halus) dan Lenis aktif (`html.lenis`).
+
+## Regresi
+
+- Sticky footer /connect viewport 2000px: footerBottom = 2000 = vh, gap 0.
+- Mobile 390px: drawer 10 tautan, tutup otomatis saat navigasi; scrollX tetap 0
+  (docScrollW 402 dari dekorasi terpotong, identik baseline V7.3).
+- Opening overlay: tampil sekali per sesi (sessionStorage), auto-hide, gate
+  hero tetap bekerja; tidak tampil ulang pada navigasi client-side.
+- 11 halaman selesai di-sweep lewat navigasi client-side tanpa page error;
+  warning GSAP pre-existing tidak bertambah.
+
+## VALIDASI MANDIRI V7.4
+
+- `bun run build`: 11 halaman sukses (setelah tiap fase + final).
+- `node --check` (salinan .mjs): 8 file JS OK (about, archive, connect, core,
+  generative-ambient, global, home, work).
+- grep em dash U+2014 seluruh proyek (minus node_modules/.astro/dist): KOSONG;
+  dist juga 0.
+
+## Kepatuhan Batasan Absolut V7.4
+
+1. **ClientRouter bawaan Astro**: satu-satunya mekanisme navigasi; tidak ada
+   Swup/Barba.js atau library eksternal baru (package.json tetap astro+gsap+lenis).
+2. **Lenis + GSAP ScrollTrigger utuh di halaman baru**: terverifikasi di semua
+   halaman tujuan navigasi client-side (boot + refresh + interaksi).
+3. **`astro:page-load` sebagai kunci**: seluruh inisialisasi melewatinya;
+   DOMContentLoaded hanya sebagai fallback load awal (epoch 0) sesuai perilaku
+   lama, tidak lagi satu-satunya pemicu.
+4. **Tanpa em dash (U+2014)**: grep KOSONG di src, docs, dan dist.
+
+## NOT RUN (jujur)
+
+- Emulasi runtime `prefers-reduced-motion: reduce` dua arah (tooling headless
+  tidak mengekspos emulasi reducedMotion); diverifikasi lewat jalur kode
+  (context reduce -> forceContentVisible) + blok CSS transisi.
+- Deploy Vercel nyata; GitHub/Spotify API live (rate limit sandbox, jalur
+  fallback terverifikasi); Lighthouse.

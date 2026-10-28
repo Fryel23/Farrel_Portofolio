@@ -209,12 +209,16 @@ export const DATA = {
     ]
   },
 
-  /* Real projects only. A card shows a working link ONLY when `link`
-     points to an actual destination. The AQI project has no repository,
-     paper or results page yet; the open dataset is the only public
-     destination, so it is the only CTA. */
+  /* Real projects only. A card shows a working link ONLY when it points
+     to an actual destination. V7.4: `slug` mengikat entri ini ke halaman
+     case study (Content Collection src/content/work/<slug>.md) supaya
+     kartu menaut ke detail secara internal dan morph view transition
+     (Fase 2) memakai nama yang identik di markup statis maupun hasil
+     render JavaScript. Tautan dataset eksternal tetap tersedia sebagai
+     CTA di halaman detailnya. */
   projects: [
     {
+      slug: 'aqi-cirebon',
       title: 'Air Quality Index Trends · Cirebon (2021–2024)',
       category: 'Data & Research',
       tag: 'Research / Data Analysis',

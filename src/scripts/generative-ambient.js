@@ -167,7 +167,11 @@
     instances.forEach((instance) => {
       if (instance.destroy) instance.destroy();
     });
+    /* V7.4: daftar instance dikosongkan agar resize handler tidak
+       menyentuh instance mati (destroy mematikan ctx internalnya). */
+    instances.length = 0;
     if (visibility) visibility.disconnect();
+    visibility = null;
     if (resizeTimer) window.clearTimeout(resizeTimer);
   }
   function onEnvironmentChange() {
@@ -471,22 +475,29 @@
   /* ======================================================================
    * Registration (V6.5 §5.1) + per-canvas IntersectionObserver (§5.2)
    * ==================================================================== */
-  visibility = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      const instance = entry.target.__ambientInstance;
-      if (!instance) return;
-      if (entry.isIntersecting) {
-        instance.resize(); // re-fit in case the layout shifted
-        activeCanvases.add(instance);
-        startLoop();
-      } else {
-        activeCanvases.delete(instance);
-        if (!activeCanvases.size) stopLoop();
-      }
-    });
-  }, { threshold: 0.04, rootMargin: '60px 0px' });
+  /* V7.4 Fase 3: observer dibuat lewat factory. Teardown navigasi
+     (ClientRouter) memutus observer lama; mountCanvases() berikutnya
+     membuat observer baru untuk canvas halaman yang baru. */
+  function ensureObserver() {
+    if (visibility) return;
+    visibility = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const instance = entry.target.__ambientInstance;
+        if (!instance) return;
+        if (entry.isIntersecting) {
+          instance.resize(); // re-fit in case the layout shifted
+          activeCanvases.add(instance);
+          startLoop();
+        } else {
+          activeCanvases.delete(instance);
+          if (!activeCanvases.size) stopLoop();
+        }
+      });
+    }, { threshold: 0.04, rootMargin: '60px 0px' });
+  }
 
   function mountCanvases() {
+    ensureObserver();
     const canvases = doc.querySelectorAll('canvas.ambient-canvas');
     Array.prototype.forEach.call(canvases, (el) => {
       const effect = el.dataset.effect;
@@ -499,6 +510,19 @@
   mountCanvases();
 
   /* Public handle (V6.5 §3.1): the loop and the live set are exposed so
-     future features can integrate without owning a second rAF loop. */
-  window.GenerativeAmbient = { activeCanvases: activeCanvases, startLoop: startLoop, stopLoop: stopLoop };
+     future features can integrate without owning a second rAF loop.
+     V7.4 Fase 3: remount() dipanggil global.js pada setiap
+     astro:page-load: canvas halaman yang baru di-mount lagi setelah
+     ClientRouter mengganti DOM (no-op saat reduce/mobile atau saat
+     halaman tak punya canvas ambient). */
+  window.GenerativeAmbient = {
+    activeCanvases: activeCanvases,
+    startLoop: startLoop,
+    stopLoop: stopLoop,
+    remount: function () {
+      if (reduceMql.matches || mobileMql.matches) return;
+      teardown(); // hentikan loop, destroy instance lama (canvas lama)
+      mountCanvases();
+    }
+  };
 })();

@@ -1,9 +1,21 @@
-# Farrel Islami Putra · Editorial Portfolio (Astro V7.3)
+# Farrel Islami Putra · Editorial Portfolio (Astro V7.4)
 
 Portofolio pribadi berbasis **Astro 7** dengan arsitektur **Hub-and-Spoke (Pucuk-Cabang)**.
 Migrasi total dari versi monolitik satu halaman (HTML/CSS/JS murni, V6.7) sesuai
 `PROMPT_EKSEKUSI_V7.0_ASTRO_MIGRATION.md`. Desain visual, palet warna, tipografi,
 animasi GSAP, dan seluruh fitur interaktif dipertahankan identik.
+
+**V7.4 (Cinematic View Transitions & Motion Lifecycle)** sesuai `PROMPT_V7.4_VIEW_TRANSITIONS.md`:
+navigasi antar halaman kini memakai **Astro View Transitions (`ClientRouter`)** sehingga
+perpindahan halaman terasa seperti aplikasi native tanpa flash layar putih
+(`transition:animate="fade"` pada `<main>`). Gambar kartu proyek **morph** menjadi
+cover case study lewat `transition:name` yang identik antara kartu dan halaman detail
+(`project-image-<slug>`, dipertahankan juga pada render JavaScript). Siklus hidup
+JavaScript dibangun ulang di sekitar **`astro:page-load`**: semua inisialisasi
+(GSAP, ScrollTrigger, Lenis, render data) berjalan ulang pada setiap muatan halaman,
+teardown halaman lama dieksekusi di `astro:after-swap`, dan `ScrollTrigger.refresh()`
+dipanggil di akhir setiap inisialisasi. Reduced motion mematikan transisi halaman.
+Rincian verifikasi di `VERIFICATION.md`.
 
 **V7.3 (Mobile Navigation & Responsive Fixes)** sesuai `PROMPT_V7.3_MOBILE_RESPONSIVE.md`:
 navigasi mobile yang sebelumnya hilang di bawah 980px kini digantikan **Mobile
@@ -129,6 +141,66 @@ src/
   media query dipecah mengikuti rule). Halaman yang memakai komponen lintas
   berkas (mis. homepage memakai komponen About/Contact) memuat CSS halaman
   tersebut juga. Tidak ada satu pun nilai aturan yang diubah.
+
+## Catatan V7.4 (Cinematic View Transitions & Motion Lifecycle)
+
+- **Fase 1 - ClientRouter**: `ClientRouter` dari `astro:transitions` dipasang di
+  `<head>` `BaseLayout.astro`; `<main id="main">` diberi `transition:animate="fade"`
+  sehingga tiap pergantian halaman melakukan cross-fade tanpa flash putih. Header,
+  footer, dan overlay opening berada di luar grup fade. Browser tanpa View Transitions
+  API (mis. Firefox) otomatis memakai fallback simulasi bawaan Astro.
+- **Fase 2 - Morph kartu ke case study**: `.project-cover` (kartu) dan
+  `.case-study-cover` (halaman detail) memakai nama transisi identik
+  `project-image-<slug>` (`<slug>` = id entri Content Collection, mis.
+  `project-image-aqi-cirebon`). Nama yang sama dipasang juga pada render JavaScript
+  (`work.js` `projectCardMarkup` via `style.viewTransitionName`) sehingga morph tetap
+  bekerja setelah `renderProjects()` membangun ulang grid saat boot maupun saat filter.
+  Slot reserved tidak diberi nama transisi (tidak punya halaman detail).
+- **Penyesuaian tautan kartu (jujur dilaporkan)**: sejak V6.7 kartu proyek nyata
+  menaut langsung ke dataset eksternal ("Open dataset source"), karena versi satu
+  halaman belum punya halaman detail. Spek V7.4 mensyaratkan kartu bisa diklik menuju
+  halaman detail untuk morph, sehingga kartu proyek ber-slug kini menaut ke case study
+  ("Read case study", internal). Tautan dataset eksternal tidak hilang: tetap tersedia
+  sebagai tombol CTA di halaman detailnya. Slot reserved tetap tanpa tautan.
+- **Fase 3 - Siklus hidup JavaScript (kunci utama)**: `bootPage()` di `core.js` kini
+  memicu inisialisasi pada event **`astro:page-load`** (bukan lagi hanya
+  `DOMContentLoaded`). Router Astro menjamin urutan: `swap()` mengganti DOM, modul
+  halaman yang belum pernah dieksekusi dijalankan, lalu `astro:page-load` dipicu -
+  jadi setiap bootPage (global + per halaman) menjalankan render/interaksi/motion
+  tepat satu kali per muatan halaman, dengan latch epoch anti boot ganda.
+- **Teardown navigasi**: pada `astro:after-swap` seluruh motion halaman lama dimatikan:
+  semua konteks `gsap.matchMedia()` di-revert (termasuk fungsi cleanups halaman),
+  registry dibersihkan (listener terlacak, timer, interval, observer, tween,
+  ticker callback), sisa ScrollTrigger dibunuh, timeline global disapu, dan Lenis
+  dihancurkan. Halaman baru memulai dari kondisi bersih; Lenis dibuat ulang oleh
+  boot global. Diuji bebas akumulasi: jumlah ScrollTrigger per halaman stabil
+  (home 25, about 17) setelah beberapa round trip.
+- **`ScrollTrigger.refresh()` di akhir inisialisasi** sesuai spek, agar posisi trigger
+  dihitung ulang terhadap tinggi halaman yang baru.
+- **Listener level dokumen/window dilacak** (`trackMotionListener`) di `global.js`,
+  `home.js`, dan `archive.js` (delegasi anchor, quick menu, drawer mobile, progress
+  bar, visibilitychange, Konami, resize) supaya terlepas saat teardown dan tidak
+  menumpuk antar navigasi. Interval polling Now Playing didaftarkan ke registry.
+- **`archive.js` satu modul empat halaman**: konfigurasi boot per halaman arsip
+  (hub, play, credentials, off-screen) kini di-resolve pada setiap `astro:page-load`
+  lewat opsi `resolve` (kunci halaman dibaca dari `data-page`), karena modul hanya
+  dieksekusi sekali per sesi browser.
+- **Engine ambient generatif**: `generative-ambient.js` mengekspos `remount()`;
+  dipanggil boot global pada setiap muatan halaman untuk memasang ulang canvas
+  halaman baru setelah DOM diganti (observer dibuat ulang; no-op saat reduced motion
+  atau di bawah 900px, sesuai aturan V6.5).
+- **Reduced motion**: blok CSS `@media (prefers-reduced-motion: reduce)` mematikan
+  animasi `::view-transition-*` dan fallback `data-astro-transition-fallback`, sehingga
+  pengguna yang meminta pengurangan gerak mendapat pergantian halaman langsung
+  tanpa animasi.
+- **Batasan Absolut terpenuhi**: memakai `ClientRouter` bawaan Astro (tanpa Swup/
+  Barba.js), Lenis + GSAP ScrollTrigger tetap berfungsi di halaman tujuan navigasi,
+  inisialisasi memakai `astro:page-load`, dan tanpa em dash (U+2014).
+- Terverifikasi di browser headless (build preview): 11 halaman boot sempurna lewat
+  navigasi client-side maupun back/forward, morph terpicu satu kali per navigasi
+  (`startViewTransition` terpanggil, animasi berjalan lalu beres), Game Deck
+  INSERT/EJECT, filter 3-1-3, copy email, Konami, drawer mobile, dan sticky footer
+  semuanya berfungsi pada halaman yang dikunjungi lewat transisi.
 
 ## Catatan V7.3 (Mobile Navigation & Responsive)
 

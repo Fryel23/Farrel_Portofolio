@@ -62,6 +62,7 @@ const reserved = entries.filter((e) => e.data.status === 'RESERVED');
           <ProjectCard
             project={{
               ...entry.data,
+              id: entry.id,
               href: `/work/${entry.id}`,
             }}
             index={index}

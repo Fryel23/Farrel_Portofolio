@@ -1,9 +1,14 @@
 ---
-/* ProjectCard: mirror persis projectCardMarkup() di script.js V6.7
+/* ProjectCard: mirror persis projectCardMarkup() di work.js V6.7
    (struktur class sama), dirender saat build dari Content Collection.
-   Hanya proyek nyata; slot reserved memakai ReservedCard.astro. */
+   Hanya proyek nyata; slot reserved memakai ReservedCard.astro.
+   V7.4 Fase 2: `id` (id entri collection, mis. "aqi-cirebon") wajib
+   diteruskan pemanggil; dipakai sebagai nama transisi view transition
+   yang identik dengan .case-study-cover di halaman detail, sehingga
+   gambar kartu "terbang" membesar menjadi cover case study. */
 interface Props {
   project: {
+    id: string;
     title: string;
     tag: string;
     category: string;
@@ -24,7 +29,7 @@ const number = String(index + 1).padStart(2, '0');
 ---
 
 <article class="project-card" data-category={project.category} data-slug={project.href ? project.href.split('/').pop() : undefined}>
-  <div class="project-cover">
+  <div class="project-cover" transition:name={`project-image-${project.id}`}>
     <div class="project-cover-inner">
       <img src={imageUrl} alt={`${project.title}: project cover illustration`} loading="lazy" decoding="async" />
     </div>
@@ -48,7 +53,7 @@ const number = String(index + 1).padStart(2, '0');
       {
         project.href && (
           <a class="project-link" href={project.href}>
-            {project.linkLabel || 'Read case study'}
+            Read case study
             <span class="project-link-arrow" aria-hidden="true">↗</span>
           </a>
         )

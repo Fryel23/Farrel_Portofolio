@@ -2051,7 +2051,9 @@ function initCompanion() {
   });
 
   // Tab hidden: float stops (the global pause also holds), timers clear.
-  doc.addEventListener('visibilitychange', () => {
+  /* V7.4: listener level dokumen dilacak agar terlepas saat teardown
+     navigasi (tidak menumpuk antar boot). */
+  trackMotionListener(doc, 'visibilitychange', () => {
     if (doc.hidden) stopFloat();
     else if (summoned && !moving) startFloat();
   });
@@ -2104,6 +2106,7 @@ function startDataRain(onDone) {
 
   function cleanup() {
     gsap.ticker.remove(draw);
+    motionRegistry.tickerCallbacks.delete(draw);
     doc.removeEventListener('visibilitychange', onVisibility);
     window.removeEventListener('resize', resize);
     if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
@@ -2133,9 +2136,13 @@ function startDataRain(onDone) {
     if (elapsed >= DURATION_MS) fadeOut();
   }
 
-  doc.addEventListener('visibilitychange', onVisibility);
-  window.addEventListener('resize', resize);
+  /* V7.4: listener dilacak + ticker callback didaftarkan di registry
+     supaya data rain yang masih berjalan saat navigasi ikut mati
+     bersih di teardown (canvas lama sudah tidak ada di DOM). */
+  trackMotionListener(doc, 'visibilitychange', onVisibility);
+  trackMotionListener(window, 'resize', resize);
   gsap.ticker.add(draw);
+  motionRegistry.tickerCallbacks.add(draw);
 }
 
 function initKonami() {
@@ -2157,7 +2164,9 @@ function initKonami() {
     startDataRain(() => { running = false; });
   }
 
-  doc.addEventListener('keydown', (event) => {
+  /* V7.4: Konami memasang listener di level dokumen; dilacak agar
+     tidak menumpuk ketika boot berjalan lagi setiap navigasi. */
+  trackMotionListener(doc, 'keydown', (event) => {
     const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
     const expected = SEQUENCE[progress.length];
     if (key === expected) {
@@ -2649,7 +2658,8 @@ function initGitHubTooltips() {
     if (event.target.closest && event.target.closest('.github-card')) hideTip();
   });
 
-  doc.addEventListener('visibilitychange', () => { if (doc.hidden) hideTip(); });
+  /* V7.4: dilacak untuk teardown navigasi. */
+  trackMotionListener(doc, 'visibilitychange', () => { if (doc.hidden) hideTip(); });
 }
 
 /* --- §4.4: About constellation draw ------------------------------------- */
@@ -2760,6 +2770,11 @@ const PAGE_BOOT = {
   },
 };
 
-const pageKey = doc.documentElement.dataset.page || '';
-const pageBoot = PAGE_BOOT[pageKey];
-if (pageBoot) bootPage(pageBoot);
+/* V7.4: kunci halaman (data-page) dibaca ulang pada SETIAP
+   astro:page-load lewat opsi resolve. Modul ini hanya dieksekusi sekali
+   per sesi browser, tetapi kini satu bootPage melayani empat halaman
+   arsip (hub, play, credentials, off-screen) bahkan saat berpindah
+   lewat navigasi client-side. */
+bootPage({
+  resolve: () => PAGE_BOOT[doc.documentElement.dataset.page || ''] || null,
+});

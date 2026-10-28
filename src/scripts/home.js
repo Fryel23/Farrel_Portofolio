@@ -354,7 +354,9 @@ function initGlobalArchiveSearch() {
   });
 
   // Click outside the widget closes the dropdown.
-  doc.addEventListener('click', (event) => {
+  /* V7.4: listener level dokumen dilacak agar terlepas saat teardown
+     navigasi (tidak menumpuk antar boot). */
+  trackMotionListener(doc, 'click', (event) => {
     if (!event.target.closest('.archive-search-wrap')) closeArchiveSuggestions();
   });
   // Keyboard users: close when focus leaves the whole widget.
@@ -670,10 +672,11 @@ bootPage({
     initPointerParallax,
     initHeroButtons,
     () => {
-      /* V7.0: hero menunggu opening experience bila tampil. */
+      /* V7.0: hero menunggu opening experience bila tampil.
+         V7.4: listener dilacak agar terlepas saat teardown navigasi. */
       const startHero = () => initHeroIntro();
       if (window.__FIP_OPENING_ACTIVE) {
-        window.addEventListener('fip:start-hero', startHero, { once: true });
+        trackMotionListener(window, 'fip:start-hero', startHero, { once: true });
       } else {
         startHero();
       }

@@ -58,11 +58,16 @@ const reserved = entries.filter((e) => e.data.status === 'RESERVED');
       </div>
 
       <div class="project-grid" id="project-grid" aria-live="polite">
-        {/* V7.2: kartu dirender statis saat build. Tanpa atribut href agar
-            tautan kartu identik dengan hasil renderProjects() dari work.js
-            (tautan dataset eksternal, bukan "Read case study"). */}
+        {/* V7.2: kartu dirender statis saat build (tanpa menunggu JS).
+            V7.4: kartu menaut ke halaman case study secara internal
+            (href), identik dengan hasil renderProjects() di work.js yang
+            kini juga merender "Read case study" untuk proyek ber-slug;
+            tautan dataset eksternal tetap ada di halaman detail. */}
         {projects.map((entry, index) => (
-          <ProjectCard project={{ ...entry.data }} index={index} />
+          <ProjectCard
+            project={{ ...entry.data, id: entry.id, href: `/work/${entry.id}` }}
+            index={index}
+          />
         ))}
         {reserved.map((entry) => (
           <ReservedCard slot={{ title: entry.data.title, kicker: entry.data.kicker, description: entry.data.description }} />

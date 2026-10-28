@@ -38,6 +38,13 @@ function projectCardMarkup(project, index) {
   const card = el('article', 'project-card');
 
   const cover = el('div', 'project-cover');
+  /* V7.4 Fase 2: nama view transition identik dengan kartu statis
+     (ProjectCard.astro) supaya morph kartu -> cover case study tetap
+     bekerja setelah renderProjects() membangun ulang grid saat boot
+     maupun saat filter. Tanpa slug = tanpa nama (fallback fade). */
+  if (project.slug) {
+    cover.style.viewTransitionName = 'project-image-' + project.slug;
+  }
   /* V6.3 §3.1.1: the img sits inside a .project-cover-inner clip layer.
      The inner div is the only element the hover reveal ever animates,
      so the entrance batch (scale on the img) and the directional
@@ -69,8 +76,16 @@ function projectCardMarkup(project, index) {
   const url = String(project.link || '').trim();
   // Honest footer: the status label is always shown; a link is only
   // rendered when it points to a real destination. Never a dead button.
+  // V7.4 Fase 2: proyek ber-slug menaut ke halaman case study secara
+  // internal agar transisi morph terjadi saat kartu diklik; tautan
+  // dataset eksternal tetap tersedia sebagai CTA di halaman detail.
   if (project.status) foot.appendChild(el('span', 'project-status', project.status));
-  if (/^https?:\/\//i.test(url)) {
+  if (project.slug) {
+    const link = el('a', 'project-link', 'Read case study');
+    link.href = '/work/' + project.slug;
+    link.appendChild(el('span', 'project-link-arrow', '↗'));
+    foot.appendChild(link);
+  } else if (/^https?:\/\//i.test(url)) {
     const link = el('a', 'project-link', project.linkLabel || 'View project');
     link.href = url;
     link.target = '_blank';
