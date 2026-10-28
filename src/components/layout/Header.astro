@@ -59,6 +59,22 @@ const NAV = [
     <span class="now-playing-dot" aria-hidden="true"></span>
     <span class="now-playing-text" id="now-playing-text" aria-live="polite"></span>
   </a>
+  <!-- V8.0 Fase 2: tombol mute/unmute efek suara antarmuka (Web Audio
+       API, sintesis oscillator). Preferensi tersimpan di localStorage
+       (fip-audio-muted) dan ikon disinkronkan oleh initAudioFeedback di
+       global.js. Ikon memakai aria-hidden sesuai spesifikasi; label
+       aksesibel hidup di aria-label tombol. -->
+  <button class="audio-toggle" id="audio-toggle" type="button" aria-label="Mute interface sounds" aria-pressed="false">
+    <svg class="audio-icon-on" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M11 5 6 9H2v6h4l5 4V5z"></path>
+      <path d="M15.5 8.5a5 5 0 0 1 0 7"></path>
+      <path d="M18.5 5.5a9 9 0 0 1 0 13"></path>
+    </svg>
+    <svg class="audio-icon-off" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden>
+      <path d="M11 5 6 9H2v6h4l5 4V5z"></path>
+      <path d="m22 9-6 6M16 9l6 6"></path>
+    </svg>
+  </button>
   <!-- V7.3 Fase 1: tombol hamburger, hanya tampil di bawah 980px
        (dikendalikan CSS); ditempatkan sebelum tombol menu-dots sesuai
        spesifikasi. -->

@@ -3,7 +3,9 @@
  * Filter kategori, render kartu proyek + slot reserved (perilaku V6.7:
  * reserved hanya tampil di view All, tidak dihitung), reveal arah pada
  * cover, batch entrance, dan dekorasi ruler galeri.
+ * V8.0 Fase 3: WebGL image hover (Curtains) khusus path /work.
  */
+import { Curtains, Plane } from 'curtainsjs';
 import {
   DATA, doc, MOTION,
   el, qs, qsa, setText, showToast, fetchWithTimeout,
@@ -13,6 +15,7 @@ import {
   trackEventTween, trackAmbientTween, trackQuickTo,
   reducedMotion, finePointer, hasGSAP, hasScrollTrigger, hasLenis,
   pluginsRegistered, bootPage, cleanupMotionRegistry,
+  trackWebGLContext, trackRafLoop,
 } from './core.js';
 
 let activeFilter = 'All';
@@ -210,6 +213,9 @@ function renderProjects() {
       (visible.length === 1 ? 'PROJECT' : (DATA.gallery.countLabel || 'PROJECTS'));
   }
   if (pluginsRegistered) window.ScrollTrigger.refresh();
+  /* V8.0 Fase 3: grid dibangun ulang -> plane WebGL untuk kartu lama
+     dibuang dan plane baru dibuat untuk kartu yang tersisa. */
+  syncWebGLPlanes();
 }
 
 /* Gallery category filters: the only project filter after V5.3. */
@@ -221,6 +227,204 @@ function initFilterControls() {
       renderProjects();
     });
   });
+}
+
+/* ======================================================================
+ * V8.0 FASE 3: WEBGL IMAGE HOVER (CURTAINS) - SPATIAL DEPTH
+ * ======================================================================
+ * Satu instance Curtains per cover kartu proyek (bukan satu container
+ * global): canvas kecil hidup DI DALAM .project-cover sehingga terpotong
+ * border-radius kartu (overflow hidden) dan z-index 1 menempatkannya di
+ * atas gambar (z auto) tetapi DI BAWAH label .project-tag/.project-number
+ * (z-index 2, .project-cover adalah stacking context via isolation).
+ * Tekstur = img di dalam cover; img asli TIDAK disembunyikan sehingga
+ * saat WebGL gagal/context hilang, kartu tetap tampil normal (Batasan 1).
+ * Hanya jalan di path /work dan /work/[slug], pointer: fine, dan tanpa
+ * reduced motion (Batasan 3 + 4). Instance Curtains + loop rAF internal
+ * didaftarkan ke motionRegistry (webgl + rafLoops) sehingga astro:after-swap
+ * mem-dispose context dan menghapus canvas dari DOM (Batasan 2).
+ * Karena canvas planenya opaque meng-cover img, efek hover CSS pada img
+ * (scale) praktis tergantikan oleh distorsi WebGL saat plane aktif;
+ * tanpa WebGL, perilaku hover CSS lama tetap utuh. */
+
+const webglHoverState = { active: false, entries: [] };
+
+/* Spesifikasi: hanya /work dan /work/[slug]. work.js juga dipakai
+   homepage, jadi gate-nya path, bukan file yang dimuat. */
+function webglPathAllowed() {
+  const path = (window.location.pathname || '/').replace(/\/+$/, '') || '/';
+  return path === '/work' || path.indexOf('/work/') === 0;
+}
+
+function webglSupported() {
+  try {
+    const probe = doc.createElement('canvas');
+    return !!(probe.getContext && probe.getContext('webgl'));
+  } catch (error) {
+    return false;
+  }
+}
+
+const WEBGL_VERTEX = [
+  'precision mediump float;',
+  'attribute vec3 aVertexPosition;',
+  'attribute vec2 aTextureCoord;',
+  'uniform mat4 uMVMatrix;',
+  'uniform mat4 uPMatrix;',
+  'uniform mat4 uTextureMatrix0;',
+  'uniform float uHover;',
+  'uniform vec2 uMouse;',
+  'varying vec3 vVertexPosition;',
+  'varying vec2 vTextureCoord;',
+  'void main() {',
+  '  vec3 vertexPosition = aVertexPosition;',
+  '  float dist = distance(vertexPosition.xy, uMouse);',
+  '  float pull = uHover * exp(-dist * 1.4) * 0.16;',
+  '  vertexPosition.xy += (uMouse - vertexPosition.xy) * pull;',
+  '  vertexPosition.z += uHover * 0.35 * exp(-dist * 1.4);',
+  '  gl_Position = uPMatrix * uMVMatrix * vec4(vertexPosition, 1.0);',
+  '  vTextureCoord = (uTextureMatrix0 * vec4(aTextureCoord, 0.0, 1.0)).xy;',
+  '  vVertexPosition = vertexPosition;',
+  '}'
+].join('\n');
+
+const WEBGL_FRAGMENT = [
+  'precision mediump float;',
+  'varying vec3 vVertexPosition;',
+  'varying vec2 vTextureCoord;',
+  'uniform sampler2D uSampler0;',
+  'uniform float uHover;',
+  'uniform float uTime;',
+  'void main() {',
+  '  vec2 texCoord = vTextureCoord;',
+  '  float wave = sin(vVertexPosition.x * 6.0 + uTime * 1.6) * cos(vVertexPosition.y * 5.0 - uTime) * 0.014 * uHover;',
+  '  texCoord.x += wave;',
+  '  texCoord.y += wave * 0.6;',
+  '  gl_FragColor = texture2D(uSampler0, texCoord);',
+  '}'
+].join('\n');
+
+function disposeWebGLEntry(entry) {
+  if (!entry || entry.disposed) return;
+  entry.disposed = true;
+  if (entry.hoverTween) { try { entry.hoverTween.kill(); } catch (error) { /* tween sudah mati */ } }
+  if (entry.plane) { try { entry.plane.remove(); } catch (error) { /* plane sudah lepas */ } }
+  if (entry.curtains) { try { entry.curtains.dispose(); } catch (error) { /* context sudah lepas */ } }
+  if (entry.container && entry.container.parentNode) {
+    try { entry.container.parentNode.removeChild(entry.container); } catch (error) { /* DOM sudah diganti */ }
+  }
+}
+
+function createWebGLPlane(img) {
+  const cover = img.closest('.project-cover');
+  const card = img.closest('.project-card');
+  if (!cover || !card || cover.querySelector('.webgl-cover-canvas')) return null;
+
+  const container = el('div', 'webgl-cover-canvas');
+  container.setAttribute('aria-hidden', 'true');
+  container.style.cssText = 'position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden;';
+  cover.appendChild(container);
+
+  const entry = { img, cover, card, container, curtains: null, plane: null, hoverTween: null, disposed: false };
+  let disposeRegistered = false;
+  const registerDispose = () => {
+    if (disposeRegistered) return;
+    disposeRegistered = true;
+    const disposeFn = () => disposeWebGLEntry(entry);
+    trackWebGLContext(disposeFn); // Batasan 2: context + canvas dibersihkan after-swap
+    trackRafLoop(disposeFn);      // Batasan 2: rAF internal Curtains ikut mati
+  };
+
+  let curtains = null;
+  try {
+    curtains = new Curtains({
+      container: container,
+      watchScroll: false,
+      alpha: true,
+      premultipliedAlpha: true,
+      pixelRatio: Math.min(window.devicePixelRatio || 1, 1.5)
+    });
+  } catch (error) {
+    container.parentNode.removeChild(container);
+    return null; // Batasan 1: WebGL gagal -> kartu tetap normal
+  }
+  entry.curtains = curtains;
+
+  curtains.onError(() => disposeWebGLEntry(entry));
+  curtains.onContextLost(() => disposeWebGLEntry(entry));
+
+  let plane = null;
+  try {
+    plane = new Plane(curtains, cover, {
+      autoloadSources: false,
+      widthSegments: 16,
+      heightSegments: 12,
+      vertexShader: WEBGL_VERTEX,
+      fragmentShader: WEBGL_FRAGMENT,
+      uniforms: {
+        uHover: { name: 'uHover', type: '1f', value: 0 },
+        uMouse: { name: 'uMouse', type: '2f', value: [0, 0] },
+        uTime: { name: 'uTime', type: '1f', value: 0 }
+      }
+    });
+  } catch (error) {
+    disposeWebGLEntry(entry);
+    return null;
+  }
+  entry.plane = plane;
+  registerDispose();
+
+  /* Tekstur dimuat eksplisit dari img (autoload dimatikan supaya canvas
+     WebGL sendiri tidak ikut dijadikan tekstur). */
+  try { plane.loadImages([img]); } catch (error) { disposeWebGLEntry(entry); return null; }
+
+  plane.onRender(() => {
+    if (plane.uniforms && plane.uniforms.uTime) plane.uniforms.uTime.value += 0.016;
+  });
+
+  const setHover = (target) => {
+    if (entry.hoverTween) { try { entry.hoverTween.kill(); } catch (error) { /* noop */ } }
+    if (plane.uniforms && plane.uniforms.uHover) {
+      entry.hoverTween = trackEventTween(window.gsap.to(plane.uniforms.uHover, { value: target, duration: 0.5, ease: 'power2.out' }));
+    }
+  };
+
+  trackMotionListener(card, 'pointerenter', () => setHover(1));
+  trackMotionListener(card, 'pointermove', (event) => {
+    const rect = cover.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    if (plane.uniforms && plane.uniforms.uMouse) {
+      plane.uniforms.uMouse.value = [
+        ((event.clientX - rect.left) / rect.width) * 2 - 1,
+        -(((event.clientY - rect.top) / rect.height) * 2 - 1)
+      ];
+    }
+  }, { passive: true });
+  trackMotionListener(card, 'pointerleave', () => setHover(0));
+
+  return entry;
+}
+
+/* Buang plane yang elemennya sudah tidak terhubung (hasil render ulang
+   filter) dan buat plane untuk kartu baru. */
+function syncWebGLPlanes() {
+  if (!webglHoverState.active || !webglPathAllowed()) return;
+  webglHoverState.entries = webglHoverState.entries.filter((entry) => {
+    if (entry.img.isConnected && entry.cover.isConnected) return true;
+    disposeWebGLEntry(entry);
+    return false;
+  });
+  qsa('.project-card .project-cover img').forEach((img) => {
+    if (webglHoverState.entries.some((entry) => entry.img === img)) return;
+    const entry = createWebGLPlane(img);
+    if (entry) webglHoverState.entries.push(entry);
+  });
+}
+
+function initWebGLHover() {
+  if (!finePointer || isReducedMotion() || !webglPathAllowed() || !webglSupported()) return;
+  webglHoverState.active = true;
+  syncWebGLPlanes();
 }
 
 /* V7.0: label ruler galeri (dekorasi) dipisah dari renderV4Sections. */
@@ -367,6 +571,6 @@ function resetBatchTriggers() {
 bootPage({
   renders: [renderFilters, renderProjects, renderGalleryRuler],
   interactions: [initFilterControls, initGalleryBlueprint],
-  motion: [initProjectImageReveal, setupProjectBatch],
+  motion: [initProjectImageReveal, initWebGLHover, setupProjectBatch],
   cleanups: [resetProjectReveal, resetBatchTriggers],
 });

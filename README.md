@@ -1,9 +1,27 @@
-# Farrel Islami Putra · Editorial Portfolio (Astro V7.5)
+# Farrel Islami Putra · Editorial Portfolio (Astro V8.0)
 
 Portofolio pribadi berbasis **Astro 7** dengan arsitektur **Hub-and-Spoke (Pucuk-Cabang)**.
 Migrasi total dari versi monolitik satu halaman (HTML/CSS/JS murni, V6.7) sesuai
 `PROMPT_EKSEKUSI_V7.0_ASTRO_MIGRATION.md`. Desain visual, palet warna, tipografi,
 animasi GSAP, dan seluruh fitur interaktif dipertahankan identik.
+
+**V8.0 (Cinematic Experience & Micro-Interactions)** sesuai `PROMPT_V8.0_CINEMATIC_EXPERIENCE.md`:
+portofolio kini punya lapisan sinematik dengan progressive enhancement penuh.
+**Magnetic buttons**: CTA utama (dua tombol hero, CTA case study, INSERT COIN)
+mengikuti kursor lewat `gsap.quickTo` (maks 15px) dan kembali dengan elastic.
+**Audio feedback**: suara sintesis Web Audio (tanpa file) untuk klik CTA dan
+hover kartu proyek, dengan tombol mute di header + preferensi `localStorage`
+(`fip-audio-muted`). **WebGL image hover**: cover kartu di `/work` dan
+`/work/[slug]` didistorsi halus mengikuti kursor via Curtains (canvas per
+kartu, di dalam cover sehingga ikut radius kartu dan tetap di bawah label).
+**CRT shader**: saat Game Deck terbuka, overlay WebGL prosedural (scanline,
+phosphor glow, band roll, grain, ilusi layar melengkung) hidup di atas
+`.deck-screen` dan mati bersih saat EJECT. Semua efek hanya jalan di
+desktop `pointer: fine`, mati saat reduced motion, dan seluruh listener/rAF/
+context WebGL terdaftar di `motionRegistry` (dua jalur baru: `rafLoops` +
+`webgl`) sehingga `astro:after-swap` membebaskannya semua. Tanpa WebGL atau
+Web Audio, situs tetap berfungsi 100% normal. Rincian verifikasi di
+`VERIFICATION.md`.
 
 **V7.5 (Fix Game Deck Scroll Bug)** sesuai `PROMPT_V7.5_FIX_DECK_SCROLL.md`:
 memperbaiki bug kritis di `/archive/play` di mana roda mouse macet setelah

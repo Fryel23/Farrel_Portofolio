@@ -268,6 +268,28 @@ ol, ul { padding: 0; list-style: none; }
 .menu-dots:hover { border-color: var(--blue); transform: translateY(-1px); }
 
 
+/* V8.0 Fase 2: tombol mute/unmute suara antarmuka. Mengikuti bahasa
+   visual tombol bulat header (.menu-dots); ikon on/off digantikan JS
+   lewat atribut hidden. Tetap tampil di mobile karena header mobile
+   menyisakan ruang untuk tombol bulat 40px. */
+.audio-toggle {
+  width: 40px; height: 40px; flex-shrink: 0;
+  border: 1px solid var(--border-strong); background: var(--surface);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink);
+  transition: border-color var(--micro) var(--ease), transform var(--micro) var(--ease);
+}
+
+.audio-toggle:hover { border-color: var(--blue); transform: translateY(-1px); }
+
+.audio-toggle.is-muted { color: var(--text-3); }
+
+.audio-toggle svg { display: block; }
+
+.audio-toggle svg[hidden] { display: none; }
+
+
 .quick-menu {
   position: absolute; right: clamp(20px, 5vw, 76px); top: 72px;
   width: 232px; padding: 9px; z-index: 30;

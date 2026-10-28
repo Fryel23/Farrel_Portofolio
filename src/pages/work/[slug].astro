@@ -59,12 +59,12 @@ const number = String(1).padStart(2, '0');
       <div class="case-study-actions">
         {
           d.link && /^https?:\/\//i.test(d.link) && (
-            <a class="button button-primary" href={d.link} target="_blank" rel="noopener noreferrer">
+            <a class="button button-primary magnetic-button" href={d.link} target="_blank" rel="noopener noreferrer">
               {d.linkLabel || 'View project'} <span aria-hidden="true">↗</span>
             </a>
           )
         }
-        <a class="button button-outline" href="/work">Back to the archive <span aria-hidden="true">↗</span></a>
+        <a class="button button-outline magnetic-button" href="/work">Back to the archive <span aria-hidden="true">↗</span></a>
       </div>
     </div>
   </article>

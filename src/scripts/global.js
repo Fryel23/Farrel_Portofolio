@@ -21,6 +21,7 @@ import {
   trackEventTween, trackAmbientTween, trackQuickTo,
   reducedMotion, finePointer, hasGSAP, hasScrollTrigger, hasLenis,
   pluginsRegistered, bootPage, cleanupMotionRegistry,
+  initMagneticButtons, isAudioMuted, setAudioMuted, playClickSound, playHoverSound,
 } from './core.js';
 
 /* Fase 0/2: jembatan kompatibilitas untuk logika V6.7 yang membaca
@@ -1288,6 +1289,64 @@ function initVisibilityPause() {
    opening tampil, sehingga hero tidak berjalan di balik overlay. */
 window.__FIP_OPENING_ACTIVE = false;
 
+/* ======================================================================
+ * V8.0 FASE 2: AUDIO FEEDBACK INIT (sitewide)
+ * ==================================================================== */
+/* Tiga tugas: (1) sinkron + wiring tombol mute Header (preferensi
+ * localStorage fip-audio-muted), (2) suara klik CTA lewat delegasi
+ * document pada .magnetic-button sehingga tetap bekerja untuk DOM yang
+ * dirender ulang, (3) suara hover kartu proyek lewat delegasi mouseover
+ * (sekali per kartu + throttle 90ms). Fungsi suara sendiri sudah no-op
+ * saat mute / reduced motion / tanpa Web Audio (Batasan 1 + 3). */
+function initAudioFeedback() {
+  const toggle = qs('#audio-toggle');
+  const syncToggle = (button) => {
+    if (!button) return;
+    const muted = isAudioMuted();
+    button.setAttribute('aria-pressed', String(muted));
+    button.setAttribute('aria-label', muted ? 'Unmute interface sounds' : 'Mute interface sounds');
+    button.classList.toggle('is-muted', muted);
+    const iconOn = button.querySelector('.audio-icon-on');
+    const iconOff = button.querySelector('.audio-icon-off');
+    if (iconOn) iconOn.hidden = muted;
+    if (iconOff) iconOff.hidden = !muted;
+  };
+  if (toggle && toggle.dataset.audioBound !== 'true') {
+    toggle.dataset.audioBound = 'true';
+    syncToggle(toggle);
+    trackMotionListener(toggle, 'click', () => {
+      const next = !isAudioMuted();
+      setAudioMuted(next);
+      syncToggle(toggle);
+      if (!next) playClickSound(); // umpan balik saat di-unmute
+    });
+  } else if (toggle) {
+    syncToggle(toggle);
+  }
+
+  trackMotionListener(doc, 'click', (event) => {
+    if (event.target && event.target.closest && event.target.closest('.magnetic-button')) {
+      playClickSound();
+    }
+  });
+
+  let lastHoverCard = null;
+  let lastHoverAt = 0;
+  trackMotionListener(doc, 'mouseover', (event) => {
+    const card = event.target && event.target.closest ? event.target.closest('.project-card') : null;
+    if (!card) {
+      lastHoverCard = null;
+      return;
+    }
+    if (card === lastHoverCard) return;
+    lastHoverCard = card;
+    const now = Date.now();
+    if (now - lastHoverAt < 90) return;
+    lastHoverAt = now;
+    playHoverSound();
+  });
+}
+
 function startHeroGateGlobal() {
   if (window.__FIP_OPENING_ACTIVE) {
     /* V7.4: listener jembatan hero dilacak agar terlepas saat teardown
@@ -1310,7 +1369,7 @@ bootPage({
        halaman baru harus di-mount ulang; no-op di halaman tanpa canvas. */
     () => { if (window.GenerativeAmbient && typeof window.GenerativeAmbient.remount === 'function') window.GenerativeAmbient.remount(); },
   ],
-  interactions: [initMobileMenu, initQuickMenu, initAnchors, initNowPlaying, initPageProgressBar, fallbackReveal],
+  interactions: [initMobileMenu, initQuickMenu, initAnchors, initNowPlaying, initPageProgressBar, fallbackReveal, initMagneticButtons, initAudioFeedback],
   motion: [
     initSmoothScroll,
     startHeroGateGlobal,

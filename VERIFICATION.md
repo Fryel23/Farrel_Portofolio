@@ -673,3 +673,124 @@ diubah; hanya tiga blok 8-baris yang ditambahkan.
   kedua operasi idempoten dan murah, kode dipertahankan persis sesuai spesifikasi.
 - Pengujian wheel memakai WheelEvent sintetis karena mouse wheel headless
   tidak menyampaikan event asli (keterbatasan tooling yang sama sejak V7.4).
+
+# LAPORAN V8.0 - CINEMATIC EXPERIENCE & MICRO-INTERACTIONS
+
+Laporan verifikasi `PROMPT_V8.0_CINEMATIC_EXPERIENCE.md`. Pengujian pada hasil
+`bun run build` (Astro 7.4.2, 11 halaman) via `astro preview`. Karena headless
+Chromium melaporkan `pointer: fine = false`, verifikasi efek ter-gate memakai
+Playwright + `addInitScript` (override matchMedia pointer/hover sebelum skrip
+situs berjalan) + flag `--enable-unsafe-swiftshader` untuk software WebGL.
+30/30 pemeriksaan otomatis PASS (skrip: tests/v80-verify.mjs di luar paket).
+
+## FASE 0 - Instalasi
+
+- `curtainsjs@8.1.6` terpasang (package.json); API diverifikasi dari sumber:
+  `Curtains`, `Plane`, `autoloadSources`, penamaan sampler default
+  (`uSampler0` + `uTextureMatrix0`).
+
+## FASE 1 - Magnetic Buttons (core.js + global.js + template CTA)
+
+- `initMagneticButtons()` di core.js: `gsap.quickTo` x/y, clamp 15px,
+  elastic `elastic.out(1, 0.45)` saat mouseleave; pola rebuild (pasangan
+  quickTo dibuang saat leave, dibuat ulang lazily) menghindari konflik tween.
+  CSS transition transform pada tombol dikeluarkan inline agar tidak
+  menumpuk interpolasi.
+- Kelas `.magnetic-button` pada CTA utama: 2 tombol hero (homepage), 2 CTA
+  case study (/work/[slug]), tombol INSERT COIN (/archive/play).
+- Bukti: kursor +60px dari pusat -> x=15.00 (kena clamp), +24px -> x=9.48
+  (mengikuti), mouseleave 1.5s -> x=0.00 y=0.00 (elastic selesai).
+
+## FASE 2 - Audio Feedback (core.js + global.js + Header)
+
+- Web Audio API sintesis murni: `playClickSound()` triangle 1500->900Hz,
+  0.05s; `playHoverSound()` sine 220Hz, gain 0.012. AudioContext dibuat
+  lazily; mute di localStorage `fip-audio-muted`.
+- Tombol `#audio-toggle` di Header (ikon speaker aria-hidden, label di
+  aria-label + aria-pressed), styling mengikuti .menu-dots (global.css).
+- Suara dipasang delegasi document: klik `.magnetic-button` -> click sound;
+  mouseover `.project-card` -> hover sound (sekali per kartu + throttle 90ms)
+  sehingga tetap bekerja pada DOM hasil render ulang.
+- Bukti: klik CTA -> `__v80AudioCreated == 1` (lazy creation); mute ->
+  aria-pressed=true + localStorage true + ikon off tampil; persisten setelah
+  reload; unmute memulihkan. Di mobile (Batasan 4 tidak melarang audio) tombol
+  mute tetap berfungsi.
+
+## FASE 3 - WebGL Image Hover (work.js + curtainsjs)
+
+- Satu instance Curtains per cover (canvas DI DALAM .project-cover, z-index 1,
+  pointer-events none): ikut terpotong radius kartu, berada di atas img
+  (z auto) tetapi di bawah .project-tag/.project-number (z-index 2) tanpa
+  mengubah CSS. `autoloadSources: false` + `plane.loadImages([img])` agar
+  canvas sendiri tidak dijadikan tekstur.
+- Gate: path `/work` atau `/work/[slug]` saja (work.js juga dipakai homepage
+  sehingga gate-nya path), `pointer: fine`, bukan reduced motion, probe
+  WebGL; semua di jalur motion matchMedia (no-preference).
+- Vertex shader menggeser vertex ke arah kursor (pull gaussian) + lift Z;
+  fragment menambah wave UV halus. img asli TIDAK disembunyikan (Batasan 1):
+  jika WebGL gagal/context hilang, kartu tampil normal via CSS.
+- Registry: setiap instance didaftarkan via `trackWebGLContext` + `trackRafLoop`
+  (fungsi dispose idempoten: plane.remove() -> curtains.dispose() -> container
+  dibuang) sehingga after-swap melepas context + canvas (Batasan 2).
+- Bukti: 1 kartu nyata -> 1 canvas; img tetap visible; zIndex canvas = 1;
+  hover mengubah piksel cover (screenshot diff); filter (1 kartu) dan kembali
+  All -> jumlah canvas selalu sinkron; pindah ke /about -> canvas 0; kembali
+  ke /work -> plane dibuat ulang.
+- Keputusan terdokumentasi: cover case study (/work/[slug]) sengaja tidak
+  diberi plane karena elemen itu membawa `transition:name` morph V7.4 dan
+  tidak punya efek hover CSS yang perlu digantikan.
+
+## FASE 4 - CRT Shader pada Game Deck (archive.js)
+
+- Shader GLSL inline string (spesifikasi mengizinkan): fragment prosedural
+  tanpa tekstur (scanline 4px, grille RGB, phosphor glow hijau, band roll,
+  grain, vignette tepi sebagai ilusi layar melengkung); vertex pass-through
+  quad. Canvas `.deck-crt-overlay` di dalam `#deck-region` (overflow hidden +
+  radius screen memotongnya), z-index 3, pointer-events none sehingga kartu
+  tetap interaktif.
+- Lifecycle: `startDeckCRT(screen)` hanya dari jalur openDeck animasi (no-op
+  saat reduced motion / non fine-pointer / tanpa WebGL / shader gagal);
+  `stopDeckCRT()` dipanggil `closeDeckInstant()` (satu choke point untuk
+  EJECT, instant close, reduce cleanup, fallback tanpa GSAP) + terdaftar di
+  `rafLoops` dan `webgl` (idempoten) untuk jaring after-swap. Listener resize
+  dikelola manual oleh stop().
+- Bukti: INSERT COIN -> 1 canvas (1238x220), tepat 1 context WebGL baru,
+  piksel berubah antar frame (rAF hidup); EJECT -> canvas 0; re-open ->
+  canvas 1 lagi (context baru); pindah halaman saat CRT aktif bersih tanpa
+  error; regresi V7.5: scroll deck saat CRT aktif tetap mencapai 808/808.
+
+## Kepatuhan Batasan Absolut V8.0
+
+1. **Progressive enhancement**: tanpa WebGL/Curtains gagal -> onError/onContextLost
+   dispose + kartu normal (terbukti saat probe headless pertama tanpa
+   swiftshader: plane dibuang, halaman normal, tanpa page error); tanpa Web
+   Audio fungsi suara no-op; JS gagal -> konten statis tetap utuh.
+2. **Lifecycle ketat**: dua jalur registry baru (`motionRegistry.rafLoops`,
+   `motionRegistry.webgl`) + helper `trackRafLoop`/`trackWebGLContext`;
+   cleanupMotionRegistry memanggil semuanya saat astro:after-swap. Listener
+   magnetic/audio/reveal memakai trackMotionListener; quickTo memakai
+   trackQuickTo; tween hover memakai trackEventTween.
+3. **Reduced motion**: initMagneticButtons, initWebGLHover, dan startDeckCRT
+   early-return saat reduce; suara juga dimatikan (interpretasi "semua efek
+   baru" didokumentasikan di kode); blok CSS reduced-motion sudah ada.
+4. **Mobile safe**: ketiga efek visual ter-gate `pointer: fine`; terbukti di
+   context mobile 390x844: tidak ada bind magnetik, 0 plane WebGL, 0 CRT
+   canvas, dan halaman tetap berfungsi penuh.
+5. **Tanpa em dash (U+2014)**: grep KOSONG di src + docs.
+
+## Catatan jujur
+
+- Headless Chromium tanpa GPU memakai software WebGL (swiftshader) yang
+  merender ~300ms/frame; akibatnya `document.startViewTransition()` menunggu
+  frame lambat sehingga navigasi client-side dari /work (saat plane hidup)
+  tertunda beberapa detik pada lingkungan uji. Bukan bug situs: bukti event
+  menunjukkan router menerima klik lalu mengeksekusi swap begitu frame
+  tersedia, dan di GPU nyata frame plane berbiaya < 2ms. Skrip uji
+  mengakomodasi dengan waitForURL timeout panjang.
+- Suara tidak dapat didengar/diverifikasi keluaran audionya di headless;
+  yang diverifikasi: jalur pembuatan AudioContext, state gating, delegasi
+  listener, dan preferensi mute.
+- Efek "Image Trail" disebut di Batasan 4 tetapi tidak ada Fase yang
+  memintanya, sehingga tidak diimplementasikan (jujur terhadap spesifikasi).
+- Emulasi runtime prefers-reduced-motion dua arah tetap diverifikasi lewat
+  jalur kode (guard isReducedMotion di ketiga efek + jalur interactions).

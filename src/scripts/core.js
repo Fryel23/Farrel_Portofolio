@@ -179,7 +179,9 @@ export const motionRegistry = {
   ambientTweens: new Set(), // created async (onComplete / delayedCall)
   batchTriggers: new Set(), // triggers from ScrollTrigger.batch()
   scrollTriggers: new Set(), // other triggers created asynchronously
-  tickerCallbacks: new Set() // V7.4: gsap.ticker callbacks outside matchMedia
+  tickerCallbacks: new Set(), // V7.4: gsap.ticker callbacks outside matchMedia
+  rafLoops: new Set(),      // V8.0: stop functions untuk loop requestAnimationFrame
+  webgl: new Set()          // V8.0: dispose functions untuk instance/context WebGL
 };
 
 export function trackMotionListener(target, type, handler, options) {
@@ -228,6 +230,192 @@ export function trackQuickTo(fn) {
     motionRegistry.eventTweens.add(fn.tween);
   }
   return fn;
+}
+
+/* V8.0 Batasan 2 (lifecycle ketat): dua jalur registrasi baru.
+   - rafLoops: fungsi stop untuk setiap loop requestAnimationFrame yang
+     dibuat di luar konteks gsap.matchMedia (CRT deck, dsb.).
+   - webgl: fungsi dispose untuk setiap instance/context WebGL (Curtains,
+     CRT canvas) sehingga after-swap selalu melepas context + canvas. */
+export function trackRafLoop(stopFn) {
+  if (typeof stopFn === 'function') motionRegistry.rafLoops.add(stopFn);
+  return stopFn;
+}
+
+export function trackWebGLContext(disposeFn) {
+  if (typeof disposeFn === 'function') motionRegistry.webgl.add(disposeFn);
+  return disposeFn;
+}
+
+/* ======================================================================
+ * V8.0 FASE 1: MAGNETIC BUTTONS
+ * ======================================================================
+ * Elemen .magnetic-button mengikuti kursor dengan gsap.quickTo (x + y),
+ * pergerakan dibatasi 15px dari pusat, dan kembali ke (0,0) dengan
+ * elastic ease saat kursor meninggalkan tombol.
+ * Batasan: reduced motion dan perangkat non fine-pointer tidak pernah
+ * menjalankan efek (Batasan 3 + 4). Semua listener masuk
+ * trackMotionListener dan setiap quickTo masuk trackQuickTo sehingga
+ * after-swap membersihkan semuanya (Batasan 2).
+ * Catatan implementasi elastic: pasangan quickTo dibuang saat mouseleave
+ * lalu dibuat ulang lazily pada mousemove berikutnya. Pola ini menghindari
+ * konflik antara tween quickTo yang di-park dan tween elastic (keduanya
+ * menarget x/y pada elemen yang sama) tanpa bergantung pada perilaku
+ * internal gsap terhadap tween quickTo yang di-kill. */
+export function initMagneticButtons() {
+  if (!hasGSAP || isReducedMotion() || !finePointer) return;
+  const g = window.gsap;
+  const MAX_SHIFT = 15;   // px, sesuai spesifikasi
+  const STRENGTH = 0.4;   // kursor 1px -> tombol bergeser 0.4px
+
+  qsa('.magnetic-button').forEach((button) => {
+    if (button.dataset.magneticBound === 'true') return;
+    button.dataset.magneticBound = 'true';
+
+    /* .button/.deck-button memakai CSS transition pada transform; transisi
+       itu menambah interpolasi kedua di atas quickTo (pergerakan terasa
+       delay). Properti transform dikeluarkan dari daftar transition inline,
+       properti lain (background, color, border) tetap bertransisi. Durasi
+       tiap properti pada tombol-tombol ini seragam (var(--micro)) sehingga
+       penghapusan satu entri tidak menggeser pemetaan durasi. */
+    const computed = window.getComputedStyle(button);
+    if (computed.transitionProperty && computed.transitionProperty.indexOf('transform') !== -1) {
+      const kept = computed.transitionProperty
+        .split(',')
+        .map((prop) => prop.trim())
+        .filter((prop) => prop && prop !== 'transform');
+      if (kept.length) button.style.transitionProperty = kept.join(', ');
+      else button.style.transitionProperty = 'none';
+    }
+
+    let xTo = null;
+    let yTo = null;
+    let elastic = null;
+    let baseRect = null; // rect tanpa offset magnetik, dipatok saat mouseenter
+
+    const buildQuickTo = () => {
+      xTo = trackQuickTo(g.quickTo(button, 'x', { duration: 0.35, ease: 'power3.out' }));
+      yTo = trackQuickTo(g.quickTo(button, 'y', { duration: 0.35, ease: 'power3.out' }));
+    };
+    const releaseQuickTo = () => {
+      [xTo, yTo].forEach((fn) => {
+        if (fn && fn.tween) {
+          try { fn.tween.kill(); } catch (error) { /* tween sudah mati */ }
+          motionRegistry.eventTweens.delete(fn.tween);
+        }
+      });
+      xTo = null;
+      yTo = null;
+    };
+
+    trackMotionListener(button, 'mouseenter', () => {
+      if (elastic) { try { elastic.kill(); } catch (error) { /* noop */ } elastic = null; }
+      g.set(button, { x: 0, y: 0 });
+      baseRect = button.getBoundingClientRect();
+    });
+
+    trackMotionListener(button, 'mousemove', (event) => {
+      if (!baseRect) return; // mouseenter selalu mendahului mousemove
+      if (elastic) { try { elastic.kill(); } catch (error) { /* noop */ } elastic = null; }
+      if (!xTo || !yTo) buildQuickTo();
+      const shiftX = g.utils.clamp(-MAX_SHIFT, MAX_SHIFT, (event.clientX - (baseRect.left + baseRect.width / 2)) * STRENGTH);
+      const shiftY = g.utils.clamp(-MAX_SHIFT, MAX_SHIFT, (event.clientY - (baseRect.top + baseRect.height / 2)) * STRENGTH);
+      xTo(shiftX);
+      yTo(shiftY);
+    });
+
+    trackMotionListener(button, 'mouseleave', () => {
+      baseRect = null;
+      releaseQuickTo();
+      elastic = trackEventTween(g.to(button, {
+        x: 0, y: 0,
+        duration: 0.9,
+        ease: 'elastic.out(1, 0.45)',
+        overwrite: 'auto',
+        onComplete: () => { elastic = null; }
+      }));
+    });
+  });
+}
+
+/* ======================================================================
+ * V8.0 FASE 2: AUDIO FEEDBACK (WEB AUDIO API, TANPA FILE)
+ * ======================================================================
+ * Dua suara sintesis oscillator: playClickSound (frekuensi tinggi,
+ * 0.05s) untuk CTA dan playHoverSound (frekuensi rendah, volume sangat
+ * kecil) untuk kartu proyek. AudioContext dibuat lazily di dalam gesture
+ * pengguna (kebijakan autoplay browser). Preferensi mute tersimpan di
+ * localStorage (kunci fip-audio-muted). Progressive enhancement penuh:
+ * tanpa Web Audio, atau saat mute, semua fungsi no-op tanpa error.
+ * Keputusan dokumentasi: Batasan 3 membaca "semua efek baru", maka
+ * suara juga dimatikan saat prefers-reduced-motion: reduce. */
+const AUDIO_STORAGE_KEY = 'fip-audio-muted';
+let audioCtx = null;
+let audioMutedCache = null;
+
+export function isAudioMuted() {
+  if (audioMutedCache === null) {
+    try {
+      audioMutedCache = window.localStorage.getItem(AUDIO_STORAGE_KEY) === 'true';
+    } catch (error) {
+      audioMutedCache = false; // storage diblokir: default tidak mute
+    }
+  }
+  return audioMutedCache;
+}
+
+export function setAudioMuted(value) {
+  audioMutedCache = value === true;
+  try {
+    window.localStorage.setItem(AUDIO_STORAGE_KEY, String(audioMutedCache));
+  } catch (error) { /* penyimpanan tidak tersedia: preferensi hanya sesi ini */ }
+}
+
+function getAudioContext() {
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (!AC) return null; // Batasan 1: tanpa Web Audio situs tetap normal
+  if (!audioCtx) {
+    try { audioCtx = new AC(); } catch (error) { return null; }
+  }
+  if (audioCtx && audioCtx.state === 'suspended') {
+    try { audioCtx.resume(); } catch (error) { /* akan di-resume gesture lain */ }
+  }
+  return audioCtx;
+}
+
+export function playClickSound() {
+  if (isAudioMuted() || isReducedMotion()) return;
+  const ctx = getAudioContext();
+  if (!ctx || ctx.state !== 'running') return;
+  const now = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = 'triangle';
+  osc.frequency.setValueAtTime(1500, now);
+  osc.frequency.exponentialRampToValueAtTime(900, now + 0.05);
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(0.06, now + 0.008);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
+  osc.connect(gain).connect(ctx.destination);
+  osc.start(now);
+  osc.stop(now + 0.06);
+}
+
+export function playHoverSound() {
+  if (isAudioMuted() || isReducedMotion()) return;
+  const ctx = getAudioContext();
+  if (!ctx || ctx.state !== 'running') return;
+  const now = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(220, now);
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(0.012, now + 0.015);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.09);
+  osc.connect(gain).connect(ctx.destination);
+  osc.start(now);
+  osc.stop(now + 0.1);
 }
 
 export function scrollToTarget(target) {
@@ -288,6 +476,16 @@ export function cleanupMotionRegistry() {
     });
   }
   motionRegistry.tickerCallbacks.clear();
+  /* V8.0: loop rAF dan context WebGL (Curtains/CRT) dimatikan sebelum
+     sisanya; setiap stop/dispose dibuat idempoten oleh pemiliknya. */
+  motionRegistry.rafLoops.forEach((stopFn) => {
+    try { stopFn(); } catch (error) { /* loop sudah mati */ }
+  });
+  motionRegistry.rafLoops.clear();
+  motionRegistry.webgl.forEach((disposeFn) => {
+    try { disposeFn(); } catch (error) { /* context sudah lepas */ }
+  });
+  motionRegistry.webgl.clear();
   if (lenis) {
     gsap.ticker.remove(lenisTicker);
     try { lenis.destroy(); } catch (error) { /* already gone */ }
