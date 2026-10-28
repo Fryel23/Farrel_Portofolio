@@ -19,7 +19,10 @@ const projects = entries.filter((e) => e.data.status !== 'RESERVED');
 const reserved = entries.filter((e) => e.data.status === 'RESERVED');
 ---
 
-<BaseLayout pageKey="home">
+<BaseLayout
+  pageKey="home"
+  description="Portofolio Farrel Islami Putra, mahasiswa Informatika UNIKOM: proyek data yang sedang berjalan, ringkasan profil, dan kanal kontak. Semua ditulis apa adanya sebagai catatan proses belajar."
+>
   <Hero />
 
   <div class="transition-ribbon" aria-hidden="true"><span></span></div>

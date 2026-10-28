@@ -463,6 +463,13 @@
 @media (max-width: 700px) {
 
 .ornament-hero-crosshair { width: 80px; height: 80px; }
+
+/* V8.1 Fase 2.1: hero-ruler disembunyikan di layar kecil. Komentar
+   Hero.astro memang menyatakan ruler hanya untuk layar besar; aturan
+   dasar .hero-ruler di file ini (display: flex) menimpa display: none
+   milik global.css karena urutan impor, jadi aturan mobile eksplisit
+   diperlukan di sini agar konsisten dengan niat desain. */
+.hero-ruler { display: none; }
 }
 
 /* ======================================================================

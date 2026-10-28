@@ -4,8 +4,11 @@ import '../../styles/global.css';
 import '../../styles/work.css';
 import { getCollection, render } from 'astro:content';
 
+/* V8.1 Fase 4.1: entri berstatus RESERVED tidak pernah menghasilkan
+   rute publik. Filter dilakukan di getStaticPaths (bukan di komponen
+   halaman) sesuai rekomendasi Astro untuk mengecualikan rute. */
 export async function getStaticPaths() {
-  const entries = await getCollection('work');
+  const entries = await getCollection('work', ({ data }) => data.status !== 'RESERVED');
   return entries.map((entry) => ({
     params: { slug: entry.id },
     props: { entry },

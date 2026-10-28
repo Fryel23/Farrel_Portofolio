@@ -19,7 +19,11 @@ const projects = entries.filter((e) => e.data.status !== 'RESERVED');
 const reserved = entries.filter((e) => e.data.status === 'RESERVED');
 ---
 
-<BaseLayout title="Work · Farrel Islami Putra" pageKey="work">
+<BaseLayout
+  title="Work · Farrel Islami Putra"
+  pageKey="work"
+  description="Arsip proyek Farrel Islami Putra: riset kualitas udara Cirebon yang masih berjalan, ide yang tertunda, dan rencana kecil ke depan, lengkap dengan filter kategori."
+>
   <section class="gallery-section" id="work" aria-labelledby="gallery-heading">
     <div class="desktop-frame desktop-frame--tl" aria-hidden="true"></div>
     <div class="desktop-frame desktop-frame--br" aria-hidden="true"></div>
@@ -40,10 +44,10 @@ const reserved = entries.filter((e) => e.data.status === 'RESERVED');
       <div class="section-heading section-heading-light">
         <div>
           <p class="section-kicker">01 / SELECTED WORKS</p>
-          <h2 class="display-heading" id="gallery-heading">
+          <h1 class="display-heading" id="gallery-heading">
             <span class="line-mask"><span class="line">The project</span></span>
             <span class="line-mask"><span class="line"><em>archive.</em></span></span>
-          </h2>
+          </h1>
         </div>
         <p class="heading-aside" id="gallery-aside">Satu proyek penelitian yang masih berjalan, satu ide yang tertunda, dan satu rencana kecil untuk ke depan. Semua ditulis apa adanya.</p>
       </div>

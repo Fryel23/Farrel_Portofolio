@@ -19,10 +19,15 @@ const {
     'Catatan belajar Farrel Islami Putra, mahasiswa Informatika UNIKOM. Soal data, pola, software, dan hal-hal yang belum selesai dipelajari.',
   pageKey = '',
 } = Astro.props;
+
+/* V8.1 Fase 3.4: canonical dan og:image absolut memakai Astro.site
+   (di-set di astro.config.mjs) sesuai rekomendasi SEO Astro. */
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImageURL = new URL('/og-default.png', Astro.site);
 ---
 
 <!doctype html>
-<html lang="en" data-page={pageKey}>
+<html lang="id" data-page={pageKey}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -32,6 +37,10 @@ const {
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <title>{title}</title>
+    <!-- V8.1 Fase 3.4: URL absolut untuk canonical, og:url, dan og:image. -->
+    <link rel="canonical" href={canonicalURL} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={ogImageURL} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -43,7 +52,7 @@ const {
     <ClientRouter />
   </head>
   <body>
-    <a class="skip-link" href="#main">Skip to content</a>
+    <a class="skip-link" href="#main" lang="en">Skip to content</a>
 
     <div class="page-progress" aria-hidden="true"><span id="progress-bar"></span></div>
 

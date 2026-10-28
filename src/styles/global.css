@@ -917,6 +917,21 @@ html { scroll-padding-top: 80px; }
 
 .geo-one { left: auto; right: 6%; top: 6%; }
 
+/* V8.1 Fase 2.2: kendalikan dekorasi yang keluar batas viewport di
+   mobile. .geo-two sebelumnya right: -5px; digabung bbox rotasi 45
+   derajat (segi 34px menghasil bbox 48px) tepi elemen menonjol 12px
+   melewati viewport (scrollWidth 402 vs 390). Ditarik ke dalam agar
+   bbox rotasinya berada di dalam viewport tanpa perlu overflow hidden
+   pada .hero (yang justru memotong sticker dan pixel frame). */
+.geo-two { right: 12px; }
+
+/* V8.1 Fase 2.2: .gallery-curve (work.css) dan .social-pattern
+   (connect.css) sudah terkurung oleh overflow: hidden pada parent
+   masing-masing (.gallery-section dan .social-section), termasuk di
+   breakpoint mobile; tidak ada override yang melepas keduanya. Karena
+   itu elemen ini tidak perlu aturan tambahan dan bentuk kurva/pola
+   tetap utuh. */
+
 .tool-two { left: 3%; }
 
 .section-heading { align-items: flex-start; flex-direction: column; gap: 18px; margin-bottom: 30px; }

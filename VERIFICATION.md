@@ -794,3 +794,118 @@ situs berjalan) + flag `--enable-unsafe-swiftshader` untuk software WebGL.
   memintanya, sehingga tidak diimplementasikan (jujur terhadap spesifikasi).
 - Emulasi runtime prefers-reduced-motion dua arah tetap diverifikasi lewat
   jalur kode (guard isReducedMotion di ketiga efek + jalur interactions).
+
+# LAPORAN V8.1 - TECHNICAL DEBT CLEANUP, SEO & SEMANTIC HARDENING
+
+Spesifikasi: `upload/PROMPT_V8.1_DEBT_CLEANUP_SEO.md` (5 Fase, 5 Batasan Absolut).
+Mode: EDIT IN-PLACE, tanpa fitur visual baru. Tujuan: judul unik, semantik benar,
+SEO lengkap, layout mobile bersih, konsol JavaScript tanpa peringatan GSAP.
+
+## Eksekusi per Fase
+
+| Fase | File | Perubahan |
+|---|---|---|
+| 1 | `src/scripts/global.js` | Baris `if (DATA.meta.siteTitle) doc.title = ...` di `renderIdentity()` dihapus (plus komentarnya). Judul tab kini murni dari prop `title` BaseLayout per halaman. |
+| 2.1 | `src/styles/home.css` | `.hero-ruler { display: none; }` ditambahkan di `@media (max-width: 700px)`. Alasan: rule dasar `.hero-ruler { display: flex }` di home.css (urutan impor lebih akhir) menimpa `display: none` milik global.css, itulah mengapa ruler masih aktif di mobile. |
+| 2.2 | `src/styles/global.css` | `.geo-two { right: 12px }` di breakpoint mobile (sebelumnya `right: -5px`). `.gallery-curve` dan `.social-pattern` diverifikasi sudah terkurung `overflow: hidden` parent masing-masing (`.gallery-section`, `.social-section`) juga di mobile, jadi tidak diberi aturan tambahan (dokumentasi di komentar CSS). |
+| 3.1 | `src/layouts/BaseLayout.astro` | `<html lang="en">` menjadi `<html lang="id">`; skip-link (satu-satunya konten Inggris di file ini) ditandai `lang="en"`. |
+| 3.2 | 7 halaman | h2 utama menjadi h1: `about.astro` (#about-heading), `connect.astro` (#social-heading), `archive/index.astro` (#archive-hub-heading), `archive/play.astro` (#games-heading), `archive/credentials.astro` (#credentials-heading), `archive/off-screen.astro` (#offscreen-heading), `work/index.astro` (#gallery-heading). Tidak ada CSS/JS yang bergantung pada tag h2 untuk heading tersebut (audit: hanya reset global `h1,h2,h3,h4,p{margin:0}` dan `.prose-archive h2` untuk body case study). |
+| 3.3 | 8 halaman | Meta description unik ditambahkan di frontmatter BaseLayout masing-masing (homepage, about, connect, work, archive hub, play, credentials, off-screen). Halaman detail `/work/[slug]` sudah memakai `d.description` dari content collection. |
+| 3.4 | `BaseLayout.astro` + `astro.config.mjs` | `const canonicalURL = new URL(Astro.url.pathname, Astro.site)` dan `ogImageURL = new URL('/og-default.png', Astro.site)`; `<link rel="canonical">`, `<meta property="og:url">`, `<meta property="og:image">` ditambahkan di head. `astro.config.mjs` kini punya `site: 'https://www.farrelislami.tech'`. Aset baru `public/og-default.png` (1200x630 PNG, 48 KB) digenerate deterministik via sharp dari SVG dengan palet token global.css (blueprint frame, atlas paths, geo diamonds, ruler ticks). |
+| 4.1 | `src/pages/work/[slug].astro` | `getStaticPaths` kini `getCollection('work', ({ data }) => data.status !== 'RESERVED')`. Bukti build: 9 halaman (sebelumnya 11); `/work/ideas-in-progress/` dan `/work/saham-indonesia/` tidak lagi digenerate. |
+| 4.2 | `src/scripts/archive.js` | Blok pembuatan kartu `credential-card--sample` (SAMPLE FORMAT / NOT AN ENTRY) dihapus dari `renderCredentials()`. Format kartu tetap terdokumentasi di komentar "HOW TO ADD A CREDENTIAL" pada `src/data/content.js` (opsi dokumentasi yang disediakan spesifikasi). Vault framing + slot kosong dipertahankan. |
+| 5 | `src/scripts/global.js` + `src/scripts/archive.js` | 9 blok selector lintas-halaman di `initSectionMotion()` (about, software-chip, skill-chip, journey-item, resume-card, social-card, credential, contact, curiosity-panel) dan 4 blok di `initV4Motion()` (deck-console, offscreen-layout, github-grid, companion-inner) dijaga pola `gsap.utils.toArray(sel)` + `if (targets.length)` sesuai contoh spesifikasi. Tween, timing, ease, dan selektor tidak diubah. |
+
+## VALIDASI MANDIRI V8.1
+
+| Langkah | Hasil |
+|---|---|
+| `node --check` (salinan .mjs global.js + archive.js) | LOLOS, sintaks valid |
+| `rg` em dash (U+2014) atas src/, README.md, VERIFICATION.md, astro.config.mjs | Kosong, LOLOS |
+| `bun run build` | LOLOS, 9 halaman dibangun (turun dari 11), rute RESERVED tidak ada |
+| Verifikasi dist | 8 `<title>` unik + title homepage; canonical/og:url/og:image absolut; 8 deskripsi unik (hash beda semua); h1 = 1 di 7 halaman; `lang="id"`; `.hero-ruler{display:none` ada di bundle home; `.geo-two{right:12px` ada di bundle BaseLayout; `utils.toArray(` = 10 (global) + 4 (archive); string `SAMPLE FORMAT`/`credential-card--sample` tidak ada di bundle; `og-default.png` tersalin ke dist |
+
+## Bukti browser (desktop 1440x900, astro preview)
+
+| Halaman | scrollWidth/innerWidth | h1 | lang | canonical+og |
+|---|---|---|---|---|
+| / (9 halaman: /, /about, /connect, /work, /work/aqi-cirebon, /archive, /archive/play, /archive/credentials, /archive/off-screen) | 1440/1440 semua | 1 semua | id semua | ada semua |
+
+Console setelah tur 9 halaman (setelah perbaikan Fase 5): **0 baris, 0 peringatan
+GSAP, 0 page error**. Sebelum perbaikan: 32 warning (`GSAP target ... not found`
+untuk .deck-console/.offscreen-layout/.github-grid/.companion-inner dan
+`Element not found:` untuk trigger-nya, keduanya dari GSAP internal
+nullTargetWarn, dipicu blok tak terjaga di initV4Motion archive.js).
+
+## Bukti browser (mobile 390x844)
+
+| Halaman | scrollWidth/innerWidth |
+|---|---|
+| 9 halaman yang sama (diukur juga setelah scroll ke dasar halaman) | **390/390 semua** |
+
+Pengukuran eksplisit homepage mobile: `getComputedStyle(.hero-ruler).display`
+= `none`, `getComputedStyle(.geo-two).right` = `12px`. Tidak ada horizontal
+scroll. Screenshot tersimpan sebagai bukti (v81-mobile-home.png,
+v81-desktop-home.png): desktop mempertahankan hero-ruler (layar besar),
+mobile bersih tanpa ruler dan diamond tetap di dalam viewport.
+
+## Rute & konten publik
+
+- `GET /work/ideas-in-progress/` = **404**, `GET /work/saham-indonesia/` = **404**,
+  `GET /work/aqi-cirebon/` = 200 (satu-satunya rute case study publik).
+- `GET /og-default.png` = 200, 49486 bytes, image/png.
+- `/archive/credentials` mobile: kartu sampel = 0, slot kosong = 3 (CERTIFICATE /
+  AWARD / PUBLICATION), vault-frame utuh, h1 = 1.
+
+## Regresi fitur sebelumnya (golden path)
+
+- Deck V7.5 di /archive/play (mobile): INSERT COIN, tinggi dokumen 844 menjadi
+  3313; roda sintetis mencapai scrollY 2469/2469 (dasar persis, limit Lenis
+  ter-update oleh perbaikan V7.5 yang tidak disentuh); EJECT memulihkan
+  tinggi 844 dan scrollY 0; wheel setelah EJECT tetap normal.
+- Fitur V8.0 (magnetic, audio mute, WebGL hover, CRT) tidak disentuh; tur 9
+  halaman tanpa satu pun error konsol.
+
+## Kepatuhan Batasan Absolut V8.1
+
+1. **Tidak mengubah logika animasi/efek V8.0**: hanya file yang diinstruksikan
+   yang disentuh (global.js, global.css, home.css, BaseLayout.astro, halaman,
+   work/[slug].astro, archive.js, astro.config.mjs). Perubahan motion hanyalah
+   guard keberadaan; tween/timing/ease/selektor identik. Magnetic, Audio,
+   WebGL, CRT tidak disentuh sama sekali.
+2. **Astro.site dan Astro.url**: canonical, og:url, og:image dibuat via
+   `new URL(pathname, Astro.site)` sesuai rekomendasi SEO Astro; terbukti
+   absolut di dist (`https://www.farrelislami.tech/...`).
+3. **Filter di getStaticPaths**: `data.status !== 'RESERVED'` di
+   [slug].astro, bukan di komponen halaman; rute RESERVED lenyap dari build.
+4. **Cegah peringatan GSAP**: 13 blok dijaga `gsap.utils.toArray()` + length;
+   terbukti konsol bersih di 9 halaman.
+5. **Tanpa em dash (U+2014)**: grep kosong atas seluruh sumber yang disentuh.
+
+## Catatan jujur
+
+- Spesifikasi menyarankan `right: 0` untuk .geo-two. Secara terukur itu masih
+  menyisakan overflow ~7px karena bbox rotasi 45 derajat (segi 34px menghasil
+  bbox 48px; (48-34)/2 = 7px menonjol melewati tepi). Dipilih `right: 12px`
+  agar target verifikasi Fase 2.3 (`scrollWidth === innerWidth === 390`)
+  benar-benar tercapai di semua halaman; visual hanya bergeser 17px ke dalam
+  pada layar kecil dan tetap dekoratif.
+- `.gallery-curve` dan `.social-pattern` tidak diubah: parent-nya sudah
+  `overflow: hidden` sejak sebelum V8.1 (work.css/connect.css, file yang tidak
+  diinstruksikan), tidak ada override mobile yang melepasnya, dan pengukuran
+  390/390 membuktikan tidak ada kebocoran. Keputusan didokumentasikan sebagai
+  komentar di global.css.
+- Dua heading sekunder sengaja tetap h2 (`#github-heading` di /archive dan
+  `#companion-heading` di /archive/off-screen) agar setiap halaman punya tepat
+  satu h1; hierarki section tidak berubah. `#closing-name` di /connect juga
+  tetap h2 di bawah h1 #social-heading.
+- Penandaan `lang="en"` eksplisit hanya pada skip-link BaseLayout. Label mikro
+  berbahasa Inggris lain (kicker, stamp) tersebar di halaman/CSS di luar cakupan
+  file yang diinstruksikan dan tidak dipaksa berubah agar tidak melanggar
+  Batasan 1; bahasa utama halaman kini benar terdeklarasi `id`.
+- `isReserved` di [slug].astro kini selalu false (karena RESERVED difilter di
+  getStaticPaths) dan sengaja dipertahankan sebagai kode defensif minimal tanpa
+  perubahan perilaku.
+- Kartu sampel credentials dihapus dari runtime; CSS `.credential-card--sample`
+  di archive.css (file tidak diinstruksikan) kini tidak terpakai namun dibiarkan
+  agar file itu tidak perlu disentuh.

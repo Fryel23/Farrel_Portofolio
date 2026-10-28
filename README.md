@@ -1,9 +1,11 @@
-# Farrel Islami Putra · Editorial Portfolio (Astro V8.0)
+# Farrel Islami Putra · Editorial Portfolio (Astro V8.1)
 
 Portofolio pribadi berbasis **Astro 7** dengan arsitektur **Hub-and-Spoke (Pucuk-Cabang)**.
 Migrasi total dari versi monolitik satu halaman (HTML/CSS/JS murni, V6.7) sesuai
 `PROMPT_EKSEKUSI_V7.0_ASTRO_MIGRATION.md`. Desain visual, palet warna, tipografi,
 animasi GSAP, dan seluruh fitur interaktif dipertahankan identik.
+
+**V8.1 (Technical Debt Cleanup, SEO & Semantic Hardening)** sesuai `PROMPT_V8.1_DEBT_CLEANUP_SEO.md`: sapu bersih temuan review eksternal tanpa fitur visual baru. **Judul halaman**: override `doc.title` di `renderIdentity()` dihapus, sehingga setiap halaman memakai `<title>` unik dari prop `title` BaseLayout. **Mobile layout**: `.hero-ruler` disembunyikan di bawah 700px (aturan eksplisit di home.css karena urutan impor membuat aturan mobile global.css kalah kaskade) dan `.geo-two` ditarik ke `right: 12px`, sehingga `scrollWidth === innerWidth === 390` di semua 9 halaman (sebelumnya 402 vs 390). **Semantik & SEO**: `lang="id"`, tepat satu `<h1>` di 7 halaman yang tadinya memakai h2, meta description unik per halaman, canonical + og:url + og:image absolut via `Astro.site` (`https://www.farrelislami.tech` di astro.config.mjs), plus aset baru `public/og-default.png` (1200x630, digenerate deterministik via sharp dengan palet situs). **Rute publik**: entri RESERVED tidak pernah lagi menghasilkan halaman (`getStaticPaths` memfilter `status !== 'RESERVED'`; build turun dari 11 ke 9 halaman) dan kartu sampel "SAMPLE FORMAT / NOT AN ENTRY" dihapus dari vault credentials. **Konsol bersih**: semua blok GSAP lintas halaman di `initSectionMotion()` (global.js) dan `initV4Motion()` (archive.js) dijaga `gsap.utils.toArray()` + pemeriksaan panjang, sehingga tur 9 halaman tercatat 0 peringatan "target not found". Rincian verifikasi di `VERIFICATION.md`.
 
 **V8.0 (Cinematic Experience & Micro-Interactions)** sesuai `PROMPT_V8.0_CINEMATIC_EXPERIENCE.md`:
 portofolio kini punya lapisan sinematik dengan progressive enhancement penuh.

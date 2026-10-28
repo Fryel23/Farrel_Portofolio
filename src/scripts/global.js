@@ -126,8 +126,9 @@ export function renderIdentity() {
   if (!DATA) return;
   const hero = DATA.hero;
 
-  // Keep the document title synchronized with the canonical value.
-  if (DATA.meta.siteTitle) doc.title = DATA.meta.siteTitle;
+  /* V8.1 Fase 1: override doc.title dihapus. BaseLayout.astro menerima
+     prop title dan merendernya di <head> untuk setiap halaman, sehingga
+     judul tab kini unik per halaman tanpa ditimpa JS global. */
 
   setText('#hero-eyebrow', hero.eyebrow);
   buildHeading(qs('#hero-title'), hero.headline, hero.headlineAccent, true);
@@ -735,60 +736,90 @@ function initSectionMotion() {
      rebuilds the batch whenever the grid is re-rendered below the
      viewport. */
 
-  // About copy: calm rhythm
-  gsap.set(['.about-lead', '.about-body'], { opacity: 0, y: 26 });
-  gsap.to(['.about-lead', '.about-body'], {
-    opacity: 1, y: 0, duration: 0.7, stagger: 0.12, ease: 'power2.out',
-    scrollTrigger: { trigger: '.about-layout', start: 'top 78%', once: true }
-  });
+  /* V8.1 Fase 5: setiap blok di bawah ini dijaga dengan pemeriksaan
+     keberadaan target (gsap.utils.toArray + length) agar GSAP tidak
+     mencatat peringatan "target not found" di halaman yang tidak
+     memiliki section tersebut. initSectionMotion berjalan di semua
+     halaman, sedangkan selector di bawah hanya ada di halaman tertentu. */
+
+  // About copy: calm rhythm (halaman /about)
+  const aboutTargets = gsap.utils.toArray('.about-lead, .about-body');
+  if (aboutTargets.length) {
+    gsap.set(aboutTargets, { opacity: 0, y: 26 });
+    gsap.to(aboutTargets, {
+      opacity: 1, y: 0, duration: 0.7, stagger: 0.12, ease: 'power2.out',
+      scrollTrigger: { trigger: '.about-layout', start: 'top 78%', once: true }
+    });
+  }
 
   // Chips: short stagger (transform cleared afterwards so the CSS hover
   // lift and the :active press (5.3.5) can take over)
-  gsap.set('.software-chip', { opacity: 0, scale: 0.85 });
-  gsap.to('.software-chip', {
-    opacity: 1, scale: 1, duration: 0.4, stagger: 0.04, ease: 'power2.out',
-    clearProps: 'transform',
-    scrollTrigger: { trigger: '.software-block', start: 'top 85%', once: true }
-  });
-  gsap.set('.skill-chip', { opacity: 0, y: 14 });
-  gsap.to('.skill-chip', {
-    opacity: 1, y: 0, duration: 0.4, stagger: 0.035, ease: 'power2.out',
-    clearProps: 'transform',
-    scrollTrigger: { trigger: '.skills-block', start: 'top 85%', once: true }
-  });
+  const softwareChips = gsap.utils.toArray('.software-chip');
+  if (softwareChips.length) {
+    gsap.set(softwareChips, { opacity: 0, scale: 0.85 });
+    gsap.to(softwareChips, {
+      opacity: 1, scale: 1, duration: 0.4, stagger: 0.04, ease: 'power2.out',
+      clearProps: 'transform',
+      scrollTrigger: { trigger: '.software-block', start: 'top 85%', once: true }
+    });
+  }
+  const skillChips = gsap.utils.toArray('.skill-chip');
+  if (skillChips.length) {
+    gsap.set(skillChips, { opacity: 0, y: 14 });
+    gsap.to(skillChips, {
+      opacity: 1, y: 0, duration: 0.4, stagger: 0.035, ease: 'power2.out',
+      clearProps: 'transform',
+      scrollTrigger: { trigger: '.skills-block', start: 'top 85%', once: true }
+    });
+  }
 
   // Journey + education: sequential, emphasis on titles
-  gsap.set('.journey-item', { opacity: 0, x: -18 });
-  gsap.to('.journey-item', {
-    opacity: 1, x: 0, duration: 0.55, stagger: 0.09, ease: 'power2.out',
-    scrollTrigger: { trigger: '.journey-list', start: 'top 84%', once: true }
-  });
-  gsap.set('.resume-card', { opacity: 0, y: 40 });
-  gsap.to('.resume-card', {
-    opacity: 1, y: 0, duration: 0.7, stagger: 0.12, ease: 'power2.out',
-    scrollTrigger: { trigger: '.journey-grid', start: 'top 86%', once: true }
-  });
+  const journeyItems = gsap.utils.toArray('.journey-item');
+  if (journeyItems.length) {
+    gsap.set(journeyItems, { opacity: 0, x: -18 });
+    gsap.to(journeyItems, {
+      opacity: 1, x: 0, duration: 0.55, stagger: 0.09, ease: 'power2.out',
+      scrollTrigger: { trigger: '.journey-list', start: 'top 84%', once: true }
+    });
+  }
+  const resumeCards = gsap.utils.toArray('.resume-card');
+  if (resumeCards.length) {
+    gsap.set(resumeCards, { opacity: 0, y: 40 });
+    gsap.to(resumeCards, {
+      opacity: 1, y: 0, duration: 0.7, stagger: 0.12, ease: 'power2.out',
+      scrollTrigger: { trigger: '.journey-grid', start: 'top 86%', once: true }
+    });
+  }
 
-  // Social cards: measured stagger
-  gsap.set('.social-card', { opacity: 0, y: 30 });
-  gsap.to('.social-card', {
-    opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out',
-    scrollTrigger: { trigger: '.social-grid', start: 'top 86%', once: true }
-  });
+  // Social cards: measured stagger (grid dirender renderSocials di /connect)
+  const socialCards = gsap.utils.toArray('.social-card');
+  if (socialCards.length) {
+    gsap.set(socialCards, { opacity: 0, y: 30 });
+    gsap.to(socialCards, {
+      opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out',
+      scrollTrigger: { trigger: '.social-grid', start: 'top 86%', once: true }
+    });
+  }
 
   // Credentials: restrained entrance; reserved slots stay quiet
-  gsap.set(['.credential-card', '.credential-slot'], { opacity: 0, y: 26 });
-  gsap.to(['.credential-card', '.credential-slot'], {
-    opacity: 1, y: 0, duration: 0.55, stagger: 0.08, ease: 'power2.out',
-    scrollTrigger: { trigger: '.credential-grid', start: 'top 86%', once: true }
-  });
+  const credentialTargets = gsap.utils.toArray('.credential-card, .credential-slot');
+  if (credentialTargets.length) {
+    gsap.set(credentialTargets, { opacity: 0, y: 26 });
+    gsap.to(credentialTargets, {
+      opacity: 1, y: 0, duration: 0.55, stagger: 0.08, ease: 'power2.out',
+      scrollTrigger: { trigger: '.credential-grid', start: 'top 86%', once: true }
+    });
+  }
 
   // Contact block: modest entrance for the email cards
-  gsap.set(['.contact-heading', '.contact-card', '.contact-note'], { opacity: 0, y: 22 });
-  gsap.to(['.contact-heading', '.contact-card', '.contact-note'], {
-    opacity: 1, y: 0, duration: 0.55, stagger: 0.08, ease: 'power2.out',
-    scrollTrigger: { trigger: '.contact-block', start: 'top 88%', once: true }
-  });
+  const contactTargets = gsap.utils.toArray('.contact-heading, .contact-card, .contact-note');
+  if (contactTargets.length) {
+    gsap.set(contactTargets, { opacity: 0, y: 22 });
+    gsap.to(contactTargets, {
+      opacity: 1, y: 0, duration: 0.55, stagger: 0.08, ease: 'power2.out',
+      scrollTrigger: { trigger: '.contact-block', start: 'top 88%', once: true }
+    });
+  }
 
   // Closing: oversized typography reveal
   const solid = qs('.closing-solid .line');
@@ -833,11 +864,14 @@ function initSectionMotion() {
       scrollTrigger: { trigger: '.curiosity-map', start: 'top 82%', once: true }
     });
   }
-  gsap.set(['.curiosity-panel', '.curiosity-intro'], { opacity: 0, y: 18 });
-  gsap.to(['.curiosity-panel', '.curiosity-intro'], {
-    opacity: 1, y: 0, duration: 0.55, stagger: 0.1, ease: MOTION.easeSoft,
-    scrollTrigger: { trigger: '.curiosity-map', start: 'top 78%', once: true }
-  });
+  const curiosityPanels = gsap.utils.toArray('.curiosity-panel, .curiosity-intro');
+  if (curiosityPanels.length) {
+    gsap.set(curiosityPanels, { opacity: 0, y: 18 });
+    gsap.to(curiosityPanels, {
+      opacity: 1, y: 0, duration: 0.55, stagger: 0.1, ease: MOTION.easeSoft,
+      scrollTrigger: { trigger: '.curiosity-map', start: 'top 78%', once: true }
+    });
+  }
 
   /* Learning Journey rail (12.5): called from boot() so its
      IntersectionObserver fallback also works without GSAP. */

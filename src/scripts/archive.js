@@ -294,24 +294,10 @@ function renderCredentials() {
       grid.appendChild(slot);
     });
 
-    // V6.6 Fase 2.2: clearly-labelled sample card; no buttons, no dialog,
-    // no tab stops: it demonstrates the format without being an entry.
-    const sample = el('article', 'credential-card credential-card--sample');
-    sample.setAttribute('aria-label', 'Sample format, not a real credential');
-    const sampleImage = el('div', 'credential-sample-image');
-    sampleImage.setAttribute('aria-hidden', 'true');
-    sampleImage.appendChild(el('span', null, 'IMAGE'));
-    const sampleBody = el('div', 'credential-body');
-    const sampleMeta = el('div', 'credential-meta');
-    sampleMeta.append(el('span', 'credential-type', 'SAMPLE FORMAT'), el('span', 'credential-date', 'NOT AN ENTRY'));
-    sampleBody.append(sampleMeta, el('h3', null, 'Certificate title'),
-      el('p', 'credential-issuer', 'Issuing organization'), el('p', 'credential-desc', 'One honest line about relevance.'));
-    const sampleActions = el('div', 'credential-sample-actions');
-    sampleActions.setAttribute('aria-hidden', 'true');
-    sampleActions.append(el('span', 'sample-button', 'Verify credential'), el('span', 'sample-button', 'Open preview'));
-    sampleBody.appendChild(sampleActions);
-    sample.append(sampleImage, sampleBody);
-    grid.appendChild(sample);
+    /* V8.1 Fase 4.2: kartu sampel "SAMPLE FORMAT / NOT AN ENTRY"
+       dihapus dari tampilan publik agar vault hanya berisi slot yang
+       jujur. Format kartu lengkap tetap terdokumentasi di komentar
+       "HOW TO ADD A CREDENTIAL" pada src/data/content.js. */
 
     // Vault framing (5.5.1): the reserved grid gets a casing with a small
     // dial that turns on hover. Pure decoration; skipped once real
@@ -2912,33 +2898,49 @@ function resetDeskHabitatDust() {
 function initV4Motion() {
   if (!hasScrollTrigger) return;
 
-  gsap.set('.deck-console', { opacity: 0, y: 34 });
-  gsap.to('.deck-console', {
-    opacity: 1, y: 0, duration: 0.6, ease: 'power2.out',
-    clearProps: 'transform',
-    scrollTrigger: { trigger: '.games-section', start: 'top 78%', once: true }
-  });
+  /* V8.1 Fase 5: initV4Motion dipakai empat halaman arsip lewat
+     PAGE_BOOT, tetapi tiap blok hanya relevan di satu halaman. Setiap
+     blok dijaga gsap.utils.toArray + length agar GSAP tidak mencatat
+     peringatan "target not found" di halaman arsip lain. */
+  const deckConsole = gsap.utils.toArray('.deck-console');
+  if (deckConsole.length) {
+    gsap.set(deckConsole, { opacity: 0, y: 34 });
+    gsap.to(deckConsole, {
+      opacity: 1, y: 0, duration: 0.6, ease: 'power2.out',
+      clearProps: 'transform',
+      scrollTrigger: { trigger: '.games-section', start: 'top 78%', once: true }
+    });
+  }
 
-  gsap.set('.offscreen-layout > *', { opacity: 0, y: 30 });
-  gsap.to('.offscreen-layout > *', {
-    opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out',
-    clearProps: 'transform',
-    scrollTrigger: { trigger: '.offscreen-layout', start: 'top 84%', once: true }
-  });
+  const offscreenItems = gsap.utils.toArray('.offscreen-layout > *');
+  if (offscreenItems.length) {
+    gsap.set(offscreenItems, { opacity: 0, y: 30 });
+    gsap.to(offscreenItems, {
+      opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out',
+      clearProps: 'transform',
+      scrollTrigger: { trigger: '.offscreen-layout', start: 'top 84%', once: true }
+    });
+  }
 
-  gsap.set(['.github-grid', '.github-fallback', '.github-note'], { opacity: 0, y: 30 });
-  gsap.to(['.github-grid', '.github-fallback', '.github-note'], {
-    opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out',
-    clearProps: 'transform',
-    scrollTrigger: { trigger: '.github-inner', start: 'top 84%', once: true }
-  });
+  const githubTargets = gsap.utils.toArray('.github-grid, .github-fallback, .github-note');
+  if (githubTargets.length) {
+    gsap.set(githubTargets, { opacity: 0, y: 30 });
+    gsap.to(githubTargets, {
+      opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out',
+      clearProps: 'transform',
+      scrollTrigger: { trigger: '.github-inner', start: 'top 84%', once: true }
+    });
+  }
 
-  gsap.set('.companion-inner > *', { opacity: 0, y: 26 });
-  gsap.to('.companion-inner > *', {
-    opacity: 1, y: 0, duration: 0.55, stagger: 0.08, ease: 'power2.out',
-    clearProps: 'transform',
-    scrollTrigger: { trigger: '.companion-inner', start: 'top 86%', once: true }
-  });
+  const companionItems = gsap.utils.toArray('.companion-inner > *');
+  if (companionItems.length) {
+    gsap.set(companionItems, { opacity: 0, y: 26 });
+    gsap.to(companionItems, {
+      opacity: 1, y: 0, duration: 0.55, stagger: 0.08, ease: 'power2.out',
+      clearProps: 'transform',
+      scrollTrigger: { trigger: '.companion-inner', start: 'top 86%', once: true }
+    });
+  }
 }
 
 /* ======================================================================

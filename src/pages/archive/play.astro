@@ -3,7 +3,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import '../../styles/archive.css';
 ---
 
-<BaseLayout title="Game Deck · Farrel Islami Putra" pageKey="archive-play">
+<BaseLayout
+  title="Game Deck · Farrel Islami Putra"
+  pageKey="archive-play"
+  description="Game deck interaktif portofolio Farrel Islami Putra: kartu arcade dengan sistem insert coin, deck scroll, dan statistik main yang santai, bukan kompetitif."
+>
   <!-- ============ GAME DECK (V4 §5) ============ -->
   <section class="games-section" id="games" aria-labelledby="games-heading">
     <div class="desktop-frame desktop-frame--tl" aria-hidden="true"></div>
@@ -12,10 +16,10 @@ import '../../styles/archive.css';
       <div class="section-heading section-heading-light">
         <div>
           <p class="section-kicker" id="games-kicker">03 / INSERT COIN</p>
-          <h2 class="display-heading" id="games-heading">
+          <h1 class="display-heading" id="games-heading">
             <span class="line-mask"><span class="line">Press <em>start.</em></span></span>
             <span class="line-mask"><span class="line">See what I play.</span></span>
-          </h2>
+          </h1>
         </div>
         <p class="heading-aside" id="games-intro">A self-reported deck of games I actually play. Stats are casual, not competitive.</p>
       </div>
