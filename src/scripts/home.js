@@ -365,12 +365,24 @@ function initGlobalArchiveSearch() {
   });
 }
 
-function initHeroIntro() {
+/* ======================================================================
+ * V9.0 FASE 3.1 (Batasan 6): initHeroIntro() lama dipecah menjadi dua
+ * fungsi dengan kontrak yang tegas:
+ *   - prepareHeroState(): HANYA persiapan (gsap.set + elemen scanline).
+ *     Hero dibuat invisible dan siap dianimasikan. Dipanggil global.js
+ *     segera setelah showModal() (sebelum wipe).
+ *   - animateHeroIn(): HANYA animasi masuk (timeline gsap.to). Dipanggil
+ *     di REVEAL_AT (0.5s ke dalam wipe) atau langsung pada jalur bypass.
+ * Keduanya dijamin dipanggil tepat satu kali per boot oleh
+ * initArchiveOpening (global.js) lewat kontrak callback V9.0.
+ * ==================================================================== */
+export function prepareHeroState() {
   const hero = qs('.hero');
-  if (!hero) return;
+  if (!hero || !hasGSAP) return;
 
   // Scanline elements (5.1.1): one per masked headline line, appended
-  // before the timeline so they can sweep during the reveal.
+  // during preparation so they are already in place when the reveal
+  // sweeps (animateHeroIn never mutates the DOM).
   qsa('.hero-title .line-mask').forEach((mask) => {
     if (!mask.querySelector('.scanline')) {
       const scan = el('span', 'scanline');
@@ -385,6 +397,19 @@ function initHeroIntro() {
   gsap.set('#pixel-frame', { opacity: 0, y: 40, rotate: -14, scale: 0.96 });
   gsap.set('.floating-tool', { opacity: 0, scale: 0.5, y: 10 });
   gsap.set('.hero-sticker', { opacity: 0, scale: 0.9 });
+
+  /* Data Atlas prep (12.1): ukur panjang path dan sembunyikan node.
+     Semua gsap.set murni - bagian dari persiapan, bukan animasi. */
+  qsa('.atlas-path').forEach((path) => {
+    const length = path.getTotalLength ? path.getTotalLength() : 0;
+    if (length) gsap.set(path, { strokeDasharray: length, strokeDashoffset: length });
+  });
+  gsap.set(['.atlas-node', '.atlas-cross'], { opacity: 0, scale: 0.5, transformOrigin: '50% 50%' });
+}
+
+export function animateHeroIn() {
+  const hero = qs('.hero');
+  if (!hero || !hasGSAP) return;
 
   const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
   tl.to('#hero-title .line', { yPercent: 0, duration: 0.9, stagger: 0.09 }, 0.15)
@@ -410,19 +435,19 @@ function initHeroIntro() {
      labels follow. Decorative only, nothing here hides content. */
   const atlasPaths = qsa('.atlas-path');
   if (atlasPaths.length) {
-    atlasPaths.forEach((path) => {
-      const length = path.getTotalLength ? path.getTotalLength() : 0;
-      if (length) gsap.set(path, { strokeDasharray: length, strokeDashoffset: length });
-    });
     tl.to(atlasPaths, { strokeDashoffset: 0, duration: 1.4, stagger: 0.25, ease: 'power2.inOut' }, 0.55);
   }
-  gsap.set(['.atlas-node', '.atlas-cross'], { opacity: 0, scale: 0.5, transformOrigin: '50% 50%' });
   tl.to(['.atlas-node', '.atlas-cross'], { opacity: 1, scale: 1, duration: 0.5, stagger: 0.06, ease: MOTION.easeSoft }, 0.9);
   tl.fromTo('.atlas-label', { opacity: 0 }, { opacity: 1, duration: 0.6, stagger: 0.08, ease: MOTION.easeSoft }, 1.15);
   tl.fromTo('.atlas-tick', { opacity: 0 }, { opacity: 1, duration: 0.4 }, 1.3);
 
   // Ambient atlas loops (4.1) start only after the entrance finishes.
   tl.eventCallback('onComplete', startAtlasAmbient);
+  /* V9.0 (Batasan 9): timeline dibuat asinkron dari callback wipe, di
+     luar kepemilikan gsap.matchMedia, sehingga didaftarkan ke registry
+     agar teardown navigasi pasti membunuhnya (trackEventTween tetap
+     mempertahankan onComplete asli startAtlasAmbient). */
+  return trackEventTween(tl);
 }
 
 /* Data Atlas breathing (4.1): once the entrance ends, the field keeps
@@ -622,6 +647,12 @@ function initPointerParallax() {
 
 function initHeroButtons() {
   if (!hasGSAP || isReducedMotion()) return;
+  /* V9.0: home.js kini dieksekusi di semua halaman (diimpor statis oleh
+     global.js untuk kontrak callback opening). Guard ini menjaga
+     cakupan perilaku persis seperti sebelum V9.0: efek hover tombol
+     hanya pernah aktif di halaman home - satu-satunya halaman yang
+     memuat home.js sebelum V9.0. */
+  if (!qs('.hero')) return;
   qsa('.button-primary, .button-outline').forEach((btn) => {
     trackMotionListener(btn, 'mouseenter', () => {
       const arrow = btn.querySelector('span[aria-hidden="true"]');
@@ -671,16 +702,11 @@ bootPage({
   motion: [
     initPointerParallax,
     initHeroButtons,
-    () => {
-      /* V7.0: hero menunggu opening experience bila tampil.
-         V7.4: listener dilacak agar terlepas saat teardown navigasi. */
-      const startHero = () => initHeroIntro();
-      if (window.__FIP_OPENING_ACTIVE) {
-        trackMotionListener(window, 'fip:start-hero', startHero, { once: true });
-      } else {
-        startHero();
-      }
-    },
+    /* V9.0: jembatan lama 'fip:start-hero' / window.__FIP_OPENING_ACTIVE
+       dihapus. Hero kini digerakkan oleh initArchiveOpening (global.js)
+       lewat kontrak callback V9.0: prepareHeroState dipanggil setelah
+       showModal(), animateHeroIn di REVEAL_AT (atau berurutan pada
+       jalur bypass). Entri hero tidak lagi ada di boot home. */
   ],
   cleanups: [resetAtlasAmbient],
 });

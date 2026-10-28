@@ -1,9 +1,32 @@
-# Farrel Islami Putra · Editorial Portfolio (Astro V8.1)
+# Farrel Islami Putra · Editorial Portfolio (Astro V9.0)
 
 Portofolio pribadi berbasis **Astro 7** dengan arsitektur **Hub-and-Spoke (Pucuk-Cabang)**.
 Migrasi total dari versi monolitik satu halaman (HTML/CSS/JS murni, V6.7) sesuai
 `PROMPT_EKSEKUSI_V7.0_ASTRO_MIGRATION.md`. Desain visual, palet warna, tipografi,
 animasi GSAP, dan seluruh fitur interaktif dipertahankan identik.
+
+**V9.0 (Absolute Final: Archive Boot Sequence)** sesuai `PROMPT_V9.0_ABSOLUTE_FINAL.md`:
+overlay pembuka V6.6 diganti penuh dengan boot sequence sinematik berbasis `<dialog>`
+native yang tahan 100% edge case. **Zero-FOUC**: inline script sinkron di `<head>`
+(berjalan sebelum first paint) memeriksa `sessionStorage['fip-opening-seen']` +
+`prefers-reduced-motion`, menandai `html.opening-armed` (guard CSS menyembunyikan
+konten), dan memasang safety timeout 4s jika global.js gagal; dengan JS mati total
+script itu tidak jalan sehingga halaman langsung tampil. **Counter + ring progres**
+untuk aset kritis (`img[data-opening-critical]` - cover profil /about dan cover
+case study /work/[slug]; Hero tidak punya `<img>` sama sekali sehingga landing di
+`/` memakai no-assets branch: READY + jeda 400ms). **Timer tunggal** 2200ms
+(`CONTINUING...` + wipe; total <= 3s), **exactly-once asset settlement** (Set
+`settled` + pasangan load/error saling melepas), **no-assets branch di luar loop**,
+dan **::backdrop yang memudar serentak dengan wipe clip-path 0.8s** sehingga hero
+benar-benar terungkap di tengah wipe (REVEAL_AT 0.5s). **Kontrak callback hero**:
+`initHeroIntro()` dipecah menjadi `prepareHeroState()` (gsap.set saja) +
+`animateHeroIn()` (timeline saja) yang diekspor home.js dan diterima
+`initArchiveOpening` sebagai callback - dipanggil tepat satu kali di semua jalur.
+**Lifecycle**: semua listener/timer/timeline exit terdaftar di motionRegistry,
+plus handler `astro:after-swap` idempoten (paksa tutup dialog, batalkan safety
+timer, lepas guard). Escape, klik (ganda), dan tab tetap aman (focus trap native
+showModal). Terverifikasi 32/32 checks via Playwright + bukti screenshot.
+Rincian verifikasi di `VERIFICATION.md`.
 
 **V8.1 (Technical Debt Cleanup, SEO & Semantic Hardening)** sesuai `PROMPT_V8.1_DEBT_CLEANUP_SEO.md`: sapu bersih temuan review eksternal tanpa fitur visual baru. **Judul halaman**: override `doc.title` di `renderIdentity()` dihapus, sehingga setiap halaman memakai `<title>` unik dari prop `title` BaseLayout. **Mobile layout**: `.hero-ruler` disembunyikan di bawah 700px (aturan eksplisit di home.css karena urutan impor membuat aturan mobile global.css kalah kaskade) dan `.geo-two` ditarik ke `right: 12px`, sehingga `scrollWidth === innerWidth === 390` di semua 9 halaman (sebelumnya 402 vs 390). **Semantik & SEO**: `lang="id"`, tepat satu `<h1>` di 7 halaman yang tadinya memakai h2, meta description unik per halaman, canonical + og:url + og:image absolut via `Astro.site` (`https://www.farrelislami.tech` di astro.config.mjs), plus aset baru `public/og-default.png` (1200x630, digenerate deterministik via sharp dengan palet situs). **Rute publik**: entri RESERVED tidak pernah lagi menghasilkan halaman (`getStaticPaths` memfilter `status !== 'RESERVED'`; build turun dari 11 ke 9 halaman) dan kartu sampel "SAMPLE FORMAT / NOT AN ENTRY" dihapus dari vault credentials. **Konsol bersih**: semua blok GSAP lintas halaman di `initSectionMotion()` (global.js) dan `initV4Motion()` (archive.js) dijaga `gsap.utils.toArray()` + pemeriksaan panjang, sehingga tur 9 halaman tercatat 0 peringatan "target not found". Rincian verifikasi di `VERIFICATION.md`.
 

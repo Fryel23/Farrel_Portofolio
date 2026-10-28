@@ -1940,34 +1940,60 @@ body.is-glitching { animation: none; }
 }
 
 /* ==========================================================================
-   17. V6.6 FASE 9: ARCHIVE OPENING EXPERIENCE (KONSEP A)
-   Once per session editorial cover. The markup ships with [hidden]:
-   JavaScript is the only thing that can reveal it, so a failed script
-   can never block the hero. Skippable via click, Escape, scroll, or the
-   SKIP button. Reduced motion hides it entirely.
+   17. V9.0: ARCHIVE BOOT SEQUENCE (overlay pembuka berbasis <dialog>)
+   Zero-FOUC: inline script di <head> menandai html.opening-armed SEBELUM
+   first paint; guard visibility menyembunyikan semua anak body kecuali
+   dialog itu sendiri, sampai global.js membuka dialog (atau safety
+   timeout 4s di inline script melepas guard jika global.js gagal).
+   Dengan JS mati total, class tidak pernah ditambahkan: halaman langsung
+   tampil. Wipe keluar memakai clip-path pada dialog sementara ::backdrop
+   memudar serentak sehingga hero benar-benar terungkap di tengah wipe.
    ========================================================================== */
+.archive-opening:not([open]) { display: none !important; }
+.archive-opening[open] { display: grid; }
+
 .archive-opening {
   position: fixed;
   inset: 0;
-  z-index: 200;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  max-width: none;
+  max-height: none;
+  padding: 0;
+  border: none;
   background: var(--bg);
-  display: grid;
+  color: var(--ink);
   place-items: center;
-  overflow: hidden;
-  cursor: pointer;
+  z-index: 9999;
 }
 
+/* V9.0 FIX (Batasan 4): ::backdrop adalah layer terpisah yang tidak
+   terpengaruh clip-path pada dialog; ia harus memudar sendiri agar
+   Hero terlihat selama wipe berjalan, bukan hanya setelah dialog
+   ditutup. */
+.archive-opening::backdrop {
+  background: var(--bg);
+  opacity: 1;
+  transition: opacity 0.8s var(--ease);
+}
+.archive-opening.is-wiping::backdrop { opacity: 0; }
 
-.archive-opening[hidden] { display: none; }
+/* FOUC guard (dipasang inline script, dilepas initArchiveOpening
+   tepat setelah showModal()). */
+html.opening-armed body > *:not(.archive-opening):not(script):not(style) {
+  visibility: hidden;
+}
+html.opening-armed { background: var(--bg); }
 
-
+/* Wadah konten boot: label, ring progres, status, tombol masuk. */
 .opening-inner {
   display: grid;
   place-items: center;
-  gap: 48px;
-  width: min(560px, 80vw);
+  gap: 20px;
+  width: min(560px, 86vw);
+  text-align: center;
 }
-
 
 .opening-label {
   font-family: var(--mono);
@@ -1978,74 +2004,57 @@ body.is-glitching { animation: none; }
   text-align: center;
 }
 
-
-.opening-rule {
-  /* Documented adjustment to the spec CSS: position relative so the
-     absolute tick strip anchors to this rule, not to the viewport. */
+/* Counter positioning: angka berada di tengah RING (bukan tengah
+   layar) karena wrap-lah yang menjadi anchor absolut. */
+.opening-progress-wrap {
   position: relative;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
+  width: 160px;
+  height: 160px;
+  margin: 0 auto;
 }
-
-
-.opening-rule-line {
-  flex: 1;
-  height: 1px;
-  background: var(--border-strong);
-  transform-origin: left center;
-  transform: scaleX(0);
+.opening-ring { width: 100%; height: 100%; }
+.ring-bg { stroke: var(--border-strong); stroke-width: 2; fill: none; }
+.ring-fill {
+  stroke: var(--blue);
+  stroke-width: 2;
+  fill: none;
+  stroke-dasharray: 289;
+  stroke-dashoffset: 289;
+  transform: rotate(-90deg);
+  transform-origin: center;
 }
-
-
-.opening-rule-ticks {
-  /* Documented adjustment: right edge stops short of the READY label so
-     the last tick never strikes through the text. */
+.opening-counter {
   position: absolute;
-  left: 0;
-  right: 64px;
-  height: 8px;
-  display: flex;
-  justify-content: space-between;
-  pointer-events: none;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--mono);
+  font-size: 28px;
+  font-variant-numeric: tabular-nums;
 }
 
-
-.opening-rule-tick { width: 1px; height: 8px; background: var(--border-strong); }
-
-
-.opening-rule-end {
+.opening-status {
   font-family: var(--mono);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.2em;
   color: var(--text-3);
-  opacity: 0;
-  flex-shrink: 0;
+  margin: 0;
+  min-height: 1em;
 }
 
-
 .opening-skip {
-  position: absolute;
-  bottom: 32px;
-  right: 32px;
+  margin-top: 32px;
   background: transparent;
   border: 1px solid var(--border-strong);
   border-radius: 999px;
-  padding: 8px 14px;
+  padding: 10px 16px;
   font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: 0.16em;
+  font-size: 10px;
+  letter-spacing: 0.14em;
   color: var(--text-2);
   cursor: pointer;
 }
-
-
 .opening-skip:hover { border-color: var(--blue); color: var(--blue); }
-
-
 .opening-skip:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
-
 
 @media (prefers-reduced-motion: reduce) {
 
@@ -2055,7 +2064,11 @@ body.is-glitching { animation: none; }
 
 @media (max-width: 700px) {
 
-.opening-inner { gap: 32px; }
+.opening-inner { gap: 16px; }
 
-.opening-skip { bottom: 20px; right: 20px; }
+.opening-progress-wrap { width: 128px; height: 128px; }
+
+.opening-counter { font-size: 24px; }
+
+.opening-skip { margin-top: 24px; }
 }

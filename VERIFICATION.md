@@ -909,3 +909,127 @@ mobile bersih tanpa ruler dan diamond tetap di dalam viewport.
 - Kartu sampel credentials dihapus dari runtime; CSS `.credential-card--sample`
   di archive.css (file tidak diinstruksikan) kini tidak terpakai namun dibiarkan
   agar file itu tidak perlu disentuh.
+
+---
+
+# V9.0 ABSOLUTE FINAL: ARCHIVE BOOT SEQUENCE (LAPORAN VERIFIKASI)
+
+Spec: `PROMPT_V9.0_ABSOLUTE_FINAL.md` (hasil 3 putaran revisi). Metode verifikasi:
+Playwright (chromium headless, addInitScript MutationObserver `__bootLog` +
+`__wipeLog` ber-timestamp `performance.now()`), astro preview port 4321, screenshot
+di setiap titik kunci. Skrip: `/home/z/v90-verify/pw-scenarios.js`
+(+ `isolate-work.js` untuk isolasi pesan pre-existing). Hasil akhir: **32/32 PASS**.
+
+## AUDIT AWAL (WAJIB SEBELUM CODING - dilaporkan)
+
+1. `core.js`: `motionRegistry.timers` = **Set** (`.add`/`.delete`), `motionListeners`
+   = array; `trackMotionListener(target, type, handler, options)` menambah listener
+   sekaligus mendaftarkan; `trackEventTween(tween)` mendaftarkan + membungkus
+   onComplete (onComplete asli tetap jalan) + mengembalikan tween;
+   `cleanupMotionRegistry()` membebaskan semuanya; `teardownPageMotion()` terpasang
+   di `astro:after-swap` core.js (terdaftar lebih dulu daripada handler global.js,
+   jadi berjalan sebelum guard V9.0).
+2. `BaseLayout.astro`: overlay lama `<div class="archive-opening" hidden>` (V6.6)
+   dengan rule/ticks/READY; head: charset -> viewport -> meta -> title -> canonical
+   -> favicon -> fonts -> ClientRouter. Slot inline script: tepat setelah viewport
+   (sebelum CSS mana pun).
+3. `home.js initHeroIntro()` (368-426): gsap.set baris 382-387 + atlas dash
+   413-419; timeline 389-399 + scanline 403-407 + atlas tween 417-422 +
+   eventCallback onComplete 425. Pemanggil tunggal: entri boot home via jembatan
+   `window.__FIP_OPENING_ACTIVE` / event `fip:start-hero`.
+4. `global.js`: `initArchiveOpening` lama (V6.6) + `shouldShowArchiveOpening` di
+   562-649; gate bootPage 1413-1424; `startHeroGateGlobal` menggating
+   `initSectionMotion` lewat event yang sama.
+5. `astro:after-swap`: teardownPageMotion (revert matchMedia contexts ->
+   cleanupMotionRegistry -> kill semua ScrollTrigger -> globalTimeline.clear())
+   berjalan lebih dulu; guard V9.0 menutup sisanya.
+6. `global.css`: blok opening lama = section 17 (1942-2061); semua var yang
+   dipakai spek ada: --bg, --ink, --border-strong, --blue, --mono, --text-2,
+   --text-3, --ease.
+7. **Temuan penting**: Hero.astro TIDAK memiliki satu pun `<img>` (kartu profil
+   murni HTML/CSS). Gambar di atas lipatan yang kritis: `#profile-image`
+   (/assets/profile-card.svg) di about.astro dan cover `loading="eager"` di
+   work/[slug].astro. ProjectCard lazy + now-playing hidden tidak layak dilacak.
+
+## PERUBAHAN PER FASE (in-place, file minimum)
+
+| Fase | File | Perubahan |
+|---|---|---|
+| 1 | `src/layouts/BaseLayout.astro` | Inline script sinkron di head (arm + safety 4s, try/catch) + `<div hidden>` diganti `<dialog class="archive-opening" aria-labelledby="opening-label">` (ring SVG r=46, counter, status, tombol Enter Archive) |
+| 1 | `src/pages/about.astro`, `src/pages/work/[slug].astro` | `data-opening-critical` pada img eager atas-lipatan (Batasan 8) |
+| 2 | `src/styles/global.css` | Section 17 ditulis ulang: dialog fullscreen (margin/max-width/max-height none), `::backdrop` transisi 0.8s + `.is-wiping::backdrop{opacity:0}`, guard `html.opening-armed body > *`, ring 289 dasharray, counter absolut di tengah wrap, skip pill; media reduce + mobile dipertahankan/diselaraskan |
+| 3.1 | `src/scripts/home.js` | `initHeroIntro` dipecah: `export prepareHeroState()` (scanline DOM + semua gsap.set: judul, eyebrow/tail/desk/note/cue, actions, pixel-frame, floating-tool, sticker, atlas dash + node) dan `export animateHeroIn()` (timeline to/fromTo + onComplete startAtlasAmbient; dibungkus trackEventTween agar teardown pasti membunuhnya). Jembatan `fip:start-hero` dihapus dari bootPage; `initHeroButtons` diberi guard `.hero` |
+| 3.2 | `src/scripts/global.js` | `initArchiveOpening(prepareHero, animateHero)` baru: 3 bypass (elemen, reduced motion, tanpa opening-armed) yang SEMUA memanggil callback (bukan impor langsung), set flag sesi lebih dulu, showModal + focus skip, prepareHero, lepas guard, timer tunggal 2200ms, Set settled, no-assets branch langsung (READY + 400ms), exitSequence tunggal (is-wiping + clip-path 0.8s + tl.call animateHeroOnce di 0.5s + close + lepas listener), kontrol Escape (cancel preventDefault) + klik via trackMotionListener |
+| 4 | `src/scripts/global.js` | Import `prepareHeroState, animateHeroIn` dari home.js (satu arah, tanpa siklus); gate bootPage baru membungkus animateHeroIn dengan initSectionMotion (semantik lama dipertahankan di SEMUA jalur); flag `__FIP_OPENING_ACTIVE` + event + `startHeroGateGlobal` dihapus; handler `astro:after-swap` idempoten (close dialog, clear __openingSafety, lepas opening-armed) |
+
+## VALIDASI MANDIRI
+
+- `node --check` (salinan .mjs): `global.js` OK, `home.js` OK.
+- Grep em dash (U+2014) pada 6 file yang disentuh: **0** semua.
+- `bun run build`: sukses, **9 halaman** (index, about, connect, archive x4,
+  work, work/aqi-cirebon).
+- Verifikasi dist: inline script `opening-armed` ada di head index.html; dialog
+  `archive-opening` ada; `data-opening-critical` ada di about + work/[slug];
+  bundle memuat `showModal`, `is-wiping`, `fip-opening-seen`, `CONTINUING`,
+  `data-opening-critical`.
+
+## FASE 5: 10 SKENARIO + EKSTRA (bukti, semua PASS)
+
+| # | Skenario | Bukti (ringkas) |
+|---|---|---|
+| 1 | JS mati total | `javaScriptEnabled:false`, home + about: `#main` visible, dialog `display:none`, `<html>` tanpa class, bodyText 3020/2143; screenshot s1-js-off-home/about.png |
+| 2 | prefers-reduced-motion: reduce | Context `reducedMotion:'reduce'`: dialog tak pernah open (bootLog), `display:none`, eyebrow opacity 1 + line transform none (hero tanpa animasi); screenshot s2 |
+| 3 | Kunjungan pertama | Overlay open (status INITIALIZING/000 -> READY/100 saat aset selesai@~625ms), dialog tertutup t=1479-1909ms, seen=1, bootLog counter+status tercatat, **__wipeLog: backdropOpacity 1 -> 0.879 -> 0.718 -> 0.622...** + clip inset bertumbuh (fade + wipe serentak terbukti), konten terungkap, guard dilepas, console bersih; screenshot s3 x3 |
+| 4 | Refresh (session ada) | seen=1 sebelum reload; setelah reload: tidak ada event open=true, open=false, konten langsung tampil; screenshot s4 |
+| 5 | Tab saat overlay | 6x Tab: fokus hanya BODY<->`#opening-skip` (focus trap native showModal); tidak pernah mendarat di header/nav; screenshot s5 |
+| 6 | Escape | Escape -> is-wiping -> close; Escape kedua no-op; konten terungkap; console bersih; screenshot s6 |
+| 7 | Klik Enter Archive (+ganda) | dblclick + klik saat wiping: `wipeStarts=1` (tepat satu wipe), dialog tertutup, console bersih |
+| 8 | Aset lambat 6s | `status:CONTINUING...@2357ms` (timeout 2200ms terbukti), dialog tertutup total 3183-3227ms (<= 3s), console bersih; screenshot s8 |
+| 9 | Aset gagal (rename/abort) | `CONTINUING...@209-212ms` (fail-fast, tidak menunggu 2.2s), total 1172-1210ms, tanpa pageerror; screenshot s9 |
+| 10 | Navigasi saat overlay aktif | Klik nav ke /work di tengah opening: URL /work, dialog closed, main visible, opening-armed hilang; pesan console tunggal adalah pesan Curtains WebGL yang **terbukti pre-existing** (isolate-work.js: muncul identik pada kunjungan /work langsung maupun SPA tanpa opening - keterbatasan WebGL headless, bukan regresi V9.0); screenshot s10 |
+| X1 | No-assets branch (`/`) | `statuses=["READY"]` (bukan CONTINUING), counter `100`, exit t=1223-1224ms; X1b: overlay terbuka + hero teranimasi setelahnya (eyebrow 1) |
+| X2 | Counter di tengah ring + mobile 390x844 | offset pusat counter vs wrap = **0px**, wrap 128px, dialog persis fullscreen (390x844); screenshot x2-mobile-overlay.png + x2-mobile-hero.png |
+
+## KEPATUHAN 10 BATASAN ABSOLUT
+
+1. **Zero-FOUC via inline script** - terpenuhi (bukan astro:page-load; bukti skenario 1/3/4).
+2. **No-assets branch di luar loop** - terpenuhi (X1).
+3. **Exactly-once settlement** - terpenuhi (Set settled; pasangan handler saling melepas; img.complete dicek).
+4. **Backdrop transition** - terpenuhi (bukti numerik __wipeLog + visual).
+5. **Timer tunggal** - terpenuhi (satu `timeoutId`; `clearMainTimer()` selalu clearTimeout + registry.delete sebelum menjadwalkan ulang).
+6. **Kontrak callback hero (split)** - terpenuhi (prepareHeroState/animateHeroIn diekspor; dipanggil tepat satu kali di semua jalur; bypass memanggil callback yang diterima, bukan impor).
+7. **Fullscreen dialog CSS** - terpenuhi (margin/max none; X2 dialogFull true desktop+mobile).
+8. **Penanda aset eksplisit** - terpenuhi (`img[data-opening-critical]`; selector persis).
+9. **Lifecycle konkret tanpa placeholder** - terpenuhi (registry timers/listeners/eventTweens + handler after-swap: close dialog, clearTimeout safety, lepas class).
+10. **Git safety** - terpenuhi (git status/diff diperiksa; hanya file fitur yang di-stage, lihat bagian commit).
+
+## PENYIMPANGAN TERDOKUMENTASI (jujur)
+
+- **Penanda aset di Hero.astro (contoh spek) tidak mungkin**: Hero.astro tidak
+  punya `<img>`. Penanda dipasang pada dua gambar kritis nyata: about.astro
+  (`#profile-image`) dan work/[slug].astro (cover eager). Konsekuensi: landing
+  pertama di `/` selalu melewati no-assets branch (READY + 400ms) - persis
+  skenario verifikasi "No-assets branch" di spek.
+- **Bypass path 1 & 2 juga melepas class opening-armed**: spek hanya menghapus
+  di path 2; tanpa ini, markup rusak (dialog hilang) akan menggantung tersembunyi
+  sampai safety 4s. Penambahan defensif satu baris, selaras Batasan 9.
+- **Parameter callback, bukan impor langsung, di badan initArchiveOpening**: spek
+  menulis signature tanpa parameter sambil menuntut "menerima dua callback"
+  (Batasan 6). Diimplementasi sebagai parameter; ini satu-satunya cara agar
+  pembungkus `animateHeroIn + initSectionMotion` (semantik gating lama) ikut
+  terpanggil di jalur bypass juga.
+- **`.opening-inner`, `.opening-label`, `.opening-status` tidak didefinisikan
+  spek**: dipertahankan/diadaptasi dari gaya lama (grid center, mono 10px) -
+  markup spek butuh wadah dan status terlihat.
+- **Registry timers dipakai `Set.add/delete`** (bukan `?.delete?.`): sesuai audit
+  API core.js + catatan spek sendiri.
+- **Handler after-swap juga membersihkan `window.__openingSafety`**: Batasan 9
+  menuntut "batalkan semua timer" saat after-swap; safety timer inline berada
+  di luar registry, jadi dibersihkan eksplisit.
+- **animateHeroIn membungkus timeline dengan trackEventTween**: timeline hero
+  kini dibuat asinkron (di REVEAL_AT) di luar kepemilikan gsap.matchMedia;
+  tanpa registrasi, hanya globalTimeline.clear() yang membunuhnya. onComplete
+  asli (startAtlasAmbient) tetap berjalan (perilaku trackEventTween).
+- **Pesan konsol Curtains WebGL di /work adalah pre-existing** (V8.0), dibuktikan
+  dengan isolate-work.js; bukan bagian perubahan V9.0 dan tidak diperbaiki di sini
+  (file archive/work tidak diinstruksikan).

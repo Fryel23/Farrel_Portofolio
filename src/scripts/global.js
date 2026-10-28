@@ -12,6 +12,13 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import './generative-ambient.js';
+/* V9.0 FASE 3.2: kontrak callback hero. initArchiveOpening menerima
+   dua fungsi ini dari home.js (modul hero). home.js tidak pernah
+   mengimpor global.js sehingga arah dependensi tetap satu arah tanpa
+   siklus. Konsekuensi yang disadari: home.js kini dieksekusi di semua
+   halaman; seluruh entri boot-nya ber-guard terhadap ketiadaan elemen
+   hero (lihat initHeroButtons di home.js). */
+import { prepareHeroState, animateHeroIn } from './home.js';
 import {
   DATA, doc, MOTION,
   el, qs, qsa, setText, showToast, fetchWithTimeout,
@@ -559,93 +566,229 @@ function fallbackReveal() {
   targets.forEach((node) => observer.observe(node));
 }
 
-/* --- V6.6 Fase 9: archive opening experience (Konsep A) ------------------ */
-/* Once per session editorial cover, skippable via click/Escape/scroll/
-   SKIP; reduced motion never reaches this path; no JS = no overlay.
-   READY waits for BOTH the 1.2s floor and document.fonts.ready. */
+/* --- V9.0 FASE 3.2: ARCHIVE BOOT SEQUENCE -------------------------------- */
+/* Overlay pembuka sinematik berbasis <dialog> native (pengganti cover
+   editorial V6.6). Desain hasil 3 putaran revisi spek V9.0:
+   - Zero-FOUC: inline script di <head> sudah menandai html.opening-armed
+     sebelum first paint; guard ini dilepas tepat setelah showModal().
+   - Timer tunggal: satu variabel timeoutId; setiap penjadwalan ulang
+     wajib clearTimeout dulu (Batasan 5).
+   - Exactly-once asset settlement: Set `settled` + pasangan
+     load/error saling melepas listenernya (Batasan 3).
+   - No-assets branch dieksekusi LANGSUNG di luar forEach (Batasan 2).
+   - ::backdrop memudar serentak dengan wipe (Batasan 4).
+   - Kontrak callback hero: prepareHeroState setelah showModal(),
+     animateHeroIn di REVEAL_AT; kedua callback pasti dipanggil tepat
+     satu kali di semua jalur (Batasan 6).
+   API registry mengikuti hasil audit core.js: timers adalah Set
+   (add/delete), listener lewat trackMotionListener, timeline exit
+   lewat trackEventTween. */
 const OPENING_SEEN_KEY = 'fip-opening-seen';
 
-function shouldShowArchiveOpening() {
-  if (!hasGSAP || isReducedMotion() || !qs('#archive-opening')) return false;
-  try {
-    return window.sessionStorage.getItem(OPENING_SEEN_KEY) !== '1';
-  } catch (error) {
-    return false; // storage unavailable: stay on the quiet path
+export function initArchiveOpening(prepareHero, animateHero) {
+  /* Kontrak Batasan 6: SELURUH jalur (bypass maupun normal) memanggil
+     callback yang diterima - bukan impor langsung - supaya pemanggil
+     (gate boot di bawah) bisa membungkus animateHeroIn dengan
+     initSectionMotion dan tetap berjalan di semua jalur. */
+  const dialog = qs('#archive-opening');
+  const skipBtn = qs('#opening-skip');
+  const counter = qs('#opening-counter');
+  const ringFill = qs('#opening-ring-fill');
+  const status = qs('#opening-status');
+
+  /* --- BYPASS PATHS --- */
+  /* 1. Elemen hilang (markup tanpa dialog / halaman tanpa overlay):
+        hero jalan langsung, dan guard FOUC wajib dilepas supaya halaman
+        tidak menggantung tersembunyi sampai safety timeout 4s. */
+  if (!dialog || !skipBtn) {
+    document.documentElement.classList.remove('opening-armed');
+    prepareHero();
+    animateHero();
+    return;
   }
-}
+  /* 2. Reduced motion (jaring pengaman; jalur boot motion context
+        no-preference sudah menyaring sebelumnya). */
+  if (isReducedMotion()) {
+    document.documentElement.classList.remove('opening-armed');
+    prepareHero();
+    animateHero();
+    return;
+  }
+  /* 3. Sesi sudah pernah melihat opening: inline script tidak menambah
+        class opening-armed, jadi cukup animasi hero biasa. */
+  if (!document.documentElement.classList.contains('opening-armed')) {
+    prepareHero();
+    animateHero();
+    return;
+  }
 
-function initArchiveOpening(onComplete) {
-  const overlay = qs('#archive-opening');
-  if (!overlay) { if (onComplete) onComplete(); return; }
+  /* --- NORMAL PATH --- */
+  /* Safety timeout inline script tidak dibutuhkan lagi. */
+  if (window.__openingSafety) {
+    clearTimeout(window.__openingSafety);
+    delete window.__openingSafety;
+  }
 
-  // Mark the session FIRST so a refresh mid-animation never replays it.
+  /* Tandai sesi TERLEBIH DAHULU: refresh di tengah animasi tidak
+     pernah me-replay opening (Skenario 4). */
   try { window.sessionStorage.setItem(OPENING_SEEN_KEY, '1'); } catch (error) { /* best effort */ }
-  overlay.removeAttribute('aria-hidden'); // content is live while visible
-  overlay.hidden = false;
 
-  const topLabel = qs('.opening-label--top', overlay);
-  const bottomLabel = qs('.opening-label--bottom', overlay);
-  const line = qs('.opening-rule-line', overlay);
-  const ticksHost = qs('.opening-rule-ticks', overlay);
-  const ruleEnd = qs('.opening-rule-end', overlay);
-  const ticks = [];
-  if (ticksHost) {
-    for (let i = 0; i < 13; i++) {
-      const tick = el('span', 'opening-rule-tick');
-      ticksHost.appendChild(tick);
-      ticks.push(tick);
+  dialog.showModal();
+  skipBtn.focus({ preventScroll: true });
+
+  /* Hero disiapkan (tersembunyi, siap animasi) TAPI belum dianimasikan;
+     animasi dipicu di REVEAL_AT di tengah wipe. */
+  prepareHero();
+
+  /* Sekarang aman membuka guard FOUC: dialog sudah menutupi layar. */
+  document.documentElement.classList.remove('opening-armed');
+
+  /* --- STATE (timer tunggal, Batasan 5) --- */
+  let isExiting = false;
+  let heroAnimated = false;
+  let timeoutId = null;
+  const EXIT_DURATION_MS = 800;
+  const REVEAL_AT_SEC = 0.5;
+  const TOTAL_TIMEOUT_MS = 2200; // 2200 + 800 = 3000ms total (Skenario 8)
+
+  const clearMainTimer = () => {
+    if (timeoutId) {
+      window.clearTimeout(timeoutId);
+      if (motionRegistry.timers) motionRegistry.timers.delete(timeoutId);
+      timeoutId = null;
     }
+  };
+
+  const animateHeroOnce = () => {
+    if (heroAnimated) return;
+    heroAnimated = true;
+    animateHero();
+  };
+
+  /* --- EXIT SEQUENCE (satu-satunya jalur keluar) --- */
+  const exitSequence = () => {
+    if (isExiting) return;
+    isExiting = true;
+    clearMainTimer();
+
+    dialog.classList.add('is-wiping');
+    const tl = trackEventTween(gsap.timeline({
+      onComplete: () => {
+        dialog.close();
+        /* Listener spesifik dilepas di sini DAN tersedia di
+           motionRegistry (didaftarkan lewat trackMotionListener di
+           bawah), jadi teardown navigasi juga membersihkannya. */
+        skipBtn.removeEventListener('click', exitSequence);
+        dialog.removeEventListener('cancel', onCancel);
+      }
+    }));
+    tl.to(dialog, {
+      clipPath: 'inset(0 0 100% 0)',
+      duration: EXIT_DURATION_MS / 1000,
+      ease: 'power4.inOut'
+    }, 0);
+    /* Hero mulai muncul 0.5s ke dalam wipe 0.8s (Batasan 6). */
+    tl.call(animateHeroOnce, null, REVEAL_AT_SEC);
+  };
+
+  /* --- TIMEOUT UTAMA (dijadwalkan DULU, sebelum memproses aset) --- */
+  timeoutId = window.setTimeout(() => {
+    if (isExiting) return;
+    if (status) status.textContent = 'CONTINUING...';
+    exitSequence();
+  }, TOTAL_TIMEOUT_MS);
+  if (motionRegistry.timers) motionRegistry.timers.add(timeoutId);
+
+  /* --- ASSET TRACKING (Batasan 3 + 8) --- */
+  const images = qsa('img[data-opening-critical]');
+  const total = images.length;
+  let loaded = 0;
+  let failed = 0;
+  const settled = new Set();
+
+  /* Setiap aset dihitung TEPAT SATU KALI. */
+  const settleAsset = (img, success) => {
+    if (settled.has(img)) return;
+    settled.add(img);
+    if (success) loaded++; else failed++;
+    checkAssets();
+  };
+
+  const checkAssets = () => {
+    if (isExiting) return;
+
+    /* Kondisi gagal: jangan tunggu timeout, lanjutkan segera. */
+    if (failed > 0) {
+      clearMainTimer();
+      if (status) status.textContent = 'CONTINUING...';
+      exitSequence();
+      return;
+    }
+
+    /* Update ring + counter. */
+    const percent = total === 0 ? 100 : Math.round((loaded / total) * 100);
+    if (counter) counter.textContent = String(percent).padStart(3, '0');
+    if (ringFill) ringFill.style.strokeDashoffset = String(289 * (1 - percent / 100));
+
+    /* Semua berhasil: segera keluar tanpa menunggu 2.2s penuh. */
+    if (loaded === total) {
+      clearMainTimer();
+      if (status) status.textContent = 'READY';
+      exitSequence();
+    }
+  };
+
+  /* --- NO-ASSETS BRANCH (Batasan 2: DI LUAR LOOP, WAJIB) ---
+     Tanpa ini, landing tanpa img kritis akan menggantung sampai
+     timeout 2.2s karena checkAssets() hanya dipanggil dari dalam
+     loop yang tidak pernah berjalan. */
+  if (total === 0) {
+    clearMainTimer();
+    if (status) status.textContent = 'READY';
+    if (counter) counter.textContent = '100';
+    if (ringFill) ringFill.style.strokeDashoffset = '0';
+    /* Jeda napas singkat agar status READY terbaca, lalu wipe. */
+    timeoutId = window.setTimeout(() => {
+      if (!isExiting) exitSequence();
+    }, 400);
+    if (motionRegistry.timers) motionRegistry.timers.add(timeoutId);
+  } else {
+    /* --- ASSET LOOP (deduplikasi tepat-satu) --- */
+    images.forEach((img) => {
+      if (settled.has(img)) return;
+
+      if (img.complete) {
+        /* Sudah selesai (sukses atau gagal) sebelum listener dipasang. */
+        settleAsset(img, img.naturalWidth > 0);
+        return;
+      }
+
+      /* Pasangan handler saling melepas: setiap load/error memastikan
+         pasangannya tidak pernah memicu settleAsset kedua kalinya. */
+      const onLoad = () => {
+        img.removeEventListener('error', onError);
+        settleAsset(img, true);
+      };
+      const onError = () => {
+        img.removeEventListener('load', onLoad);
+        settleAsset(img, false);
+      };
+      img.addEventListener('load', onLoad, { once: true });
+      img.addEventListener('error', onError, { once: true });
+    });
   }
 
-  gsap.set([topLabel, bottomLabel, ruleEnd], { opacity: 0 });
-  gsap.set(ticks, { opacity: 0 });
-  gsap.set(overlay, { clipPath: 'inset(0 0 0% 0)' });
-
-  const cleanup = () => {
-    doc.removeEventListener('keydown', onKey);
-    window.removeEventListener('scroll', onScroll, true);
+  /* --- KONTROL --- */
+  const onCancel = (event) => {
+    event.preventDefault(); // blok close native; tutup lewat wipe saja
+    exitSequence();
   };
-  const done = () => {
-    overlay.hidden = true;
-    overlay.setAttribute('aria-hidden', 'true');
-    gsap.set(overlay, { clearProps: 'clipPath,transform' });
-    cleanup();
-    if (onComplete) onComplete();
-  };
-  const exitOverlay = (fast) => {
-    if (overlay.dataset.closing === '1') return;
-    overlay.dataset.closing = '1';
-    gsap.to(overlay, {
-      clipPath: 'inset(0 0 100% 0)', y: '-2%',
-      duration: fast ? 0.3 : 0.7, ease: 'power3.inOut', onComplete: done
-    });
-  };
-  const onKey = (event) => { if (event.key === 'Escape') exitOverlay(true); };
-  const onScroll = () => { exitOverlay(true); };
 
-  overlay.addEventListener('click', () => exitOverlay(true));
-  /* V7.4: listener level dokumen/window dilacak supaya navigasi di
-     tengah-tengah opening (kasus jarang) tetap bersih saat teardown. */
-  trackMotionListener(doc, 'keydown', onKey);
-  trackMotionListener(window, 'scroll', onScroll, { capture: true, passive: true });
-
-  // Entrance (9.3 steps a to e).
-  gsap.to(topLabel, { opacity: 1, duration: 0.4, ease: 'power2.out' });
-  gsap.to(line, { scaleX: 1, duration: 0.8, ease: 'power2.inOut' });
-  gsap.to(ticks, { opacity: 1, duration: 0.18, stagger: 0.05, ease: 'none', delay: 0.5 });
-  gsap.to(bottomLabel, { opacity: 1, duration: 0.3, ease: 'power2.out', delay: 1.2 });
-
-  // Step f: READY after 1.2s AND fonts ready; exit 0.3s later (7g).
-  const minDelay = new Promise((resolve) => { window.setTimeout(resolve, 1200); });
-  const fontsReady = (doc.fonts && doc.fonts.ready && typeof doc.fonts.ready.then === 'function')
-    ? doc.fonts.ready : Promise.resolve();
-  Promise.all([minDelay, fontsReady]).then(() => {
-    if (overlay.dataset.closing === '1') return;
-    gsap.to(ruleEnd, {
-      opacity: 1, duration: 0.2, ease: 'none',
-      onComplete: () => { window.setTimeout(() => exitOverlay(false), 300); }
-    });
-  });
+  /* Klik tombol dan Escape (cancel) sama-sama lewat exitSequence;
+     guard isExiting membuat klik ganda / Escape berulang tidak
+     memicu dua wipe (Skenario 6 + 7). */
+  trackMotionListener(skipBtn, 'click', exitSequence);
+  trackMotionListener(dialog, 'cancel', onCancel);
 }
 
 function initSmoothScroll() {
@@ -1318,10 +1461,14 @@ function initVisibilityPause() {
 /* ======================================================================
  * BOOT GLOBAL (semua halaman)
  * ==================================================================== */
-/* V7.0: gerbang hero lintas modul. Opening experience dimiliki
-   global.js; halaman (home) menunggu event 'fip:start-hero' bila
-   opening tampil, sehingga hero tidak berjalan di balik overlay. */
-window.__FIP_OPENING_ACTIVE = false;
+/* V9.0: flag window.__FIP_OPENING_ACTIVE dan event 'fip:start-hero'
+   dihapus. Gerbang hero kini kontrak callback langsung: gate di bawah
+   memanggil initArchiveOpening(prepareHeroState, animateHeroIn+)
+   (dua fungsi diekspor home.js). animateHeroIn dibungkus agar
+   initSectionMotion tetap start tepat saat reveal - di SEMUA jalur
+   (bypass maupun normal), menggantikan gating startHeroGateGlobal lama.
+   Catatan urutan: initSectionMotion sebelum animateHeroIn, sama
+   seperti urutan listener lama saat event fip:start-hero dispatch. */
 
 /* ======================================================================
  * V8.0 FASE 2: AUDIO FEEDBACK INIT (sitewide)
@@ -1381,15 +1528,29 @@ function initAudioFeedback() {
   });
 }
 
-function startHeroGateGlobal() {
-  if (window.__FIP_OPENING_ACTIVE) {
-    /* V7.4: listener jembatan hero dilacak agar terlepas saat teardown
-       navigasi (listener window bertahan lintas swap). */
-    trackMotionListener(window, 'fip:start-hero', () => initSectionMotion(), { once: true });
-  } else {
-    initSectionMotion();
+/* V9.0 FASE 4 (Batasan 9): lifecycle guard navigation. Idempoten dan
+   berjalan pada SETIAP astro:after-swap. Teardown utama sudah dilakukan
+   cleanupMotionRegistry() di core.js (listener astro:after-swap core
+   terdaftar lebih dulu, jadi berjalan sebelum handler ini): timer yang
+   dilacak dibatalkan, listener dilepas, timeline exit di-kill. Handler
+   ini menutup sisa state DOM yang tidak dimiliki registry:
+   - dialog yang mungkin masih open (mis. navigasi di tengah opening);
+   - safety timeout inline script (timer mentah di luar registry);
+   - class opening-armed di <html> (Batasan 9: tidak ada class sisa). */
+document.addEventListener('astro:after-swap', () => {
+  const dialog = qs('#archive-opening');
+  if (dialog && dialog.open) {
+    /* Paksa tutup dialog. */
+    dialog.close();
   }
-}
+  /* Batalkan timer safety inline script bila masih menggantung. */
+  if (window.__openingSafety) {
+    clearTimeout(window.__openingSafety);
+    delete window.__openingSafety;
+  }
+  /* Pulihkan state DOM: guard FOUC tidak boleh tersisa. */
+  document.documentElement.classList.remove('opening-armed');
+});
 
 bootPage({
   renders: [
@@ -1406,21 +1567,19 @@ bootPage({
   interactions: [initMobileMenu, initQuickMenu, initAnchors, initNowPlaying, initPageProgressBar, fallbackReveal, initMagneticButtons, initAudioFeedback],
   motion: [
     initSmoothScroll,
-    startHeroGateGlobal,
     initArchiveSpine,
     initBackTop,
     initVisibilityPause,
     () => {
-      const start = () => {
-        window.__FIP_OPENING_ACTIVE = false;
-        window.dispatchEvent(new CustomEvent('fip:start-hero'));
+      /* V9.0 FASE 4.1: Archive Boot Sequence dipanggil di bootPage,
+         menggantikan gate shouldShowArchiveOpening + event lama. Semua
+         keputusan tampil/tidak (elemen, reduced motion, sesi) kini
+         internal ke initArchiveOpening lewat jalur bypass-nya. */
+      const animateHeroInWithSections = () => {
+        initSectionMotion();
+        animateHeroIn();
       };
-      if (shouldShowArchiveOpening()) {
-        window.__FIP_OPENING_ACTIVE = true;
-        initArchiveOpening(start);
-      } else {
-        start();
-      }
+      initArchiveOpening(prepareHeroState, animateHeroInWithSections);
     },
   ],
   cleanups: [],

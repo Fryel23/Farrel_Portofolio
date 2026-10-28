@@ -50,7 +50,9 @@ const number = String(1).padStart(2, '0');
       {
         !isReserved && d.image && (
           <div class="case-study-cover" transition:name={`project-image-${entry.id}`}>
-            <img src={d.image} alt={`${d.title}: project cover illustration`} loading="eager" decoding="async" />
+            <!-- V9.0 Batasan 8: cover eager di atas lipatan = aset kritis
+                 boot sequence (halaman detail bisa menjadi landing pertama). -->
+            <img src={d.image} alt={`${d.title}: project cover illustration`} loading="eager" decoding="async" data-opening-critical />
           </div>
         )
       }

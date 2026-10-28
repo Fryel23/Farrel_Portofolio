@@ -80,7 +80,10 @@ import '../styles/about.css';
           </svg>
         </div>
         <div class="artwork-backdrop" aria-hidden="true"></div>
-        <img id="profile-image" src="/assets/profile-card.svg" alt="Illustrated personal file card of Farrel Islami Putra" class="id-art" width="420" height="440" />
+        <!-- V9.0 Batasan 8: penanda aset kritis eksplisit untuk Archive
+             Boot Sequence (img eager di atas lipatan; dilacak
+             img[data-opening-critical] di global.js). -->
+        <img id="profile-image" src="/assets/profile-card.svg" alt="Illustrated personal file card of Farrel Islami Putra" class="id-art" width="420" height="440" data-opening-critical />
         <div class="artwork-label"><span>PERSONAL FILE</span><strong>NO. 0032 / FIP</strong><span>COLLECTED &amp; IN PROGRESS</span></div>
         <div class="artwork-index" aria-hidden="true">02<br />/<br />05</div>
       </div>

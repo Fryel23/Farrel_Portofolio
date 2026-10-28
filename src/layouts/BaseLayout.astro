@@ -31,6 +31,27 @@ const ogImageURL = new URL('/og-default.png', Astro.site);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- V9.0 FASE 1: Zero-FOUC arm sebelum first paint. Script sinkron
+         ini berjalan SEBELUM CSS dan SEBELUM body dirender: ia memutus
+         apakah Archive Boot Sequence akan tampil (sekali per sesi,
+         motion diizinkan) dan menandai html.opening-armed agar guard
+         CSS menyembunyikan konten sampai dialog terbuka. Safety timeout
+         4s adalah jaring pengaman jika global.js gagal dimuat. Dengan
+         JS mati total, script ini tidak jalan -> tanpa class -> tanpa
+         guard -> halaman langsung tampil (Skenario 1). -->
+    <script is:inline>
+      (function () {
+        try {
+          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+          if (sessionStorage.getItem('fip-opening-seen') === '1') return;
+          document.documentElement.classList.add('opening-armed');
+          window.__openingSafety = setTimeout(function () {
+            document.documentElement.classList.remove('opening-armed');
+            delete window.__openingSafety;
+          }, 4000);
+        } catch (e) { /* storage blocked: fallback ke konten langsung */ }
+      })();
+    </script>
     <meta name="theme-color" content="#F8FAFC" />
     <meta name="description" content={description} />
     <meta property="og:title" content={title} />
@@ -58,23 +79,26 @@ const ogImageURL = new URL('/og-default.png', Astro.site);
 
     <Header />
 
-    <!-- V6.6 Fase 9: archive opening experience. Disembunyikan di markup:
-         JavaScript yang melepas `hidden` hanya saat overlay harus tampil
-         (sekali per sesi, motion diizinkan). Tanpa JS = tanpa overlay,
-         halaman langsung tampil. Bisa dilewati: klik, Escape, scroll,
-         atau tombol SKIP. -->
-    <div class="archive-opening" id="archive-opening" hidden aria-hidden="true">
+    <!-- V9.0 FASE 1: Archive Boot Sequence berbasis <dialog> native.
+         Default browser menutup dialog (tanpa atribut [open]) sehingga
+         tanpa JS = tanpa overlay, halaman langsung tampil. showModal()
+         memberi focus trap + Escape (event cancel) secara native.
+         Dibuka hanya oleh initArchiveOpening (global.js) pada kunjungan
+         pertama per sesi saat motion diizinkan. -->
+    <dialog class="archive-opening" id="archive-opening" aria-labelledby="opening-label">
       <div class="opening-inner">
-        <p class="opening-label opening-label--top">FIP · PERSONAL ARCHIVE</p>
-        <div class="opening-rule">
-          <span class="opening-rule-line"></span>
-          <span class="opening-rule-ticks" aria-hidden="true"></span>
-          <span class="opening-rule-end">READY</span>
+        <p class="opening-label" id="opening-label">FIP · PERSONAL ARCHIVE</p>
+        <div class="opening-progress-wrap">
+          <svg class="opening-ring" viewBox="0 0 100 100" aria-hidden="true">
+            <circle class="ring-bg" cx="50" cy="50" r="46" />
+            <circle class="ring-fill" id="opening-ring-fill" cx="50" cy="50" r="46" />
+          </svg>
+          <div class="opening-counter" id="opening-counter" aria-hidden="true">000</div>
         </div>
-        <p class="opening-label opening-label--bottom">EST. 2026 · VOL. 01</p>
+        <p class="opening-status" id="opening-status">INITIALIZING...</p>
+        <button class="opening-skip" id="opening-skip" type="button">[ ENTER ARCHIVE → ]</button>
       </div>
-      <button class="opening-skip" type="button">SKIP</button>
-    </div>
+    </dialog>
 
     <!-- V7.4 Fase 1: cross-fade halus pada setiap pergantian halaman;
          header, footer, dan overlay opening berada di luar grup fade. -->
