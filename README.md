@@ -1,9 +1,42 @@
-# Farrel Islami Putra · Editorial Portfolio (Astro V9.1)
+# Farrel Islami Putra · Editorial Portfolio (Astro V10.1)
 
 Portofolio pribadi berbasis **Astro 7** dengan arsitektur **Hub-and-Spoke (Pucuk-Cabang)**.
 Migrasi total dari versi monolitik satu halaman (HTML/CSS/JS murni, V6.7) sesuai
 `PROMPT_EKSEKUSI_V7.0_ASTRO_MIGRATION.md`. Desain visual, palet warna, tipografi,
 animasi GSAP, dan seluruh fitur interaktif dipertahankan identik.
+
+**V10.1 (Audit Fixes, 5 fase terisolasi)** sesuai `PROMPT_FINAL_V10.0_AUDIT_FIXES.md`:
+perbaikan akar masalah atas hasil audit V10.0 tanpa menyentuh `core.js` maupun fitur
+pra-V10.0 (Opening V9.1, Game Deck, Companion, WebGL Curl, Magnetic, Audio, Generative
+Ambient). **FASE 1 (H1+H2, lifecycle)**: `gsap.matchMedia()` naratif kini module-level
+(`activeMM`) dan di-revert di dua titik (awal init + `astro:after-swap`) sehingga
+cleanup `tl.kill()` + `tl.scrollTrigger.kill()` benar-benar jalan - timeline + konteks
+tidak bocor lagi tiap navigasi ke /work/[slug]. **FASE 2 (M1+M2)**: `initPageTransitions`
+dipindah dari array `interactions` ke `motion` (reduce mode boot = tidak pernah init),
+runtime guard `isReducedMotion()` di ketiga handler, MQL change listener yang mematikan
+tween overlay saat preferensi berubah mid-transition, dan scroll restoration - navigasi
+baru (push/replace) selalu mulai di top, sedangkan Back/Forward (traverse) mengembalikan
+posisi scroll dari `history.state` secara deterministik (`behavior: 'instant'`, lihat
+catatan deviasi di VERIFICATION.md). **FASE 3 (M3+M4)**: safety timer 3s di-clear tepat
+sebelum reveal dimulai (race fetch lambat tertutup; skenario offline tetap pulih) dan
+terdaftar di `motionRegistry.timers` sesuai konvensi lifecycle. **FASE 4 (L4)**: judul
+scene naratif h3 -> h2 (hierarki heading h1 -> h2, WCAG 1.3.1) dengan nilai CSS identik.
+**FASE 5 (N6)**: audit em dash (U+2014) seluruh src/ bersih; EN DASH judul case study
+dipertahankan. Setiap fase satu commit terpisah; 12 skenario verifikasi akhir dieksekusi
+otomatis via Playwright dengan hasil **24/24 PASS** (`v101-verify/`).
+
+**V10.0 (Ultimate Safe: Cinematic Page Transitions + Scroll Narrative)** sesuai
+`PROMPT_V10.0_ULTIMATE_SAFE.md`: **Archive Wipe** - overlay page transition
+(`PageTransitionOverlay.astro`, `transition:persist` bernama) dengan cover (panel naik
+0.4s) pada `astro:before-preparation` dan reveal (panel lanjut ke atas) pada
+`astro:after-swap`, intersepsi klik fase capture untuk guard opening V9.1 + rapid click
+(tanpa `preventDefault` pada event router - terbukti tidak membatalkan navigasi di Astro
+7), route exclusion /work <-> /work/[slug] (morphing native), jaring pengaman timer 3s.
+Plus **Scroll Narrative 3 scene** (MASALAH -> PROSES -> TEMUAN) pada case study:
+`CaseNarrative.astro` + timeline scrub ScrollTrigger (top top -> bottom bottom, scrub 1,
+tanpa pin ganda - sticky CSS yang mengunci) dengan skema konten `narrative` di
+`content.config.ts` dan scene di `aqi-cirebon.md`. Verifikasi 24/24 PASS
+(`v10-verify/`). Rincian di `VERIFICATION.md`.
 
 **V9.1 (Enhanced Archive Boot Sequence, Cinematic)** sesuai `PROMPT_V9.1_ENHANCED_OPENING.md`:
 ritual pembuka V9.0 ditingkatkan dari "quiet ritual" (~2.2s) menjadi pengalaman

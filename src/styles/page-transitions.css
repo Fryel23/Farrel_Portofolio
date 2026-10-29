@@ -1,0 +1,50 @@
+/*
+ * page-transitions.css (V10.0 FASE 2): Archive Wipe overlay.
+ * Semua token warna/motion memakai variabel global.css (--bg, --blue,
+ * --mono, --text-2) sehingga mengikuti tema arsip. Overlay fixed di
+ * atas semuanya (z-index 9998, DI BAWAH dialog opening V9.1), hidden
+ * secara default; visibility di-toggle dari page-transitions.js.
+ */
+.page-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pt-panel {
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+  transform: translateY(100%);
+  will-change: transform;
+}
+.pt-accent {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--blue);
+  transform: scaleX(0);
+  transform-origin: left;
+  will-change: transform;
+}
+.pt-label {
+  position: relative;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--text-2);
+  opacity: 0;
+}
+/* Reduced motion: overlay tidak pernah tampil; navigasi tetap jalan
+   dengan cross-fade bawaan ClientRouter. */
+@media (prefers-reduced-motion: reduce) {
+  .page-transition {
+    display: none !important;
+  }
+}

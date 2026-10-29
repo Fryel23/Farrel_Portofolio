@@ -30,6 +30,10 @@ import {
   pluginsRegistered, bootPage, cleanupMotionRegistry,
   initMagneticButtons, isAudioMuted, setAudioMuted, playClickSound, playHoverSound,
 } from './core.js';
+/* V10.0 FASE 2: Archive Wipe page transition (overlay transition:persist
+   di BaseLayout; guard V9.1 opening + rapid click + pengecualian rute
+   /work morphing ada di dalam modulnya). */
+import { initPageTransitions } from './page-transitions.js';
 
 /* Fase 0/2: jembatan kompatibilitas untuk logika V6.7 yang membaca
    window.gsap / window.ScrollTrigger / window.Lenis. */
@@ -1752,6 +1756,11 @@ bootPage({
        halaman baru harus di-mount ulang; no-op di halaman tanpa canvas. */
     () => { if (window.GenerativeAmbient && typeof window.GenerativeAmbient.remount === 'function') window.GenerativeAmbient.remount(); },
   ],
+  /* M1: initPageTransitions pindah ke `motion` (gate inisialisasi):
+     di reduce mode boot, init tidak dipanggil sama sekali - tidak ada
+     listener preventDefault yang memblokir klik ~0.8s per navigasi.
+     Runtime guard + MQL listener di page-transitions.js menutup kasus
+     preferensi berubah mid-session. */
   interactions: [initMobileMenu, initQuickMenu, initAnchors, initNowPlaying, initPageProgressBar, fallbackReveal, initMagneticButtons, initAudioFeedback],
   motion: [
     initSmoothScroll,
@@ -1769,6 +1778,9 @@ bootPage({
       };
       initArchiveOpening(prepareHeroState, animateHeroInWithSections);
     },
+    /* M1: gate inisialisasi via `motion` (no-preference saja). Posisi
+       akhir: overlay siap setelah semua motion halaman terpasang. */
+    initPageTransitions,
   ],
   cleanups: [],
 });

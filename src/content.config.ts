@@ -6,6 +6,10 @@ import { glob } from 'astro/loaders';
  * Catatan migrasi: Astro 7 memakai Content Layer API (glob loader +
  * src/content.config.ts) pengganti type: 'content' pada Astro lama.
  * Skema field identik dengan spesifikasi prompt.
+ * V10.0 FASE 1: field opsional `narrative` (3 scene scrollytelling:
+ * Masalah -> Proses -> Temuan) untuk halaman case study. Maksimal 3
+ * scene; `image` opsional (tanpa image -> placeholder arsip dirender);
+ * `label` default 'SCENE' agar markup tetap bermakna tanpa konfigurasi.
  */
 const workCollection = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/work' }),
@@ -20,6 +24,18 @@ const workCollection = defineCollection({
     link: z.string().url().optional(),
     linkLabel: z.string().optional(),
     kicker: z.string().optional(),
+    // V10.0: 3 Scene Naratif (Masalah, Proses, Temuan)
+    narrative: z
+      .array(
+        z.object({
+          title: z.string(),
+          text: z.string(),
+          image: z.string().optional(),
+          label: z.string().default('SCENE'),
+        })
+      )
+      .max(3)
+      .optional(),
   }),
 });
 

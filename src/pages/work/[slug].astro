@@ -2,6 +2,9 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import '../../styles/global.css';
 import '../../styles/work.css';
+/* V10.0 FASE 3: panggung naratif 3 scene + stylesheet-nya. */
+import CaseNarrative from '../../components/work/CaseNarrative.astro';
+import '../../styles/case-narrative.css';
 import { getCollection, render } from 'astro:content';
 
 /* V8.1 Fase 4.1: entri berstatus RESERVED tidak pernah menghasilkan
@@ -57,6 +60,15 @@ const number = String(1).padStart(2, '0');
         )
       }
 
+      {/* V10.0 FASE 3: scrollytelling 3 scene (Masalah -> Proses ->
+          Temuan) sebagai section full-bleed SAUDARA dari case-study-body
+          (bukan di dalamnya): spesifikasi merender panggung sticky
+          setinggi 100vh dengan padding clamp(22px, 7vw, 110px) - bila
+          diletakkan di dalam .case-study-body, lebar panggung ikut
+          terkurung kolom prosa (~720px) dan panggung tidak pernah
+          full-bleed. Hanya muncul bila frontmatter punya `narrative`. */}
+      <CaseNarrative narrative={d.narrative} />
+
       <div class="case-study-body prose-archive">
         <Content />
       </div>
@@ -77,4 +89,14 @@ const number = String(1).padStart(2, '0');
 
 <script>
   import '../../scripts/global.js';
+  /* V10.0 FASE 3: narrative dipanggil lewat bootPage halaman (bukan
+     top-level) karena modul halaman hanya dieksekusi sekali per sesi;
+     bootPage memastikan initCaseNarrative berjalan pada SETIAP
+     astro:page-load (navigasi masuk/keluar case study) dan ikut siklus
+     cleanup after-swap. Guard elemen di dalam initCaseNarrative
+     membuatnya no-op di halaman lain yang memuat modul ini. */
+  import { initCaseNarrative } from '../../scripts/case-narrative.js';
+  import { bootPage } from '../../scripts/core.js';
+
+  bootPage({ motion: [initCaseNarrative] });
 </script>

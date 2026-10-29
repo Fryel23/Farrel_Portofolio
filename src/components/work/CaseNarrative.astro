@@ -1,0 +1,40 @@
+---
+/*
+ * CaseNarrative.astro (V10.0 FASE 3): panggung scrollytelling 3 scene
+ * (Masalah -> Proses -> Temuan) untuk halaman case study. Dirender
+ * HANYA bila frontmatter .md punya array `narrative` (skema V10.0).
+ * Struktur mengikuti spesifikasi: container .narrative-visuals (kiri)
+ * dan .narrative-texts (kanan); tiap scene membawa data-scene={i}
+ * yang menjadi target timeline scrub di case-narrative.js. Scene
+ * tanpa `image` merender placeholder arsip (div kosong bergaya
+ * surface-2) sehingga halaman tetap jujur tanpa aset palsu.
+ */
+const { narrative } = Astro.props;
+---
+
+{narrative && narrative.length > 0 && (
+  <section class="case-narrative" id="case-narrative" aria-label="Project narrative">
+    <div class="narrative-stage">
+      <div class="narrative-visuals">
+        {narrative.map((scene, i) => (
+          <div class="narrative-visual" data-scene={i}>
+            {scene.image ? (
+              <img src={scene.image} alt={scene.title} loading="lazy" decoding="async" />
+            ) : (
+              <div class="narrative-placeholder"></div>
+            )}
+          </div>
+        ))}
+      </div>
+      <div class="narrative-texts">
+        {narrative.map((scene, i) => (
+          <div class="narrative-text" data-scene={i}>
+            <p class="mini-label">{scene.label} / 0{i + 1}</p>
+            <h2>{scene.title}</h2>
+            <p>{scene.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
