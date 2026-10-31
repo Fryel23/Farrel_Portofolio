@@ -1,6 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/home/Hero.astro';
+/* V11.0 FASE 4+7: Curtain Pattern menggantikan Opening V9.1 sebagai
+   dekorasi sinematik homepage. Markup + stylesheet hanya dimuat di
+   halaman ini (bukan BaseLayout) sesuai spek §7.5. */
+import Curtain from '../components/home/Curtain.astro';
 import ProjectCard from '../components/work/ProjectCard.astro';
 import ReservedCard from '../components/work/ReservedCard.astro';
 import { getCollection } from 'astro:content';
@@ -8,6 +12,7 @@ import '../styles/home.css';
 import '../styles/work.css';
 import '../styles/about.css';
 import '../styles/connect.css';
+import '../styles/curtain.css';
 
 /* Fase 4.1: homepage memuat 3 entri terbaru dari Content Collections.
    Entri berstatus RESERVED dirender sebagai kartu reserved (non-click,
@@ -23,6 +28,11 @@ const reserved = entries.filter((e) => e.data.status === 'RESERVED');
   pageKey="home"
   description="Portofolio Farrel Islami Putra, mahasiswa Informatika UNIKOM: proyek data yang sedang berjalan, ringkasan profil, dan kanal kontak. Semua ditulis apa adanya sebagai catatan proses belajar."
 >
+  <!-- V11.0: kedua inline harness eksperimen (?opening-variant dan
+       ?v105) DIHAPUS bersama arsitektur Opening lama. Tidak ada
+       temporary experiment harness tersisa (spek §25). -->
+  <Curtain />
+
   <Hero />
 
   <div class="transition-ribbon" aria-hidden="true"><span></span></div>

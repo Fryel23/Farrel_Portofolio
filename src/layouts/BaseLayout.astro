@@ -35,27 +35,10 @@ const ogImageURL = new URL('/og-default.png', Astro.site);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- V9.0 FASE 1: Zero-FOUC arm sebelum first paint. Script sinkron
-         ini berjalan SEBELUM CSS dan SEBELUM body dirender: ia memutus
-         apakah Archive Boot Sequence akan tampil (sekali per sesi,
-         motion diizinkan) dan menandai html.opening-armed agar guard
-         CSS menyembunyikan konten sampai dialog terbuka. Safety timeout
-         4s adalah jaring pengaman jika global.js gagal dimuat. Dengan
-         JS mati total, script ini tidak jalan -> tanpa class -> tanpa
-         guard -> halaman langsung tampil (Skenario 1). -->
-    <script is:inline>
-      (function () {
-        try {
-          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-          if (sessionStorage.getItem('fip-opening-seen') === '1') return;
-          document.documentElement.classList.add('opening-armed');
-          window.__openingSafety = setTimeout(function () {
-            document.documentElement.classList.remove('opening-armed');
-            delete window.__openingSafety;
-          }, 4000);
-        } catch (e) { /* storage blocked: fallback ke konten langsung */ }
-      })();
-    </script>
+    <!-- V11.0: Zero-FOUC guard opening-armed + window.__openingSafety
+         DIHAPUS bersama arsitektur Opening modal V9.1. Curtain Pattern
+         tidak pernah menyembunyikan konten; Hero tersedia sejak initial
+         render tanpa guard apa pun (spek §3.1 + §5.1). -->
     <meta name="theme-color" content="#F8FAFC" />
     <meta name="description" content={description} />
     <meta property="og:title" content={title} />
@@ -83,65 +66,12 @@ const ogImageURL = new URL('/og-default.png', Astro.site);
 
     <Header />
 
-    <!-- V9.1 FASE 1: Archive Boot Sequence berbasis <dialog> native,
-         kini dengan komposisi 4 lapis (ENHANCED OPENING):
-         Layer 1 Ambient  -> grain + vignette (latar, di luar clip).
-         Layer 2 Frame    -> bracket sudut, garis ukur, label meta (di luar
-                             clip sehingga tetap terlihat selama exit dan
-                             memudar bersamaan, sesuai spek V9.1).
-         Layer 3 Center   -> ritual V9.0 (label, ring, counter, status,
-                             tombol masuk) di dalam .opening-clip.
-         Layer 4 Ticker   -> metadata mono ber-ganti tiap ~500ms.
-         .opening-clip adalah elemen yang menerima clip-path circle(...)
-         saat circular reveal exit; guard FOUC html.opening-armed tetap
-         sama dengan V9.0. Tombol skip lahir disabled agar tidak bisa
-         diklik tidak sengaja; choreography (global.js) mengaktifkannya
-         saat ia fade-in di 1.5s. -->
-    <dialog class="archive-opening" id="archive-opening" aria-labelledby="opening-label">
-      <!-- Layer 1: Ambient -->
-      <div class="opening-grain" aria-hidden="true"></div>
-      <div class="opening-vignette" aria-hidden="true"></div>
+    <!-- V11.0: dialog Opening V9.1 (#archive-opening) DIHAPUS. Opening
+         kini Curtain Pattern (dekorasi Hero, bukan gerbang): markup di
+         src/components/home/Curtain.astro yang hanya di-mount homepage,
+         controller di src/scripts/curtain-controller.js. -->
 
-      <!-- Layer 2: Archive Frame (dekoratif murni) -->
-      <div class="opening-frame" aria-hidden="true">
-        <div class="opening-bracket opening-bracket--tl"></div>
-        <div class="opening-bracket opening-bracket--tr"></div>
-        <div class="opening-bracket opening-bracket--bl"></div>
-        <div class="opening-bracket opening-bracket--br"></div>
-        <div class="opening-ruler opening-ruler--v"></div>
-        <div class="opening-ruler opening-ruler--h"></div>
-        <span class="opening-corner-label opening-corner-label--tl">FIP / ARCHIVE / VOL.01</span>
-        <span class="opening-corner-label opening-corner-label--br">-6.7322 / 108.5525</span>
-      </div>
-
-      <!-- Wrapper konten untuk circular reveal exit -->
-      <div class="opening-clip">
-        <!-- Layer 3: Center Ritual (dipertahankan dari V9.0) -->
-        <div class="opening-inner">
-          <p class="opening-label" id="opening-label">FIP · PERSONAL ARCHIVE</p>
-          <div class="opening-progress-wrap">
-            <svg class="opening-ring" viewBox="0 0 100 100" aria-hidden="true">
-              <circle class="ring-bg" cx="50" cy="50" r="46" />
-              <circle class="ring-fill" id="opening-ring-fill" cx="50" cy="50" r="46" />
-            </svg>
-            <div class="opening-counter" id="opening-counter" aria-hidden="true">000</div>
-          </div>
-          <p class="opening-status" id="opening-status">INITIALIZING...</p>
-          <button class="opening-skip" id="opening-skip" type="button" disabled
-                  aria-label="Enter the archive and skip the opening sequence">
-            [ ENTER ARCHIVE → ]
-          </button>
-        </div>
-
-        <!-- Layer 4: Metadata Ticker (dekoratif, bukan progres nyata) -->
-        <div class="opening-ticker" aria-hidden="true">
-          <span class="opening-ticker-line" id="opening-ticker-line">&gt; LOADING FIELD NOTES / 001</span>
-        </div>
-      </div>
-    </dialog>
-
-    <!-- V7.4 Fase 1: cross-fade halus pada setiap pergantian halaman;
-         header, footer, dan overlay opening berada di luar grup fade. -->
+    <!-- V7.4 Fase 1: cross-fade halus pada setiap pergantian halaman. -->
     <main id="main" transition:animate="fade">
       <slot />
     </main>

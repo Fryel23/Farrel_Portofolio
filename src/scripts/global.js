@@ -4,21 +4,26 @@
  * window agar seluruh logika V6.7 yang memakai window.gsap /
  * window.ScrollTrigger / window.Lenis tetap berjalan tanpa diubah.
  * Bertanggung jawab atas: identity sync, header (quick menu, now
- * playing), progress bar, anchor smooth scroll, opening experience
- * (sekali per sesi), dekorasi sitewide (ticks, spine, debris,
- * ornamen V6.5), smooth scroll, dan section motion generik.
+ * playing), progress bar, anchor smooth scroll, Curtain Pattern V11.0
+ * (dekorasi opening sekali per sesi), dekorasi sitewide (ticks, spine,
+ * debris, ornamen V6.5), smooth scroll, dan section motion generik.
  */
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import './generative-ambient.js';
-/* V9.0 FASE 3.2: kontrak callback hero. initArchiveOpening menerima
-   dua fungsi ini dari home.js (modul hero). home.js tidak pernah
-   mengimpor global.js sehingga arah dependensi tetap satu arah tanpa
-   siklus. Konsekuensi yang disadari: home.js kini dieksekusi di semua
-   halaman; seluruh entri boot-nya ber-guard terhadap ketiadaan elemen
-   hero (lihat initHeroButtons di home.js). */
+/* V11.0 FASE 3: kontrak hero baru. prepareHeroState hanya menyiapkan
+   dekorasi (TIDAK menyembunyikan konten) dan animateHeroIn hanya
+   menganimasikan elemen pendukung - keduanya dipanggil langsung di boot
+   gate, tanpa bergantung pada Opening. home.js tidak pernah mengimpor
+   global.js sehingga arah dependensi tetap satu arah tanpa siklus.
+   Konsekuensi yang disadari: home.js dieksekusi di semua halaman;
+   seluruh entri boot-nya ber-guard terhadap ketiadaan elemen hero
+   (lihat initHeroButtons di home.js). */
 import { prepareHeroState, animateHeroIn } from './home.js';
+/* V11.0 FASE 6: controller Curtain Pattern (dekorasi opening).
+   Self-guarding: elemen, reduced motion, sesi, late window, duplikat. */
+import { initCurtain } from './curtain-controller.js';
 import {
   DATA, doc, MOTION,
   el, qs, qsa, setText, showToast, fetchWithTimeout,
@@ -568,419 +573,6 @@ function fallbackReveal() {
   }, { rootMargin: '0px 0px -12% 0px', threshold: 0.1 });
   trackObserver(observer); // V7.4: observer ikut teardown navigasi
   targets.forEach((node) => observer.observe(node));
-}
-
-/* --- V9.1 FASE 3: ENHANCED ARCHIVE BOOT SEQUENCE ------------------------ */
-/* Overlay pembuka sinematik berbasis <dialog> native. V9.1 meningkatkan
-   ritual V9.0 (yang terlalu cepat) menjadi pengalaman ~4.5s dengan
-   komposisi 4 lapis + choreography GSAP beat-by-beat:
-   - Zero-FOUC: inline script di <head> sudah menandai html.opening-armed
-     sebelum first paint; guard ini dilepas tepat setelah showModal().
-   - Timer tunggal: satu variabel timeoutId; setiap penjadwalan ulang
-     wajib clearTimeout dulu (Batasan 5 V9.0).
-   - Exactly-once asset settlement: Set `settled` + pasangan load/error
-     saling melepas listenernya (Batasan 3 V9.0) - tetap dipertahankan,
-     kini bertugas mendeteksi KEGAGALAN aset (exit cepat) karena progress
-     visual sudah dimiliki counter choreography (bukan progres nyata,
-     sejalan dengan prinsip ticker dekoratif V9.1).
-   - PERUBAHAN V9.1: exit TIDAK lagi dipicu "semua aset selesai". Waktu
-     exit tunggal = timeout utama 3500ms (Batasan 2 V9.1) supaya
-     choreography selalu utuh (halaman depan memang tanpa img kritis;
-     perilaku lama akan memotong ritual di <1s). Aset gagal tetap
-     fast-fail ke CONTINUING... (Skenario 9), aset lambat tetap ditutup
-     timeout 3.5s dengan CONTINUING... (Skenario 8).
-   - Kontrak callback hero: prepareHeroState setelah showModal(),
-     animateHeroIn di REVEAL_AT; kedua callback pasti dipanggil tepat
-     satu kali di semua jalur (Batasan 6 V9.0).
-   - Lifecycle (Batasan 8 V9.1): choreography + counter + pulse lewat
-     trackEventTween, ticker interval di motionRegistry.intervals,
-     quickTo debu kursor lewat trackQuickTo, listener lewat
-     trackMotionListener; exitSequence membersihkan semuanya idempoten. */
-const OPENING_SEEN_KEY = 'fip-opening-seen';
-
-export function initArchiveOpening(prepareHero, animateHero) {
-  /* Kontrak Batasan 6: SELURUH jalur (bypass maupun normal) memanggil
-     callback yang diterima - bukan impor langsung - supaya pemanggil
-     (gate boot di bawah) bisa membungkus animateHeroIn dengan
-     initSectionMotion dan tetap berjalan di semua jalur. */
-  const dialog = qs('#archive-opening');
-  const skipBtn = qs('#opening-skip');
-  const counter = qs('#opening-counter');
-  const ringFill = qs('#opening-ring-fill');
-  const status = qs('#opening-status');
-
-  /* --- BYPASS PATHS --- */
-  /* 1. Elemen hilang (markup tanpa dialog / halaman tanpa overlay):
-        hero jalan langsung, dan guard FOUC wajib dilepas supaya halaman
-        tidak menggantung tersembunyi sampai safety timeout 4s. */
-  if (!dialog || !skipBtn) {
-    document.documentElement.classList.remove('opening-armed');
-    prepareHero();
-    animateHero();
-    return;
-  }
-  /* 2. Reduced motion (jaring pengaman; jalur boot motion context
-        no-preference sudah menyaring sebelumnya). */
-  if (isReducedMotion()) {
-    document.documentElement.classList.remove('opening-armed');
-    prepareHero();
-    animateHero();
-    return;
-  }
-  /* 3. Sesi sudah pernah melihat opening: inline script tidak menambah
-        class opening-armed, jadi cukup animasi hero biasa. */
-  if (!document.documentElement.classList.contains('opening-armed')) {
-    prepareHero();
-    animateHero();
-    return;
-  }
-
-  /* --- NORMAL PATH --- */
-  /* Safety timeout inline script tidak dibutuhkan lagi. */
-  if (window.__openingSafety) {
-    clearTimeout(window.__openingSafety);
-    delete window.__openingSafety;
-  }
-
-  /* Tandai sesi TERLEBIH DAHULU: refresh di tengah animasi tidak
-     pernah me-replay opening (Skenario 4). */
-  try { window.sessionStorage.setItem(OPENING_SEEN_KEY, '1'); } catch (error) { /* best effort */ }
-
-  dialog.showModal();
-  /* Tombol lahir disabled (anti klik tidak sengaja, Batasan 2 V9.1);
-     focus() menjadi no-op dan fokus jatuh ke dialog itu sendiri sampai
-     choreography mengaktifkan tombol di 1.5s. */
-  skipBtn.focus({ preventScroll: true });
-
-  /* Hero disiapkan (tersembunyi, siap animasi) TAPI belum dianimasikan;
-     animasi dipicu di REVEAL_AT di tengah wipe. */
-  prepareHero();
-
-  /* Sekarang aman membuka guard FOUC: dialog sudah menutupi layar. */
-  document.documentElement.classList.remove('opening-armed');
-
-  /* --- STATE (timer tunggal, Batasan 5) + KONSTANTA V9.1 --- */
-  let isExiting = false;
-  let heroAnimated = false;
-  let timeoutId = null;
-  /* Batasan 2 V9.1: total ~4.5s = 3.5s choreography + 1.0s wipe exit. */
-  const TOTAL_TIMEOUT_MS = 3500;
-  const EXIT_DURATION_MS = 1000;
-  const REVEAL_AT_SEC = 0.65; // hero mulai muncul di pertengahan wipe
-
-  const clearMainTimer = () => {
-    if (timeoutId) {
-      window.clearTimeout(timeoutId);
-      if (motionRegistry.timers) motionRegistry.timers.delete(timeoutId);
-      timeoutId = null;
-    }
-  };
-
-  const animateHeroOnce = () => {
-    if (heroAnimated) return;
-    heroAnimated = true;
-    animateHero();
-  };
-
-  /* --- LAYER 4: METADATA TICKER (dekoratif, teks statis) --- */
-  const tickerLines = [
-    '> LOADING FIELD NOTES / 001',
-    '> MOUNTING DATA ATLAS / 002',
-    '> INDEXING ARCHIVE / 003',
-    '> CALIBRATING SENSORS / 004'
-  ];
-  let tickerIndex = 0;
-  let tickerIntervalId = null;
-
-  const startTicker = () => {
-    tickerIntervalId = window.setInterval(() => {
-      tickerIndex = (tickerIndex + 1) % tickerLines.length;
-      const line = qs('#opening-ticker-line');
-      if (!line) return;
-      /* Tween pergantian dibuat asinkron dari callback interval,
-         jadi didaftarkan lewat trackEventTween (Batasan 8). */
-      trackEventTween(gsap.fromTo(line,
-        { opacity: 0, y: 6 },
-        { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' }));
-      line.textContent = tickerLines[tickerIndex];
-    }, 500);
-    if (motionRegistry.intervals) motionRegistry.intervals.add(tickerIntervalId);
-  };
-
-  const stopTicker = () => {
-    if (tickerIntervalId) {
-      window.clearInterval(tickerIntervalId);
-      if (motionRegistry.intervals) motionRegistry.intervals.delete(tickerIntervalId);
-      tickerIntervalId = null;
-    }
-  };
-
-  /* --- CHOREOGRAPHY TIMELINE (Batasan 4 V9.1, beat-by-beat) --- */
-  /* Semua layer dianimasikan dalam SATU timeline terlacak; exitSequence
-     meng-kill-nya dan men-snap visual ke keadaan akhir. */
-  const choreography = trackEventTween(gsap.timeline());
-
-  /* Posisi clip HARUS eksplisit inline: CSS produksi meminimasi
-     circle(150% at 50% 50%) menjadi circle(150%) (posisi default
-     dilepas minifier), dan GSAP membaca computed style - tanpa inline
-     set, interpolasi exit salah membaca posisi awal 0% sehingga iris
-     menyusut ke pojok kiri atas, bukan ke pusat. */
-  gsap.set('.opening-clip', { clipPath: 'circle(150% at 50% 50%)' });
-
-  choreography
-    /* Layer 1: Ambient (grain + vignette) */
-    .to('.opening-grain', { opacity: 0.04, duration: 0.5, ease: 'none' }, 0)
-    .to('.opening-vignette', { opacity: 1, duration: 0.5, ease: 'none' }, 0)
-
-    /* Layer 2: bracket stagger 0.1s + garis ukur menggambar diri 0.2s
-       + label sudut 0.4/0.6s */
-    .to('.opening-bracket', { opacity: 1, duration: 0.3, stagger: 0.1, ease: 'power2.out' }, 0)
-    .to('.opening-ruler--v', { scaleY: 1, opacity: 0.4, duration: 0.6, ease: 'power2.inOut', transformOrigin: 'top' }, 0.2)
-    .to('.opening-ruler--h', { scaleX: 1, opacity: 0.4, duration: 0.6, ease: 'power2.inOut', transformOrigin: 'left' }, 0.2)
-    .to('.opening-corner-label--tl', { opacity: 1, duration: 0.4, ease: 'none' }, 0.4)
-    .to('.opening-corner-label--br', { opacity: 1, duration: 0.4, ease: 'none' }, 0.6)
-
-    /* Layer 3: label fade-slide-up 0.8s, ring scale-in back.out 1.0s,
-       skip fade-in + aktif di 1.5s (>= jeda 800ms Batasan 2) */
-    .to('.opening-label', { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 0.8)
-    .fromTo('.opening-progress-wrap',
-      { scale: 0.8, opacity: 0 },
-      { scale: 1, opacity: 1, duration: 0.6, ease: 'back.out(1.4)' }, 1.0)
-    .to('.opening-skip',
-      { opacity: 1, duration: 0.3, ease: 'none',
-        onStart: () => {
-          skipBtn.disabled = false;
-          /* Batasan 7 V9.1: satu-satunya elemen yang bisa di-fokus.
-             Saat tombol aktif, fokus (yang sampai detik ini berada di
-             dialog) dipindah ke tombol agar Tab langsung berputar di
-             dalam dialog. */
-          skipBtn.focus({ preventScroll: true });
-        } }, 1.5)
-
-    /* Layer 4: ticker fade-in + interval pergantian 500ms dimulai. */
-    .to('.opening-ticker', { opacity: 1, duration: 0.3, ease: 'none', onStart: startTicker }, 1.2);
-
-  /* Counter choreographed: 000 -> 100 selama 1.8s mulai 1.2s (selesai
-     3.0s), ring mengikuti, status INITIALIZING -> CALIBRATING (>=50)
-     -> READY. Ini pemilik visual progres - bukan progres aset nyata. */
-  const counterProxy = { val: 0 };
-  let pulseTween = null;
-  const counterTween = trackEventTween(gsap.to(counterProxy, {
-    val: 100, duration: 1.8, ease: 'power2.inOut', delay: 1.2,
-    onUpdate: () => {
-      const v = Math.round(counterProxy.val);
-      if (counter) counter.textContent = String(v).padStart(3, '0');
-      if (ringFill) ringFill.style.strokeDashoffset = String(289 * (1 - v / 100));
-      if (status && v >= 50 && status.textContent === 'INITIALIZING...') {
-        status.textContent = 'CALIBRATING...';
-      }
-    },
-    onComplete: () => {
-      if (status) status.textContent = 'READY';
-      /* Ring pulse 3.2s: scale 1 -> 1.12 -> 1. Tracked agar exitSequence
-         dapat membunuhnya di tengah jalan. */
-      pulseTween = trackEventTween(gsap.fromTo('.opening-progress-wrap',
-        { scale: 1 },
-        { scale: 1.12, duration: 0.25, yoyo: true, repeat: 1, ease: 'power2.out' }));
-    }
-  }));
-
-  /* --- MICRO-DELIGHT: partikel debu kursor (reuse motif .pixel-dust) --- */
-  /* 6 partikel kecil di sekitar ring yang mengikuti kursor perlahan
-     lewat gsap.quickTo (damped 0.22 sehingga tetap melayang di area
-     ring). Hanya fine pointer; semua quickTo + listener terlacak. */
-  let dustNodes = null;
-  let dustFns = null;
-  let dustMove = null;
-  const dustWrap = qs('.opening-progress-wrap');
-  if (finePointer && dustWrap) {
-    dustNodes = [];
-    dustFns = [];
-    const DAMPING = 0.22;
-    for (let i = 0; i < 6; i++) {
-      const particle = el('span', 'opening-dust');
-      particle.setAttribute('aria-hidden', 'true');
-      dustWrap.appendChild(particle);
-      gsap.set(particle, {
-        x: gsap.utils.random(-80, 80),
-        y: gsap.utils.random(-80, 80),
-        opacity: gsap.utils.random(0.18, 0.42)
-      });
-      dustNodes.push(particle);
-      dustFns.push({
-        xTo: trackQuickTo(gsap.quickTo(particle, 'x', { duration: 1.4, ease: 'power2.out' })),
-        yTo: trackQuickTo(gsap.quickTo(particle, 'y', { duration: 1.4, ease: 'power2.out' }))
-      });
-    }
-    dustMove = (event) => {
-      if (!dustWrap || !dustFns) return;
-      const rect = dustWrap.getBoundingClientRect();
-      const cx = (event.clientX - rect.left - rect.width / 2) * DAMPING;
-      const cy = (event.clientY - rect.top - rect.height / 2) * DAMPING;
-      dustFns.forEach((fn, index) => {
-        const spread = (index - 2.5) * 10;
-        fn.xTo(cx + spread);
-        fn.yTo(cy - spread * 0.6);
-      });
-    };
-    trackMotionListener(doc, 'pointermove', dustMove);
-  }
-
-  const removeDust = () => {
-    if (dustMove) {
-      doc.removeEventListener('pointermove', dustMove);
-      dustMove = null;
-    }
-    if (dustFns) {
-      dustFns.forEach((fn) => {
-        if (fn.xTo && fn.xTo.tween) fn.xTo.tween.kill();
-        if (fn.yTo && fn.yTo.tween) fn.yTo.tween.kill();
-      });
-      dustFns = null;
-    }
-    if (dustNodes) {
-      dustNodes.forEach((node) => { if (node.parentNode) node.parentNode.removeChild(node); });
-      dustNodes = null;
-    }
-  };
-
-  /* --- EXIT SEQUENCE (satu-satunya jalur keluar, idempoten) --- */
-  const exitSequence = () => {
-    if (isExiting) return;
-    isExiting = true;
-
-    /* 1. Matikan seluruh sumber gerak V9.1 + timer utama V9.0. */
-    if (choreography) choreography.kill();
-    if (counterTween) counterTween.kill();
-    if (pulseTween) { pulseTween.kill(); pulseTween = null; }
-    stopTicker();
-    removeDust();
-    clearMainTimer();
-
-    /* 2. Snap visual ke keadaan akhir (skip/Escape di tengah
-          choreography tetap meninggalkan ritual yang terbaca lengkap).
-          Status CONTINUING... (jalur gagal aset) tidak ditimpa. */
-    gsap.set('.opening-bracket', { opacity: 1 });
-    gsap.set('.opening-ruler--v', { scaleY: 1, opacity: 0.4, transformOrigin: 'top' });
-    gsap.set('.opening-ruler--h', { scaleX: 1, opacity: 0.4, transformOrigin: 'left' });
-    gsap.set('.opening-corner-label--tl, .opening-corner-label--br', { opacity: 1 });
-    gsap.set('.opening-label, .opening-skip', { opacity: 1, y: 0 });
-    gsap.set('.opening-progress-wrap', { scale: 1, opacity: 1 });
-    gsap.set('.opening-ticker', { opacity: 1 });
-    skipBtn.disabled = false;
-    if (counter) counter.textContent = '100';
-    if (ringFill) ringFill.style.strokeDashoffset = '0';
-    if (status && status.textContent !== 'CONTINUING...') status.textContent = 'READY';
-
-    /* 3. Wipe: circular reveal. clip-path circle pada .opening-clip
-          menyusut 150% -> 0% (1.0s power3.inOut) sementara ::backdrop
-          memudar 1s (CSS .is-wiping) dan dialog menjadi transparan,
-          sehingga hero terungkap DI TENGAH wipe (REVEAL_AT 0.65s),
-          bukan hanya setelah dialog.close(). Total exit 1.0s: total
-          keseluruhan 3.5 + 1.0 = 4.5s (Batasan 2). */
-    dialog.classList.add('is-wiping');
-    const tl = trackEventTween(gsap.timeline({
-      onComplete: () => {
-        dialog.close();
-        /* Listener spesifik dilepas di sini DAN tersedia di
-           motionRegistry (didaftarkan lewat trackMotionListener di
-           bawah), jadi teardown navigasi juga membersihkannya. */
-        skipBtn.removeEventListener('click', exitSequence);
-        dialog.removeEventListener('cancel', onCancel);
-      }
-    }));
-    /* Frame + ambient memudar bersamaan (mereka di luar clip). */
-    tl.to('.opening-frame, .opening-grain, .opening-vignette',
-      { opacity: 0, duration: 0.4, ease: 'none' }, 0);
-    /* Circular reveal pada wrapper konten. */
-    tl.to('.opening-clip',
-      { clipPath: 'circle(0% at 50% 50%)', duration: EXIT_DURATION_MS / 1000, ease: 'power3.inOut' }, 0);
-    /* Hero mulai muncul 0.65s ke dalam wipe (Batasan 6). */
-    tl.call(animateHeroOnce, null, REVEAL_AT_SEC);
-  };
-
-  /* --- ASSET TRACKING (Batasan 3 + 8 V9.0, dipertahankan) --- */
-  const images = qsa('img[data-opening-critical]');
-  const total = images.length;
-  let loaded = 0;
-  let failed = 0;
-  const settled = new Set();
-
-  /* Setiap aset dihitung TEPAT SATU KALI. */
-  const settleAsset = (img, success) => {
-    if (settled.has(img)) return;
-    settled.add(img);
-    if (success) loaded++; else failed++;
-    checkAssets();
-  };
-
-  /* V9.1: checkAssets hanya menangani KEGAGALAN (fast-fail, Skenario 9).
-     Kondisi "semua berhasil" TIDAK lagi keluar cepat: waktu exit tunggal
-     adalah timeout utama 3.5s agar choreography selalu utuh (lihat
-     komentar header). Tidak ada penulisan counter/ring di sini - visual
-     progres dimiliki counter choreography. */
-  const checkAssets = () => {
-    if (isExiting) return;
-    if (failed > 0) {
-      clearMainTimer();
-      if (status) status.textContent = 'CONTINUING...';
-      exitSequence();
-    }
-  };
-
-  /* --- TIMEOUT UTAMA (dijadwalkan SEBELUM listener aset dipasang) --- */
-  timeoutId = window.setTimeout(() => {
-    if (isExiting) return;
-    /* Skenario 8 (lambat): aset masih menggantung -> CONTINUING...
-       Jalur normal membiarkan READY dari counter tween terbaca. */
-    if (status && loaded < total) status.textContent = 'CONTINUING...';
-    exitSequence();
-  }, TOTAL_TIMEOUT_MS);
-  if (motionRegistry.timers) motionRegistry.timers.add(timeoutId);
-
-  /* --- NO-ASSETS BRANCH (Batasan 2 V9.0; diperbarui V9.1) ---
-     Halaman tanpa img kritis (termasuk halaman depan) tidak memasang
-     listener apa pun; choreography + counter choreographed + timeout
-     3.5s memegang seluruh garis waktu: counter tetap berjalan 000->100,
-     status READY di 3.0s, lalu wipe di 3.5s (Skenario 3 + 11). Tidak
-     ada lagi exit cepat 400ms karena itu memotong ritual V9.1. */
-  if (total > 0) {
-    /* --- ASSET LOOP (deduplikasi tepat-satu) --- */
-    images.forEach((img) => {
-      if (settled.has(img)) return;
-
-      if (img.complete) {
-        /* Sudah selesai (sukses atau gagal) sebelum listener dipasang. */
-        settleAsset(img, img.naturalWidth > 0);
-        return;
-      }
-
-      /* Pasangan handler saling melepas: setiap load/error memastikan
-         pasangannya tidak pernah memicu settleAsset kedua kalinya. */
-      const onLoad = () => {
-        img.removeEventListener('error', onError);
-        settleAsset(img, true);
-      };
-      const onError = () => {
-        img.removeEventListener('load', onLoad);
-        settleAsset(img, false);
-      };
-      img.addEventListener('load', onLoad, { once: true });
-      img.addEventListener('error', onError, { once: true });
-    });
-  }
-
-  /* --- KONTROL --- */
-  const onCancel = (event) => {
-    event.preventDefault(); // blok close native; tutup lewat wipe saja
-    exitSequence();
-  };
-
-  /* Klik tombol dan Escape (cancel) sama-sama lewat exitSequence;
-     guard isExiting membuat klik ganda / Escape berulang tidak
-     memicu dua wipe (Skenario 6 + 7). */
-  trackMotionListener(skipBtn, 'click', exitSequence);
-  trackMotionListener(dialog, 'cancel', onCancel);
 }
 
 function initSmoothScroll() {
@@ -1653,14 +1245,12 @@ function initVisibilityPause() {
 /* ======================================================================
  * BOOT GLOBAL (semua halaman)
  * ==================================================================== */
-/* V9.0: flag window.__FIP_OPENING_ACTIVE dan event 'fip:start-hero'
-   dihapus. Gerbang hero kini kontrak callback langsung: gate di bawah
-   memanggil initArchiveOpening(prepareHeroState, animateHeroIn+)
-   (dua fungsi diekspor home.js). animateHeroIn dibungkus agar
-   initSectionMotion tetap start tepat saat reveal - di SEMUA jalur
-   (bypass maupun normal), menggantikan gating startHeroGateGlobal lama.
-   Catatan urutan: initSectionMotion sebelum animateHeroIn, sama
-   seperti urutan listener lama saat event fip:start-hero dispatch. */
+/* V11.0: gerbang hero lama (kontrak callback initArchiveOpening + event
+   'fip:start-hero' + window.__FIP_OPENING_ACTIVE) dihapus bersama
+   arsitektur Opening modal. Urutan baru di motion gate:
+   initSectionMotion -> animateHeroIn (dekorasi) -> initCurtain.
+   Ketiganya independen: tidak ada yang menunggu completion entitas
+   lain (spek §3.8 - NO DEPENDENCY ON ANIMATION COMPLETION). */
 
 /* ======================================================================
  * V8.0 FASE 2: AUDIO FEEDBACK INIT (sitewide)
@@ -1720,29 +1310,11 @@ function initAudioFeedback() {
   });
 }
 
-/* V9.0 FASE 4 (Batasan 9): lifecycle guard navigation. Idempoten dan
-   berjalan pada SETIAP astro:after-swap. Teardown utama sudah dilakukan
-   cleanupMotionRegistry() di core.js (listener astro:after-swap core
-   terdaftar lebih dulu, jadi berjalan sebelum handler ini): timer yang
-   dilacak dibatalkan, listener dilepas, timeline exit di-kill. Handler
-   ini menutup sisa state DOM yang tidak dimiliki registry:
-   - dialog yang mungkin masih open (mis. navigasi di tengah opening);
-   - safety timeout inline script (timer mentah di luar registry);
-   - class opening-armed di <html> (Batasan 9: tidak ada class sisa). */
-document.addEventListener('astro:after-swap', () => {
-  const dialog = qs('#archive-opening');
-  if (dialog && dialog.open) {
-    /* Paksa tutup dialog. */
-    dialog.close();
-  }
-  /* Batalkan timer safety inline script bila masih menggantung. */
-  if (window.__openingSafety) {
-    clearTimeout(window.__openingSafety);
-    delete window.__openingSafety;
-  }
-  /* Pulihkan state DOM: guard FOUC tidak boleh tersisa. */
-  document.documentElement.classList.remove('opening-armed');
-});
+/* V11.0: handler after-swap khusus opening V9.1 (tutup dialog,
+   __openingSafety, opening-armed) DIHAPUS - seluruh state yang
+   dibersihkannya tidak ada lagi. Teardown navigasi kini cukup
+   cleanupMotionRegistry() (core.js) + dispose Curtain via listener
+   astro:before-swap di curtain-controller.js. */
 
 bootPage({
   renders: [
@@ -1768,15 +1340,21 @@ bootPage({
     initBackTop,
     initVisibilityPause,
     () => {
-      /* V9.0 FASE 4.1: Archive Boot Sequence dipanggil di bootPage,
-         menggantikan gate shouldShowArchiveOpening + event lama. Semua
-         keputusan tampil/tidak (elemen, reduced motion, sesi) kini
-         internal ke initArchiveOpening lewat jalur bypass-nya. */
-      const animateHeroInWithSections = () => {
-        initSectionMotion();
-        animateHeroIn();
-      };
-      initArchiveOpening(prepareHeroState, animateHeroInWithSections);
+      /* V11.0 FASE 3+6: Hero tidak lagi menunggu Opening.
+         1. prepareHeroState: persiapan dekorasi (scanline + state awal
+            elemen pendukung) - konten utama tidak pernah disembunyikan.
+         2. initSectionMotion: reveal heading per section (ScrollTrigger,
+            below-fold) - registrasi langsung di boot.
+         3. animateHeroIn: entrance ELEMEN DEKORATIF hero saja (pixel
+            frame, tools, sticker, atlas); teks/CTA/search berada pada
+            posisi final sejak HTML.
+         4. initCurtain: dekorasi opening sekali per sesi; self-guarding
+            (reduced motion, sesi, jendela aktivasi ~1s, duplikat) dan
+            gagal aman - bila tidak aktif, halaman tetap normal. */
+      prepareHeroState();
+      initSectionMotion();
+      animateHeroIn();
+      initCurtain();
     },
     /* M1: gate inisialisasi via `motion` (no-preference saja). Posisi
        akhir: overlay siap setelah semua motion halaman terpasang. */

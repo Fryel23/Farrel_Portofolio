@@ -10,11 +10,12 @@
  *   doPreparation melewatkan loader, lalu transition() mendelegasikan
  *   ke `location.href = to.href` - full page reload yang justru
  *   menghancurkan pengalaman (opening ter-tutup paksa, flash reload).
- *   Karena itu kedua guard (V9.1 opening + rapid click) memakai
+ *   Karena itu kedua guard (rapid click) memakai
  *   intersepsi klik fase CAPTURE pada document: navigation never
  *   starts, benar-benar "tidak terjadi apa-apa".
- * - Guard V9.1 yang BENAR: cek dialog.open (bukan class opening-armed
- *   yang memang langsung dihapus dari <html>).
+ * - V11.0: guard Opening V9.1 (cek dialog.open) DIHAPUS bersama
+ *   dialognya. Klik tautan internal kini hidup sejak awal - Curtain
+ *   Pattern tidak pernah memblokir navigasi (spek §3.3).
  *
  * Alur overlay: before-preparation = Cover (panel naik), after-swap =
  * Reveal (panel berlanjut ke atas). Karena teardown halaman (core.js,
@@ -32,8 +33,8 @@
  * Jaring pengaman: jika astro:after-swap tidak pernah tiba (fetch
  * gagal / router membatalkan di tengah jalan), timer reset memulihkan
  * overlay + flag isTransitioning agar navigasi tidak terkunci selamanya.
- * Navigasi popstate/back tidak diblokir (perilaku V9.0 dipertahankan:
- * after-swap menutup dialog opening yang masih terbuka).
+ * Navigasi popstate/back tidak diblokir (perilaku V9.0 dipertahankan;
+ * V11.0: tidak ada lagi dialog opening yang perlu ditutup after-swap).
  */
 /* M1: isReducedMotion dibaca live (window.matchMedia) di setiap handler
    agar preferensi yang berubah mid-session selalu dihormati. M2: lenis
@@ -91,23 +92,17 @@ export function initPageTransitions() {
   bound = true;
   /* ----------------------------------------------------------------
    * GUARD (fase capture, sebelum router melihat klik):
-   * 1. V9.1 opening masih terbuka  -> semua klik tautan internal
-   *    di-blok (tidak terjadi apa-apa), sampai opening selesai.
-   * 2. Transisi sedang berjalan    -> klik tautan berikutnya di-blok
-   *    (rapid click: hanya satu transisi dalam satu waktu).
-   * Tombol di dalam dialog (skip) bukan <a href> sehingga tetap hidup.
+   * Transisi sedang berjalan -> klik tautan berikutnya di-blok
+   * (rapid click: hanya satu transisi dalam satu waktu).
+   * V11.0: guard dialog opening V9.1 DIHAPUS bersama dialognya -
+   * tidak ada lagi gerbang halaman; semua tautan internal hidup
+   * sejak first paint (Curtain tidak pernah memblokir navigasi).
    * ---------------------------------------------------------------- */
   document.addEventListener('click', (event) => {
     if (isReducedMotion()) return; // M1: no-op di reduce mode
     const link = internalLink(event.target);
     if (!link) return;
 
-    const dialog = qs('#archive-opening');
-    if (dialog && dialog.open) {
-      event.preventDefault();
-      event.stopPropagation();
-      return;
-    }
     if (isTransitioning) {
       event.preventDefault();
       event.stopPropagation();
@@ -144,8 +139,7 @@ export function initPageTransitions() {
 
     /* Jaring pengaman: jika after-swap tidak kunjung tiba.
        M4: timer didaftarkan ke motionRegistry.timers sesuai konvensi
-       initArchiveOpening; dihapus saat clear (resetOverlayState dan
-       after-swap). */
+       lifecycle; dihapus saat clear (resetOverlayState dan after-swap). */
     if (resetTimer) clearTimeout(resetTimer);
     resetTimer = setTimeout(() => resetOverlayState(), 3000);
     if (motionRegistry.timers) motionRegistry.timers.add(resetTimer);

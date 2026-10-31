@@ -1,3 +1,62 @@
+# VERIFICATION · V10.4 OPENING DIAGNOSTIC & VISUAL PROTOTYPING
+
+Laporan verifikasi mandiri sesuai `PROMPT_FINAL_V10.4_OPENING_LCP_DIAGNOSTIC.md`
+(5 subfase: preflight audit, Opsi C diagnostic, restore V10.3, prototipe varian
+V0-V4, evaluasi performa/visual + laporan). Mode eksekusi: **Experimental /
+Non-Shipping** di feature branch `v10.4-lcp-diagnostic` (base `e3dbfb0`, V10.3
+tervalidasi). Semua pengujian pada hasil build produksi via `astro preview`
+(localhost:4321), Chrome for Testing **156.0.8078.47** headless (Playwright +
+CDP; catatan: baseline V10.3 memakai Chrome 143 - V0 karenanya diukur ulang pada
+branch ini sebagai pembanding adil), Lighthouse 13.6.0, viewport 1440x900
+(desktop, no throttling) dan 412x823 @ DPR 1.75 (mobile, Simulated Slow 4G, CPU
+x4). Laporan lengkap + data mentah: `V10.4_DIAGNOSTIC_REPORT.md`,
+`v10.4-research/` (36 JSON Lighthouse, 48 screenshot, regression-results.txt,
+AUDIT_NOTES.md, lighthouse-summary.txt).
+
+## Summary Matrix
+
+| Subfase | Status | Bukti |
+| --- | --- | --- |
+| 0 Preflight & Code Audit | PASS | AUDIT_NOTES.md - 9/9 pertanyaan `[VERIFIED]`, 0 perubahan kode pra-audit |
+| 1 Opsi C Diagnostic | PASS | 6 run Lighthouse + 8 screenshot; LCP desktop 5.276 -> 485 ms (−91%); occlusion [VERIFIED]; kesimpulan template terisi; home.js dikembalikan byte-identik (diff vs `e3dbfb0` = 0) + smoke test opacity kembali 0 |
+| 2 Prototype Variants | PASS | `src/styles/opening-prototype-variants.css` + harness `?opening-variant=v[0-4]` di homepage saja; verifikasi fungsional 5/5 (dialog bg + ::backdrop per variant sesuai spek; is-wiping override bekerja) |
+| 3 Performance Testing | PASS | 36 run Lighthouse sesuai rencana spek (5 variant x 2 konfig x 3 run + 6 Opsi C); median + elemen LCP tiap run tercatat |
+| 3 Visual Assessment | PASS | 48 screenshot browser aktual (akurasi frame ±5 ms via CDP); 9 penilaian visual berbantuan model visi (VLM) |
+| 3 Regression Testing | PASS | 70/70 pemeriksaan lolos (14 pemeriksaan x 5 variant); 0 console error |
+
+## Temuan utama
+
+1. Opsi C membenarkan hipotesis occlusion namun **metric-only** (DO NOT SHIP).
+2. Varian translusen V1-V4 **tidak mengubah LCP** (delta <= noise) - waktu
+   paint teks hero dikendalikan choreography GSAP, bukan opasitas overlay.
+3. Teks hero tak terlihat di mid-opening pada semua variant (hanya dekorasi
+   statis yang tembus); V1 ≈ V2; settle 6,2 s identik; variant punya
+   re-occlusion snap di awal wipe yang tidak dimiliki V0.
+4. Rekomendasi: **C. Further exploration required** (kombinasi translucent +
+   reveal lebih awal + perbaikan mekanik wipe; menunggu approval pengguna).
+
+## Batasan yang dihormati
+
+- Kode produksi V10.3 utuh: `home.js` byte-identik; hanya 2 artifact eksperimen
+  ditambahkan (CSS varian + harness inline di `src/pages/index.astro`), keduanya
+  non-aktif tanpa parameter, ter-commit di feature branch, mudah di-rollback.
+- Tidak ada perubahan identitas, font, warna, layout, copywriting, dependency,
+  timing Opening V9.1, core.js/bootPage/Page Transitions, Game Deck/Companion.
+- Tidak ada merge ke `main`, tidak ada deployment, tidak ada push remote
+  (repositori tidak punya remote).
+- Tanpa em dash (U+2014) pada file yang disentuh (konvensi repo).
+
+## Perubahan file (V10.4)
+
+- Baru: `V10.4_DIAGNOSTIC_REPORT.md`, `src/styles/opening-prototype-variants.css`,
+  `v10.4-research/` (AUDIT_NOTES.md, lighthouse/*.json x36, screenshots/ x48,
+  regression-results.txt, lighthouse-summary.txt, tools/*.mjs), bagian V10.4 di
+  dokumen ini, paragraf V10.4 di README.md.
+- Ubah: `src/pages/index.astro` (import CSS varian + harness inline script,
+  keduanya hanya aktif dengan parameter eksperimen).
+
+---
+
 # VERIFICATION · V10.3 STABILIZATION & PERFORMANCE BASELINE
 
 Laporan verifikasi mandiri sesuai `PROMPT_EKSEKUSI_V10.3_STABILIZATION_BASELINE.md`

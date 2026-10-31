@@ -366,23 +366,26 @@ function initGlobalArchiveSearch() {
 }
 
 /* ======================================================================
- * V9.0 FASE 3.1 (Batasan 6): initHeroIntro() lama dipecah menjadi dua
- * fungsi dengan kontrak yang tegas:
- *   - prepareHeroState(): HANYA persiapan (gsap.set + elemen scanline).
- *     Hero dibuat invisible dan siap dianimasikan. Dipanggil global.js
- *     segera setelah showModal() (sebelum wipe).
- *   - animateHeroIn(): HANYA animasi masuk (timeline gsap.to). Dipanggil
- *     di REVEAL_AT (0.5s ke dalam wipe) atau langsung pada jalur bypass.
- * Keduanya dijamin dipanggil tepat satu kali per boot oleh
- * initArchiveOpening (global.js) lewat kontrak callback V9.0.
+ * V11.0 FASE 3 (refactor V9.0 FASE 3.1): kontrak hero baru sesuai
+ * Curtain Pattern. Kedua fungsi TIDAK lagi bergantung pada Opening:
+ *   - prepareHeroState(): HANYA persiapan dekorasi (scanline + gsap.set
+ *     pada elemen pendukung). KONTEN UTAMA TIDAK PERNAH disembunyikan:
+ *     headline, tagline, deskripsi, actions (CTA + search), eyebrow,
+ *     note, dan scroll-cue berada pada posisi final sejak HTML render
+ *     (spek §3.1 NO HIDDEN HERO + §6.1).
+ *   - animateHeroIn(): entrance elemen dekoratif saja (pixel frame,
+ *     floating tools, sticker, atlas, scanline). Dipanggil langsung di
+ *     boot gate global.js - tanpa menunggu completion apa pun (spek
+ *     §3.8), dan tetap aman bila Curtain tidak pernah aktif.
  * ==================================================================== */
 export function prepareHeroState() {
   const hero = qs('.hero');
   if (!hero || !hasGSAP) return;
 
   // Scanline elements (5.1.1): one per masked headline line, appended
-  // during preparation so they are already in place when the reveal
-  // sweeps (animateHeroIn never mutates the DOM).
+  // during preparation so they are already in place when the decorative
+  // beam sweeps (animateHeroIn never mutates the DOM). Beam dekoratif:
+  // tidak pernah menyembunyikan teks (pointer-events none, overlay tipis).
   qsa('.hero-title .line-mask').forEach((mask) => {
     if (!mask.querySelector('.scanline')) {
       const scan = el('span', 'scanline');
@@ -391,9 +394,8 @@ export function prepareHeroState() {
     }
   });
 
-  gsap.set('#hero-title .line', { yPercent: 115 });
-  gsap.set(['.eyebrow', '.hero-tail', '.hero-description', '.hero-note', '.scroll-cue'], { opacity: 0, y: 16 });
-  gsap.set('.hero-actions > *', { opacity: 0, y: 14 });
+  /* Dekorasi visual pendukung: entrance tetap punya karakter, konten
+     utama tidak tersentuh (posisi final sejak frame pertama, spek §3.2). */
   gsap.set('#pixel-frame', { opacity: 0, y: 40, rotate: -14, scale: 0.96 });
   gsap.set('.floating-tool', { opacity: 0, scale: 0.5, y: 10 });
   gsap.set('.hero-sticker', { opacity: 0, scale: 0.9 });
@@ -411,24 +413,19 @@ export function animateHeroIn() {
   const hero = qs('.hero');
   if (!hero || !hasGSAP) return;
 
+  /* V11.0: HANYA dekorasi - tidak ada teks/CTA/search di timeline ini.
+     Semua elemen konten utama sudah terlihat sejak initial render. */
   const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-  tl.to('#hero-title .line', { yPercent: 0, duration: 0.9, stagger: 0.09 }, 0.15)
-    .to('.eyebrow', { opacity: 1, y: 0, duration: 0.5 }, 0.35)
-    .to('.hero-tail', { opacity: 1, y: 0, duration: 0.55 }, 0.62)
-    .to('.hero-description', { opacity: 1, y: 0, duration: 0.6 }, 0.72)
-    .to('.hero-actions > *', { opacity: 1, y: 0, duration: 0.5, stagger: 0.07, clearProps: 'transform' }, 0.84)
-    .to('.hero-note', { opacity: 1, y: 0, duration: 0.5 }, 1.02)
-    .to('#pixel-frame', { opacity: 1, y: 0, rotate: -7, scale: 1, duration: 0.9, ease: 'power2.out' }, 0.55)
-    .to('.floating-tool', { opacity: 1, scale: 1, y: 0, duration: 0.45, stagger: 0.08, ease: 'power2.out' }, 1.0)
-    .to('.hero-sticker', { opacity: 1, scale: 1, duration: 0.5, ease: 'power2.out' }, 1.1)
-    .to('.scroll-cue', { opacity: 1, y: 0, duration: 0.5 }, 1.2);
+  tl.to('#pixel-frame', { opacity: 1, y: 0, rotate: -7, scale: 1, duration: 0.9, ease: 'power2.out' }, 0.1)
+    .to('.floating-tool', { opacity: 1, scale: 1, y: 0, duration: 0.45, stagger: 0.08, ease: 'power2.out' }, 0.35)
+    .to('.hero-sticker', { opacity: 1, scale: 1, duration: 0.5, ease: 'power2.out' }, 0.45);
 
-  // Scanline sweep (5.1.1): a light beam crosses each line once while
-  // the masked text rises, like a scanner reading the archive.
+  // Scanline sweep (5.1.1): a light beam crosses each masked line once.
+  // Dekoratif; teks sudah terbaca penuh sejak frame pertama.
   tl.fromTo('.scanline',
     { x: '-100%' },
     { x: '100%', duration: 0.6, ease: 'power2.inOut', stagger: 0.09 },
-    0.15
+    0.1
   );
 
   /* Data Atlas entrance (12.1): paths draw themselves in, nodes and
@@ -702,11 +699,9 @@ bootPage({
   motion: [
     initPointerParallax,
     initHeroButtons,
-    /* V9.0: jembatan lama 'fip:start-hero' / window.__FIP_OPENING_ACTIVE
-       dihapus. Hero kini digerakkan oleh initArchiveOpening (global.js)
-       lewat kontrak callback V9.0: prepareHeroState dipanggil setelah
-       showModal(), animateHeroIn di REVEAL_AT (atau berurutan pada
-       jalur bypass). Entri hero tidak lagi ada di boot home. */
+    /* V11.0: entri hero-boot lama dihapus. animateHeroIn kini dipanggil
+       dari boot gate global.js (dekorasi, tanpa menunggu Opening);
+       prepareHeroState tetap diekspor untuk kontrak yang sama. */
   ],
   cleanups: [resetAtlasAmbient],
 });
