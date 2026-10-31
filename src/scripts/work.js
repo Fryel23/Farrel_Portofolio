@@ -4,8 +4,12 @@
  * reserved hanya tampil di view All, tidak dihitung), reveal arah pada
  * cover, batch entrance, dan dekorasi ruler galeri.
  * V8.0 Fase 3: WebGL image hover (Curtains) khusus path /work.
+ * V10.3 SUBFASE 2: curtainsjs tidak lagi di-import statis - modul hanya
+ * diunduh via dynamic import ketika initWebGLHover() berjalan di path
+ * /work dengan pointer fine, tanpa reduced motion, dan WebGL didukung.
+ * Homepage (work.js juga dipakai di sana untuk hover reveal) tidak akan
+ * pernah mengunduh chunk curtainsjs.
  */
-import { Curtains, Plane } from 'curtainsjs';
 import {
   DATA, doc, MOTION,
   el, qs, qsa, setText, showToast, fetchWithTimeout,
@@ -247,7 +251,9 @@ function initFilterControls() {
  * (scale) praktis tergantikan oleh distorsi WebGL saat plane aktif;
  * tanpa WebGL, perilaku hover CSS lama tetap utuh. */
 
-const webglHoverState = { active: false, entries: [] };
+/* V10.3 SUBFASE 2: konstruktor Curtains/Plane diinjeksi dari dynamic
+   import (tidak ada lagi binding statis dari 'curtainsjs'). */
+const webglHoverState = { active: false, entries: [], curtainsCtor: null, planeCtor: null };
 
 /* V10.2 B.1: hanya /work (galeri arsip) yang mengizinkan WebGL hover.
    [slug].astro tidak meng-import work.js sehingga /work/* dead path.
@@ -317,6 +323,9 @@ function disposeWebGLEntry(entry) {
 }
 
 function createWebGLPlane(img) {
+  const Curtains = webglHoverState.curtainsCtor;
+  const Plane = webglHoverState.planeCtor;
+  if (!Curtains || !Plane) return null;
   const cover = img.closest('.project-cover');
   const card = img.closest('.project-card');
   if (!cover || !card || cover.querySelector('.webgl-cover-canvas')) return null;
@@ -422,10 +431,24 @@ function syncWebGLPlanes() {
   });
 }
 
-function initWebGLHover() {
+/* V10.3 SUBFASE 2: async - chunk curtainsjs hanya diunduh di sini, dan
+   hanya ketika semua gate lolos (path /work, pointer fine, bukan reduced
+   motion, WebGL didukung). webglHoverState.active baru bernilai true
+   setelah import sukses, sehingga syncWebGLPlanes() yang dipanggil
+   renderProjects() tidak membuat plane sebelum modul siap. */
+async function initWebGLHover() {
   if (!finePointer || isReducedMotion() || !webglPathAllowed() || !webglSupported()) return;
-  webglHoverState.active = true;
-  syncWebGLPlanes();
+  try {
+    const module = await import('curtainsjs');
+    webglHoverState.curtainsCtor = module.Curtains;
+    webglHoverState.planeCtor = module.Plane;
+    webglHoverState.active = true;
+    syncWebGLPlanes();
+  } catch (error) {
+    /* Import gagal (jarang): kartu tetap tampil normal tanpa WebGL
+       (Batasan 1 V8.0). Tidak ada fallback visual baru (zero creep). */
+    webglHoverState.active = false;
+  }
 }
 
 /* V7.0: label ruler galeri (dekorasi) dipisah dari renderV4Sections. */
@@ -442,18 +465,31 @@ function renderGalleryRuler() {
 
 const projectRevealTimelines = new WeakMap();
 
+/* V10.3 SUBFASE 1: delegasi reveal dipindah dari .project-cover-inner ke
+   .project-cover. Terbukti lewat log [FLICKER-DIAG] (kini dihapus):
+   clip-path pada inner mengubah region hit-test-nya selama animasi, jadi
+   pointerover/pointerout yang mendelegasi ke inner bergantian terpicu
+   (over IMG -> out IMG dengan relatedTarget = wrapper -> over IMG ...)
+   saat kursor diam, dan guard contains() (searah turun) tak bisa
+   menyerapnya, sehingga tween reveal terus kill/restart -> flicker.
+   Wrapper tidak pernah ter-clip, ukurannya stabil, dan dengan
+   pointer-events:none pada inner (work.css) hit-test sepenuhnya
+   terjadi di wrapper; guard relatedTarget menyerap semua perpindahan
+   internal. Target animasi clip-path tetap .project-cover-inner. */
 function initProjectImageReveal() {
   if (!hasGSAP || isReducedMotion() || !finePointer) return;
   const grid = qs('#project-grid');
   if (!grid) return;
 
   trackMotionListener(grid, 'pointerover', (event) => {
-    const cover = event.target.closest('.project-cover-inner');
+    const cover = event.target.closest('.project-cover');
     if (!cover) return;
     if (event.relatedTarget && cover.contains(event.relatedTarget)) return;
 
     const card = cover.closest('.project-card');
     if (!card) return;
+    const inner = cover.querySelector('.project-cover-inner');
+    if (!inner) return;
     const rect = cover.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
@@ -469,8 +505,8 @@ function initProjectImageReveal() {
     const previous = projectRevealTimelines.get(card);
     if (previous && typeof previous.kill === 'function') previous.kill();
 
-    gsap.set(cover, { clipPath: initialClip });
-    const timeline = gsap.to(cover, {
+    gsap.set(inner, { clipPath: initialClip });
+    const timeline = gsap.to(inner, {
       clipPath: 'inset(0 0 0 0)',
       duration: 0.6,
       ease: 'power2.out'
@@ -480,15 +516,17 @@ function initProjectImageReveal() {
   }, { passive: true });
 
   trackMotionListener(grid, 'pointerout', (event) => {
-    const cover = event.target.closest('.project-cover-inner');
+    const cover = event.target.closest('.project-cover');
     if (!cover) return;
     if (event.relatedTarget && cover.contains(event.relatedTarget)) return;
 
     const card = cover.closest('.project-card');
     if (!card) return;
+    const inner = cover.querySelector('.project-cover-inner');
+    if (!inner) return;
     const previous = projectRevealTimelines.get(card);
     if (previous && typeof previous.kill === 'function') previous.kill();
-    const timeline = gsap.to(cover, {
+    const timeline = gsap.to(inner, {
       clipPath: 'inset(0 0 0 0)',
       duration: 0.3,
       ease: 'power2.out'

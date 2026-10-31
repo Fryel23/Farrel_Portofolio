@@ -110,12 +110,17 @@
 
 /* V6.3 §3.1.2: clip layer for the directional hover reveal. The default
    clip is fully open so the image is always visible without JS, without
-   GSAP, and under reduced motion; only the hover reveal ever closes it. */
+   GSAP, and under reduced motion; only the hover reveal ever closes it.
+   V10.3 SUBFASE 1: pointer-events none - clip-path yang berubah saat
+   animasi reveal mengubah region hit-test inner dan memicu loop
+   pointerover/pointerout (flicker). Dengan mematikan hit-test inner,
+   seluruh hit-test milik wrapper .project-cover yang ukurannya stabil. */
 .project-cover-inner {
   position: absolute; inset: 0;
   overflow: hidden;
   isolation: isolate;
   clip-path: inset(0 0 0 0);
+  pointer-events: none;
 }
 
 

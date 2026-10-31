@@ -1,3 +1,154 @@
+# VERIFICATION · V10.3 STABILIZATION & PERFORMANCE BASELINE
+
+Laporan verifikasi mandiri sesuai `PROMPT_EKSEKUSI_V10.3_STABILIZATION_BASELINE.md`
+(4 subfase: fix flicker, dynamic import curtainsjs, baseline performa, identity audit).
+Semua pengujian pada hasil build produksi (Astro, static, 9 halaman) via
+`astro preview` (localhost:4321), Chrome for Testing 143.0.7499.4 headless
+(agent-browser / Lighthouse), viewport 1440x900 (desktop) dan 412x823 (mobile).
+Pointer desktop diemulasi via init-script `matchMedia('(pointer: fine)') = true`
+karena Chrome headless tidak memiliki pointing device (media `(pointer: fine)`
+default false).
+
+## Summary Matrix
+
+| Subfase | File | Status | Bukti |
+| --- | --- | --- | --- |
+| 1 (fix flicker) | `src/scripts/work.js`, `src/styles/work.css` | PASS | [VERIFIED] log event + [MANUAL] hover/klik/keyboard/WebGL |
+| 2 (dynamic import) | `src/scripts/work.js` | PASS | [BUILD] + [VERIFIED] chunk + [MANUAL] network/hover |
+| 3 (performance baseline) | `PERFORMANCE_BASELINE.md` (baru) | PASS | [VERIFIED] 18 run Lighthouse valid |
+| 4 (identity audit) | `IDENTITY_AUDIT.md` (baru) | PASS | [STATIK] read-only, 0 baris kode diubah |
+
+Catatan commit: SUBFASE 1+2 digabung satu commit karena sama-sama menyentuh
+`work.js` (kedua perubahan saling bertetangga di file yang sama); SUBFASE 3+4
+dalam commit dokumen.
+
+## SUBFASE 1 - Flicker homepage: root cause [VERIFIED] lalu di-fix
+
+### Diagnosis (sebelum fix, sesuai instruksi spek)
+
+1. Sebelum diukur, satu kenyataan lingkungan harus ditangani: Chrome headless
+   melaporkan `(pointer: fine)` = false, sehingga guard `finePointer` membuat
+   listener reveal tidak pernah terpasang dan bug tidak bisa direproduksi.
+   Ditangani dengan init-script yang memaksa `matchMedia('(pointer: fine)')`
+   dan `(hover: hover)` mengembalikan `matches = true` (emulasi desktop).
+2. Instrumentasi sementara `console.log('[FLICKER-DIAG] ...')` ditambahkan di
+   handler `pointerover`/`pointerout` di `initProjectImageReveal()` (build
+   sementara), lalu kursor digerakkan melintasi kartu homepage. Log:
+   - `pointerover inner {t: 8829, target: IMG, rel: null}` (masuk)
+   - `pointerout inner {t: 8967, target: IMG, rel: project-cover}` (138 ms
+     kemudian, kursor tak bergerak: clip-path yang baru saja ditutup membuat
+     inner kehilangan hit-test, pointer "pindah" ke wrapper)
+   - `pointerover inner {t: 9289, ...}` lalu `pointerout inner {t: 9399, ...}`
+     (siklus berulang: reveal di-kill/restart terus).
+3. Counter pointerover/pointerout (capture phase) menunjukkan pola
+   IMG <-> .project-cover bergantian saat kursor diam, dan clip-path
+   ter-hitung ikut berubah-ubah. Diagnosis clip-path memicu hit-test loop:
+   **[VERIFIED]**. Guard lama `cover.contains(relatedTarget)` gagal karena
+   relatedTarget adalah PARENT (`.project-cover`), dan `contains()` hanya
+   searah turun.
+
+### Fix yang diterapkan (persis instruksi spek)
+
+1. Delegasi listener di `#project-grid` pindah target:
+   `event.target.closest('.project-cover')` (wrapper stabil) alih-alih
+   `.project-cover-inner`.
+2. Mempertahankan `pointerover`/`pointerout` (bubbling) dengan delegasi +
+   `relatedTarget` check (opsi B dalam spek); guard kini menyerap semua
+   perpindahan internal wrapper karena semua calon target (IMG, label,
+   wrapper) berada DI DALAM wrapper.
+3. `pointer-events: none` ditambahkan pada `.project-cover-inner` di
+   `work.css` sehingga hit-test sepenuhnya milik wrapper.
+4. Target animasi clip-path TETAP `.project-cover-inner` (di-query dari
+   wrapper); geometri arah reveal (getBoundingClientRect) tidak berubah
+   karena inner adalah `inset: 0` dari wrapper.
+5. `console.log` sementara dihapus dari kode final.
+
+### Acceptance criteria (semua PASS)
+
+- Hover dari 4 arah (kiri/kanan/atas/bawah): 4 entri, masing-masing tepat
+  SATU reveal, tanpa osilasi. [MANUAL]
+- Kursor diam 2,5 detik di tengah kartu: 0 event pointer, clip-path
+  stabil `inset(0px)`. [MANUAL]
+- Klik "Read case study" -> navigasi ke `/work/aqi-cirebon` (morphing
+  view transition tidak rusak). [MANUAL]
+- Keyboard: `link.focus()` dengan clip dipaksa tertutup -> reveal
+  membuka kembali (path focusin utuh). [MANUAL]
+- WebGL hover di `/work` tidak rusak: canvas 354x235 dibuat saat hover,
+  tanpa error; filter kategori di /work tetap me-resync plane WebGL. [MANUAL]
+- Reduced motion: WebGL tidak pernah diinisialisasi (tanpa canvas). [MANUAL]
+- 9 rute di-smoke-test: 0 error console. [MANUAL]
+
+## SUBFASE 2 - Dynamic import curtainsjs
+
+1. `import { Curtains, Plane } from 'curtainsjs'` statis dihapus.
+2. `initWebGLHover()` menjadi async: setelah semua gate lolos
+   (finePointer, bukan reduced motion, `webglPathAllowed()`, `webglSupported()`),
+   `await import('curtainsjs')`, konstruktor diinjeksi lewat
+   `webglHoverState.curtainsCtor/planeCtor`, lalu `webglHoverState.active
+   = true` dan `syncWebGLPlanes()`. `createWebGLPlane()` membaca injeksi
+   tersebut dan return null bila modul belum siap.
+3. `webglHoverState.active` hanya bernilai true SETELAH import sukses,
+   sehingga `syncWebGLPlanes()` yang dipanggil `renderProjects()` aman
+   dipanggil lebih dulu.
+
+Bukti:
+
+- [BUILD] build produksi sukses tanpa warning baru.
+- [VERIFIED] chunk terpisah: `work.COLxFcq2.js` (12.030 byte) dan
+  `src.I73TVkiV.js` (curtainsjs, 106.573 byte). Satu-satunya referensi ke
+  chunk curtains adalah `await S(()=>import('./src.I73TVkiV.js'),[])`
+  DI DALAM chunk work (dynamic import, bukan static import). HTML homepage
+  tidak memuat referensi chunk curtains (grep = 0).
+- [MANUAL] Homepage (dengan pointer fine dipaksa - kasus paling ketat):
+  network log hanya memuat ClientRouter, chunk index, global.js, dan
+  work.COLxFcq2.js. TIDAK ada request ke chunk curtainsjs.
+- [MANUAL] `/work`: hover kartu -> chunk curtains terunduh (23.795 byte
+  transfer), canvas WebGL muncul.
+- Bundle size (raw / gzip / brotli), sebelum -> sesudah:
+  - chunk work.js: 105.641 / 24.916 / 21.294 -> 12.030 / 4.615 / 4.110
+  - chunk curtainsjs (baru, on-demand hanya di /work):
+    106.573 / 23.473 / 19.986
+
+## SUBFASE 3 - Reproducible performance baseline
+
+- `PERFORMANCE_BASELINE.md` dibuat di root proyek: environment lengkap
+  (OS Linux sandbox, Chrome 143.0.7499.4, tanpa ekstensi, astro preview
+  localhost), 2 konfigurasi (Desktop 1440x900 no throttling; Mobile
+  412x823 DPR 1.75 simulated Slow 4G CPU x4), 3 rute, 3 run per sel,
+  median + data mentah 18 run + elemen LCP per rute + perintah reproduksi.
+- Tidak ada optimasi kode di subfase ini. `[VERIFIED]` untuk semua angka
+  (JSON Lighthouse tersimpan di lingkungan kerja), `[NOT YET TESTED]`
+  untuk field data (Vercel Analytics tidak dapat diakses dari sandbox).
+- Catatan lingkungan: tanpa `--disable-dev-shm-usage`, tab Chrome di
+  container sering crash saat trace capture (5 dari 9 run desktop awal);
+  flag tersebut wajib untuk reproduksi.
+
+## SUBFASE 4 - Identity audit (read-only)
+
+- `IDENTITY_AUDIT.md` dibuat di root proyek: pemetaan token tipografi
+  (`--font`, `--mono`), warna (`--blue*` 237 pemakaian), elemen -> font,
+  kandidat serif V11.0 (`.hero-title`, `.display-heading`,
+  `.case-study-title`), kelompok konsumen `--blue*` untuk aksen "Vessel",
+  dan 8 catatan potensi bentrok.
+- NOL baris kode aplikasi diubah pada subfase ini. `[STATIK]`
+
+## LARANGAN REKAP - kepatuhan
+
+- Font, warna, layout, logo, teks konten: TIDAK diubah. (Satu-satunya
+  perubahan CSS adalah `pointer-events: none` pada `.project-cover-inner`,
+  yaitu perbaikan hit-testing yang secara eksplisit diizinkan spek.)
+- Opening V9.1, Game Deck, Companion, Page Transitions V10.1: TIDAK disentuh.
+- `core.js` dan `bootPage`: TIDAK di-refactor.
+- Tidak ada library baru; `curtainsjs` tetap satu-satunya sumber WebGL,
+  kini di-load on-demand.
+- Tanpa em dash (U+2014) pada file yang disentuh (konvensi repo).
+
+## Perubahan file (V10.3)
+
+- Ubah: `src/scripts/work.js` (SUBFASE 1 + 2), `src/styles/work.css`
+  (SUBFASE 1, pointer-events).
+- Baru: `PERFORMANCE_BASELINE.md`, `IDENTITY_AUDIT.md`, bagian V10.3 di
+  dokumen ini, paragraf V10.3 di README.md.
 # VERIFICATION · V10.2 CLEANUP FOUNDATION
 
 Laporan verifikasi mandiri sesuai `PROMPT_FINAL_V10.2_CLEANUP_FOUNDATION.md`

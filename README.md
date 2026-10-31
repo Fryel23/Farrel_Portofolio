@@ -1,9 +1,11 @@
-# Farrel Islami Putra · Editorial Portfolio (Astro V10.2)
+# Farrel Islami Putra · Editorial Portfolio (Astro V10.3)
 
 Portofolio pribadi berbasis **Astro 7** dengan arsitektur **Hub-and-Spoke (Pucuk-Cabang)**.
 Migrasi total dari versi monolitik satu halaman (HTML/CSS/JS murni, V6.7) sesuai
 `PROMPT_EKSEKUSI_V7.0_ASTRO_MIGRATION.md`. Desain visual, palet warna, tipografi,
 animasi GSAP, dan seluruh fitur interaktif dipertahankan identik.
+
+**V10.3 (Stabilization & Performance Baseline, 4 subfase)** sesuai `PROMPT_EKSEKUSI_V10.3_STABILIZATION_BASELINE.md`: stabilisasi murni, tanpa perubahan identitas, font, warna, atau fitur visual. **SUBFASE 1**: akar bug flicker kartu proyek dibuktikan dulu lewat log `[FLICKER-DIAG]` sebelum difix - clip-path pada `.project-cover-inner` mengubah region hit-test-nya selama animasi reveal, sehingga delegasi `pointerover`/`pointerout` ke inner bergantian kill/restart tween (guard `contains()` hanya searah turun, tak bisa menyerap relatedTarget berupa wrapper parent). Fix: delegasi dipindah ke `.project-cover` (wrapper berukuran stabil) dengan guard `event.relatedTarget`, plus `pointer-events: none` pada `.project-cover-inner` di work.css; target animasi clip-path tetap inner. **SUBFASE 2**: curtainsjs tidak lagi di-import statis di work.js - `initWebGLHover()` kini async dan hanya `await import('curtainsjs')` ketika semua gate lolos (path /work, pointer fine, tanpa reduced motion, WebGL didukung); chunk curtains (106.573 byte raw / 23.473 gzip) jadi chunk terpisah yang TIDAK dimuat di homepage, chunk work turun 105.641 -> 12.030 byte raw (24.916 -> 4.615 gzip). **SUBFASE 3**: `PERFORMANCE_BASELINE.md` - baseline Lighthouse 13.6.0 reproducible (2 konfigurasi x 3 rute x 3 run, median): LCP homepage didominasi element render delay ±5,5 dtk dari opening V9.1 (elemen `#hero-subtitle`), rute /work dan /work/aqi-cirebon sehat (LCP desktop 623-675 ms, CLS <= 0.0051 di semua rute). **SUBFASE 4**: `IDENTITY_AUDIT.md` read-only - pemetaan token tipografi/warna, kandidat serif V11.0, kelompok konsumen `--blue*` untuk persiapan aksen Vessel, dan catatan potensi bentrok. Verifikasi: log event pointer, network log browser, 18 run Lighthouse valid; rincian di `VERIFICATION.md`.
 
 **V10.2 (Cleanup Foundation, 8 subfase terisolasi)** sesuai `PROMPT_FINAL_V10.2_CLEANUP_FOUNDATION.md`:
 menutup technical debt hasil audit V10.0 tanpa menambah fitur baru. **A.1**: deklarasi
