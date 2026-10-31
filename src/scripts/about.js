@@ -429,24 +429,6 @@ function renderAboutNotes() {
 
 /* Social icon redraw (5.6.1): on hover, each brand mark redraws itself
    via stroke-dashoffset, then hands back to the plain filled icon. */
-/* --- V6.3 §3.3: HoverGrid-style directional cover reveal ------------------ */
-/* The project cover image reveals from the side the pointer enters.
-   Principles adapted from HoverGrid (Codrops, MIT); this implementation
-   is original. Two non-negotiables from the spec:
-     1. the non-bubbling enter/leave pair of pointer events is NOT used;
-        the grid listens to the bubbling over/out pair instead
-        (delegation: cards rendered by the filters are covered
-        automatically).
-     2. The inset() map follows the pointer direction: entering from the
-        top clips everything but the top edge, so the reveal travels
-        top -> bottom; same logic for the other three sides.
-   Leaving the cover simply returns to inset(0 0 0 0) - the image never
-   disappears. FocusIn/focusOut give keyboard users the same reveal.
-   All listeners run through trackMotionListener and every timeline is
-   tracked with trackEventTween, so the reduce cleanup removes them. */
-const projectRevealTimelines = new WeakMap();
-
-
 function initAboutFieldMarks() {
   const deco = DATA && DATA.decorations && DATA.decorations.about;
   const layout = qs('.about-layout');

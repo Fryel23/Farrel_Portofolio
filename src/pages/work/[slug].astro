@@ -9,20 +9,21 @@ import { getCollection, render } from 'astro:content';
 
 /* V8.1 Fase 4.1: entri berstatus RESERVED tidak pernah menghasilkan
    rute publik. Filter dilakukan di getStaticPaths (bukan di komponen
-   halaman) sesuai rekomendasi Astro untuk mengecualikan rute. */
+   halaman) sesuai rekomendasi Astro untuk mengecualikan rute.
+   V10.2 B.2: nomor case study di-derive dari indeks getStaticPaths
+   (sort deterministik by id) sehingga proyek kedua otomatis "02". */
 export async function getStaticPaths() {
-  const entries = await getCollection('work', ({ data }) => data.status !== 'RESERVED');
-  return entries.map((entry) => ({
+  const entries = (await getCollection('work', ({ data }) => data.status !== 'RESERVED'))
+    .sort((a, b) => a.id.localeCompare(b.id));
+  return entries.map((entry, index) => ({
     params: { slug: entry.id },
-    props: { entry },
+    props: { entry, number: String(index + 1).padStart(2, '0') },
   }));
 }
 
-const { entry } = Astro.props;
+const { entry, number } = Astro.props;
 const { Content } = await render(entry);
 const d = entry.data;
-const isReserved = d.status === 'RESERVED';
-const number = String(1).padStart(2, '0');
 ---
 
 <BaseLayout title={`${d.title} · Farrel Islami Putra`} description={d.description} pageKey="work-detail">
@@ -51,7 +52,7 @@ const number = String(1).padStart(2, '0');
       </div>
 
       {
-        !isReserved && d.image && (
+        d.image && (
           <div class="case-study-cover" transition:name={`project-image-${entry.id}`}>
             <!-- V9.0 Batasan 8: cover eager di atas lipatan = aset kritis
                  boot sequence (halaman detail bisa menjadi landing pertama). -->

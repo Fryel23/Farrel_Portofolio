@@ -1,3 +1,128 @@
+# VERIFICATION · V10.2 CLEANUP FOUNDATION
+
+Laporan verifikasi mandiri sesuai `PROMPT_FINAL_V10.2_CLEANUP_FOUNDATION.md`
+(8 subfase terisolasi: A.1, A.2, B.1, B.2, B.3, C, D, E). Tanggal:
+29 Oktober 2026. Semua pengujian pada hasil `npm run build` (Astro 7.4.2,
+static, 9 halaman) via `astro preview` (127.0.0.1:4321), Chromium headless
+(Playwright) 1440x900 dan 390x844.
+
+Harness: `v102-verify/verify_v102.py` - hasil: **25/25 PASS**
+(`v102-verify/results.json`, bukti screenshot di `v102-verify/shots/`).
+
+## Eksekusi per subfase (commit terpisah)
+
+| Subfase | File | Commit | Bukti |
+| --- | --- | --- | --- |
+| A.1 | `src/scripts/about.js` | `0432785` chore(about): remove unused projectRevealTimelines declaration | [STATIK] + [BUILD] + T6 |
+| A.2 | `src/pages/work/[slug].astro` | `5b82d3b` chore(work-slug): remove dead isReserved check | [STATIK] + [BUILD] + T4-b |
+| B.1 | `src/scripts/work.js` | `2e49844` chore(work): restrict WebGL hover to /work only | [STATIK] + [BUILD] + T3 |
+| B.2 | `src/pages/work/[slug].astro` | `0580b9c` refactor(work-slug): derive case study number from getStaticPaths index | [STATIK] + [BUILD] + T4-a |
+| B.3 | `src/scripts/work.js` | `26ceff8` refactor(work): route-aware bootPage config, skip gallery renders on homepage | [STATIK] + [BUILD] + T1/T2 |
+| C | `src/content.config.ts`, `src/components/work/CaseNarrative.astro` | `bd62042` feat(case-narrative): add optional alt field for narrative images | [STATIK] + [BUILD] + T5 |
+| D | `src/scripts/core.js` | `ddd1696` fix(core): guard forceContentVisible targets to prevent GSAP warnings | [STATIK] + [BUILD] + T7/T8 |
+| E | `README.md`, `VERIFICATION.md` | (commit docs ini) | [STATIK] + [BUILD] |
+
+## Bukti per subfase
+
+- **A.1** [STATIK] Audit pra-ubah sesuai instruksi spek:
+  `grep -n "initProjectImageReveal" src/scripts/about.js` = tidak ada
+  (exit 1); `grep -n "projectRevealTimelines" src/scripts/about.js` =
+  hanya baris 447 (deklarasi `const projectRevealTimelines = new WeakMap();`,
+  tanpa `.get()` / `.set()` di file yang sama). Komentar blok "V6.3 §3.3
+  HoverGrid-style directional cover reveal" tepat di atasnya adalah
+  dokumentasi orphan dari implementasi yang hidup di `work.js`; keduanya
+  dihapus sesuai Langkah 4 spek (deklarasi + komentar penyerta).
+  [MANUAL] T6: `/about` utuh (journey 4 item, curiosity map 21 node,
+  11 skill chips, teks 3505 char), konsol tanpa error.
+- **A.2** [STATIK] `grep -n "isReserved" src/pages/work/[slug].astro`
+  kosong setelah ubah. [MANUAL] T4-b: cover `<img>` tampil di
+  `/work/aqi-cirebon` dengan alt deskriptif.
+- **B.1** [STATIK] `webglPathAllowed()` kini `return path === '/work';`
+  dengan normalisasi trailing slash dipertahankan. [MANUAL] T3:
+  0 canvas WebGL di `/` dan `/work/aqi-cirebon`. Catatan: uji positif
+  distorsi WebGL di `/work` = [BELUM DIJALANKAN] (lihat daftar di bawah).
+- **B.2** [STATIK] `number: String(index + 1).padStart(2, '0')` di
+  `getStaticPaths` (sort `a.id.localeCompare(b.id)`), `const { entry,
+  number } = Astro.props`, tanpa baris hardcoded. [MANUAL] T4-a:
+  kicker `01 / RESEARCH IN PROGRESS` tetap benar (visual unchanged,
+  nilai dari `d.kicker`; fallback `${number} / CASE STUDY` kini benar
+  untuk proyek kedua di masa depan).
+- **B.3** [STATIK] `bootPage({ resolve: getWorkConfig })`;
+  `getWorkConfig()` memilah via `#filter-controls`; fungsi individu
+  tidak diubah; `import '../scripts/work.js'` di `index.astro` tetap ada.
+  [MANUAL] T1: di homepage `#project-grid` markup identik sebelum vs
+  sesudah boot (signature outerHTML sama, atribut Astro utuh), tanpa
+  `#filter-controls` / `.blueprint-corners`, entrance batch berjalan
+  (opacity kartu 0 sebelum scroll menjadi 1 setelah grid masuk view).
+  T2: di `/work` filter dirender (All work + Data & Research), klik
+  filter bekerja (3 -> 1 kartu) dan "All work" mengembalikan (3 kartu),
+  `.blueprint-corners` tampil.
+- **C** [STATIK] `alt: z.string().optional()` pada item `narrative`;
+  `alt={scene.alt ?? scene.title}` (bukan `||`). [BUILD] skema valid.
+  [MANUAL] T5: konten existing (`aqi-cirebon.md`, narrative tanpa
+  image) merender 0 `<img>` dan 3 placeholder; guard `scene.image ?`
+  dipertahankan.
+- **D** [STATIK] 5/5 `gsap.set` di `forceContentVisible()` kini
+  berada di balik `if (gsap.utils.toArray(...).length)`; urutan
+  operasi, `REDUCED_REVEAL_SELECTOR`, dan try/catch dipertahankan;
+  tidak ada fungsi lain di `core.js` yang berubah. [MANUAL] T7:
+  reduce motion di 6 rute (`/`, `/work`, `/about`, `/connect`,
+  `/work/aqi-cirebon`, `/archive/play`) = 0 warning "GSAP target",
+  0 error, 0 pageerror, h1 terlihat. T8: flip ke reduce mid-session,
+  navigasi ke `/about` aman dan konten terlihat.
+- **E** [STATIK] `grep -n "V10.2" README.md VERIFICATION.md` ada;
+  `grep -rn "$(printf '\u2014')" README.md VERIFICATION.md` kosong
+  (termasuk pembersihan 8 em dash warisan di bagian V10.0/V10.1 file
+  ini, diganti "-"; kedua file memang satu-satunya file yang diizinkan
+  Subfase E). Tidak ada klaim "all tests passed" untuk butir yang
+  tidak dijalankan; butir tercantum jujur di bawah.
+
+## [BELUM DIJALANKAN] + alasan konkret
+
+1. **Distorsi WebGL Curl saat hover kartu di `/work` (uji positif B.1).**
+   Chromium headless SwiftShader gagal membuat konteks WebGL ("Renderer:
+   WebGL context could not be created"), jadi efek tak pernah hidup di
+   harness. Terverifikasi sebagai artefak environment, bukan regresi:
+   probe identik pada baseline V10.1 (worktree `e4c97aa`, build sendiri)
+   menghasilkan pesan yang sama persis. Yang terverifikasi di headless:
+   gate path B.1 (0 canvas di `/` dan `/work/aqi-cirebon`). Uji visual
+   distorsi diserahkan ke user di Chrome nyata (hardware acceleration).
+2. **Flip preferensi reduce via pengaturan OS asli.** Diuji via emulasi
+   Playwright (`emulate_media(reduced_motion=...)` + context option),
+   bukan toggle OS; mekanisme matchMedia-nya identik.
+3. **Morph / Back transition antar `/work` dan `[slug]` secara visual.**
+   Tidak diuji eksplisit di harness V10.2 (fitur V10.1, tidak disentuh);
+   satu-satunya perubahan terkait adalah B.3 yang justru menjaga atribut
+   `transition:name` Astro di homepage (T1-d membuktikan markup utuh).
+4. **Audio, Companion, Magnetic, Generative Ambient.** Tidak diuji
+   ulang; tidak disentuh sama sekali oleh V10.2 (di luar 6 file yang
+   diizinkan).
+
+## Regresi V10.1/V10.x via harness (browser)
+
+- T9: Opening V9.1 - fresh session menampilkan dialog, Escape menutup: PASS.
+- T10: Mobile 390x844 - `/work/aqi-cirebon` tanpa horizontal overflow
+  (scrollWidth 390 = innerWidth 390): PASS.
+- T11: Konsol bersih (error/pageerror) di 6 rute mode normal: PASS;
+  noise WebGL headless di `/work` dikecualikan dengan bukti baseline
+  (poin 1 di atas).
+- T8: Navigasi client-side tetap berjalan setelah flip reduce: PASS.
+
+## Perubahan file (V10.2)
+
+- `src/scripts/about.js`: -18 baris (komentar orphan + deklarasi WeakMap).
+- `src/pages/work/[slug].astro`: `isReserved` dihapus; `number` di-derive
+  dari `getStaticPaths` (sort by `id`).
+- `src/scripts/work.js`: `webglPathAllowed()` strict `/work`;
+  `getWorkConfig()` route-aware + `bootPage({ resolve })`.
+- `src/content.config.ts`: `alt` opsional pada item `narrative`.
+- `src/components/work/CaseNarrative.astro`: `alt={scene.alt ?? scene.title}`.
+- `src/scripts/core.js`: `forceContentVisible()` di-guard per selector
+  (satu-satunya perubahan di `core.js`, sesuai batas spek).
+- `README.md`, `VERIFICATION.md`: dokumen V10.2 + pembersihan em dash.
+
+---
+
 # VERIFICATION · V10.1 AUDIT FIXES
 
 Laporan verifikasi mandiri sesuai `PROMPT_FINAL_V10.0_AUDIT_FIXES.md`
@@ -123,21 +248,21 @@ Semua pengujian dijalankan pada hasil `bun run build` (Astro 7.4.2, static
 output, 9 halaman) yang disajikan lewat `astro preview` (127.0.0.1:4321),
 diukur dengan Chromium headless (Playwright) pada 1440x900 dan 390x844.
 
-Harness: `v10-verify/verify_v10.py` — hasil: **24/24 PASS**
+Harness: `v10-verify/verify_v10.py` - hasil: **24/24 PASS**
 (`v10-verify/results.json`, bukti tangkapan layar di `v10-verify/shots/`).
 
 ## Ringkasan status (checklist FASE 4.2)
 
 | # | Butir verifikasi spesifikasi | Status |
 | --- | --- | --- |
-| 1 | Build (`astro build`) — 9 halaman, skema `narrative` tervalidasi | PASS |
+| 1 | Build (`astro build`) - 9 halaman, skema `narrative` tervalidasi | PASS |
 | 2 | Uji V9.1: navigasi DIBLOKIR selama opening terbuka; setelah selesai, Archive Wipe berjalan | PASS (S1-a..d) |
 | 3 | Uji Transisi Home→About: overlay cover → swap → reveal, tanpa flash putih, scroll reset ke atas | PASS (S2-a..e) |
 | 4 | Uji Morphing /work → /work/aqi-cirebon: rute DIKECUALIKAN dari wipe (overlay tetap hidden), morph native tetap jalan | PASS (S3-a,b) |
 | 5 | Uji Scroll Narrative: scene 1→2→3 berganti saat scroll, terbalik saat scroll naik, layar terkunci (sticky), lepas setelah section | PASS (S4-a..f) |
 | 6 | Uji Mobile 390px: narrative menjadi vertikal biasa, semua scene terlihat, tanpa scroll-lock | PASS (S5-a,b) |
 | 7 | Uji Rapid Click: hanya satu transisi; klik kedua ditelan; overlay pulih | PASS (S6-a) |
-| 8 | Uji Konsol: bersih — tanpa page error, tanpa "GSAP target not found" | PASS (S7-a..c) |
+| 8 | Uji Konsol: bersih - tanpa page error, tanpa "GSAP target not found" | PASS (S7-a..c) |
 | + | Bonus: reduced-motion (overlay display:none, navigasi tetap jalan) | PASS (S8-a) |
 | + | Bonus: node overlay terbukti persisten lintas swap (`transition:persist` bernama) | PASS (S2-c) |
 
@@ -146,15 +271,15 @@ Harness: `v10-verify/verify_v10.py` — hasil: **24/24 PASS**
 1. **`preventDefault()` di `astro:before-preparation` TIDAK membatalkan
    navigasi di Astro 7.** Audit sumber (`node_modules/astro/dist/transitions/
    router.js` + `events.js`) membuktikan: preventDefault membuat router
-   mendelegasikan ke `location.href = to.href` — full page reload yang
+   mendelegasikan ke `location.href = to.href` - full page reload yang
    justru menghancurkan opening (terbukti saat uji awal: URL berpindah dan
    dialog tertutup paksa). Karena itu kedua guard (V9.1 opening + rapid
-   click) memakai **intersepsi klik fase capture pada document** — navigasi
+   click) memakai **intersepsi klik fase capture pada document** - navigasi
    tidak pernah dimulai, benar-benar "tidak terjadi apa-apa". Listener
    `before-preparation` kini murni memainkan overlay, tanpa preventDefault.
 2. **`transition:persist` tanpa nama menghasilkan id posisional** yang
    berbeda antar halaman (`astro-xxx-2` vs `astro-xxx-3`) bila jumlah
-   elemen `transition:name` berbeda — pasangan tidak cocok membuat node
+   elemen `transition:name` berbeda - pasangan tidak cocok membuat node
    overlay ikut ter-swap (state hilang di tengah transisi). Diperbaiki
    dengan nama eksplisit: `transition:persist="page-transition-overlay"`
    (terverifikasi identik di 9 halaman hasil build).
@@ -174,14 +299,14 @@ Harness: `v10-verify/verify_v10.py` — hasil: **24/24 PASS**
    `position: sticky` pada `.narrative-stage`; menumpuk `pin:` ScrollTrigger
    di atasnya membuat dua mekanisme pinning saling tarik. ScrollTrigger
    hanya memetakan progres (top top → bottom bottom, scrub 1); sticky CSS
-   yang mengunci layar — semua butir uji "layar terkunci" tetap lulus.
+   yang mengunci layar - semua butir uji "layar terkunci" tetap lulus.
 6. **Scene 1 (index 0) dimulai terlihat**: CSS spesifikasi menyetel semua
    scene opacity 0, yang membuat scene pertama tak pernah muncul; scene 0
    kini terlihat sejak awal (fallback tanpa-JS tetap anggun) dan memudar
    saat scrub dimulai.
 7. **Catatan lingkungan headless**: satu pesan error konsol dari
    curtains.js (WebGL card hover, fitur pra-V10) tidak dapat membuat
-   context WebGL di Chromium headless — di-whitelist di harness sebagai
+   context WebGL di Chromium headless - di-whitelist di harness sebagai
    keterbatasan lingkungan, bukan regresi; di browser nyata kartu hover
    WebGL berjalan normal.
 

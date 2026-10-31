@@ -19,7 +19,7 @@ const { narrative } = Astro.props;
         {narrative.map((scene, i) => (
           <div class="narrative-visual" data-scene={i}>
             {scene.image ? (
-              <img src={scene.image} alt={scene.title} loading="lazy" decoding="async" />
+              <img src={scene.image} alt={scene.alt ?? scene.title} loading="lazy" decoding="async" />
             ) : (
               <div class="narrative-placeholder"></div>
             )}

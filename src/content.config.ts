@@ -25,12 +25,15 @@ const workCollection = defineCollection({
     linkLabel: z.string().optional(),
     kicker: z.string().optional(),
     // V10.0: 3 Scene Naratif (Masalah, Proses, Temuan)
+    // V10.2 C: `alt` opsional untuk gambar naratif. Tanpa alt -> fallback
+    // ke title (perilaku lama). alt="" eksplisit = gambar dekoratif.
     narrative: z
       .array(
         z.object({
           title: z.string(),
           text: z.string(),
           image: z.string().optional(),
+          alt: z.string().optional(), // TAMBAH: alt deskriptif opsional
           label: z.string().default('SCENE'),
         })
       )

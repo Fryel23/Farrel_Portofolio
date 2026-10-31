@@ -495,14 +495,37 @@ export function cleanupMotionRegistry() {
 
 /* V6.3 §2.6.2: component-specific reset helpers. */
 
+/* V10.2 D: setiap gsap.set di-guard dengan gsap.utils.toArray().length
+   agar halaman tanpa target tertentu (mis. /work tidak punya
+   .atlas-path atau #journey-rail-fill) tidak mencetak warning
+   "GSAP target ... not found" di reduce mode. Warning hanyalah
+   console.warn sehingga try/catch tidak menangkapnya; guard length
+   adalah satu-satunya cara yang benar: lewati operasi saat kosong.
+   Urutan operasi, REDUCED_REVEAL_SELECTOR, dan try/catch (jaring
+   pengaman untuk partial lists) semuanya dipertahankan. */
 export function forceContentVisible() {
   if (doc.body.classList.contains('is-glitching')) doc.body.classList.remove('is-glitching');
   if (hasGSAP) {
-    try { gsap.set(REDUCED_REVEAL_SELECTOR, { clearProps: 'all' }); } catch (error) { /* partial lists are fine */ }
-    try { gsap.set('.atlas-path', { strokeDasharray: 'none', strokeDashoffset: 0 }); } catch (error) { /* noop */ }
-    try { gsap.set('#journey-rail-fill', { scaleY: 1 }); } catch (error) { /* noop */ }
-    try { gsap.set('.closing-outline-fill', { clipPath: 'inset(0 0% 0 0)' }); } catch (error) { /* noop */ }
-    try { gsap.set('.project-cover-inner', { clearProps: 'clipPath' }); } catch (error) { /* noop */ }
+    const revealTargets = gsap.utils.toArray(REDUCED_REVEAL_SELECTOR);
+    if (revealTargets.length) {
+      try { gsap.set(revealTargets, { clearProps: 'all' }); } catch (error) { /* partial lists are fine */ }
+    }
+    const atlasTargets = gsap.utils.toArray('.atlas-path');
+    if (atlasTargets.length) {
+      try { gsap.set(atlasTargets, { strokeDasharray: 'none', strokeDashoffset: 0 }); } catch (error) { /* noop */ }
+    }
+    const journeyRailTargets = gsap.utils.toArray('#journey-rail-fill');
+    if (journeyRailTargets.length) {
+      try { gsap.set(journeyRailTargets, { scaleY: 1 }); } catch (error) { /* noop */ }
+    }
+    const closingFillTargets = gsap.utils.toArray('.closing-outline-fill');
+    if (closingFillTargets.length) {
+      try { gsap.set(closingFillTargets, { clipPath: 'inset(0 0% 0 0)' }); } catch (error) { /* noop */ }
+    }
+    const projectCoverTargets = gsap.utils.toArray('.project-cover-inner');
+    if (projectCoverTargets.length) {
+      try { gsap.set(projectCoverTargets, { clearProps: 'clipPath' }); } catch (error) { /* noop */ }
+    }
   }
 }
 

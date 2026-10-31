@@ -249,11 +249,12 @@ function initFilterControls() {
 
 const webglHoverState = { active: false, entries: [] };
 
-/* Spesifikasi: hanya /work dan /work/[slug]. work.js juga dipakai
-   homepage, jadi gate-nya path, bukan file yang dimuat. */
+/* V10.2 B.1: hanya /work (galeri arsip) yang mengizinkan WebGL hover.
+   [slug].astro tidak meng-import work.js sehingga /work/* dead path.
+   work.js juga dipakai homepage, jadi gate-nya path, bukan file. */
 function webglPathAllowed() {
   const path = (window.location.pathname || '/').replace(/\/+$/, '') || '/';
-  return path === '/work' || path.indexOf('/work/') === 0;
+  return path === '/work';
 }
 
 function webglSupported() {
@@ -567,10 +568,38 @@ function resetBatchTriggers() {
 
 /* ======================================================================
  * BOOT HALAMAN WORK
- * ==================================================================== */
-bootPage({
-  renders: [renderFilters, renderProjects, renderGalleryRuler],
-  interactions: [initFilterControls, initGalleryBlueprint],
-  motion: [initProjectImageReveal, initWebGLHover, setupProjectBatch],
-  cleanups: [resetProjectReveal, resetBatchTriggers],
-});
+ * ====================================================================
+ * V10.2 B.3: konfigurasi route-aware. Discriminator galeri arsip adalah
+ * #filter-controls (hanya ada di /work, tidak ada di homepage).
+ * - /work: render penuh (filter + kartu + ruler), interaksi penuh,
+ *   motion penuh (reveal + WebGL + batch).
+ * - Homepage: HANYA hover reveal + entrance batch. renderProjects TIDAK
+ *   dijalankan agar markup kartu hasil render Astro (termasuk atribut
+ *   transition:name) tidak diganti ulang dari DATA.projects.
+ * - Route lain (about, connect, dst): no-op sama sekali.
+ * Fungsi individu tidak diubah; hanya logika dispatch-nya. */
+function getWorkConfig() {
+  const isWorkGallery = !!qs('#filter-controls');
+  if (isWorkGallery) {
+    return {
+      renders: [renderFilters, renderProjects, renderGalleryRuler],
+      interactions: [initFilterControls, initGalleryBlueprint],
+      motion: [initProjectImageReveal, initWebGLHover, setupProjectBatch],
+      cleanups: [resetProjectReveal, resetBatchTriggers],
+    };
+  }
+  // Homepage or other routes: preserve hover reveal + entrance, skip gallery renders
+  const hasProjectGrid = !!qs('#project-grid');
+  if (!hasProjectGrid) {
+    // No project grid at all: no-op
+    return { renders: [], interactions: [], motion: [], cleanups: [] };
+  }
+  return {
+    renders: [],
+    interactions: [],
+    motion: [initProjectImageReveal, setupProjectBatch],
+    cleanups: [resetProjectReveal, resetBatchTriggers],
+  };
+}
+
+bootPage({ resolve: getWorkConfig });

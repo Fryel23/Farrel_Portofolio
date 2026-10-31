@@ -1,9 +1,27 @@
-# Farrel Islami Putra · Editorial Portfolio (Astro V10.1)
+# Farrel Islami Putra · Editorial Portfolio (Astro V10.2)
 
 Portofolio pribadi berbasis **Astro 7** dengan arsitektur **Hub-and-Spoke (Pucuk-Cabang)**.
 Migrasi total dari versi monolitik satu halaman (HTML/CSS/JS murni, V6.7) sesuai
 `PROMPT_EKSEKUSI_V7.0_ASTRO_MIGRATION.md`. Desain visual, palet warna, tipografi,
 animasi GSAP, dan seluruh fitur interaktif dipertahankan identik.
+
+**V10.2 (Cleanup Foundation, 8 subfase terisolasi)** sesuai `PROMPT_FINAL_V10.2_CLEANUP_FOUNDATION.md`:
+menutup technical debt hasil audit V10.0 tanpa menambah fitur baru. **A.1**: deklarasi
+tak terpakai `projectRevealTimelines` dihapus dari `about.js` (audit pra-ubah: fungsi
+`initProjectImageReveal` memang tidak ada di file itu; implementasi aslinya hidup di
+`work.js`). **A.2**: dead check `isReserved` dihapus dari `work/[slug].astro`
+(`getStaticPaths` sudah memfilter RESERVED). **B.1**: `webglPathAllowed()` di-strict
+hanya `path === '/work'` (halaman [slug] tidak meng-import `work.js`). **B.2**: nomor
+case study di-derive dari indeks `getStaticPaths` (sort deterministik by `id`), bukan
+hardcoded "01". **B.3**: `work.js` route-aware via `getWorkConfig()` - di homepage
+markup kartu hasil render Astro TIDAK diganti ulang `renderProjects` (atribut
+`transition:name` ikut terjaga), hover reveal + entrance batch tetap jalan, sementara
+`/work` mendapat config penuh (filter, ruler, blueprint, WebGL hover). **C**: field
+`alt` opsional pada item `narrative` (fallback `scene.alt ?? scene.title`; `alt=""`
+eksplisit untuk gambar dekoratif). **D**: setiap `gsap.set` di `forceContentVisible()`
+di-guard `gsap.utils.toArray(...).length` sehingga reduce mode tidak lagi mencetak
+warning "GSAP target ... not found" di rute tanpa target. **E**: dokumentasi ini.
+Verifikasi: 25/25 PASS (`v102-verify/`), rincian di `VERIFICATION.md`.
 
 **V10.1 (Audit Fixes, 5 fase terisolasi)** sesuai `PROMPT_FINAL_V10.0_AUDIT_FIXES.md`:
 perbaikan akar masalah atas hasil audit V10.0 tanpa menyentuh `core.js` maupun fitur
@@ -153,6 +171,20 @@ sticky footer flexbox (tanpa white gap di halaman pendek), perbaikan artefak kot
 abu-abu (`.grain-overlay` kembali `position: fixed` di `global.css`), navigasi utama
 6 item (Home, Work, Games, About, GitHub, Contact), dan Quick Menu kini menjadi
 "Menu Pintas / Deep Dive" berisi 5 tautan. Rincian verifikasi di `VERIFICATION.md`.
+
+## Known Limitations (dicatat V10.2)
+
+- **Dual source of truth untuk daftar proyek**: `renderProjects()` di `work.js`
+  membaca `DATA.projects` dari `src/data/content.js`, sementara halaman `/work`
+  dan `/work/[slug]` dirender Astro dari content collection (`src/content/work/*.md`).
+  Keduanya harus disinkronkan manual saat menambah proyek baru. Belum disatukan
+  di V10.2 (di luar scope); kandidat iterasi berikutnya.
+- WebGL Curl pada `/work` diverifikasi statik + gate path saja di lingkungan
+  headless (tanpa GPU); uji distorsi visual butuh browser nyata dengan hardware
+  acceleration. Detail di `VERIFICATION.md`.
+- Audit V10.0 menemukan komentar orphan lain yang tidak masuk scope V10.2
+  (mis. komentar "Social icon redraw (5.6.1)" di `about.js`); dibiarkan apa
+  adanya sesuai aturan anti-perluasan-scope.
 
 ## Menjalankan
 
