@@ -24,6 +24,13 @@ import { prepareHeroState, animateHeroIn } from './home.js';
 /* V11.0 FASE 6: controller Curtain Pattern (dekorasi opening).
    Self-guarding: elemen, reduced motion, sesi, late window, duplikat. */
 import { initCurtain } from './curtain-controller.js';
+/* V11.1: controller Signature Hero WebGL (OGL, dynamic import).
+   Dipanggil non-blocking setelah sequence V11.0; self-guarding
+   (route, viewport >700px, reduced motion, WebGL API) sehingga
+   halaman tanpa markup Canvas adalah no-op tanpa network request.
+   disposeHeroWebGL menjadi cleanup matchMedia (revert saat masuk
+   reduce / navigasi) - registry core.js tetap backstop after-swap. */
+import { initHeroWebGL, disposeHeroWebGL } from './hero-webgl/index.js';
 import {
   DATA, doc, MOTION,
   el, qs, qsa, setText, showToast, fetchWithTimeout,
@@ -1350,15 +1357,24 @@ bootPage({
             posisi final sejak HTML.
          4. initCurtain: dekorasi opening sekali per sesi; self-guarding
             (reduced motion, sesi, jendela aktivasi ~1s, duplikat) dan
-            gagal aman - bila tidak aktif, halaman tetap normal. */
+            gagal aman - bila tidak aktif, halaman tetap normal.
+         5. V11.1: initHeroWebGL - Signature Hero WebGL, terpisah dan
+            NON-BLOCKING (void): tidak menunggu Curtain, tidak membuat
+            Curtain menunggu; dua sistem independen (spek V11.1 §17.1).
+            Tidak mengubah urutan/hasil empat entri V11.0 di atas. */
       prepareHeroState();
       initSectionMotion();
       animateHeroIn();
       initCurtain();
+      void initHeroWebGL();
     },
     /* M1: gate inisialisasi via `motion` (no-preference saja). Posisi
        akhir: overlay siap setelah semua motion halaman terpasang. */
     initPageTransitions,
   ],
-  cleanups: [],
+  /* V11.1: cleanup saat gsap.matchMedia revert (masuk reduce mid-session
+     atau teardown navigasi) - idempoten; before-swap dispose (listener
+     module-level controller) tetap jalur utama, registry core.js
+     after-swap tetap backstop. */
+  cleanups: [disposeHeroWebGL],
 });

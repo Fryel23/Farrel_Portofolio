@@ -1,0 +1,135 @@
+/* ==========================================================================
+   HERO-WEBGL.CSS · V11.1 Stage 4
+   Styling khusus Glass Vessel (fallback SVG + canvas WebGL).
+   Dimuat HANYA di homepage (import dari src/pages/index.astro), bukan
+   BaseLayout, agar tidak menambah scope halaman lain (spek §8.1).
+
+   Kontrak visibility (spek §8.4 - fallback-first):
+     - Default: SVG fallback terlihat, canvas invisible.
+     - `.is-webgl-ready` dipasang controller HANYA setelah frame valid
+       pertama berhasil dirender; saat itu canvas fade-in dan SVG
+       fade-out. Gagal di tahap mana pun = fallback tetap menjadi hasil.
+     - Canvas `pointer-events: none` selalu; tidak pernah mengintersepsi
+       interaksi Hero (spek §7.4).
+     - Tidak ada perubahan layout: wrapper absolute di dalam
+       .hero-visual (containing block), tanpa kontribusi flow.
+   ========================================================================== */
+
+/* Wrapper: lapisan vessel di dalam .hero-visual.
+   Di ATAS Data Atlas (z 0) dan DI BAWAH pixel card / tools / sticker
+   (z-index lokal diberikan di bawah) - layer map spek §8.2. */
+.hero-canvas-wrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  isolation: isolate;
+  /* Tidak menambah flow: absolute overlay pada area visual Hero */
+}
+
+/* SVG fallback: artwork selesai sejak initial render */
+.hero-fallback-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 1;
+  transition: opacity 600ms var(--ease, ease);
+}
+
+/* Canvas WebGL: default invisible; tidak pernah menerima pointer */
+.hero-webgl-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 600ms var(--ease, ease);
+}
+
+/* Ready: dipasang controller setelah minimal satu frame valid.
+   Transisi hanya terjadi ketika WebGL benar-benar siap (spek §8.4). */
+.hero-canvas-wrapper.is-webgl-ready .hero-webgl-canvas {
+  opacity: 1;
+  visibility: visible;
+}
+
+.hero-canvas-wrapper.is-webgl-ready .hero-fallback-svg {
+  opacity: 0;
+}
+
+/* F Monogram watermark overlay: tampil bersamaan dengan canvas WebGL
+   (menggantikan watermark yang sudah ada di fallback SVG). Path identik
+   dengan f-monogram.svg - single source of truth (spek §6.3, §12.2).
+   Kontras rendah, dekoratif, tanpa interaksi. */
+.hero-monogram-overlay {
+  position: absolute;
+  /* Posisi mengikuti body Vessel (kanan-tengah area visual). */
+  right: 13%;
+  top: 37%;
+  width: 17%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 900ms var(--ease, ease) 200ms;
+}
+
+.hero-canvas-wrapper.is-webgl-ready .hero-monogram-overlay {
+  opacity: 0.16;
+}
+
+/* ------------------------------------------------------------------
+   Penyesuaian z-index LOKAL anak .hero-visual (diizinkan spek §2.3.1):
+   glass vessel = signature visual; pixel profile card = identity plate
+   yang WAJIB tetap terbaca (foreground); sticker & caption tetap di
+   lapisan depan. Tidak mengubah layout global maupun home.css.
+   ------------------------------------------------------------------ */
+.hero-visual .pixel-frame {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-visual .hero-sticker,
+.hero-visual .visual-caption,
+.hero-visual .ornament-hero-crosshair {
+  position: absolute;
+  z-index: 3;
+}
+
+/* Komposisi desktop (>700px - breakpoint sama dengan guard WebGL):
+   card menjadi "archival plate" lebih ringkas di kiri, Glass Vessel
+   menjadi objek utama di kanan (spek §2.3.1 + §8.6). Margin (bukan
+   transform) agar tidak bertabrakan dengan inline transform GSAP.
+   Mobile tidak tersentuh - home.css tetap berlaku penuh. */
+@media (min-width: 701px) {
+  .hero-visual .pixel-frame {
+    width: min(100%, 392px);
+    margin-left: -21%;
+    margin-top: 4%;
+  }
+}
+
+/* Mobile (≤700px, konsisten dengan breakpoint Hero di home.css):
+   WebGL tidak pernah berjalan di sini - fallback SVG menjadi visual
+   vessel penuh. Wrapper tetap inset 0; SVG meet-fit sehingga tidak ada
+   horizontal overflow dan vessel proporsional di bawah teks. */
+@media (max-width: 700px) {
+  .hero-canvas-wrapper {
+    inset: 0;
+  }
+}
+
+/* Reduced motion: tanpa transisi fade; pergantian fallback<->canvas
+   terjadi langsung (dan pada praktiknya WebGL tidak aktif sama sekali
+   karena guard controller). */
+@media (prefers-reduced-motion: reduce) {
+  .hero-fallback-svg,
+  .hero-webgl-canvas {
+    transition: none;
+  }
+}

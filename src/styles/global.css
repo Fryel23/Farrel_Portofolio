@@ -48,6 +48,9 @@
   --radius-sm: 12px;
   --font: 'Space Grotesk', 'Segoe UI', Arial, sans-serif;
   --mono: 'DM Mono', 'SFMono-Regular', Consolas, monospace;
+  /* V11.1 STAGE 1: serif identitas untuk closing wordmark FARREL
+     (connect.css). Token baru - --font/--mono dan palet tidak diubah. */
+  --font-serif: 'Cormorant Garamond', 'Iowan Old Style', Baskerville, 'Times New Roman', serif;
 
   /* Motion */
   --micro: 180ms;

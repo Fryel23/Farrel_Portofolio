@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="256" height="256" role="img" aria-label="F monogram">
+  <!--
+    F Monogram · The Living Archive (V11.1)
+    Original geometric F: strong vertical stem, two horizontal arms,
+    chamfered arm ends, and a small triangular cut accent.
+    Canonical identity source: reused verbatim by the SVG hero fallback
+    and the WebGL glass vessel watermark texture (single source of truth).
+    Canvas is transparent so the mark works over any surface; the glyph
+    stays readable as a single-color silhouette.
+  -->
+  <g>
+    <!-- Vertical stem with a small bevel at the foot -->
+    <path fill="#2563EB" d="M17 5h12v43.2l-6.4 8.6L17 54.4Z"/>
+    <!-- Top arm, long, with a chamfered right end -->
+    <path fill="#2563EB" d="M17 5h31.6l-5.4 11.4H17Z"/>
+    <!-- Middle arm, shorter, mirrored chamfer -->
+    <path fill="#2563EB" d="M17 27.5h25.8l-4.6 10.4H17Z"/>
+    <!-- Triangular accent (navy), echoing the chamfer cut -->
+    <path fill="#1E3A8A" d="M42.5 46.5h9.5l-9.5 11.2Z"/>
+  </g>
+</svg>

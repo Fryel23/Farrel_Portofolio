@@ -1,6 +1,11 @@
 ---
 /* Hero homepage: markup identik dengan V6.7, hanya tautan antar
-   section yang menjadi rute halaman (CTA + scroll cue -> /work). */
+   section yang menjadi rute halaman (CTA + scroll cue -> /work).
+   V11.1: HeroCanvas (SVG fallback + canvas WebGL) di-mount dalam
+   .hero-visual sebagai signature visual. Fallback-first: SVG hadir
+   sejak initial HTML; WebGL murni enhancement via hero-webgl/index.js
+   (dynamic import, guards >700px + reduced motion). */
+import HeroCanvas from './HeroCanvas.astro';
 ---
 
 <section class="hero section-shell" aria-labelledby="hero-title">
@@ -90,6 +95,12 @@
         <text class="atlas-label atlas-axis" x="14" y="62">STRUCTURE · SIGNAL · CURIOSITY</text>
       </svg>
     </div>
+
+    <!-- V11.1 Signature Hero: Glass Vessel (fallback SVG + canvas WebGL).
+         Wrapper absolute (hero-webgl.css), pointer-events none, di ATAS
+         Data Atlas (z 0) dan DI BAWAH pixel card / sticker (z lokal 2-3):
+         profile card tetap identity plate yang terbaca (spek §2.3.1). -->
+    <HeroCanvas />
 
     <div class="floating-tool tool-one" aria-hidden="true">Py</div>
     <div class="floating-tool tool-two" aria-hidden="true">JS</div>

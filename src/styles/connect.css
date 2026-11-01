@@ -203,20 +203,30 @@
   position: relative; z-index: 1;
   text-align: center; white-space: nowrap;
   padding: 18px 0 26px; line-height: 0.82;
+  /* V11.1 STAGE 1: serif identitas HANYA pada closing wordmark.
+     Space Grotesk / DM Mono / body lain tidak disentuh. */
+  font-family: var(--font-serif);
 }
 
 
 .closing-solid {
   display: block;
   font-size: clamp(64px, 15vw, 200px);
-  font-weight: 700; letter-spacing: -0.08em; color: var(--ink);
+  /* V11.1: Cormorant lebih sempit dan kontras-nya tinggi. Tracking
+     lama Space Grotesk (-0.08em) dievaluasi ulang sesuai spek §5.5:
+     -0.035em menjaga rasa rapat tanpa memotong serif; weight 600
+     memberi stroke tegas tanpa terlihat berat. */
+  font-weight: 600; letter-spacing: -0.035em; color: var(--ink);
 }
 
 
 .closing-outline {
   display: block;
   font-size: clamp(28px, 6.4vw, 86px);
-  font-weight: 500; letter-spacing: 0.01em;
+  /* V11.1: weight 600 + tracking 0.03em (serif butuh tracking berbeda
+     dari Space Grotesk). Nilai ini WAJIB identik dengan
+     .closing-outline-fill agar fill tidak bergeser (spek §5.5). */
+  font-weight: 600; letter-spacing: 0.03em;
   color: transparent;
   -webkit-text-fill-color: transparent;
   -webkit-text-stroke: 1.5px var(--blue);
@@ -375,6 +385,10 @@
   color: var(--blue);
   -webkit-text-fill-color: var(--blue);
   clip-path: inset(0 100% 0 0);
+  /* V11.1: metrics WAJIB identik dengan .closing-outline (weight 600,
+     tracking 0.03em) - serif fill tidak boleh bergeser dari outline
+     yang ditumpuk di bawahnya (spek §5.5). */
+  font-weight: 600; letter-spacing: 0.03em;
 }
 
 /* 5.6.2 Copy checkmark: drawn check replaces the copy icon briefly */
