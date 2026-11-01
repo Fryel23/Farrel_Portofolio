@@ -452,3 +452,125 @@
   padding-top: 24px;
   border-top: 1px solid var(--border-soft);
 }
+
+/* ======================================================================
+   V12.2: STRUCTURED EDITORIAL — Konteks, Metodologi/Temuan/Keterbatasan,
+   taxonomy chips (Klasifikasi), dan Proyek Terkait (data-driven, reuse
+   ProjectCard). Mengikuti token & ritme .case-study-body (.prose-archive);
+   tanpa animasi baru; semua section hanya dirender bila datanya ada.
+   ====================================================================== */
+.case-section-title {
+  font-family: var(--font);
+  font-size: 20px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin: 0 0 12px;
+}
+
+.case-context {
+  margin-top: 30px;
+  max-width: 720px;
+}
+
+.case-context-text {
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--text-2);
+  margin: 0;
+}
+
+.case-structured {
+  margin-top: 34px;
+  max-width: 720px;
+}
+
+/* Metodologi: urutan proses (ol). Penanda angka mono agar konsisten
+   dengan bahasa arsip; kontras mengikuti --text-2. */
+.case-steps {
+  margin: 0;
+  padding-left: 22px;
+  list-style: decimal;
+}
+
+.case-steps li {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-2);
+  margin-bottom: 8px;
+  padding-left: 4px;
+}
+
+.case-steps li::marker {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+/* Temuan & Keterbatasan: enumerasi sederhana (ul). */
+.case-notes {
+  margin: 0;
+  padding-left: 20px;
+  list-style: disc;
+}
+
+.case-notes li {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-2);
+  margin-bottom: 8px;
+}
+
+.case-notes li::marker {
+  color: var(--text-3);
+}
+
+/* Taxonomy chips: baris label mini + daftar chip non-interaktif (bukan
+   tombol/link). Wrapping stabil di mobile; tanpa horizontal overflow. */
+.case-taxonomy {
+  margin-top: 34px;
+  max-width: 720px;
+}
+
+.case-taxonomy-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.case-taxonomy-row .mini-label {
+  flex: 0 0 auto;
+}
+
+.case-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-width: 0;
+}
+
+.case-chip-list .stack-chip {
+  white-space: nowrap;
+}
+
+/* Proyek Terkait: grid kartu reuse ProjectCard; lebar dibatasi kolom
+   editorial (bukan full 3 kolom galeri), turun ke 1 kolom di layar kecil. */
+.case-related {
+  margin-top: 38px;
+}
+
+.case-related-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  max-width: 860px;
+}
+
+@media (max-width: 700px) {
+  .case-related-grid { grid-template-columns: 1fr; gap: 11px; }
+  .case-section-title { font-size: 18px; }
+}
