@@ -1,0 +1,270 @@
+/* ==========================================================================
+   15. V5.2 EDGE ARCHIVE (spec: farrel_portfolio_v5_2_edge_archive)
+   Margin atlas, blueprint, arcade dressing, field notes, desk habitat,
+   open-source pulse framing, engraved credential archive, pet habitat,
+   postal decorations. Decoration rules: aria-hidden at the DOM level,
+   pointer-events none, behind content, restrained scale, no scrub.
+   ========================================================================== */
+/* 15.0 positioning context for spine + section-local overlays */
+.hero, .gallery-section, .games-section, .about-section,
+.github-section, .credentials-section, .companion-section,
+.social-section { position: relative; }
+
+/* 15.1b ARCHIVE SPINE (3.2): one margin ruler per section */
+.archive-spine {
+  position: absolute; left: 26px; top: 128px; bottom: 54px;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  pointer-events: none; z-index: 0;
+}
+
+
+.archive-spine__ticks {
+  flex: 1; display: flex; flex-direction: column;
+  justify-content: space-between; align-items: flex-start;
+  border-left: 1px solid var(--border-strong);
+}
+
+
+.archive-spine__ticks i { display: block; width: 7px; height: 1px; background: var(--border-strong); }
+
+
+.archive-spine__ticks i:nth-child(3n) { width: 11px; }
+
+
+.archive-spine__label {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em;
+  color: var(--text-3); writing-mode: vertical-rl; white-space: nowrap;
+}
+
+
+.gallery-section .archive-spine__label, .games-section .archive-spine__label,
+.github-section .archive-spine__label { color: rgba(203, 213, 225, 0.55); }
+
+
+.gallery-section .archive-spine__ticks, .games-section .archive-spine__ticks,
+.github-section .archive-spine__ticks { border-left-color: rgba(203, 213, 225, 0.35); }
+
+
+.gallery-section .archive-spine__ticks i, .games-section .archive-spine__ticks i,
+.github-section .archive-spine__ticks i { background: rgba(203, 213, 225, 0.35); }
+
+
+.blueprint-corners { position: absolute; inset: 6px; pointer-events: none; z-index: 0; }
+
+
+.blueprint-corners i { position: absolute; width: 22px; height: 22px; border: 0 solid rgba(147, 197, 253, 0.4); }
+
+
+.blueprint-corners i:nth-child(1) { top: 0; left: 0; border-top-width: 1px; border-left-width: 1px; }
+
+
+.blueprint-corners i:nth-child(2) { top: 0; right: 0; border-top-width: 1px; border-right-width: 1px; }
+
+
+.blueprint-corners i:nth-child(3) { bottom: 0; left: 0; border-bottom-width: 1px; border-left-width: 1px; }
+
+
+.blueprint-corners i:nth-child(4) { bottom: 0; right: 0; border-bottom-width: 1px; border-right-width: 1px; }
+
+
+.field-note-tag {
+  position: absolute; font-family: var(--mono); font-size: 9px;
+  letter-spacing: 0.2em; color: var(--text-3); pointer-events: none;
+  display: flex; align-items: center; gap: 8px; white-space: nowrap;
+}
+
+
+.field-note-tag::after { content: ""; width: 46px; height: 1px; background: var(--border-strong); }
+
+
+.field-note-tag--1 { top: 6px; right: 0; }
+
+
+.field-note-tag--2 { bottom: 30px; left: 0; flex-direction: row-reverse; }
+
+
+.field-note-tag--2::after { width: 34px; }
+
+/* V6.3 §1.5.2: the label rule was removed together with the
+   <g class="skill-constellation__labels"> markup; the constellation is
+   an abstract network now. */
+/* 15.5 DESK HABITAT + PET HABITAT (4.5 / 4.8): shared scene pieces */
+.desk-habitat {
+  position: absolute; inset: 6px; border-radius: calc(var(--radius) - 2px);
+  overflow: hidden; pointer-events: none; z-index: 0;
+}
+
+
+.habitat-wall {
+  position: absolute; left: 0; right: 0; top: 0; height: 58%;
+  background-color: #EEF2F7;
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.16) 1px, transparent 1px);
+  background-size: 12px 12px;
+}
+
+
+.habitat-window {
+  position: absolute; top: 11%; left: 11%; width: 21%; height: 27%;
+  background: #DBEAFE; border: 3px solid #64748B;
+  box-shadow: inset 0 0 0 2px #F8FAFC;
+}
+
+
+.habitat-window::before, .habitat-window::after {
+  content: ""; position: absolute; background: #64748B;
+}
+
+
+.habitat-window::before { left: 50%; top: 0; bottom: 0; width: 2px; margin-left: -1px; }
+
+
+.habitat-window::after { top: 50%; left: 0; right: 0; height: 2px; margin-top: -1px; }
+
+
+.habitat-poster {
+  position: absolute; top: 13%; right: 12%; width: 13%; height: 21%;
+  background: #2563EB; box-shadow: inset 0 0 0 2px #1E3A8A;
+}
+
+
+.habitat-poster::after {
+  content: ""; position: absolute; inset: 22% 18%;
+  background: #93C5FD; opacity: 0.85;
+}
+
+
+.habitat-shelf {
+  position: absolute; top: 46%; left: 55%; width: 25%; height: 3px;
+  background: #5C3A1A;
+}
+
+
+.habitat-shelf::before {
+  content: ""; position: absolute; right: 22%; top: -7px;
+  width: 5px; height: 7px; background: #00A8E8;
+}
+
+
+.habitat-floor {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 42%;
+  background: repeating-linear-gradient(0deg,
+    #C9A068 0 9px, #B98E55 9px 18px, #A67C48 18px 27px);
+  border-top: 2px solid #5C3A1A;
+}
+
+
+.habitat-dust {
+  position: absolute; width: 3px; height: 3px; border-radius: 1px;
+  background: #93C5FD; opacity: 0.5; z-index: 1;
+}
+
+
+.habitat-preview-pet {
+  position: absolute; left: 50%; bottom: 30%; width: 120px; height: 120px;
+  transform: translateX(-50%); image-rendering: pixelated; z-index: 2;
+  transition: opacity 0.2s ease;
+}
+
+/* --- V6.6 Fase 5: habitat furniture + wall board --------------------------- */
+/* Rect-only pixel props (script.js, createElementNS) in the --px-*
+   palette. Each svg wraps <g class="habitat-furniture habitat-furniture--name">.
+   They hug the scene margins and never cover the centred pet preview
+   (z-index 2); furniture sits at 1. Sizes stay fixed so the pixel scale
+   is stable across viewport widths. */
+.habitat-furniture {
+  position: absolute; height: auto; z-index: 1;
+  image-rendering: pixelated; pointer-events: none;
+}
+
+
+.habitat-furniture--table { left: 7%; bottom: 10%; width: 40px; }
+
+
+.habitat-furniture--chair { left: calc(7% + 46px); bottom: 10%; width: 22px; }
+
+
+.habitat-furniture--plant { right: 4%; bottom: 4%; width: 26px; }
+
+
+.habitat-furniture--clock { left: 50%; top: 7%; width: 22px; }
+
+/* 5.2 Wall activity board: honest STATUS text on the habitat wall. */
+.habitat-board {
+  position: absolute; top: 18%; right: 28%; z-index: 1;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  padding: 4px 8px;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.06);
+  display: flex; flex-direction: column; gap: 1px;
+  pointer-events: none;
+}
+
+
+.habitat-board-label {
+  font-family: var(--mono); font-size: 7px; letter-spacing: 0.16em;
+  color: var(--text-3); display: block;
+}
+
+
+.habitat-board-value {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em;
+  color: var(--ink); font-weight: 500; display: block;
+}
+
+
+@media (max-width: 700px) {
+
+.habitat-board { right: 20%; top: 14%; }
+
+.habitat-furniture--table { width: 32px; }
+
+.habitat-furniture--chair { left: calc(7% + 36px); width: 18px; }
+
+.habitat-furniture--plant { width: 20px; }
+
+.habitat-furniture--clock { width: 18px; }
+}
+
+/* 15.10 SECTION-LOCAL GRAIN (3.3): dark sections carry a touch more
+   texture. Uses the global #grain-filter; static, desktop only.
+   V5.3 §4.1: combined with the 0.06 global layer the dark sections land
+   near the agreed 0.08 target without doubling into mud. */
+@media (min-width: 701px) {
+
+.gallery-section::after, .games-section::after, .github-section::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+    opacity: 0.02; filter: url(#grain-filter);
+  }
+}
+
+/* 15.11 RESPONSIVE (7.1): margins calm down on small screens */
+@media (max-width: 1100px) {
+
+.archive-spine { left: 14px; }
+
+.field-note-tag { display: none; }
+}
+
+
+@media (max-width: 1000px) {
+
+.hero-ruler, .archive-spine { display: none; }
+}
+
+
+@media (max-width: 700px) {
+
+.blueprint-corners { inset: 2px; }
+
+.habitat-preview-pet { width: 104px; height: 104px; }
+}
+
+/* 15.12 REDUCED MOTION (8.2): decoration stays, loops do not */
+@media (prefers-reduced-motion: reduce) {
+
+.habitat-dust { display: none; }
+
+.habitat-preview-pet { transition: none; }
+}

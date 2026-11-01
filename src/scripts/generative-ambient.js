@@ -32,6 +32,14 @@
  *   3. Register it in mountCanvases() below.
  * -------------------------------------------------------------------------
  */
+/* Effect factories (modularized V11.1-M): dipisah dari engine.
+   Engine tetap SATU owner RAF loop, active canvas set, visibility
+   pause, observer bersama, environment MQL, dan mount/remount/
+   teardown. Factory hanya menggambar; kontrak { tick, resize,
+   destroy() } diterima engine. */
+import { mountIsometricGrid } from './generative-ambient/effects/isometric-grid.js';
+import { mountOrbital } from './generative-ambient/effects/orbital.js';
+import { mountConstellation } from './generative-ambient/effects/constellation.js';
 (function initGenerativeAmbient() {
   'use strict';
 
@@ -185,293 +193,13 @@
     reduceMql.addListener(onEnvironmentChange);
   }
 
-  /* ======================================================================
-   * Effect 1 · IsometricGrid (Off-screen): data grid + scanline
-   * ==================================================================== */
-  /* A static isometric line field (two line families at +/-30 degrees)
-     pre-rendered once per resize, plus a horizontal scanline that sweeps
-     down and fades behind itself. */
-  function mountIsometricGrid(canvas) {
-    let ctx = null;
-    let width = 1;
-    let height = 1;
-    let gridLayer = null;
-    let clock = 0;
-    const PERIOD = 7000;   // ms for one full sweep
-    const TRAIL = 130;     // px of fading trail behind the scanline
-    const SPACING = 46;    // px between grid lines
-    const SLOPE = Math.tan(Math.PI / 6); // isometric 30 degrees
 
-    function renderGridLayer() {
-      gridLayer = doc.createElement('canvas');
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      gridLayer.width = Math.round(width * dpr);
-      gridLayer.height = Math.round(height * dpr);
-      const g = gridLayer.getContext('2d');
-      g.setTransform(dpr, 0, 0, dpr, 0, 0);
-      g.clearRect(0, 0, width, height);
-      g.strokeStyle = COLORS.deep;
-      g.globalAlpha = 0.09;
-      g.lineWidth = 0.5;
-      g.beginPath();
-      const span = height * SLOPE;
-      for (let c = -span; c <= width * SLOPE + span + SPACING; c += SPACING) {
-        g.moveTo(0, c);
-        g.lineTo(width, c + width * SLOPE);   // falling family
-        g.moveTo(0, c);
-        g.lineTo(width, c - width * SLOPE);   // rising family
-      }
-      g.stroke();
-      g.globalAlpha = 1;
-    }
-
-    return {
-      resize() {
-        const fit = fitCanvas(canvas);
-        ctx = fit.ctx;
-        width = fit.width;
-        height = fit.height;
-        renderGridLayer();
-      },
-      tick(dt) {
-        if (!ctx || !gridLayer) return;
-        clock = (clock + dt) % PERIOD;
-        ctx.clearRect(0, 0, width, height);
-        ctx.drawImage(gridLayer, 0, 0, width, height);
-
-        /* Scanline: leads with a soft gradient trail that fades over
-           time (distance behind the leading edge = age). */
-        const progress = clock / PERIOD;
-        const y = progress * (height + TRAIL * 2) - TRAIL;
-        if (y > -TRAIL && y < height + TRAIL) {
-          const trailTop = Math.max(0, y - TRAIL);
-          const trailBottom = Math.min(height, y);
-          if (trailBottom > trailTop) {
-            const gradient = ctx.createLinearGradient(0, trailTop, 0, y);
-            gradient.addColorStop(0, 'rgba(147, 197, 253, 0)');
-            gradient.addColorStop(1, 'rgba(147, 197, 253, 0.26)');
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, trailTop, width, trailBottom - trailTop);
-          }
-          if (y >= 0 && y <= height) {
-            ctx.strokeStyle = 'rgba(147, 197, 253, 0.4)';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(0, y);
-            ctx.lineTo(width, y);
-            ctx.stroke();
-          }
-        }
-      },
-      destroy() {
-        ctx = null;
-        gridLayer = null;
-      }
-    };
-  }
-
-  /* ======================================================================
-   * Effect 2 · Orbital (Companion): particles on tracking paths
-   * ==================================================================== */
-  /* 2x2px particles travelling along faint ellipses. When the pointer
-     approaches, a particle slows down (V6.5 §4.4). */
-  function mountOrbital(canvas) {
-    const section = canvas.closest('section');
-    const pointer = { x: -9999, y: -9999, inside: false };
-    trackSectionPointer(section, pointer);
-
-    let ctx = null;
-    let width = 1;
-    let height = 1;
-    let particles = [];
-
-    function build() {
-      const count = 26;
-      particles = [];
-      for (let i = 0; i < count; i++) {
-        const ring = i % 3;
-        /* V6.6 Fase 1: particles live in the section margins so they are
-           never hidden behind the white habitat card (max-width 760px,
-           z-index 1). Spread 4% to 96% wide, 8% to 83% tall; the centre
-           band keeps fewer particles, so the orbits read around it. */
-        particles.push({
-          cx: width * (0.04 + (i % 5) * 0.23) + (i % 2 === 0 ? -20 : 20),
-          cy: height * (0.08 + (i % 6) * 0.15),
-          rx: width * (0.16 + ring * 0.09),
-          ry: width * (0.16 + ring * 0.09) * (0.34 + (i % 3) * 0.12),
-          angle: (i * 2.39996) % (Math.PI * 2), // golden-angle spread
-          speed: (0.00022 + ring * 0.00016) * (i % 2 === 0 ? 1 : -1),
-          slow: 1
-        });
-      }
-    }
-
-    return {
-      resize() {
-        const fit = fitCanvas(canvas);
-        ctx = fit.ctx;
-        width = fit.width;
-        height = fit.height;
-        build();
-      },
-      tick(dt) {
-        if (!ctx) return;
-        ctx.clearRect(0, 0, width, height);
-
-        particles.forEach((p) => {
-          const px = p.cx + p.rx * Math.cos(p.angle);
-          const py = p.cy + p.ry * Math.sin(p.angle);
-
-          /* Pointer proximity: ease the particle toward 25% speed. */
-          let target = 1;
-          if (pointer.inside) {
-            const dx = px - pointer.x;
-            const dy = py - pointer.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < 170) target = 0.25 + 0.75 * (dist / 170);
-          }
-          p.slow += (target - p.slow) * Math.min(dt / 220, 1);
-          p.angle += p.speed * dt * p.slow;
-
-          /* Faint tracking path (the ellipse itself). */
-          ctx.strokeStyle = COLORS.deep;
-          ctx.globalAlpha = 0.05;
-          ctx.lineWidth = 0.5;
-          ctx.beginPath();
-          ctx.ellipse(p.cx, p.cy, p.rx, p.ry, 0, 0, Math.PI * 2);
-          ctx.stroke();
-
-          /* Short trailing arc, fading behind the particle. */
-          const dir = p.speed > 0 ? 1 : -1;
-          ctx.strokeStyle = COLORS.soft;
-          for (let s = 1; s <= 4; s++) {
-            ctx.globalAlpha = 0.16 - s * 0.035;
-            ctx.beginPath();
-            ctx.ellipse(
-              p.cx, p.cy, p.rx, p.ry, 0,
-              p.angle - dir * s * 0.09,
-              p.angle - dir * (s - 1) * 0.09,
-              dir < 0
-            );
-            ctx.stroke();
-          }
-
-          /* The particle: a 2x2px pixel dot. */
-          ctx.globalAlpha = 0.3 * p.slow + 0.06;
-          ctx.fillStyle = COLORS.blue;
-          ctx.fillRect(px - 1, py - 1, 2, 2);
-          ctx.globalAlpha = 1;
-        });
-      },
-      destroy() {
-        ctx = null;
-        particles = [];
-      }
-    };
-  }
-
-  /* ======================================================================
-   * Effect 3 · Constellation (Social): the ONE interactive ornament
-   * ==================================================================== */
-  /* Drifting nodes joined by thin lines. While the pointer is over the
-     section, nearby nodes light up and link to the cursor. */
-  function mountConstellation(canvas) {
-    const section = canvas.closest('section');
-    const pointer = { x: -9999, y: -9999, inside: false };
-    trackSectionPointer(section, pointer);
-
-    let ctx = null;
-    let width = 1;
-    let height = 1;
-    let nodes = [];
-    const LINK_DIST = 120;
-    const CURSOR_DIST = 150;
-
-    function build() {
-      const count = Math.max(26, Math.min(46, Math.round((width * height) / 26000)));
-      nodes = [];
-      for (let i = 0; i < count; i++) {
-        nodes.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.016,
-          vy: (Math.random() - 0.5) * 0.014
-        });
-      }
-    }
-
-    return {
-      resize() {
-        const fit = fitCanvas(canvas);
-        ctx = fit.ctx;
-        width = fit.width;
-        height = fit.height;
-        build();
-      },
-      tick(dt) {
-        if (!ctx) return;
-        ctx.clearRect(0, 0, width, height);
-
-        /* Drift + soft bounce. */
-        nodes.forEach((n) => {
-          n.x += n.vx * dt;
-          n.y += n.vy * dt;
-          if (n.x < 4) { n.x = 4; n.vx = Math.abs(n.vx); }
-          if (n.x > width - 4) { n.x = width - 4; n.vx = -Math.abs(n.vx); }
-          if (n.y < 4) { n.y = 4; n.vy = Math.abs(n.vy); }
-          if (n.y > height - 4) { n.y = height - 4; n.vy = -Math.abs(n.vy); }
-        });
-
-        /* Node-to-node mesh. */
-        ctx.lineWidth = 0.5;
-        ctx.strokeStyle = COLORS.deep;
-        for (let i = 0; i < nodes.length; i++) {
-          for (let j = i + 1; j < nodes.length; j++) {
-            const dx = nodes[i].x - nodes[j].x;
-            const dy = nodes[i].y - nodes[j].y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < LINK_DIST) {
-              ctx.globalAlpha = 0.09 * (1 - dist / LINK_DIST);
-              ctx.beginPath();
-              ctx.moveTo(nodes[i].x, nodes[i].y);
-              ctx.lineTo(nodes[j].x, nodes[j].y);
-              ctx.stroke();
-            }
-          }
-        }
-
-        /* Nodes; lit when the cursor is near. */
-        nodes.forEach((n) => {
-          let lit = 0;
-          if (pointer.inside) {
-            const dx = n.x - pointer.x;
-            const dy = n.y - pointer.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < CURSOR_DIST) lit = 1 - dist / CURSOR_DIST;
-          }
-          ctx.globalAlpha = 0.28 + lit * 0.5;
-          ctx.fillStyle = lit > 0 ? COLORS.blue : COLORS.deep;
-          ctx.fillRect(n.x - 1, n.y - 1, 2, 2);
-          if (lit > 0) {
-            ctx.globalAlpha = 0.28 * lit;
-            ctx.strokeStyle = COLORS.soft;
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(n.x, n.y);
-            ctx.lineTo(pointer.x, pointer.y);
-            ctx.stroke();
-            ctx.lineWidth = 0.5;
-          }
-        });
-        ctx.globalAlpha = 1;
-      },
-      destroy() {
-        ctx = null;
-        nodes = [];
-      }
-    };
-  }
-
+  /* --- Effect factories 1-3 (isometric-grid, orbital, constellation)
+     dipindah ke generative-ambient/effects/*.js (V11.1-M §14).
+     Dependency engine bersama (doc, COLORS, fitCanvas,
+     trackSectionPointer) diberikan via parameter env; TIDAK ada RAF
+     atau observer baru per effect. --- */
+  const envDeps = { doc: doc, COLORS: COLORS, fitCanvas: fitCanvas, trackSectionPointer: trackSectionPointer };
   /* ======================================================================
    * Registration (V6.5 §5.1) + per-canvas IntersectionObserver (§5.2)
    * ==================================================================== */
@@ -501,9 +229,9 @@
     const canvases = doc.querySelectorAll('canvas.ambient-canvas');
     Array.prototype.forEach.call(canvases, (el) => {
       const effect = el.dataset.effect;
-      if (effect === 'isometric-grid') registerInstance(el, mountIsometricGrid(el));
-      else if (effect === 'orbital') registerInstance(el, mountOrbital(el));
-      else if (effect === 'constellation') registerInstance(el, mountConstellation(el));
+      if (effect === 'isometric-grid') registerInstance(el, mountIsometricGrid(el, envDeps));
+      else if (effect === 'orbital') registerInstance(el, mountOrbital(el, envDeps));
+      else if (effect === 'constellation') registerInstance(el, mountConstellation(el, envDeps));
     });
   }
 

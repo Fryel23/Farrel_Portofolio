@@ -1,0 +1,163 @@
+/* 14.1 GAME DECK (#games) -------------------------------------------------- */
+.games-section {
+  background: var(--night); color: var(--text-on-dark);
+  padding: 92px clamp(22px, 7vw, 110px) 66px;
+  overflow: hidden; position: relative;
+}
+
+
+.games-inner { z-index: 1; }
+
+
+.games-section .geo { position: absolute; }
+
+
+.deck-console { margin-top: 6px; }
+
+
+.deck-controls { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-bottom: 16px; }
+
+
+.deck-button {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: var(--night-card); color: var(--text-on-dark);
+  border: 1px solid var(--line-on-dark); border-radius: 999px;
+  padding: 14px 22px; font-family: var(--mono); font-size: 11px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  transition: border-color var(--micro) var(--ease), transform var(--micro) var(--ease),
+              box-shadow var(--micro) var(--ease), color var(--micro) var(--ease);
+}
+
+
+.deck-button:hover { border-color: var(--blue-soft); color: var(--blue-soft); transform: translateY(-2px); box-shadow: 0 0 24px color-mix(in srgb, var(--blue) 30%, transparent); }
+
+
+.deck-button:active { transform: translateY(0); }
+
+
+.deck-button[aria-expanded="true"] { border-color: var(--blue-soft); color: var(--blue-soft); }
+
+
+.deck-button[aria-busy="true"] { opacity: 0.72; }
+
+
+.deck-coin { width: 13px; height: 13px; border-radius: 50%; border: 2px solid var(--blue-soft); position: relative; flex-shrink: 0; }
+
+
+.deck-coin::after { content: ""; position: absolute; left: 50%; top: 1.5px; bottom: 1.5px; width: 1.5px; transform: translateX(-50%); background: var(--blue-soft); }
+
+
+.deck-hint { font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.14em; color: var(--text-on-dark-2); margin: 0; }
+
+/* Dead screen (idle state): night card, dashed frame, scanline + vignette */
+.deck-screen { position: relative; min-height: 220px; border-radius: var(--radius); overflow: hidden; }
+
+
+.deck-screen--off {
+  background: var(--night-card);
+  border: 1px dashed var(--line-on-dark);
+  display: grid; place-items: center;
+}
+
+
+.deck-screen--off::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.028) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse at center, transparent 52%, rgba(0, 0, 0, 0.38));
+}
+
+
+.deck-off-label { display: flex; flex-direction: column; align-items: center; gap: 9px; text-align: center; padding: 20px; }
+
+
+.deck-no-signal { font-family: var(--mono); font-size: 15px; letter-spacing: 0.34em; color: var(--text-3); }
+
+
+.deck-no-signal-sub { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; color: var(--text-on-dark-2); opacity: 0.72; }
+
+
+.deck-screen--glitch, .deck-screen--active {
+  background: var(--night-card);
+  border: 1px solid var(--line-on-dark);
+}
+
+
+.deck-screen--active { padding: 18px; }
+
+
+.deck-noscript { margin-top: 10px; color: var(--blue-soft); }
+
+
+.deck-footnote {
+  display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+  margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line-on-dark);
+  font-family: var(--mono); font-size: 8px; letter-spacing: 0.12em;
+  color: var(--text-on-dark-2);
+}
+
+/* Game cards */
+.deck-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: 14px; perspective: 900px;
+}
+
+
+.game-card {
+  position: relative; min-width: 0;
+  display: flex; flex-direction: column; gap: 11px;
+  background: color-mix(in srgb, var(--night) 55%, var(--night-card));
+  border: 1px solid var(--line-on-dark);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  transition: transform var(--hover) var(--ease), border-color var(--hover) var(--ease),
+              box-shadow var(--hover) var(--ease);
+}
+
+/* Rarity tiers: legendary = strong themed glow, rare = medium, common = slate */
+.game-card[data-rarity="legendary"] {
+  border-color: color-mix(in srgb, var(--game-color, var(--blue-soft)) 55%, transparent);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--game-color, var(--blue-soft)) 24%, transparent);
+}
+
+
+.game-card[data-rarity="rare"] {
+  border-color: color-mix(in srgb, var(--game-color, var(--blue-soft)) 38%, transparent);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--game-color, var(--blue-soft)) 13%, transparent);
+}
+
+
+.game-card:hover, .game-card:focus-visible {
+  transform: translateY(-6px);
+  border-color: var(--game-color, var(--blue-soft));
+  box-shadow: 0 0 24px color-mix(in srgb, var(--game-color, var(--blue-soft)) 35%, transparent);
+  outline: none;
+}
+
+/* V6.4 §2.5.2: the head is a two-column flex row - text column and the
+   56px pixel scene, top-aligned so long names wrap in place. */
+.game-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+
+
+.game-name { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
+
+
+.game-status {
+  font-family: var(--mono); font-size: 8px; letter-spacing: 0.1em;
+  padding: 4px 8px; border-radius: 999px; border: 1px solid var(--line-on-dark);
+  color: var(--text-on-dark-2); white-space: nowrap;
+}
+
+
+.game-status--playing { color: var(--blue-soft); border-color: color-mix(in srgb, var(--blue-soft) 55%, transparent); }
+
+
+.game-card-meta {
+  display: flex; align-items: center; gap: 9px; flex-wrap: wrap;
+  font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.1em;
+  color: var(--text-on-dark-2);
+}
+
+
+.game-stats { display: flex; flex-direction: column; gap: 7px; margin-top: auto; }
+

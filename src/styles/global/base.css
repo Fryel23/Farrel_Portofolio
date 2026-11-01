@@ -1,0 +1,134 @@
+/* 02. BASE & RESET ------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+
+/* V7.1 Fase 1.1 + V7.2 Fase 1: sticky footer. Dokumen setinggi penuh
+   dan body flex column, agar halaman pendek (mis. /connect) tidak
+   menyisakan ruang putih kosong di bawah footer. */
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 96px;
+}
+
+
+body {
+  /* Tambahan V7.2: Flexbox Sticky Footer */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+
+/* V7.2 Fase 1: main mengisi sisa ruang di atas footer; footer tidak
+   boleh mengecil. Flexbox murni, tanpa trik absolute atau margin manual. */
+main {
+  flex: 1 0 auto;
+}
+
+
+.site-footer {
+  flex-shrink: 0;
+}
+
+
+/* V7.4 Fase 1: hormati prefers-reduced-motion untuk transisi halaman.
+   Native View Transitions (morph/fade di ::view-transition-*) dan
+   fallback animasi Astro (elemen ber-atribut data-astro-transition-
+   fallback) sama-sama dimatikan, sehingga pergantian halaman menjadi
+   potongan langsung tanpa gerak untuk pengguna yang meminta
+   pengurangan gerak. Aturan situs: reduced motion = tanpa animasi. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-image-pair(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+
+  [data-astro-transition-fallback] {
+    animation: none !important;
+  }
+}
+
+
+a { color: inherit; text-decoration: none; }
+
+
+button, input, textarea { font: inherit; }
+
+
+button { cursor: pointer; }
+
+
+img { max-width: 100%; display: block; }
+
+
+h1, h2, h3, h4, p, ol, ul { margin: 0; }
+
+
+ol, ul { padding: 0; list-style: none; }
+
+
+::selection { background: var(--blue-pale); color: var(--ink); }
+
+
+:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+
+.skip-link {
+  position: fixed; top: -60px; left: 16px; z-index: 200;
+  background: var(--ink); color: #fff;
+  padding: 10px 16px; border-radius: 8px; font-size: 13px;
+  transition: top var(--micro) var(--ease);
+}
+
+
+.skip-link:focus-visible { top: 12px; }
+
+/* Small monospaced metadata label: the editorial signature */
+.section-kicker, .brand-name, .eyebrow, .hero-note, .visual-caption,
+.scroll-cue, .filter-row, .gallery-bottom-line, .resume-card-top,
+.resume-foot, .mini-label, .artwork-label, .social-footnote,
+.closing-top, .closing-bottom, .site-footer, .project-status,
+.journey-phase, .journey-status, .hero-tail .tag-mono {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+/* Scroll progress -------------------------------------------------------- */
+.page-progress {
+  height: 4px; position: fixed; inset: 0 0 auto; z-index: 50;
+  background: var(--border-soft);
+}
+
+
+.page-progress span {
+  display: block; width: 0; height: 100%;
+  background: linear-gradient(90deg, var(--blue-deep), var(--blue));
+}
+

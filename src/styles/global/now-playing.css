@@ -1,0 +1,78 @@
+/* 14.3 NOW PLAYING (header indicator, V4 §6.5) ------------------------------- */
+.now-playing {
+  display: flex; align-items: center; gap: 9px;
+  max-width: 220px; padding: 7px 12px 7px 8px; flex-shrink: 0;
+  background: var(--surface); border: 1px solid var(--border-soft); border-radius: 999px;
+  transition: border-color var(--micro) var(--ease), opacity var(--micro) var(--ease);
+}
+
+
+.now-playing:hover { border-color: var(--blue); }
+
+
+.now-playing-art { width: 24px; height: 24px; border-radius: 6px; overflow: hidden; flex-shrink: 0; background: var(--surface-2); }
+
+
+.now-playing-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+
+.now-playing-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border-strong); flex-shrink: 0; }
+
+
+.now-playing.is-playing .now-playing-dot { background: #1DB954; animation: np-pulse 1.6s ease-in-out infinite; }
+
+
+@keyframes np-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(29, 185, 84, 0.45); }
+  50% { box-shadow: 0 0 0 4px rgba(29, 185, 84, 0); }
+}
+
+
+.now-playing.is-recent { opacity: 0.65; }
+
+
+.now-playing-text {
+  min-width: 0; font-family: var(--mono); font-size: 9px; letter-spacing: 0.03em;
+  color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+
+.quick-now-playing {
+  display: block; padding: 9px 12px; margin-bottom: 5px;
+  font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.08em; color: var(--text-3);
+  border-bottom: 1px solid var(--border-soft);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+
+.companion-pet { position: fixed; right: 24px; bottom: 24px; z-index: 90; }
+
+
+.companion-pet-button {
+  width: 78px; height: 78px; display: grid; place-items: center; padding: 6px;
+  background: var(--surface-2); border: 1px solid var(--border-strong); border-radius: 18px;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.16);
+  transition: border-color var(--micro) var(--ease), box-shadow var(--micro) var(--ease);
+}
+
+
+.companion-pet-button:hover { border-color: var(--blue); box-shadow: 0 14px 34px rgba(37, 99, 235, 0.22); }
+
+
+.companion-pet-button svg { width: 60px; height: 60px; image-rendering: pixelated; }
+
+
+.companion-tooltip {
+  position: absolute; bottom: calc(100% + 10px); right: 0;
+  background: var(--ink); color: #fff;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.02em;
+  padding: 9px 12px; border-radius: 10px; white-space: nowrap;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.28);
+}
+
+
+.companion-tooltip::after {
+  content: ""; position: absolute; top: 100%; right: 18px;
+  border: 5px solid transparent; border-top-color: var(--ink);
+}
+

@@ -1,0 +1,97 @@
+/* 14.4 GITHUB ACTIVITY (#github) ---------------------------------------------- */
+.github-section {
+  background: var(--night); color: var(--text-on-dark);
+  padding: 92px clamp(22px, 7vw, 110px) 72px;
+  overflow: hidden; position: relative;
+}
+
+
+.github-inner { z-index: 1; }
+
+
+.github-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+
+
+.github-card {
+  display: flex; flex-direction: column; gap: 7px; min-width: 0; min-height: 132px;
+  background: var(--surface); color: var(--ink);
+  border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+  padding: 20px 18px 16px;
+  transition: transform var(--hover) var(--ease), border-color var(--hover) var(--ease);
+}
+
+
+.github-card:hover { transform: translateY(-4px); border-color: var(--blue); }
+
+
+.github-card-value {
+  font-size: clamp(30px, 3.4vw, 44px); font-weight: 700; line-height: 1;
+  letter-spacing: -0.03em; font-variant-numeric: tabular-nums;
+}
+
+
+.github-card-label { font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.14em; color: var(--text-3); }
+
+
+.github-langs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 5px; }
+
+
+.github-lang-chip {
+  font-family: var(--mono); font-size: 9px; padding: 5px 9px; border-radius: 999px;
+  border: 1px solid var(--border-strong); background: var(--surface-2); color: var(--ink);
+}
+
+
+.github-fallback {
+  margin-top: 16px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--text-on-dark-2);
+}
+
+
+.github-fallback a { color: var(--blue-soft); border-bottom: 1px solid currentColor; padding-bottom: 1px; }
+
+
+.github-pulse { display: flex; gap: 6px; margin-top: 18px; }
+
+
+.github-pulse span { width: 8px; height: 8px; border-radius: 2px; background: var(--blue-soft); opacity: 0.25; }
+
+
+.github-note {
+  display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+  margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line-on-dark);
+  font-family: var(--mono); font-size: 8px; letter-spacing: 0.12em; color: var(--text-on-dark-2);
+}
+
+/* --- V6.6 Fase 8.2: recent repositories list ------------------------------- */
+/* Rendered by script.js from the live GitHub payload (3 most recently
+   updated public repos). Links are real html_url anchors, always
+   target="_blank" rel="noopener noreferrer". */
+.github-repos { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line-on-dark); }
+
+
+.github-repos-label {
+  margin: 0 0 4px;
+  font-family: var(--mono); font-size: 8px; letter-spacing: 0.14em;
+  color: var(--text-on-dark-2);
+}
+
+
+.github-repos-list { list-style: none; margin: 0; padding: 0; }
+
+
+.github-repos-list li {
+  display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: baseline;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.04em;
+  padding: 6px 0;
+}
+
+
+.github-repos-list a { color: var(--blue-soft); overflow-wrap: anywhere; }
+
+
+.github-repos-list a:hover { text-decoration: underline; }
+
+
+.github-repos-list span { color: var(--text-on-dark-2); opacity: 0.7; white-space: nowrap; font-variant-numeric: tabular-nums; }
+

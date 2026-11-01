@@ -1,0 +1,165 @@
+/* --- V6.3: EDGE SVG ORNAMENTS ------------------------------------------- */
+/* General ornament contract: absolute, untouchable, inherits colour.
+   Sections already carry position: relative; the content layers sit
+   above every ornament through source order (ornaments are inserted as
+   early children) plus the explicit z-index rules below. */
+.ornament { position: absolute; pointer-events: none; color: currentColor; z-index: 0; }
+
+
+[id^="ornament-"] { scroll-margin: 0; }
+
+
+.section-inner, .hero-copy, .hero-visual { position: relative; z-index: 1; }
+
+/* SVG sizing: fill-type ornaments stretch to their layer; aspect-type
+   ornaments keep their ratio (width 100%, height auto inside a sized
+   ornament box). */
+.ornament-gallery-truchet svg,
+.ornament-about-dots svg { width: 100%; height: 100%; display: block; }
+
+
+.ornament-hero-crosshair svg,
+.ornament-about-leader svg,
+.ornament-games-cable svg,
+.ornament-github-pulse svg,
+.ornament-contact-envelope svg,
+.ornament-habitat-plant svg,
+.ornament-habitat-poster2 svg { width: 100%; height: auto; display: block; }
+
+
+.ornament-label {
+  font-family: var(--mono); font-size: 8px; letter-spacing: 0.12em;
+  color: var(--text-3); margin-top: 4px; display: block; text-align: center;
+}
+
+/* 5.8 Companion habitat: shelf books (SVG sits on the shelf line) and
+   the geometric rug on the floor. */
+.habitat-shelf svg {
+  position: absolute; bottom: 3px; right: 20%;
+  width: 44px; height: 22px; display: block;
+}
+
+/* Reduced motion: every ornament stays visible; only reveal animations
+   are skipped (script.js never runs them under the preference). */
+@media (prefers-reduced-motion: reduce) {
+
+.ornament { opacity: 1; }
+}
+
+/* Mobile density: the noisiest accents are hidden below 700px; the
+   quiet ones stay because they cost nothing. */
+@media (max-width: 700px) {
+
+.ornament-gallery-stamp,
+  .ornament-games-cable,
+  .ornament-github-terminal { display: none; }
+}
+
+/* --- 4.1 Curiosity Map: sonar / radar sweep ------------------------------ */
+/* Spec CSS with one documented adjustment: z-index is -1 instead of 0,
+   because the panel text is static in-flow; a z-index 0 absolute ornament
+   would paint ABOVE it. With isolation: isolate on .curiosity-panel the
+   -1 child renders above the panel surface and below the notes. */
+.ornament-radar-sweep {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: var(--blue-soft);
+  opacity: 0.06;
+  pointer-events: none;
+  z-index: -1;
+}
+
+
+.ornament-radar-sweep svg { width: 100%; height: 100%; display: block; }
+
+
+.radar-beam {
+  transform-box: view-box;
+  transform-origin: 100px 100px;
+  animation: v65-radar-spin 8s linear infinite;
+}
+
+
+@keyframes v65-radar-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* --- 4.3 Credentials: cryptographic rings -------------------------------- */
+/* Two dashed rings rotating in opposite directions (40s / 60s). Mounted
+   at section level behind .credentials-inner. */
+.ornament-crypto-rings {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  /* V6.6 Fase 2.5: raised from 0.05 so the rings read as a faint but
+     clearly present instrument plate at 1440px, still far below text. */
+  opacity: 0.09;
+  color: var(--blue);
+  pointer-events: none;
+  z-index: -1;
+}
+
+
+.ornament-crypto-rings svg { width: min(520px, 80%); height: auto; display: block; }
+
+
+.ornament-crypto-rings .ring-outer {
+  transform-box: view-box;
+  transform-origin: 200px 200px;
+  animation: v65-spin-cw 40s linear infinite;
+}
+
+
+.ornament-crypto-rings .ring-inner {
+  transform-box: view-box;
+  transform-origin: 200px 200px;
+  animation: v65-spin-ccw 60s linear infinite;
+}
+
+
+@keyframes v65-spin-cw { to { transform: rotate(360deg); } }
+
+
+@keyframes v65-spin-ccw { to { transform: rotate(-360deg); } }
+
+/* --- 4.2 / 4.4 / 4.5: generative ambient canvases ------------------------ */
+/* Drawing is owned by generative-ambient.js. The canvas-level opacity
+   scales the engine's internal alphas into the ornament band. */
+.ambient-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* --- V6.5 §5.3 + §6.3: mobile and reduced-motion guards ------------------ */
+/* Mobile (<= 900px): every V6.5 layer is hidden completely. */
+@media (max-width: 900px) {
+
+.ambient-canvas,
+  .ornament-radar-sweep,
+  .ornament-crypto-rings,
+  .ornament-closing-crosshair { display: none; }
+}
+
+/* Reduced motion: canvases never run (engine also early-returns); SVG
+   ornaments stay visible and static, crosshair pinned to final state. */
+@media (prefers-reduced-motion: reduce) {
+
+.ambient-canvas { display: none; }
+
+.radar-beam,
+  .ornament-crypto-rings .ring-outer,
+  .ornament-crypto-rings .ring-inner { animation: none; }
+
+.ornament-radar-sweep { opacity: 0.06; }
+
+.ornament-crypto-rings { opacity: 0.09; }
+}
+

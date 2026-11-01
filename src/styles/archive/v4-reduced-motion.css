@@ -1,0 +1,16 @@
+/* 14.8 REDUCED MOTION (V4) -------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+
+.game-card:hover, .game-card:focus-visible { transform: none; box-shadow: none; border-color: var(--game-color, var(--blue-soft)); }
+
+.game-card[data-rarity="legendary"], .game-card[data-rarity="rare"] { box-shadow: none; }
+
+.deck-button:hover { transform: none; box-shadow: none; }
+
+.hobby-chip:hover { transform: none; box-shadow: none; }
+
+.github-card:hover { transform: none; }
+
+#data-rain { display: none; }
+}
+

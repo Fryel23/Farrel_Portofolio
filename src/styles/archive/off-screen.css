@@ -1,0 +1,165 @@
+/* 14.2 OFF-SCREEN (#offscreen) ---------------------------------------------- */
+.offscreen-section { padding-top: 116px; padding-bottom: 100px; overflow: hidden; position: relative; }
+
+
+.offscreen-layout {
+  display: grid; grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: 28px; align-items: start;
+}
+
+
+.pixel-stage {
+  margin: 0; display: grid; place-items: center; gap: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong); border-radius: var(--radius);
+  padding: 30px 22px 16px; position: relative;
+}
+
+
+.pixel-stage::before, .pixel-stage::after {
+  content: ""; position: absolute; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--border-strong);
+}
+
+
+.pixel-stage::before { top: 9px; left: 9px; }
+
+
+.pixel-stage::after { top: 9px; right: 9px; }
+
+
+.pixel-pet {
+  /* The pixel palette now lives on :root (V6.3) so every pixel SVG on
+     the page resolves the same tokens. */
+  width: min(280px, 82%); height: auto; image-rendering: pixelated;
+}
+
+
+.pixel-stage-label { font-family: var(--mono); font-size: 8px; letter-spacing: 0.16em; color: var(--text-3); }
+
+
+.hobby-chips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
+
+/* V6.6 Fase 4.3: chip is now a wrapper div (grid 1fr 24px). The press
+   area is button.hobby-chip-main; the jump anchor a.hobby-link sits in
+   its own column with a dashed divider. Padding moved to the button. */
+.hobby-chip {
+  display: grid; grid-template-columns: minmax(0, 1fr) 24px; align-items: center;
+  min-width: 0;
+  background: var(--surface); border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm); padding: 0;
+  overflow: hidden;
+  transition: border-color var(--micro) var(--ease), transform var(--micro) var(--ease),
+              box-shadow var(--micro) var(--ease);
+}
+
+
+.hobby-chip:hover { border-color: var(--blue); transform: translateY(-3px); box-shadow: 4px 4px 0 var(--blue-pale); }
+
+
+.hobby-chip-main {
+  display: flex; align-items: center; gap: 11px; min-width: 0;
+  padding: 12px 8px 12px 14px;
+  background: transparent; border: 0; text-align: left; cursor: pointer; width: 100%;
+  font: inherit; color: inherit;
+}
+
+
+.hobby-chip-main:focus-visible { outline: 2px solid var(--blue); outline-offset: -2px; }
+
+
+.hobby-link {
+  display: grid; place-items: center;
+  padding: 12px 8px;
+  font-family: var(--mono); font-size: 12px;
+  color: var(--blue);
+  border-left: 1px dashed var(--border-soft);
+  transition: background var(--micro) var(--ease), color var(--micro) var(--ease);
+}
+
+
+.hobby-link:hover { background: var(--surface-2); color: var(--blue-hover); }
+
+
+.hobby-link:focus-visible { outline: 2px solid var(--blue); outline-offset: -2px; }
+
+
+.hobby-icon {
+  width: 32px; height: 32px; flex-shrink: 0; display: grid; place-items: center;
+  background: var(--blue-pale); color: var(--blue-deep); border-radius: 9px;
+}
+
+
+.hobby-icon svg { width: 17px; height: 17px; }
+
+
+.hobby-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+
+
+.hobby-label { font-size: 13px; font-weight: 600; }
+
+
+.hobby-detail { font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.06em; color: var(--text-3); }
+
+/* V6.6 Fase 4.1: CURRENTLY status row above the chips. */
+.hobby-current {
+  display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap;
+  margin: 16px 0 0;
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em;
+  color: var(--text-3);
+}
+
+
+.hobby-current-value { color: var(--blue); font-weight: 500; }
+
+/* V6.6 Fase 4.2: last-logged log, at most three rows, newest on top. */
+.hobby-log { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border-soft); }
+
+
+.hobby-log-label {
+  margin: 0 0 8px;
+  font-family: var(--mono); font-size: 8px; letter-spacing: 0.14em;
+  color: var(--text-3);
+}
+
+
+.hobby-log-list { list-style: none; margin: 0; padding: 0; }
+
+
+.hobby-log-list li {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--border-soft);
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em;
+}
+
+
+.spotify-frame {
+  border: 1px solid var(--border-strong); border-radius: var(--radius);
+  background: var(--surface); overflow: hidden;
+}
+
+
+.spotify-frame-top {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 12px 16px; border-bottom: 1px solid var(--border-soft);
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em; color: var(--text-2);
+}
+
+
+.spotify-live { color: var(--blue); font-size: 8px; letter-spacing: 0.1em; }
+
+
+.spotify-frame iframe { display: block; border: 0; width: 100%; height: 352px; }
+
+
+.spotify-frame-link {
+  display: flex; justify-content: flex-end; align-items: center; gap: 6px;
+  padding: 11px 16px; border-top: 1px solid var(--border-soft);
+  font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.14em; color: var(--blue);
+  transition: color var(--micro) var(--ease);
+}
+
+
+.spotify-frame-link:hover { color: var(--blue-hover); }
+

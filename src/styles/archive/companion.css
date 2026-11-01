@@ -1,0 +1,63 @@
+/* 14.5 COMPANION (#companion + floating pet, V4 §8) ---------------------------- */
+.companion-section { padding-top: 112px; padding-bottom: 92px; overflow: hidden; position: relative; }
+
+
+.companion-inner { position: relative; z-index: 1; }
+
+
+.companion-intro { max-width: 560px; font-size: 15px; color: var(--text-2); margin: 2px 0 26px; }
+
+
+.companion-toggle[aria-pressed="true"] { border-color: var(--blue); color: var(--blue); }
+
+
+.companion-note {
+  display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+  margin-top: 30px; padding-top: 12px; border-top: 1px solid var(--border-soft);
+  font-family: var(--mono); font-size: 8px; letter-spacing: 0.12em; color: var(--text-3);
+}
+
+
+#data-rain {
+  position: fixed; inset: 0; z-index: 9999; pointer-events: none;
+  opacity: 0.92; transition: opacity 0.4s ease;
+}
+
+
+#data-rain.is-fading { opacity: 0; }
+
+
+@media (max-width: 980px) {
+
+.offscreen-layout { grid-template-columns: 1fr; }
+
+.github-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+
+@media (max-width: 700px) {
+
+.games-section { padding-top: 76px; padding-bottom: 54px; }
+
+.github-section { padding-top: 76px; padding-bottom: 56px; }
+
+.offscreen-section { padding-top: 84px; padding-bottom: 70px; }
+
+.companion-section { padding-top: 84px; padding-bottom: 70px; }
+
+.deck-screen--active { padding: 12px; }
+
+.game-card { padding: 14px; }
+
+.spotify-frame iframe { height: 320px; }
+
+.github-card { min-height: 118px; padding: 16px 14px 13px; }
+}
+
+
+@media (max-width: 420px) {
+/* V6.6 Fase 4: hobby chips stay 2 columns at 390px per spec; each chip
+     is a compact button + 24px arrow column, so both fit without clipping. */
+.github-grid { grid-template-columns: 1fr; }
+}
+

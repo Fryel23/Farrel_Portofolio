@@ -1,0 +1,13 @@
+/* 14.6 KONAMI DATA RAIN (V4 §9) ------------------------------------------------- */
+body.is-glitching { animation: v4-glitch 0.3s steps(5) both; }
+
+
+@keyframes v4-glitch {
+  0% { filter: hue-rotate(0deg); transform: translateX(0); }
+  20% { filter: hue-rotate(60deg) saturate(1.6); transform: translateX(-4px); }
+  40% { filter: hue-rotate(-45deg); transform: translateX(4px); }
+  60% { filter: hue-rotate(25deg); transform: translateX(-2px); }
+  80% { filter: hue-rotate(-12deg); transform: translateX(2px); }
+  100% { filter: none; transform: none; }
+}
+

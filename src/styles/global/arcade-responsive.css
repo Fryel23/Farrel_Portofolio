@@ -1,0 +1,60 @@
+/* 14.7 RESPONSIVE (V4) ----------------------------------------------------------- */
+@media (max-width: 1150px) {
+
+.brand-name { display: none; }
+
+.main-nav { gap: 13px; }
+
+.nav-link { font-size: 11px; letter-spacing: 0; }
+
+.now-playing { max-width: 168px; }
+/* V5.3 §6.2: nine nowrap links measured 1.5px past the 1024px viewport;
+     a slightly tighter header padding removes the overflow without
+     shrinking type or hiding navigation on small laptops. */
+.site-header { padding-inline: clamp(18px, 4vw, 60px); }
+}
+
+/* Keep every nav label on one line now that the nav carries 9 links */
+.nav-link { white-space: nowrap; }
+
+
+@media (max-width: 980px) {
+/* Header gets crowded: the quick menu row carries Now Playing instead.
+     V5.3 §6.2 fix: nine nowrap links plus the dots button cannot fit at
+     tablet widths, so the quick menu becomes the navigation here. This
+     removes the horizontal overflow measured at 768px. */
+.main-nav { display: none; }
+
+.now-playing { display: none; }
+}
+
+
+@media (max-width: 700px) {
+
+.companion-pet { right: 14px; bottom: 14px; }
+
+.companion-pet-button { width: 64px; height: 64px; border-radius: 15px; }
+
+.companion-pet-button svg { width: 50px; height: 50px; }
+}
+
+
+@media (max-width: 420px) {
+
+.stat-row { grid-template-columns: minmax(72px, auto) 1fr auto; gap: 7px; }
+
+.stat-label { font-size: 10px; }
+
+.now-playing { display: none; }
+}
+
+/* 14.8 REDUCED MOTION (V4) -------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+
+.now-playing.is-playing .now-playing-dot { animation: none; }
+
+.companion-pet-button { box-shadow: 0 10px 22px rgba(15, 23, 42, 0.14); }
+
+body.is-glitching { animation: none; }
+}
+

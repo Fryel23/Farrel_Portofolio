@@ -1,0 +1,186 @@
+
+/* Dropdown listbox: floats above hero content, never clips text.
+   z-index stays below the fixed header (z 90) but above hero layers. */
+.archive-suggestions {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 250px;
+  max-width: min(340px, 88vw);
+  max-height: 264px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.16);
+  padding: 6px;
+  z-index: 40;
+}
+
+
+.archive-suggestions[hidden] { display: none; }
+
+
+.archive-suggestion {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  padding: 9px 12px;
+  border-radius: 9px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink);
+  transition: background var(--micro) var(--ease), color var(--micro) var(--ease);
+}
+
+
+.archive-suggestion-key {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  flex-shrink: 0;
+}
+
+
+.archive-suggestion:hover,
+.archive-suggestion.is-active,
+.archive-suggestion[aria-selected="true"] {
+  background: var(--surface-2);
+}
+
+
+.archive-suggestion[aria-selected="true"] {
+  background: var(--blue-pale);
+  color: var(--blue-deep);
+}
+
+
+.archive-suggestion[aria-selected="true"] .archive-suggestion-key { color: var(--blue); }
+
+
+.archive-suggestion:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: -2px;
+}
+
+/* Touch ergonomics: suggestions keep 44px-ish targets and the dropdown
+   spans the row width so taps never feel cramped. */
+@media (max-width: 700px) {
+
+.archive-suggestions {
+    min-width: 100%;
+    max-width: 100%;
+    max-height: 232px;
+  }
+
+.archive-suggestion { padding: 12px; }
+}
+
+/* Reduced motion: the not-found feedback stays as plain colour text,
+   no shake (script.js also checks the preference before tweening). */
+@media (prefers-reduced-motion: reduce) {
+
+.archive-suggestion { transition: none; }
+}
+
+
+@keyframes val-muzzle-flash {
+  0%, 70% { opacity: 0; }
+  71%, 85% { opacity: 1; }
+  86%, 100% { opacity: 0; }
+}
+
+
+@keyframes val-casing-drop {
+  0% { translate: 0 0; opacity: 1; }
+  100% { translate: 2px 4px; opacity: 0; }
+}
+
+
+@keyframes hades-rune-spin {
+  0% { rotate: 0deg; }
+  25% { rotate: 45deg; }
+  50% { rotate: 90deg; }
+  75% { rotate: 135deg; }
+  100% { rotate: 180deg; }
+}
+
+
+@keyframes px-torch-flicker {
+  0%, 100% { fill-opacity: 1; }
+  30% { fill-opacity: 0.55; }
+  60% { fill-opacity: 0.8; }
+}
+
+
+@keyframes ds3-sword-sway {
+  0%, 100% { rotate: 0deg; }
+  50% { rotate: 2deg; }
+}
+
+
+@keyframes hoi4-arrow-move {
+  0% { translate: 0 0; }
+  50% { translate: 2px 0; }
+  100% { translate: 0 0; }
+}
+
+
+@keyframes mc-crack-blink {
+  0%, 100% { fill-opacity: 1; }
+  50% { fill-opacity: 0.2; }
+}
+
+
+@keyframes aoe-banner-sway {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 1px 0; }
+}
+
+
+@keyframes tw-lava-flicker {
+  0%, 100% { fill-opacity: 0.9; }
+  40% { fill-opacity: 0.4; }
+  70% { fill-opacity: 0.7; }
+}
+
+
+@keyframes rdr-dust-drift {
+  0% { translate: 0 0; fill-opacity: 0.4; }
+  100% { translate: -3px 0; fill-opacity: 0.1; }
+}
+
+
+@keyframes got-leaf-fall {
+  0% { translate: 0 -2px; rotate: 0deg; fill-opacity: 1; }
+  100% { translate: 2px 3px; rotate: 90deg; fill-opacity: 0.3; }
+}
+
+
+@keyframes tlou-flashlight-flicker {
+  0% { fill-opacity: 0.5; }
+  20% { fill-opacity: 0.3; }
+  35% { fill-opacity: 0.6; }
+  55% { fill-opacity: 0.35; }
+  75% { fill-opacity: 0.6; }
+  100% { fill-opacity: 0.5; }
+}
+
+
+@keyframes out-noise-flicker {
+  0% { fill-opacity: 0.9; }
+  25% { fill-opacity: 0.3; }
+  50% { fill-opacity: 0.8; }
+  75% { fill-opacity: 0.2; }
+  100% { fill-opacity: 0.9; }
+}
+

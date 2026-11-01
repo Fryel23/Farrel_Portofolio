@@ -1,0 +1,93 @@
+/* 04. SHARED COMPONENTS -------------------------------------------------- */
+.section-shell {
+  padding-left: clamp(22px, 7vw, 110px);
+  padding-right: clamp(22px, 7vw, 110px);
+  position: relative;
+}
+
+
+.section-inner { max-width: 1390px; margin: 0 auto; position: relative; }
+
+
+.section-heading {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  gap: 35px; margin-bottom: 40px; position: relative;
+}
+
+
+.section-kicker { font-size: 9px; color: var(--blue); margin: 0 0 17px; }
+
+
+.display-heading {
+  font-size: clamp(44px, 6.3vw, 80px);
+  line-height: 0.9; letter-spacing: -0.07em;
+  font-weight: 600;
+}
+
+
+.display-heading em { font-style: normal; color: var(--blue); }
+
+
+.heading-aside {
+  max-width: 290px; font-size: 13px; line-height: 1.7;
+  color: var(--text-2); margin: 0 0 5px;
+}
+
+
+.button {
+  border: 1px solid transparent; border-radius: 999px;
+  display: inline-flex; justify-content: center; align-items: center; gap: 10px;
+  padding: 13px 20px; font-size: 12px; font-weight: 600;
+  transition: transform var(--micro) var(--ease), background var(--micro) var(--ease),
+              color var(--micro) var(--ease), border-color var(--micro) var(--ease);
+}
+
+
+.button:hover { transform: translateY(-2px); }
+
+
+.button-primary { background: var(--blue); color: #fff; }
+
+
+.button-primary:hover { background: var(--blue-hover); }
+
+
+.button-outline { border-color: var(--border-strong); background: transparent; color: var(--ink); }
+
+
+.button-outline:hover { border-color: var(--blue); color: var(--blue); }
+
+/* Line masks used by the motion system (JS fills initial states) */
+.line-mask { display: block; overflow: hidden; }
+
+
+.line-mask .line { display: block; }
+
+/* Geometric diamond decorations */
+.geo {
+  position: absolute; pointer-events: none; z-index: 1;
+  width: 22px; height: 22px;
+  background: var(--ink); transform: rotate(45deg); opacity: 0.92;
+}
+
+
+.geo::before, .geo::after { content: ""; position: absolute; background: inherit; }
+
+
+.geo-one { left: 55%; top: 12%; box-shadow: 18px 0 0 -3px var(--ink), 0 18px 0 -3px var(--blue-soft); }
+
+
+.geo-two { width: 34px; height: 34px; right: -5px; top: 47%; box-shadow: -21px -21px 0 -5px var(--blue-soft), 22px 19px 0 -8px var(--ink); }
+
+
+.geo-three { width: 15px; height: 15px; left: 3%; bottom: 16%; box-shadow: 12px 12px 0 var(--border-strong), 23px 0 0 -2px var(--ink); }
+
+
+.geo-blue { background: var(--blue); }
+
+
+.geo-four { width: 26px; height: 26px; left: 2%; top: 35%; box-shadow: 19px 19px 0 -4px var(--border-strong), 38px 0 0 -7px var(--blue-soft); }
+
+
+.geo-five { width: 36px; height: 36px; right: 2%; top: 15%; opacity: 0.14; box-shadow: 20px -20px 0 var(--ink), -20px 20px 0 var(--ink); }
+

@@ -1,0 +1,68 @@
+/* ==========================================================================
+   14. V4: THE LIVING ARCADE (sections 03 / 05 / 06 / 08 + extras)
+   Game Deck · Off-screen · GitHub Activity · Companion · Konami Data Rain
+   Every new colour beyond :root is a per-game accent from the data file,
+   used only for borders, bars and glow, never for body text (§3.1).
+   ========================================================================== */
+/* [hidden] must always win, even against display:flex/grid components */
+[hidden] { display: none !important; }
+
+/* Extra decorative geometry for the two light V4 sections */
+.geo-six { left: 1%; top: 18%; width: 18px; height: 18px; box-shadow: 15px 15px 0 -3px var(--blue-soft), 30px 0 0 -6px var(--border-strong); }
+
+
+.geo-seven { right: 3%; top: 12%; width: 20px; height: 20px; opacity: 0.16; box-shadow: 16px 16px 0 var(--ink), -16px -16px 0 var(--blue-soft); }
+
+
+.rarity-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 7.5px; letter-spacing: 0.16em; padding: 3px 8px; border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--game-color, var(--blue-soft)) 60%, transparent);
+  color: var(--text-on-dark);
+}
+
+
+.rarity-badge::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--game-color, var(--blue-soft)); }
+
+
+.stat-row { display: grid; grid-template-columns: minmax(88px, auto) 1fr auto; align-items: center; gap: 9px; }
+
+
+.stat-row--text { grid-template-columns: minmax(88px, auto) 1fr; }
+
+
+.stat-label { font-size: 11px; color: var(--text-on-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+
+.stat-bar { height: 5px; border-radius: 999px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
+
+/* V6.3 §1.1.1: the fill is always full width; the visible amount is the
+   scaleX transform set inline by the renderer (target / 100). No width
+   percentages are written anymore, so scaleX and width never compound. */
+.stat-bar span { display: block; width: 100%; height: 100%; border-radius: 999px; background: var(--game-color, var(--blue-soft)); transform-origin: left center; }
+
+
+.stat-value { font-family: var(--mono); font-size: 9px; color: var(--text-on-dark-2); white-space: nowrap; }
+
+
+.stat-value--text { color: var(--blue-soft); }
+
+
+.stat-spacer { min-width: 0; }
+
+
+.stat-note {
+  margin: -3px 0 0; padding-left: 1px;
+  font-family: var(--mono); font-size: 8px; letter-spacing: 0.04em;
+  color: color-mix(in srgb, var(--text-on-dark-2) 85%, transparent);
+}
+
+
+.log-name { color: var(--text-2); }
+
+
+.log-name.is-new { color: var(--blue); }
+
+
+.log-time { color: var(--text-3); font-variant-numeric: tabular-nums; }
+

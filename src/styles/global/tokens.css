@@ -1,0 +1,69 @@
+/* ==========================================================================
+   GLOBAL.CSS · Farrel Islami Putra · Editorial Portfolio (Astro V7.0)
+   Blue / White / Slate · Contemporary Editorial · Motion-led
+   Token, reset, header, footer, komponen bersama, dekorasi sitewide.
+   Diekstrak otomatis dari styles.css V6.7. Isi aturan tidak diubah.
+   ========================================================================== */
+
+/* ==========================================================================
+   Farrel Islami Putra · Editorial Portfolio
+   Blue / White / Slate · Contemporary Editorial · Motion-led
+   --------------------------------------------------------------------------
+   Contents:
+   01. Design tokens          05. Hero                09. Credentials + social
+   02. Base & reset           06. Project gallery     10. Closing & footer
+   03. Header & navigation    07. About & skills      11. Responsive
+   04. Shared components      08. Journey/education   12. Reduced motion
+   ========================================================================== */
+/* 01. DESIGN TOKENS ------------------------------------------------------ */
+:root {
+  /* Surfaces */
+  --bg: #F8FAFC;
+  --surface: #FFFFFF;
+  --surface-2: #F1F5F9;
+  --night: #0F172A;
+  --night-card: #1E293B;
+
+  /* Lines */
+  --border-soft: #E2E8F0;
+  --border-strong: #CBD5E1;
+  --line-on-dark: rgba(255, 255, 255, 0.16);
+
+  /* Text */
+  --ink: #0F172A;
+  --text-2: #475569;
+  --text-3: #64748B;
+  --text-on-dark: #E2E8F0;
+  --text-on-dark-2: #94A3B8;
+
+  /* Blue identity */
+  --blue: #2563EB;
+  --blue-hover: #1D4ED8;
+  --blue-deep: #1E3A8A;
+  --blue-pale: #DBEAFE;
+  --blue-soft: #93C5FD;
+
+  /* Shape & type */
+  --radius: 18px;
+  --radius-sm: 12px;
+  --font: 'Space Grotesk', 'Segoe UI', Arial, sans-serif;
+  --mono: 'DM Mono', 'SFMono-Regular', Consolas, monospace;
+  /* V11.1 STAGE 1: serif identitas untuk closing wordmark FARREL
+     (connect.css). Token baru - --font/--mono dan palet tidak diubah. */
+  --font-serif: 'Cormorant Garamond', 'Iowan Old Style', Baskerville, 'Times New Roman', serif;
+
+  /* Motion */
+  --micro: 180ms;
+  --hover: 280ms;
+  --ease: cubic-bezier(0.33, 1, 0.68, 1);
+
+  /* V6.3: the 16-colour pixel palette, promoted from .pixel-pet to
+     :root so the game-deck pixel characters and the habitat ornaments
+     (plant, second poster, shelf books) can share the exact same
+     tokens. Nothing else changed. */
+  --px-black: #0D0D11; --px-slate: #1E1E24; --px-steel: #3A4356; --px-gray: #6B7280;
+  --px-blue: #00A8E8; --px-navy: #16324F; --px-python-blue: #4584B6; --px-python-yellow: #FFDE57;
+  --px-ivory: #F4F4F9; --px-neon: #CCFF00; --px-purple: #4B0082; --px-pink: #FF007F;
+  --px-wood: #8B5A2B; --px-wood-dark: #5C3A1A; --px-lime: #A3E635; --px-gold: #D4AF37;
+}
+
