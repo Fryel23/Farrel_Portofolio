@@ -141,3 +141,19 @@ body::after {
   margin-top: -12px;
 }
 
+
+/* V12.0: tautan The Data Lab di footer sitewide (Footer.astro). Styling
+   minimal mengikuti konvensi footer: teks kecil, aksen biru saat hover. */
+.footer-lab-link {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color var(--micro) var(--ease), border-color var(--micro) var(--ease);
+}
+
+.footer-lab-link b { color: var(--blue); }
+
+.footer-lab-link:hover {
+  color: var(--blue);
+  border-bottom-color: var(--blue);
+}

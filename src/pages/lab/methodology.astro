@@ -1,0 +1,305 @@
+---
+/* V12.0 - The Data Lab / Methodology (spec §10).
+   Halaman statis editorial: menjelaskan seluruh keputusan metodologis Data
+   Lab: sumber data, rumus ISPU, tabel breakpoint, kategori, penanganan
+   missing/duplikat, statistik, dominasi polutan, dan keterbatasan.
+   Tidak ada kalkulasi di halaman ini; hanya dokumentasi yang dapat
+   dipertanggungjawabkan. */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/lab.css';
+
+const SOURCE_ROW = {
+  region: 'Kota Cirebon (Jawa Barat, Indonesia)',
+  producer: 'Dinas Lingkungan Hidup (DLH) Kota Cirebon',
+  file: 'data_kualitas_udara_2.csv + data_kualitas_udara_2_metadata.pdf',
+  coverage: '2021–2025 · 23 lokasi · tahap TAHAP I & TAHAP II · 200 baris sumber',
+  parameters: 'SO₂ dan NO₂ (µg/Nm³, sebagaimana dilaporkan sumber)',
+  url: null,
+  contact: '(0231) 202223 · dlh@cirebonkota.go.id',
+  accessed: '2026-11-01 (tanggal akses dataset melalui portal Open Data DLH Kota Cirebon; nilai provenance yang diberikan pemilik situs, tercatat sebagai accessedAt di dataset & manifest)',
+};
+---
+
+<BaseLayout
+  title="Methodology · The Data Lab · Farrel Islami Putra"
+  pageKey="lab"
+  description="Metodologi The Data Lab: definisi ISPU, rumus interpolasi PermenLHK P.14/2020, tabel breakpoint SO₂/NO₂/PM2.5, kategori, penanganan missing data & duplikat sumber, statistik, dan keterbatasan dataset Cirebon 2021–2025."
+>
+  <!-- ============ HERO ============ -->
+  <section class="lab-hero" aria-labelledby="lab-method-heading">
+    <div class="section-shell">
+      <p class="section-kicker">THE DATA LAB / METHODOLOGY</p>
+      <h1 class="display-heading" id="lab-method-heading">
+        <span class="line-mask"><span class="line">Setiap angka</span></span>
+        <span class="line-mask"><span class="line"><em>punya asal.</em></span></span>
+      </h1>
+      <p class="lab-lead">
+        Halaman ini menjelaskan seluruh keputusan metodologis di balik The
+        Data Lab: dari mana data berasal, bagaimana ISPU dihitung, apa yang
+        terjadi pada nilai kosong dan anomali, sampai apa yang <em>tidak</em>
+        bisa diklaim dari data ini.
+      </p>
+      <p class="lab-hero-note"><a href="/lab">← Kembali ke explorer</a></p>
+    </div>
+  </section>
+
+  <div class="lab-methodology section-shell">
+
+    <!-- 1. Tujuan -->
+    <section class="lab-panel" aria-labelledby="m-tujuan">
+      <h2 class="lab-panel-title" id="m-tujuan">1 · TUJUAN DATA LAB</h2>
+      <p class="lab-prose">
+        The Data Lab adalah latihan jujur membaca data lingkungan: menampilkan
+        pengukuran resmi apa adanya, menghitung nilai turunan dengan rumus yang
+        bisa diuji, membedakan mana angka asli sumber dan mana hasil hitungan,
+        serta memperlihatkan keterbatasan alih-alih menyembunyikannya. Tidak
+        ada pipeline real-time, tidak ada backend · hanya data statis
+        terverifikasi yang disajikan dengan transparan.
+      </p>
+    </section>
+
+    <!-- 2. AQI vs ISPU -->
+    <section class="lab-panel" aria-labelledby="m-definisi">
+      <h2 class="lab-panel-title" id="m-definisi">2 · AQI DAN ISPU</h2>
+      <p class="lab-prose">
+        <strong>AQI</strong> (Air Quality Index) adalah keluarga indeks kualitas
+        udara yang rumus dan skalanya berbeda antar negara/lembaga.
+        <strong>ISPU</strong> (Indeks Standar Pencemar Udara) adalah versi
+        Indonesia yang diatur <em>Permen LHK No. P.14/MENLHK/SETJEN/KUM.1/7/2020</em>:
+        dihitung untuk tujuh parameter (PM10, PM2.5, SO₂, NO₂, O₃, CO, HC),
+        di mana ISPU total ditentukan oleh sub-indeks <em>tertinggi</em> di
+        antara parameter-parameter tersebut (polutan dominan), dan dikategorikan
+        menjadi lima tingkat: Baik, Sedang, Tidak Sehat, Sangat Tidak Sehat,
+        Berbahaya.
+      </p>
+      <p class="lab-prose">
+        Perbedaan penting untuk halaman ini: dataset DLH Cirebon hanya memuat
+        <strong>SO₂ dan NO₂</strong>, sehingga nilai ISPU yang ditampilkan adalah
+        <em>ISPU terderivasi dari dua parameter tersebut</em>, bukan ISPU resmi
+        tujuh parameter. Bila PM2.5 misalnya ikut diukur, ISPU sesungguhnya
+        bisa lebih tinggi.
+      </p>
+    </section>
+
+    <!-- 3. Sumber data -->
+    <section class="lab-panel" aria-labelledby="m-sumber">
+      <h2 class="lab-panel-title" id="m-sumber">3 · SUMBER DATA PER REGION</h2>
+      <p class="lab-prose">
+        Saat ini satu region dengan data terverifikasi: <strong>Kota
+        Cirebon</strong>. Arsitektur manifest
+        (<code>public/data/aqi/regions.json</code>) sudah mendukung multi-region,
+        tetapi region lain tidak ditambahkan sampai ada data nyata yang dapat
+        diverifikasi; tidak ada region palsu untuk kelulusan tes.
+      </p>
+      <div class="lab-table-wrap">
+        <table class="lab-table">
+          <caption>Sumber dataset Kota Cirebon dan provenance-nya.</caption>
+          <thead>
+            <tr><th scope="col">Atribut</th><th scope="col">Nilai</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Region</th><td>{SOURCE_ROW.region}</td></tr>
+            <tr><th scope="row">Produsen</th><td>{SOURCE_ROW.producer}</td></tr>
+            <tr><th scope="row">Berkas sumber</th><td>{SOURCE_ROW.file} (disimpan di <code>data/sources/</code>, sha256 tercatat di audit ingest)</td></tr>
+            <tr><th scope="row">Cakupan</th><td>{SOURCE_ROW.coverage}</td></tr>
+            <tr><th scope="row">Parameter</th><td>{SOURCE_ROW.parameters}</td></tr>
+            <tr><th scope="row">URL portal</th><td>Tidak dicantumkan sebagai tautan karena URL persis dataset tidak dapat diverifikasi dari lampiran; dataset resmi ini dipublikasikan DLH Kota Cirebon pada portal data terbuka kotanya. {SOURCE_ROW.contact}</td></tr>
+            <tr><th scope="row">Lisensi</th><td>Unverified · metadata sumber tidak memuat pernyataan lisensi; data digunakan untuk keperluan edukasi/portofolio dengan atribusi produsen.</td></tr>
+            <tr><th scope="row">Diakses</th><td>{SOURCE_ROW.accessed}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 4-7. Stasiun, periode, parameter, averaging -->
+    <section class="lab-panel" aria-labelledby="m-cakupan">
+      <h2 class="lab-panel-title" id="m-cakupan">4–7 · LOKASI, PERIODE, PARAMETER, BASIS WAKTU</h2>
+      <ul class="lab-list">
+        <li><strong>Lokasi:</strong> 23 titik pengukuran (kantor kelurahan, jalan arteri, kawasan industri/pelabuhan, fasilitas publik). Koordinat GPS tidak disediakan sumber, sehingga tidak ditampilkan (tidak dikarang).</li>
+        <li><strong>Periode:</strong> 2021–2025. Setiap tahun umumnya memuat 12 lokasi × 2 tahap pengukuran (TAHAP I &amp; TAHAP II); 2025 baru 4 lokasi × TAHAP I (status <em>partial</em> di manifest).</li>
+        <li><strong>Parameter &amp; satuan:</strong> SO₂ dan NO₂ dalam <strong>µg/Nm³</strong> sebagaimana ditulis sumber. Satuan ini dipertahankan apa adanya; tidak ada konversi ke µg/m³ karena kondisi referensi volume (suhu/tekanan) tidak disediakan sumber. Kedua penulisan diperlakukan setara untuk keperluan pembandingan tabel ISPU.</li>
+        <li><strong>Basis waktu (tiga konsep, ditampilkan terpisah di explorer):</strong> (a) <em>frekuensi sampling</em>: tahunan, 2 tahap pengukuran; (b) <em>basis agregasi observasi</em>: agregat tahap pengukuran, basis waktunya (misal 1-jam atau 24-jam) tidak dilaporkan sumber (sumber hanya memberi “tahun” dan “tahap”); (c) <em>periode referensi tabel ISPU</em> P.14/2020: 24 jam untuk SO₂/NO₂ (PM2.5 juga 24 jam) sesuai keputusan yang dikonfirmasi pemilik data dari Lampiran I. Periode tabel 24 jam <strong>tidak otomatis</strong> mengubah basis agregasi data sumber menjadi 24 jam. Ketidakcocokan basis ini diungkapkan apa adanya: sub-indeks di sini adalah <em>estimasi terderivasi</em>, bukan ISPU resmi berbasis 24 jam (lihat bagian 16).</li>
+      </ul>
+    </section>
+
+    <!-- 8. Rumus -->
+    <section class="lab-panel" aria-labelledby="m-rumus">
+      <h2 class="lab-panel-title" id="m-rumus">8 · RUMUS INTERPOLASI ISPU (P.14/2020)</h2>
+      <p class="lab-prose">Untuk konsentrasi X pada pita breakpoint [Xb, Xa] dengan rentang indeks [Ib, Ia]:</p>
+      <p class="lab-formula lab-number">I = ((Ia − Ib) / (Xa − Xb)) × (X − Xb) + Ib</p>
+      <p class="lab-prose">
+        Contoh (nilai nyata dataset): SO₂ = 83,9 µg/Nm³ pada PERUMNAS GUNUNG,
+        TAHAP II 2021 → berada di pita (52–180] dengan indeks (51–100]:<br />
+        I = ((100 − 51) / (180 − 52)) × (83,9 − 52) + 51 = 63,21171875 ≈ <strong>63,21 → ISPU 63 (Sedang)</strong>.
+        NO₂ = 109,31 µg/Nm³ → I = ((100 − 51) / (200 − 80)) × (109,31 − 80) + 51 = <strong>62,97</strong>.
+        ISPU final = maksimum kedua sub-indeks = 63 → polutan dominan: SO₂.
+      </p>
+      <p class="lab-prose">
+        Konsentrasi <strong>tidak dibulatkan</strong> sebelum interpolasi;
+        hasil antara disimpan 4 desimal; ISPU final dibulatkan ke integer
+        terdekat (praktik pelaporan). Perbandingan floating-point memakai
+        toleransi 1e-9 agar tidak ada pita tumpang-tindih atau bolong di batas.
+      </p>
+    </section>
+
+    <!-- 9. Breakpoint -->
+    <section class="lab-panel" aria-labelledby="m-breakpoint">
+      <h2 class="lab-panel-title" id="m-breakpoint">9 · TABEL BREAKPOINT YANG DIPAKAI</h2>
+      <p class="lab-prose">
+        Tabel berikut hanya memuat parameter yang <strong>terverifikasi</strong>.
+        SO₂ &amp; NO₂ diverifikasi langsung oleh pemilik data dari Permen LHK
+        P.14/2020; PM2.5 berasal dari lampiran spesifikasi V12.0 (rantai
+        breakpoint 0–15.5–55.4–150.4–250.4–350.4–500.4). PM10, O₃, CO, dan HC
+        <strong>sengaja belum diimplementasikan</strong> karena tabelnya belum
+        diverifikasi dari sumber primer; panggilan ke kalkulator untuk
+        parameter tersebut mengembalikan status <code>unsupported-parameter</code>,
+        bukan angka karangan.
+      </p>
+      <div class="lab-table-wrap">
+        <table class="lab-table">
+          <caption>Breakpoint konsentrasi → rentang ISPU (konsentrasi µg/m³; batas atas pita inklusif, batas bawah eksklusif kecuali pita pertama).</caption>
+          <thead>
+            <tr>
+              <th scope="col">ISPU</th>
+              <th scope="col">Kategori</th>
+              <th scope="col">SO₂ (µg/m³)</th>
+              <th scope="col">NO₂ (µg/m³)</th>
+              <th scope="col">PM2.5 (µg/m³)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">0–50</th><td>Baik</td><td class="lab-number">0 – 52</td><td class="lab-number">0 – 80</td><td class="lab-number">0 – 15.5</td></tr>
+            <tr><th scope="row">51–100</th><td>Sedang</td><td class="lab-number">&gt;52 – 180</td><td class="lab-number">&gt;80 – 200</td><td class="lab-number">&gt;15.5 – 55.4</td></tr>
+            <tr><th scope="row">101–200</th><td>Tidak Sehat</td><td class="lab-number">&gt;180 – 400</td><td class="lab-number">&gt;200 – 1130</td><td class="lab-number">&gt;55.4 – 150.4</td></tr>
+            <tr><th scope="row">201–300</th><td>Sangat Tidak Sehat</td><td class="lab-number">&gt;400 – 800</td><td class="lab-number">&gt;1130 – 2260</td><td class="lab-number">&gt;150.4 – 250.4</td></tr>
+            <tr><th scope="row">301–400</th><td>Berbahaya</td><td class="lab-number">&gt;800 – 1200</td><td class="lab-number">&gt;2260 – 3000</td><td class="lab-number">&gt;250.4 – 350.4</td></tr>
+            <tr><th scope="row">401–500</th><td>Berbahaya</td><td class="lab-number">-</td><td class="lab-number">-</td><td class="lab-number">&gt;350.4 – 500.4</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="lab-prose lab-note">
+        Catatan tafsir: tabel resmi menuliskan batas integer per pita
+        (“0–52”, “53–180”, …). Implementasi memakai semantik kontinu resmi
+        “&gt;52–180” sehingga tidak ada konsentrasi yang jatuh di celah antar
+        pita (mis. 52,5). Di atas batas tertinggi tabel (mis. SO₂ &gt; 1200),
+        kategori tetap dinyatakan Berbahaya (threshold-based) tetapi
+        <em>tanpa</em> nilai indeks numerik; tidak ada ekstrapolasi.
+      </p>
+      <p class="lab-prose lab-note">
+        Catatan aritmetika contoh resmi PM2.5: beberapa referensi menghitung
+        PM2.5 = 31,4 µg/m³ sebagai 69,92 ≈ 70 dengan memetakan pita kedua ke
+        rentang kontinu 50–100. Implementasi ini memakai pita tabel eksplisit
+        yang konsisten dengan SO₂/NO₂ (51–100 pada 15.5–55.4), sehingga hasilnya
+        70,53 → 71. Selisih &lt; 1 ISPU; kedua konvensi dicantumkan agar
+        pembaca bisa memeriksa.
+      </p>
+    </section>
+
+    <!-- 10. Kategori -->
+    <section class="lab-panel" aria-labelledby="m-kategori">
+      <h2 class="lab-panel-title" id="m-kategori">10 · KATEGORI ISPU</h2>
+      <p class="lab-prose">
+        Kategori ditampilkan sebagai <strong>label + rentang angka</strong>
+        (bukan warna saja, demi aksesibilitas warna). Warna chip mengikuti
+        konvensi umum ISPU dan selalu disertai teks:
+      </p>
+      <ul class="lab-list">
+        <li><span class="lab-category-chip is-baik">Baik (0–50)</span> · tidak ada dampak.</li>
+        <li><span class="lab-category-chip is-sedang">Sedang (51–100)</span> · tidak berpengaruh pada manusia/hewan, berpengaruh pada tumbuhan sensitif.</li>
+        <li><span class="lab-category-chip is-tidak-sehat">Tidak Sehat (101–200)</span> · merugikan golongan sensitif.</li>
+        <li><span class="lab-category-chip is-sangat-tidak-sehat">Sangat Tidak Sehat (201–300)</span> · berpotensi merugikan segmen populasi terpapar.</li>
+        <li><span class="lab-category-chip is-berbahaya">Berbahaya (&gt;300)</span> · berbahaya secara umum.</li>
+      </ul>
+    </section>
+
+    <!-- 11-12. QC, missing -->
+    <section class="lab-panel" aria-labelledby="m-missing">
+      <h2 class="lab-panel-title" id="m-missing">11–12 · KUALITAS DATA &amp; PENANGANAN MISSING</h2>
+      <p class="lab-prose">Empat keadaan dibedakan tegas dan tidak pernah dicampur:</p>
+      <ul class="lab-list">
+        <li><strong>0</strong> = pengukuran valid bernilai nol. Enam kombinasi lokasi×tahap tahun 2023 melaporkan 0,0 µg/Nm³ untuk SO₂ <em>dan</em> NO₂ serentak; nilai dipertahankan sesuai sumber (ISPU 0, kategori Baik) dan diberi catatan keterbatasan karena kemungkinan berarti “tidak terukur”; namun makna itu tidak dapat dikonfirmasi dari metadata, jadi tidak dikarang.</li>
+        <li><strong>null</strong> = tidak ada nilai. Contoh nyata: NO₂ DISUKCAPIL BIMA TAHAP I 2024 tidak ada di baris sumber manapun → disimpan null, tampil “-”, dan grafik menampilkan gap (chart.js <code>spanGaps: false</code>). Statistik mengabaikan null, tidak menghitungnya 0.</li>
+        <li><strong>invalid</strong> = nilai ada tetapi gagal validasi (mis. bukan angka finite, negatif); validator menolak dataset sebelum tampil.</li>
+        <li><strong>not-measured</strong> = parameter tidak diukur pada dataset tersebut (mis. PM10) → tidak pernah ditampilkan sebagai 0.</li>
+      </ul>
+      <p class="lab-prose">
+        <strong>Anomali duplikat:</strong> kombinasi “DEPAN KANTOR DISUKCAPIL
+        BIMA, JL. BRIGJEN DARSONO” 2024 TAHAP II memuat dua baris NO₂ (11,42 dan
+        9,73 µg/Nm³; baris id 10 dan 12 pada CSV). Nilai <em>kemunculan
+        pertama</em> (urutan sumber) dipakai secara deterministik; kedua nilai
+        tetap tersimpan di field <code>duplicates</code> record, ditandai “*”
+        pada tabel dan tooltip, dan tidak ada salah satunya yang dihapus
+        diam-diam. Dugaan label tahap salah ketik pada baris pertama
+        <strong>tidak diubah</strong> karena tidak dapat diverifikasi.
+      </p>
+    </section>
+
+    <!-- 13-14. Statistik & dominan -->
+    <section class="lab-panel" aria-labelledby="m-statistik">
+      <h2 class="lab-panel-title" id="m-statistik">13–14 · STATISTIK &amp; POLUTAN DOMINAN</h2>
+      <ul class="lab-list">
+        <li><strong>Statistik</strong> (rata-rata, maksimum, cakupan) dihitung dari nilai valid saja; null/undefined/non-finite diabaikan, bukan dihitung nol. Array kosong menghasilkan “-”, bukan 0%. Rata-rata ISPU pada kartu metrik adalah mean sub-indeks maksimum per record (bukan mean konsentrasi; konsentrasi dan indeks tidak pernah dicampur).</li>
+        <li><strong>Polutan dominan</strong> ditentukan dari sub-indeks yang metodologinya setara (keduanya P.14/2020), bukan dari konsentrasi mentah SO₂ vs NO₂ yang unit skala pita berbeda. Ringkasan tahun = parameter yang paling sering menjadi argmax; bila tidak ada sub-indeks valid, statusnya “Tidak dapat ditentukan”, bukan tebakan.</li>
+        <li>Seluruh fungsi kalkulasi murni (tanpa DOM) dan diuji unit:
+          <code>node scripts/test-lab-core.mjs</code>.</li>
+      </ul>
+    </section>
+
+    <!-- 15. Limitasi -->
+    <section class="lab-panel" aria-labelledby="m-limitasi">
+      <h2 class="lab-panel-title" id="m-limitasi">15 · DATA LIMITATION (RINGKASAN)</h2>
+      <ul class="lab-list">
+        <li>Hanya SO₂ &amp; NO₂; ISPU tampil adalah derivasi dua parameter, bukan ISPU resmi tujuh parameter.</li>
+        <li>Basis waktu per tahap tidak dilaporkan sumber; periode referensi tabel ISPU SO₂/NO₂ adalah 24 jam sedangkan basis observasi tahap tidak dilaporkan → semua sub-indeks berstatus estimasi terderivasi.</li>
+        <li>Tidak semua lokasi diukur setiap tahun/tahap; 2025 baru parsial (4 lokasi, TAHAP I).</li>
+        <li>Satuan sumber µg/Nm³ tidak dikonversi; koordinat lokasi tidak tersedia.</li>
+        <li>Satuan indeks “indeks_kualitas_udara” pada CSV ternyata berisi konsentrasi (dikonfirmasi pemilik data), dipakai sebagai konsentrasi.</li>
+        <li>Nol serentak 2023 (6 grup) kemungkinan berarti periode tanpa pengukuran; tidak dapat diverifikasi.</li>
+      </ul>
+    </section>
+
+    <!-- 16. Reported vs derived -->
+    <section class="lab-panel" aria-labelledby="m-derived">
+      <h2 class="lab-panel-title" id="m-derived">16 · REPORTED vs DERIVED</h2>
+      <p class="lab-prose">
+        <strong>Reported</strong> (asli sumber): konsentrasi SO₂/NO₂ per lokasi×tahap×tahun.
+        <strong>Derived</strong> (hasil kalkulasi Data Lab): sub-indeks, ISPU
+        final, kategori, polutan dominan, dan seluruh statistik. Setiap record
+        dataset menyimpan keduanya terpisah (<code>values</code> vs
+        <code>derived</code>) dan <code>reportedIndices.ispu</code> sengaja
+        <code>null</code> karena sumber tidak melaporkan ISPU. Derivasi
+        dieksekusi saat build (bukan di browser) dengan modul kalkulator yang
+        sama dan teruji, sehingga angka identik untuk semua pengunjung dan
+        dapat diaudit lewat <code>data/cirebon-ingest-audit.json</code>.
+      </p>
+    </section>
+
+    <!-- 17-18. Pembaruan & referensi -->
+    <section class="lab-panel" aria-labelledby="m-referensi">
+      <h2 class="lab-panel-title" id="m-referensi">17–18 · PEMBARUAN &amp; REFERENSI</h2>
+      <p class="lab-prose">
+        Tanggal-tanggal dataset punya semantik berbeda dan tidak dicampur:
+        <code>updatedAt</code> (tanggal build/pembaruan manifest),
+        <code>accessedAt</code> (2026-11-01, provenance akses dataset via
+        portal Open Data DLH Kota Cirebon, diberikan pemilik situs), dan
+        <code>generatedAt</code> di audit (timestamp pembuatan artifact).
+        Dataset diperbarui dengan menjalankan ulang
+        <code>node scripts/data/build-cirebon-dataset.mjs</code>; seluruh
+        transformasi tercatat otomatis di audit ingest.
+      </p>
+      <ul class="lab-list">
+        <li>Peraturan Menteri LHK RI No. P.14/MENLHK/SETJEN/KUM.1/7/2020 tentang Indeks Standar Pencemar Udara (Lampiran I–II).</li>
+        <li>Penjelasan ISPU · Direktorat Pengendalian Pencemaran Udara, KLHK: ppmu.kemenlh.go.id.</li>
+        <li>Dinas Lingkungan Hidup Kota Cirebon · Data Kualitas Udara 2021–2025 (CSV + metadata PDF).</li>
+        <li>Chart.js v4 · dokumentasi Line Chart &amp; Performance (chartjs.org).</li>
+        <li>Astro · Client-side Scripts &amp; View Transitions (docs.astro.build).</li>
+      </ul>
+      <p class="lab-prose lab-note">
+        Verifikasi independen dianjurkan: unduh CSV sumber di
+        <code>data/sources/</code>, bandingkan sha256 dengan audit ingest,
+        lalu hitung ulang satu record dengan rumus di bagian 8.
+      </p>
+    </section>
+
+  </div>
+</BaseLayout>

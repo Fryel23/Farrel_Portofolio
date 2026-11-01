@@ -1,0 +1,126 @@
+---
+/* V12.0 - The Data Lab / AQI Explorer (halaman utama).
+   Sumber data: /data/aqi/regions.json + dataset tahunan (statis, historis,
+   bukan real-time). Chart.js dimuat dynamic oleh src/scripts/lab.js →
+   lab/charts/chart-loader.js; modul halaman ini TIDAK menyentuh Chart.js
+   secara statis sehingga homepage tidak pernah memuat chunk-nya.
+   Semua panel dirancang untuk kondisi nyata: loading, partial, no-data,
+   dan error; missing selalu tampil sebagai gap/dash, bukan nol. */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/lab.css';
+---
+
+<BaseLayout
+  title="The Data Lab · AQI Explorer · Farrel Islami Putra"
+  pageKey="lab"
+  description="Explorer data kualitas udara Kota Cirebon 2021–2025 (DLH): konsentrasi SO₂/NO₂, sub-indeks & ISPU terderivasi PermenLHK P.14/2020, statistik, tabel data mentah, dan metodologi yang transparan."
+>
+  <!-- ============ HERO / EDITORIAL INTRODUCTION (spec §9.2-A) ============ -->
+  <section class="lab-hero" aria-labelledby="lab-heading">
+    <div class="section-shell">
+      <p class="section-kicker">THE DATA LAB / AQI EXPLORER</p>
+      <h1 class="display-heading" id="lab-heading">
+        <span class="line-mask"><span class="line">Udara Cirebon,</span></span>
+        <span class="line-mask"><span class="line"><em>dibaca jujur.</em></span></span>
+      </h1>
+      <p class="lab-lead">
+        Explorer data kualitas udara ambien hasil pengukuran resmi Dinas
+        Lingkungan Hidup Kota Cirebon: konsentrasi SO₂ dan NO₂ per lokasi dan
+        tahap pengukuran, dikonversi menjadi sub-indeks &amp; ISPU terderivasi
+        memakai rumus interpolasi PermenLHK P.14/2020.
+      </p>
+      <p class="lab-hero-note">
+        Dataset bersifat <strong>historis tahunan</strong>, bukan real-time.
+        Setiap angka punya asal yang bisa dilacak, setiap nilai kosong tetap
+        kosong (gap, bukan nol), dan seluruh batasan metodologi didokumentasikan
+        di <a href="/lab/methodology">halaman methodology ↗</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ EXPLORER (spec §9.2-B … §9.2-G) ============ -->
+  <section class="lab-section section-shell" data-lab-root aria-label="Explorer kualitas udara Kota Cirebon">
+    <!-- Status tunggal untuk seluruh explorer; diumumkan secara aksesibel. -->
+    <div class="lab-status-row">
+      <p class="lab-status" data-lab-status role="status" aria-live="polite">Menyiapkan Data Lab…</p>
+      <button class="lab-retry" type="button" data-lab-retry hidden>Coba muat ulang</button>
+    </div>
+
+    <!-- B. Dataset context strip -->
+    <div class="lab-panel">
+      <h2 class="lab-panel-title">KONTEKS DATASET</h2>
+      <div class="lab-context" data-lab-context></div>
+    </div>
+
+    <!-- C. Controls panel (native select, berlabel semantik) -->
+    <div class="lab-panel" data-lab-controls data-busy="false">
+      <h2 class="lab-panel-title">KONTROL</h2>
+      <div class="lab-controls-grid">
+        <div class="lab-control">
+          <label for="lab-region">Region</label>
+          <select id="lab-region" data-lab-region></select>
+        </div>
+        <div class="lab-control">
+          <label for="lab-year">Tahun</label>
+          <select id="lab-year" data-lab-year></select>
+        </div>
+        <div class="lab-control lab-control--wide">
+          <label for="lab-location">Lokasi pengukuran (untuk tampilan tren)</label>
+          <select id="lab-location" data-lab-location></select>
+        </div>
+        <div class="lab-control">
+          <label for="lab-metric">Metric</label>
+          <select id="lab-metric" data-lab-metric></select>
+        </div>
+        <div class="lab-control">
+          <label for="lab-view">Tampilan grafik</label>
+          <select id="lab-view" data-lab-view></select>
+        </div>
+      </div>
+    </div>
+
+    <!-- D. Metrics grid (maksimal 4, hanya yang didukung data) -->
+    <div class="lab-metrics-grid" data-lab-metrics aria-label="Ringkasan metrik tahun terpilih"></div>
+
+    <!-- E. Chart section -->
+    <div class="lab-panel lab-chart-panel">
+      <h2 class="lab-panel-title">GRAFIK</h2>
+      <figure class="lab-chart-figure" data-lab-chart-figure>
+        <div class="lab-chart-canvas-wrap">
+          <canvas
+            data-lab-canvas
+            role="img"
+            aria-label="Grafik garis kualitas udara: ISPU terderivasi atau konsentrasi SO₂/NO₂ sesuai pilihan metric, tahun, lokasi, dan tampilan."
+          ></canvas>
+          <div class="lab-chart-overlay" data-lab-chart-overlay hidden>
+            <p class="lab-overlay-title" data-overlay-title></p>
+            <p class="lab-overlay-description" data-overlay-description></p>
+          </div>
+        </div>
+        <figcaption class="lab-chart-caption">
+          Grafik garis dengan gap jujur: titik tanpa pengukuran tidak pernah
+          disambung. Nilai setara secara tekstual tersedia pada tabel data di
+          bawah; grafik bukan satu-satunya cara membaca angka.
+        </figcaption>
+      </figure>
+    </div>
+
+    <!-- F. Data table (tersedia juga saat Chart.js gagal dimuat) -->
+    <div class="lab-panel">
+      <h2 class="lab-panel-title">TABEL DATA</h2>
+      <div class="lab-table-wrap" data-lab-table></div>
+    </div>
+
+    <!-- G. Source note + keterbatasan -->
+    <div class="lab-panel">
+      <h2 class="lab-panel-title">SUMBER &amp; KETERBATASAN</h2>
+      <div class="lab-source-note" data-lab-source-note></div>
+      <div class="lab-limitations" data-lab-limitations></div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import '../../scripts/global.js';
+  import '../../scripts/lab.js';
+</script>

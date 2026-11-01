@@ -1,0 +1,504 @@
+/* ==========================================================================
+   lab.css - The Data Lab / AQI Explorer (V12.0).
+   Menggunakan token global V11.x (--bg, --surface, --blue, --ink, --mono…)
+   tanpa mengubahnya. Gaya editorial: panel putih bergaris tipis, angka DM
+   Mono, kicker mono biru. Tidak ada styling SaaS generik; tidak ada
+   overflow horizontal; semua state (loading/partial/empty/error) didesain.
+   ========================================================================== */
+
+/* ---------- HERO / EDITORIAL INTRO -------------------------------------- */
+.lab-hero {
+  padding: clamp(64px, 12vh, 130px) 0 clamp(28px, 5vh, 48px);
+}
+
+.lab-lead {
+  max-width: 640px;
+  margin: 22px 0 0;
+  color: var(--text-2);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.lab-hero-note {
+  max-width: 640px;
+  margin: 14px 0 0;
+  color: var(--text-3);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.lab-hero-note a,
+.lab-lead a {
+  color: var(--blue);
+  text-decoration: none;
+  border-bottom: 1px solid var(--blue-pale);
+  transition: border-color var(--micro) var(--ease), color var(--micro) var(--ease);
+}
+
+.lab-hero-note a:hover,
+.lab-lead a:hover {
+  color: var(--blue-hover);
+  border-bottom-color: var(--blue);
+}
+
+/* ---------- SECTIONS & PANELS ------------------------------------------- */
+.lab-section {
+  padding-bottom: clamp(56px, 9vh, 110px);
+}
+
+.lab-panel {
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  padding: clamp(18px, 2.6vw, 28px);
+  margin-top: 18px;
+}
+
+.lab-panel-title {
+  margin: 0 0 14px;
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  color: var(--blue);
+}
+
+.lab-prose {
+  margin: 0 0 12px;
+  color: var(--text-2);
+  font-size: 14.5px;
+  line-height: 1.75;
+}
+
+.lab-prose strong { color: var(--ink); }
+
+.lab-prose code,
+.lab-limitations-list code,
+.lab-list code {
+  font-family: var(--mono);
+  font-size: 0.86em;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  border-radius: 6px;
+  padding: 1px 6px;
+  color: var(--blue-deep);
+}
+
+.lab-note {
+  font-size: 13px;
+  color: var(--text-3);
+  border-left: 2px solid var(--border-strong);
+  padding-left: 12px;
+}
+
+.lab-list {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--text-2);
+  font-size: 14.5px;
+  line-height: 1.75;
+}
+
+.lab-list li { margin-bottom: 10px; }
+.lab-list strong { color: var(--ink); }
+
+.lab-formula {
+  font-family: var(--mono);
+  font-size: 19px;
+  color: var(--ink);
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  border-left: 3px solid var(--blue);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+
+/* ---------- STATUS ROW (anti layout-jump) -------------------------------- */
+.lab-status-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 44px;
+  margin-top: 4px;
+}
+
+.lab-status {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  transition: color var(--micro) var(--ease);
+}
+
+.lab-status[data-state='error'] { color: #B91C1C; }
+.lab-status[data-state='unavailable'] { color: #92400E; }
+.lab-status[data-state='ready'] { color: var(--text-3); }
+
+.lab-retry {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blue);
+  background: var(--surface);
+  border: 1px solid var(--blue);
+  border-radius: 999px;
+  padding: 8px 16px;
+  cursor: pointer;
+  min-height: 44px;
+  transition: background var(--micro) var(--ease), color var(--micro) var(--ease);
+}
+
+.lab-retry:hover {
+  background: var(--blue);
+  color: #FFFFFF;
+}
+
+.lab-retry:focus-visible,
+.lab-control select:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+/* ---------- CONTEXT STRIP (dl) ------------------------------------------- */
+.lab-context-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 28px;
+  margin: 0;
+}
+
+.lab-context-list dt {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 3px;
+}
+
+.lab-context-list dd {
+  margin: 0;
+  color: var(--ink);
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+
+/* ---------- CONTROLS ------------------------------------------------------ */
+.lab-controls-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px 16px;
+}
+
+.lab-control { display: flex; flex-direction: column; gap: 6px; }
+.lab-control--wide { grid-column: span 2; }
+
+.lab-control label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.lab-control select {
+  font-family: var(--font);
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  padding: 10px 12px;
+  min-height: 44px;
+  width: 100%;
+  cursor: pointer;
+  transition: border-color var(--micro) var(--ease);
+}
+
+.lab-control select:hover { border-color: var(--blue); }
+.lab-control select:disabled { opacity: 0.45; cursor: not-allowed; }
+
+[data-lab-controls][data-busy='true'] .lab-control select {
+  border-style: dashed;
+  border-color: var(--border-strong);
+}
+
+/* ---------- METRICS GRID -------------------------------------------------- */
+.lab-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.lab-metric-card {
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  padding: 18px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.lab-metric-card::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 2px;
+  background: var(--blue-pale);
+}
+
+.lab-metric-kicker {
+  margin: 0 0 10px;
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: 0.18em;
+  color: var(--text-3);
+}
+
+.lab-metric-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 0;
+}
+
+.lab-metric-value {
+  font-family: var(--mono);
+  font-size: clamp(26px, 3vw, 34px);
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.lab-metric-detail {
+  margin: 10px 0 0;
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--text-3);
+}
+
+/* ---------- CATEGORY CHIPS (label + rentang, bukan warna saja) ------------ */
+.lab-category-chip {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  border-radius: 999px;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+
+.lab-category-chip.is-baik { background: #DCFCE7; color: #166534; }
+.lab-category-chip.is-sedang { background: #FEF3C7; color: #854D0E; }
+.lab-category-chip.is-tidak-sehat { background: #FEE2E2; color: #B91C1C; }
+.lab-category-chip.is-sangat-tidak-sehat { background: #F3E8FF; color: #7E22CE; }
+.lab-category-chip.is-berbahaya { background: #E2E8F0; color: #0F172A; }
+
+.lab-list .lab-category-chip { margin-right: 8px; }
+
+/* ---------- CHART ---------------------------------------------------------- */
+.lab-chart-figure { margin: 0; }
+
+.lab-chart-canvas-wrap {
+  position: relative;
+  height: clamp(300px, 42vw, 420px);
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  padding: 14px;
+}
+
+.lab-chart-canvas-wrap canvas { width: 100% !important; height: 100% !important; }
+
+.lab-chart-overlay {
+  position: absolute;
+  inset: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+  background: var(--surface-2);
+  border-radius: 10px;
+  padding: 24px;
+}
+
+.lab-overlay-title {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+}
+
+.lab-overlay-description {
+  margin: 0;
+  max-width: 460px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-3);
+}
+
+.lab-chart-caption {
+  margin-top: 10px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-3);
+}
+
+/* ---------- DATA TABLE ------------------------------------------------------ */
+.lab-table-wrap {
+  max-height: 440px;
+  overflow: auto;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.lab-table-wrap::-webkit-scrollbar { width: 8px; height: 8px; }
+.lab-table-wrap::-webkit-scrollbar-track { background: var(--surface-2); }
+.lab-table-wrap::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 8px;
+}
+.lab-table-wrap::-webkit-scrollbar-thumb:hover { background: var(--text-3); }
+
+.lab-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+
+.lab-table caption {
+  text-align: left;
+  padding: 12px 14px;
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--text-3);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.lab-table th,
+.lab-table td {
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--border-soft);
+  text-align: left;
+  vertical-align: top;
+}
+
+.lab-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--surface);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+
+.lab-table tbody tr:hover { background: var(--surface-2); }
+.lab-table tbody tr:last-child td,
+.lab-table tbody tr:last-child th { border-bottom: none; }
+
+.lab-table .lab-number {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.lab-table td.lab-cell-location { color: var(--ink); min-width: 220px; }
+
+.lab-table tbody th[scope='row'] {
+  font-weight: 500;
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+.lab-table tr.has-source-duplicate td { background: rgba(37, 99, 235, 0.045); }
+
+.lab-table-note,
+.lab-table-empty {
+  margin: 10px 0 0;
+  font-size: 11.5px;
+  line-height: 1.65;
+  color: var(--text-3);
+}
+
+.lab-table-empty { font-family: var(--mono); letter-spacing: 0.04em; }
+
+/* ---------- SOURCE NOTE & LIMITATIONS --------------------------------------- */
+.lab-source-text { margin: 0 0 10px; font-size: 13px; line-height: 1.7; color: var(--text-2); }
+.lab-source-text a { color: var(--blue); border-bottom: 1px solid var(--blue-pale); text-decoration: none; }
+.lab-source-contact { color: var(--text-3); }
+
+.lab-source-derivation {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--text-3);
+  border-left: 2px solid var(--blue-pale);
+  padding-left: 12px;
+}
+
+.lab-limitations-heading {
+  margin: 18px 0 8px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.lab-limitations-list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--text-3);
+}
+
+.lab-limitations-list li { margin-bottom: 7px; }
+
+/* ---------- METHODOLOGY LAYOUT ----------------------------------------------- */
+.lab-methodology { padding-bottom: clamp(56px, 9vh, 110px); }
+
+/* ---------- RESPONSIVE (spec §15) -------------------------------------------- */
+@media (max-width: 1080px) {
+  .lab-controls-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lab-control--wide { grid-column: span 2; }
+  .lab-metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+  .lab-context-list { grid-template-columns: 1fr; }
+  .lab-metrics-grid { grid-template-columns: 1fr; }
+  .lab-controls-grid { grid-template-columns: 1fr; }
+  .lab-control--wide { grid-column: auto; }
+  .lab-chart-canvas-wrap { height: 300px; padding: 10px; }
+  .lab-chart-overlay { inset: 10px; padding: 16px; }
+  .lab-table td.lab-cell-location { min-width: 170px; }
+  .lab-status-row { flex-wrap: wrap; }
+}
+
+/* ---------- REDUCED MOTION (spec §14.5) --------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .lab-retry,
+  .lab-status,
+  .lab-control select,
+  .lab-hero-note a,
+  .lab-lead a,
+  .lab-source-text a {
+    transition: none;
+  }
+}
