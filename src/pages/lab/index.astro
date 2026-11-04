@@ -118,6 +118,22 @@ import '../../styles/lab.css';
       <div class="lab-limitations" data-lab-limitations></div>
     </div>
   </section>
+
+  <!-- ============ NAVIGASI TOOL LAB (V12.3 FASE 8) ============
+       Pintasan ke CSV Explorer. Header sengaja TIDAK diubah: navigasi
+       utama memakai tautan tunggal "Data Lab" → /lab (keputusan V12.0),
+       sehingga tool-tool Lab saling menaut dari halaman hub ini. -->
+  <section class="lab-section section-shell" aria-label="Tool Lab lainnya">
+    <div class="lab-panel">
+      <h2 class="lab-panel-title">TOOL LAB LAINNYA</h2>
+      <p class="lab-hero-note">
+        <a href="/lab/csv">CSV Explorer ↗</a> — unggah file CSV dan periksa
+        pratinjau baris, tipe kolom, statistik deskriptif (Mean, Median, Min,
+        Max), dan grafik garis. Seluruh pemrosesan berjalan lokal di browser
+        melalui Web Worker; isi file tidak pernah dikirim ke server.
+      </p>
+    </div>
+  </section>
 </BaseLayout>
 
 <script>

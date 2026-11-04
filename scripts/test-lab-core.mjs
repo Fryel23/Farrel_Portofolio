@@ -27,7 +27,7 @@ import {
 import {
   mean, median, min, max, standardDeviation,
   countValid, countMissing, validPercentage,
-} from '../src/scripts/lab/core/stats.js';
+} from '../src/scripts/lab/shared/stats.js';
 import { validateDataset } from '../src/scripts/lab/core/validate-dataset.js';
 import { formatNumber, formatIndex, formatPercent, safeExternalUrl } from '../src/scripts/lab/core/formatters.js';
 import { parseCsv } from './data/csv-parser.mjs';

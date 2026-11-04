@@ -1,0 +1,162 @@
+---
+/* V12.3 - CSV Explorer (halaman /lab/csv).
+   Tool analisis CSV yang berjalan SEPENUHNYA di browser: parsing &
+   statistik dieksekusi Web Worker (src/scripts/lab/workers/csv-worker.js),
+   Chart.js dimuat dynamic oleh entry src/scripts/lab/csv.js hanya ketika
+   grafik dirender. File pengguna tidak pernah dikirim ke server, tidak
+   disimpan, dan tidak dicatat - arsitektur ini diverifikasi di FASE 9/10
+   V12.3, sehingga klaim "diproses lokal" yang tampil di halaman adalah
+   klaim yang benar-benar didukung implementasi.
+   Modul entry TIDAK diimpor halaman lain -> route isolation (spec §10.1). */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/lab.css';
+import '../../styles/lab/csv.css';
+---
+
+<BaseLayout
+  title="CSV Explorer · The Data Lab · Farrel Islami Putra"
+  pageKey="lab"
+  description="CSV Explorer: unggah file CSV dan periksa pratinjau, tipe kolom, statistik deskriptif (Mean/Median/Min/Max), serta grafik garis - seluruh pemrosesan berjalan lokal di browser lewat Web Worker."
+>
+  <!-- ============ PAGE HEADER (spec §8.1-A) ============ -->
+  <section class="lab-hero" aria-labelledby="csv-heading">
+    <div class="section-shell">
+      <p class="section-kicker">THE DATA LAB / CSV EXPLORER</p>
+      <h1 class="display-heading" id="csv-heading">
+        <span class="line-mask"><span class="line">CSV apa pun,</span></span>
+        <span class="line-mask"><span class="line"><em>dibaca lokal.</em></span></span>
+      </h1>
+      <p class="lab-lead">
+        Periksa file CSV milikmu: pratinjau baris, tipe setiap kolom,
+        statistik deskriptif (Mean, Median, Min, Max), dan grafik garis.
+        Parsing dan perhitungan berjalan di Web Worker sehingga tab tetap
+        responsif untuk file besar.
+      </p>
+      <p class="lab-hero-note">
+        File diproses <strong>lokal di browser</strong>: tidak diunggah ke
+        server, tidak disimpan, tidak dicatat. Satu file aktif, format CSV
+        UTF-8, ukuran maksimum <strong>10 MiB</strong>, maksimum 100 kolom
+        dan 100.000 baris.
+      </p>
+    </div>
+  </section>
+
+  <section class="lab-section section-shell" data-csv-root aria-label="CSV Explorer">
+    <!-- ============ A. UPLOAD AREA (spec §8.1-B) ============ -->
+    <div class="lab-panel">
+      <h2 class="lab-panel-title">UNGGAH CSV</h2>
+      <div class="csv-dropzone" data-csv-dropzone>
+        <input
+          type="file"
+          id="csv-file-input"
+          class="csv-file-input"
+          accept=".csv,text/csv"
+          data-csv-input
+          aria-label="Pilih file CSV untuk dianalisis"
+        />
+        <label class="csv-dropzone-label" for="csv-file-input">
+          <span class="csv-dropzone-main">Seret &amp; letakkan file CSV di sini</span>
+          <button class="lab-retry" type="button" data-csv-browse>Pilih file CSV</button>
+          <span class="csv-dropzone-hint">CSV · UTF-8 · MAKS 10 MIB · SATU FILE</span>
+        </label>
+      </div>
+      <p class="csv-upload-note">
+        Hanya mendukung delimiter koma (CSV standar). MIME type tidak dipercaya
+        sepenuhnya - ekstensi .csv dan isi file divalidasi saat diproses.
+      </p>
+      <p class="csv-error" data-csv-error role="alert" hidden></p>
+      <div class="lab-status-row">
+        <p class="lab-status" data-csv-status role="status" aria-live="polite">Menunggu file CSV…</p>
+      </div>
+    </div>
+
+    <!-- ============ HASIL (muncul setelah analisis sukses) ============ -->
+    <div data-csv-results hidden>
+      <!-- B. Ringkasan file -->
+      <div class="lab-panel">
+        <h2 class="lab-panel-title">FILE AKTIF</h2>
+        <div class="csv-file-head" data-csv-file-summary></div>
+      </div>
+
+      <!-- C. Preview table (maksimal 5 record, spec §8.4) -->
+      <div class="lab-panel">
+        <h2 class="lab-panel-title">PRATINJAU DATA</h2>
+        <div data-csv-preview></div>
+      </div>
+
+      <!-- D. Column overview (spec §8.5) -->
+      <div class="lab-panel">
+        <h2 class="lab-panel-title">IKHTISAR KOLOM</h2>
+        <div data-csv-columns></div>
+      </div>
+
+      <!-- E. Statistical summary (spec §8.6) -->
+      <div class="lab-panel">
+        <h2 class="lab-panel-title">STATISTIK DESKRIPTIF</h2>
+        <p class="lab-table-empty" data-csv-stats-empty hidden></p>
+        <div data-csv-stats></div>
+      </div>
+
+      <!-- F. Chart (spec §9; struktur overlay identik AQI Explorer) -->
+      <div class="lab-panel lab-chart-panel" data-csv-chart-panel hidden>
+        <h2 class="lab-panel-title">GRAFIK</h2>
+        <div class="csv-chart-controls">
+          <div class="lab-control">
+            <label for="csv-x-select">Sumbu X (kategori atau tanggal)</label>
+            <select id="csv-x-select" data-csv-x></select>
+          </div>
+          <div class="lab-control">
+            <label for="csv-y-select">Sumbu Y (numerik)</label>
+            <select id="csv-y-select" data-csv-y></select>
+          </div>
+        </div>
+        <figure class="lab-chart-figure">
+          <div class="lab-chart-canvas-wrap">
+            <canvas
+              data-csv-canvas
+              role="img"
+              aria-label="Grafik garis data CSV sesuai pilihan kolom sumbu X dan Y."
+            ></canvas>
+            <div class="lab-chart-overlay" data-csv-chart-overlay hidden>
+              <p class="lab-overlay-title" data-overlay-title></p>
+              <p class="lab-overlay-description" data-overlay-description></p>
+            </div>
+          </div>
+          <figcaption class="lab-chart-caption" data-csv-chart-caption></figcaption>
+        </figure>
+      </div>
+      <p class="lab-table-empty" data-csv-chart-unavailable hidden></p>
+    </div>
+
+    <!-- ============ RESET (spec §8.7) ============ -->
+    <div class="lab-status-row">
+      <button class="lab-retry" type="button" data-csv-reset>Hapus file &amp; mulai ulang</button>
+    </div>
+
+    <!-- ============ CATATAN PRIVASI ============ -->
+    <div class="lab-panel">
+      <h2 class="lab-panel-title">PRIVASI &amp; BATASAN</h2>
+      <p class="csv-privacy-note">
+        <strong>Cara kerja arsitektural:</strong> file diproses Web Worker di
+        tab ini. Tidak ada request jaringan yang membawa isi file, tidak ada
+        penyimpanan localStorage/sessionStorage/IndexedDB/cookie, dan isi CSV
+        tidak pernah dicatat ke console. Menutup atau meninggalkan halaman
+        menghentikan Worker, menghancurkan grafik, dan melepas referensi file.
+      </p>
+      <p class="csv-privacy-note">
+        <strong>Batasan V12.3:</strong> ukuran file maksimum 10 MiB; maksimum
+        100 kolom, 100.000 baris, 500.000 sel; grafik menampilkan maksimum
+        5.000 titik (sampling deterministik, titik awal &amp; akhir
+        dipertahankan); hanya delimiter koma; hanya encoding UTF-8; format
+        angka desimal titik (bukan locale ribuan koma); tanggal dikenali pada
+        format ISO (YYYY-MM-DD dan ISO datetime) - di luar itu diklasifikasikan
+        kategorikal.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import '../../scripts/global.js';
+  import '../../scripts/lab/csv.js';
+</script>

@@ -30,7 +30,7 @@ import { renderDataTable, renderTableEmptyMessage } from './ui/data-table.js';
 import { renderContextStrip, renderSourceNote, renderDatasetLimitations } from './ui/render.js';
 import { createLineChartController } from './charts/line-chart.js';
 import { buildChartConfig } from './charts/chart-config.js';
-import { mean, countValid, validPercentage } from './core/stats.js';
+import { mean, countValid, validPercentage } from './shared/stats.js';
 import { getDominantParameterSummary, getISPUCategory } from './core/aqi-calculator.js';
 import { parameterLabel, formatPercent } from './core/formatters.js';
 
