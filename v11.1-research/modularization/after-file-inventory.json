@@ -1,0 +1,501 @@
+{
+  "capturedAt": "2026-11-01T06:55:08.144Z",
+  "files": [
+    {
+      "file": "src/data/content.js",
+      "lines": 828
+    },
+    {
+      "file": "src/styles/about.css",
+      "lines": 718
+    },
+    {
+      "file": "src/styles/archive/archive-decorations.css",
+      "lines": 672
+    },
+    {
+      "file": "src/scripts/archive/game-deck/index.js",
+      "lines": 592
+    },
+    {
+      "file": "src/styles/connect.css",
+      "lines": 591
+    },
+    {
+      "file": "src/styles/home.css",
+      "lines": 516
+    },
+    {
+      "file": "src/scripts/hero-webgl/controller.js",
+      "lines": 476
+    },
+    {
+      "file": "src/styles/work.css",
+      "lines": 455
+    },
+    {
+      "file": "src/scripts/archive/github.js",
+      "lines": 437
+    },
+    {
+      "file": "src/scripts/archive/off-screen.js",
+      "lines": 429
+    },
+    {
+      "file": "src/scripts/archive/companion.js",
+      "lines": 373
+    },
+    {
+      "file": "src/scripts/home/archive-search.js",
+      "lines": 370
+    },
+    {
+      "file": "src/scripts/global/identity.js",
+      "lines": 367
+    },
+    {
+      "file": "src/scripts/archive/game-deck/entrance-data.js",
+      "lines": 344
+    },
+    {
+      "file": "src/styles/archive/credentials.css",
+      "lines": 341
+    },
+    {
+      "file": "src/scripts/home/hero-motion.js",
+      "lines": 305
+    },
+    {
+      "file": "src/scripts/curtain-controller.js",
+      "lines": 293
+    },
+    {
+      "file": "src/scripts/global/decorations.js",
+      "lines": 291
+    },
+    {
+      "file": "src/scripts/archive/game-deck/scene-data.js",
+      "lines": 278
+    },
+    {
+      "file": "src/styles/global/edge-archive.css",
+      "lines": 271
+    },
+    {
+      "file": "src/scripts/global/section-motion.js",
+      "lines": 266
+    },
+    {
+      "file": "src/scripts/generative-ambient.js",
+      "lines": 257
+    },
+    {
+      "file": "src/scripts/archive/credentials.js",
+      "lines": 254
+    },
+    {
+      "file": "src/styles/global/header.css",
+      "lines": 244
+    },
+    {
+      "file": "src/scripts/page-transitions.js",
+      "lines": 240
+    },
+    {
+      "file": "src/scripts/hero-webgl/scene.js",
+      "lines": 224
+    },
+    {
+      "file": "src/scripts/work/webgl-hover.js",
+      "lines": 220
+    },
+    {
+      "file": "src/scripts/connect.js",
+      "lines": 217
+    },
+    {
+      "file": "src/styles/curtain.css",
+      "lines": 217
+    },
+    {
+      "file": "src/scripts/core/page-lifecycle.js",
+      "lines": 216
+    },
+    {
+      "file": "src/pages/archive/off-screen.astro",
+      "lines": 214
+    },
+    {
+      "file": "src/scripts/about/motion.js",
+      "lines": 206
+    },
+    {
+      "file": "src/styles/global/hero-foundation.css",
+      "lines": 203
+    },
+    {
+      "file": "src/scripts/archive/game-deck/crt.js",
+      "lines": 196
+    },
+    {
+      "file": "src/scripts/work/renderers.js",
+      "lines": 188
+    },
+    {
+      "file": "src/styles/global/archive-search.css",
+      "lines": 187
+    },
+    {
+      "file": "src/scripts/about/curiosity-map.js",
+      "lines": 184
+    },
+    {
+      "file": "src/scripts/hero-webgl/geometry.js",
+      "lines": 174
+    },
+    {
+      "file": "src/styles/archive/off-screen.css",
+      "lines": 166
+    },
+    {
+      "file": "src/styles/global/ornaments.css",
+      "lines": 166
+    },
+    {
+      "file": "src/styles/archive/game-deck.css",
+      "lines": 164
+    },
+    {
+      "file": "src/pages/about.astro",
+      "lines": 158
+    },
+    {
+      "file": "src/components/layout/Header.astro",
+      "lines": 154
+    },
+    {
+      "file": "src/scripts/hero-webgl/shaders.js",
+      "lines": 152
+    },
+    {
+      "file": "src/scripts/archive/konami.js",
+      "lines": 149
+    },
+    {
+      "file": "src/scripts/core/motion-registry.js",
+      "lines": 149
+    },
+    {
+      "file": "src/pages/index.astro",
+      "lines": 148
+    },
+    {
+      "file": "src/scripts/global.js",
+      "lines": 146
+    },
+    {
+      "file": "src/styles/global/site-chrome.css",
+      "lines": 144
+    },
+    {
+      "file": "public/og-default.png",
+      "lines": 141
+    },
+    {
+      "file": "src/components/home/HeroCanvas.astro",
+      "lines": 137
+    },
+    {
+      "file": "src/styles/hero-webgl.css",
+      "lines": 136
+    },
+    {
+      "file": "src/styles/global/base.css",
+      "lines": 135
+    },
+    {
+      "file": "src/scripts/global/scroll.js",
+      "lines": 132
+    },
+    {
+      "file": "src/scripts/work/project-reveal.js",
+      "lines": 131
+    },
+    {
+      "file": "src/components/home/Hero.astro",
+      "lines": 128
+    },
+    {
+      "file": "src/styles/case-narrative.css",
+      "lines": 123
+    },
+    {
+      "file": "src/scripts/global/navigation.js",
+      "lines": 122
+    },
+    {
+      "file": "src/styles/global/decorations.css",
+      "lines": 121
+    },
+    {
+      "file": "src/scripts/global/now-playing.js",
+      "lines": 113
+    },
+    {
+      "file": "src/scripts/generative-ambient/effects/constellation.js",
+      "lines": 112
+    },
+    {
+      "file": "src/pages/archive/index.astro",
+      "lines": 111
+    },
+    {
+      "file": "src/scripts/generative-ambient/effects/orbital.js",
+      "lines": 111
+    },
+    {
+      "file": "src/scripts/core/dom.js",
+      "lines": 108
+    },
+    {
+      "file": "src/layouts/BaseLayout.astro",
+      "lines": 107
+    },
+    {
+      "file": "src/pages/connect.astro",
+      "lines": 107
+    },
+    {
+      "file": "src/scripts/core/magnetic-buttons.js",
+      "lines": 106
+    },
+    {
+      "file": "src/pages/work/[slug].astro",
+      "lines": 104
+    },
+    {
+      "file": "src/styles/global/responsive-core.css",
+      "lines": 101
+    },
+    {
+      "file": "src/styles/archive/github.css",
+      "lines": 98
+    },
+    {
+      "file": "src/scripts/case-narrative.js",
+      "lines": 97
+    },
+    {
+      "file": "src/scripts/generative-ambient/effects/isometric-grid.js",
+      "lines": 97
+    },
+    {
+      "file": "src/styles/global/shared-components.css",
+      "lines": 94
+    },
+    {
+      "file": "src/scripts/about/renderers.js",
+      "lines": 92
+    },
+    {
+      "file": "src/pages/work/index.astro",
+      "lines": 91
+    },
+    {
+      "file": "src/scripts/core/audio-runtime.js",
+      "lines": 91
+    },
+    {
+      "file": "src/pages/archive/play.astro",
+      "lines": 89
+    },
+    {
+      "file": "src/pages/archive/credentials.astro",
+      "lines": 86
+    },
+    {
+      "file": "public/assets/profile-card.svg",
+      "lines": 82
+    },
+    {
+      "file": "src/styles/global/now-playing.css",
+      "lines": 79
+    },
+    {
+      "file": "src/scripts/archive/motion.js",
+      "lines": 75
+    },
+    {
+      "file": "src/scripts/global/audio-feedback.js",
+      "lines": 75
+    },
+    {
+      "file": "src/components/work/ProjectCard.astro",
+      "lines": 72
+    },
+    {
+      "file": "src/scripts/archive/index.js",
+      "lines": 70
+    },
+    {
+      "file": "src/scripts/work/batch-motion.js",
+      "lines": 70
+    },
+    {
+      "file": "src/styles/global/tokens.css",
+      "lines": 70
+    },
+    {
+      "file": "src/styles/global/arcade-v4.css",
+      "lines": 69
+    },
+    {
+      "file": "src/components/home/Curtain.astro",
+      "lines": 67
+    },
+    {
+      "file": "public/assets/project-aqi.svg",
+      "lines": 67
+    },
+    {
+      "file": "src/styles/archive/companion.css",
+      "lines": 64
+    },
+    {
+      "file": "public/assets/project-ihsg.svg",
+      "lines": 63
+    },
+    {
+      "file": "src/styles/global/arcade-responsive.css",
+      "lines": 61
+    },
+    {
+      "file": "public/assets/project-portfolio.svg",
+      "lines": 61
+    },
+    {
+      "file": "src/scripts/home/hero-interactions.js",
+      "lines": 60
+    },
+    {
+      "file": "src/scripts/work.js",
+      "lines": 57
+    },
+    {
+      "file": "src/scripts/hero-webgl/index.js",
+      "lines": 55
+    },
+    {
+      "file": "src/scripts/about/interactions.js",
+      "lines": 54
+    },
+    {
+      "file": "src/styles/page-transitions.css",
+      "lines": 51
+    },
+    {
+      "file": "src/content.config.ts",
+      "lines": 48
+    },
+    {
+      "file": "src/scripts/core.js",
+      "lines": 47
+    },
+    {
+      "file": "src/scripts/work/filters.js",
+      "lines": 44
+    },
+    {
+      "file": "src/scripts/home.js",
+      "lines": 43
+    },
+    {
+      "file": "src/components/work/CaseNarrative.astro",
+      "lines": 41
+    },
+    {
+      "file": "src/content/work/aqi-cirebon.md",
+      "lines": 38
+    },
+    {
+      "file": "src/scripts/about.js",
+      "lines": 38
+    },
+    {
+      "file": "src/scripts/core/scroll-runtime.js",
+      "lines": 35
+    },
+    {
+      "file": "src/scripts/core/environment.js",
+      "lines": 32
+    },
+    {
+      "file": "src/scripts/core/motion-config.js",
+      "lines": 31
+    },
+    {
+      "file": "src/styles/global.css",
+      "lines": 28
+    },
+    {
+      "file": "src/scripts/archive/shared/pet-blink.js",
+      "lines": 26
+    },
+    {
+      "file": "public/assets/identity/f-monogram.svg",
+      "lines": 22
+    },
+    {
+      "file": "src/components/layout/PageTransitionOverlay.astro",
+      "lines": 21
+    },
+    {
+      "file": "src/components/work/ReservedCard.astro",
+      "lines": 21
+    },
+    {
+      "file": "src/styles/archive/v4-reduced-motion.css",
+      "lines": 17
+    },
+    {
+      "file": "src/styles/archive.css",
+      "lines": 17
+    },
+    {
+      "file": "src/content/work/ideas-in-progress.md",
+      "lines": 15
+    },
+    {
+      "file": "src/content/work/saham-indonesia.md",
+      "lines": 15
+    },
+    {
+      "file": "src/styles/global/konami.css",
+      "lines": 14
+    },
+    {
+      "file": "src/scripts/archive.js",
+      "lines": 12
+    },
+    {
+      "file": "src/components/layout/Footer.astro",
+      "lines": 11
+    },
+    {
+      "file": "public/assets/credentials/README.txt",
+      "lines": 8
+    },
+    {
+      "file": "public/assets/favicon.svg",
+      "lines": 8
+    },
+    {
+      "file": "public/favicon.svg",
+      "lines": 8
+    },
+    {
+      "file": "public/favicon.ico",
+      "lines": 4
+    }
+  ]
+}

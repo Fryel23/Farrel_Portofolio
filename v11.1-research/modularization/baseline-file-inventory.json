@@ -1,0 +1,287 @@
+{
+  "capturedAt": "2026-11-01T05:11:23.181Z",
+  "source": "portfolio-astro V11.1 (Signature WebGL Hero)",
+  "totalFiles": 56,
+  "files": [
+    {
+      "file": "src/scripts/archive.js",
+      "bytes": 127395,
+      "lines": 2996
+    },
+    {
+      "file": "src/styles/global.css",
+      "bytes": 55934,
+      "lines": 1945
+    },
+    {
+      "file": "src/styles/archive.css",
+      "bytes": 45720,
+      "lines": 1516
+    },
+    {
+      "file": "src/scripts/global.js",
+      "bytes": 57282,
+      "lines": 1381
+    },
+    {
+      "file": "src/scripts/hero-webgl/index.js",
+      "bytes": 39328,
+      "lines": 990
+    },
+    {
+      "file": "src/data/content.js",
+      "bytes": 36926,
+      "lines": 828
+    },
+    {
+      "file": "src/styles/about.css",
+      "bytes": 20756,
+      "lines": 718
+    },
+    {
+      "file": "src/scripts/home.js",
+      "bytes": 29377,
+      "lines": 708
+    },
+    {
+      "file": "src/scripts/core.js",
+      "bytes": 29212,
+      "lines": 686
+    },
+    {
+      "file": "src/scripts/work.js",
+      "bytes": 26165,
+      "lines": 644
+    },
+    {
+      "file": "src/styles/connect.css",
+      "bytes": 16952,
+      "lines": 591
+    },
+    {
+      "file": "src/scripts/generative-ambient.js",
+      "bytes": 19122,
+      "lines": 529
+    },
+    {
+      "file": "src/styles/home.css",
+      "bytes": 15361,
+      "lines": 516
+    },
+    {
+      "file": "src/scripts/about.js",
+      "bytes": 20237,
+      "lines": 505
+    },
+    {
+      "file": "src/styles/work.css",
+      "bytes": 13369,
+      "lines": 455
+    },
+    {
+      "file": "src/scripts/curtain-controller.js",
+      "bytes": 12496,
+      "lines": 293
+    },
+    {
+      "file": "src/scripts/page-transitions.js",
+      "bytes": 11199,
+      "lines": 240
+    },
+    {
+      "file": "src/scripts/connect.js",
+      "bytes": 8752,
+      "lines": 217
+    },
+    {
+      "file": "src/styles/curtain.css",
+      "bytes": 6777,
+      "lines": 217
+    },
+    {
+      "file": "src/pages/archive/off-screen.astro",
+      "bytes": 12984,
+      "lines": 214
+    },
+    {
+      "file": "src/pages/about.astro",
+      "bytes": 9401,
+      "lines": 158
+    },
+    {
+      "file": "src/components/layout/Header.astro",
+      "bytes": 7899,
+      "lines": 154
+    },
+    {
+      "file": "src/pages/index.astro",
+      "bytes": 7104,
+      "lines": 148
+    },
+    {
+      "file": "public/og-default.png",
+      "bytes": 89474,
+      "lines": 141
+    },
+    {
+      "file": "src/components/home/HeroCanvas.astro",
+      "bytes": 6406,
+      "lines": 137
+    },
+    {
+      "file": "src/styles/hero-webgl.css",
+      "bytes": 4502,
+      "lines": 136
+    },
+    {
+      "file": "src/components/home/Hero.astro",
+      "bytes": 8542,
+      "lines": 128
+    },
+    {
+      "file": "src/styles/case-narrative.css",
+      "bytes": 3745,
+      "lines": 123
+    },
+    {
+      "file": "src/pages/archive/index.astro",
+      "bytes": 6046,
+      "lines": 111
+    },
+    {
+      "file": "src/layouts/BaseLayout.astro",
+      "bytes": 4840,
+      "lines": 107
+    },
+    {
+      "file": "src/pages/connect.astro",
+      "bytes": 6041,
+      "lines": 107
+    },
+    {
+      "file": "src/pages/work/[slug].astro",
+      "bytes": 4510,
+      "lines": 104
+    },
+    {
+      "file": "src/scripts/case-narrative.js",
+      "bytes": 3779,
+      "lines": 97
+    },
+    {
+      "file": "src/pages/work/index.astro",
+      "bytes": 4480,
+      "lines": 91
+    },
+    {
+      "file": "src/pages/archive/play.astro",
+      "bytes": 4863,
+      "lines": 89
+    },
+    {
+      "file": "src/pages/archive/credentials.astro",
+      "bytes": 4284,
+      "lines": 86
+    },
+    {
+      "file": "public/assets/profile-card.svg",
+      "bytes": 5551,
+      "lines": 82
+    },
+    {
+      "file": "src/components/work/ProjectCard.astro",
+      "bytes": 2552,
+      "lines": 72
+    },
+    {
+      "file": "src/components/home/Curtain.astro",
+      "bytes": 3337,
+      "lines": 67
+    },
+    {
+      "file": "public/assets/project-aqi.svg",
+      "bytes": 4169,
+      "lines": 67
+    },
+    {
+      "file": "public/assets/project-ihsg.svg",
+      "bytes": 4935,
+      "lines": 63
+    },
+    {
+      "file": "public/assets/project-portfolio.svg",
+      "bytes": 3756,
+      "lines": 61
+    },
+    {
+      "file": "src/styles/page-transitions.css",
+      "bytes": 1206,
+      "lines": 51
+    },
+    {
+      "file": "src/content.config.ts",
+      "bytes": 1638,
+      "lines": 48
+    },
+    {
+      "file": "src/components/work/CaseNarrative.astro",
+      "bytes": 1472,
+      "lines": 41
+    },
+    {
+      "file": "src/content/work/aqi-cirebon.md",
+      "bytes": 2558,
+      "lines": 38
+    },
+    {
+      "file": "public/assets/identity/f-monogram.svg",
+      "bytes": 1057,
+      "lines": 22
+    },
+    {
+      "file": "src/components/layout/PageTransitionOverlay.astro",
+      "bytes": 1099,
+      "lines": 21
+    },
+    {
+      "file": "src/components/work/ReservedCard.astro",
+      "bytes": 687,
+      "lines": 21
+    },
+    {
+      "file": "src/content/work/ideas-in-progress.md",
+      "bytes": 904,
+      "lines": 15
+    },
+    {
+      "file": "src/content/work/saham-indonesia.md",
+      "bytes": 710,
+      "lines": 15
+    },
+    {
+      "file": "src/components/layout/Footer.astro",
+      "bytes": 302,
+      "lines": 11
+    },
+    {
+      "file": "public/assets/credentials/README.txt",
+      "bytes": 288,
+      "lines": 8
+    },
+    {
+      "file": "public/assets/favicon.svg",
+      "bytes": 448,
+      "lines": 8
+    },
+    {
+      "file": "public/favicon.svg",
+      "bytes": 448,
+      "lines": 8
+    },
+    {
+      "file": "public/favicon.ico",
+      "bytes": 1169,
+      "lines": 4
+    }
+  ]
+}

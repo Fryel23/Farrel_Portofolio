@@ -1,0 +1,107 @@
+[
+  {
+    "name": "Deck render: 11 game cards",
+    "pass": true,
+    "detail": "cards=11"
+  },
+  {
+    "name": "Deck copy rendered",
+    "pass": true,
+    "detail": "03 / INSERT COIN"
+  },
+  {
+    "name": "CRT overlay canvas active on open (fine pointer)",
+    "pass": true,
+    "detail": "canvas=1"
+  },
+  {
+    "name": "Deck state -> open (aria-expanded, grid visible)",
+    "pass": true,
+    "detail": "expanded=true gridHidden=false"
+  },
+  {
+    "name": "Deck eject -> idle (grid hidden again)",
+    "pass": true,
+    "detail": "expanded=false"
+  },
+  {
+    "name": "CRT removed after eject",
+    "pass": true,
+    "detail": "canvas=0"
+  },
+  {
+    "name": "Stat bar transform present",
+    "pass": false,
+    "detail": "none"
+  },
+  {
+    "name": "Zero console errors (/archive/play)",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "Credentials reserved slots render",
+    "pass": true,
+    "detail": "slots=3"
+  },
+  {
+    "name": "Credential requirements column",
+    "pass": true,
+    "detail": "req=1"
+  },
+  {
+    "name": "Native credential dialog present (not removed)",
+    "pass": true,
+    "detail": "dialog=1"
+  },
+  {
+    "name": "GitHub grid present",
+    "pass": true,
+    "detail": "grid=1"
+  },
+  {
+    "name": "GitHub pulse dots rendered",
+    "pass": false,
+    "detail": "dots=0"
+  },
+  {
+    "name": "GitHub copy rendered",
+    "pass": true,
+    "detail": "06 / OPEN SOURCE PULSE"
+  },
+  {
+    "name": "Off-screen pixel pet present",
+    "pass": true,
+    "detail": "pet=1"
+  },
+  {
+    "name": "Hobby chips rendered",
+    "pass": true,
+    "detail": "chips=4"
+  },
+  {
+    "name": "Desk habitat rendered",
+    "pass": false,
+    "detail": "habitat=0"
+  },
+  {
+    "name": "Desk habitat dust spans",
+    "pass": false,
+    "detail": "dust=0"
+  },
+  {
+    "name": "Companion summon works (FLIP + state)",
+    "pass": true,
+    "detail": "pressed=true"
+  },
+  {
+    "name": "Companion wall board flips to AWAY",
+    "pass": true,
+    "detail": "AWAY"
+  },
+  {
+    "name": "Zero console errors (archive functional smoke)",
+    "pass": true,
+    "detail": ""
+  }
+]

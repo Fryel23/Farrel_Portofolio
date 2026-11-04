@@ -1,0 +1,51 @@
+{
+  "phase": "phase-d",
+  "runId": "run-1",
+  "files": [
+    {
+      "path": "src/layouts/BaseLayout.astro",
+      "bytes": 4840,
+      "sha256": "081af75752ff87bed18330fc82250f84e1b6e6b45118e8e9972fa2e5f70e771a"
+    },
+    {
+      "path": "src/components/layout/Header.astro",
+      "bytes": 8236,
+      "sha256": "5541ac36f96dc8c287ca6430d255b1ab928cd6b83926a01245e812395eefb96d"
+    },
+    {
+      "path": "src/components/layout/Footer.astro",
+      "bytes": 533,
+      "sha256": "6e0facda6a5de6dcf24e4c695747f6f9e60cb0f9f3972798fa723681563f9d14"
+    },
+    {
+      "path": "src/scripts/global.js",
+      "bytes": 6967,
+      "sha256": "82b166f5c441dfae344eb7cd06773867c0260bc7eefca60fb18a5df2132431fb"
+    },
+    {
+      "path": "src/styles/global.css",
+      "bytes": 1392,
+      "sha256": "56561a7e9fa0688cecd051e012204ef1d0c592be265e61742c4722841a250524"
+    },
+    {
+      "path": "src/lib/adr-taxonomy.ts",
+      "bytes": 21575,
+      "sha256": "f4ad0b8d2fcdd017c6e3c2cbe68febfadf6fc0506611ae8915ae828da7cd3199"
+    },
+    {
+      "path": "src/data/content.js",
+      "bytes": 37329,
+      "sha256": "03b4eb791016c97856bec9635e9f248c2bceb79960fb4cfbd04d5c7bca325abe"
+    },
+    {
+      "path": "src/scripts/home/archive-search.js",
+      "bytes": 15011,
+      "sha256": "a24a1a3871c7a53098037e02787be66120ba6bf9b0508a6d7eb60d2800979823"
+    },
+    {
+      "path": "src/pages/archive/index.astro",
+      "bytes": 7008,
+      "sha256": "3e7845475b678b4578cbf1a4a060e9bdd189df4d5eed25b33871f5a40c220e4d"
+    }
+  ]
+}

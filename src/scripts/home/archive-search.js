@@ -180,7 +180,10 @@ const SEARCH_PAGE_ROUTES = {
   companion: '/archive/off-screen',
   profiles: '/connect',
   contact: '/connect',
-  closing: '/connect'
+  closing: '/connect',
+  adr: '/archive/adr',
+  codex: '/codex',
+  atlas: '/atlas'
 };
 const SEARCH_ANCHORS = {
   top: '#top',
@@ -194,7 +197,10 @@ const SEARCH_ANCHORS = {
   companion: '#companion',
   profiles: '#profiles',
   contact: '#contact',
-  closing: '#closing'
+  closing: '#closing',
+  adr: '#adr-vault',
+  codex: '#codex-page-heading',
+  atlas: '#atlas-page-heading'
 };
 
 function navigateToArchiveTarget(entry) {

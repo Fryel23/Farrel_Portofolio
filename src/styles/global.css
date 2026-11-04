@@ -25,3 +25,5 @@
 @import './global/archive-search.css';
 @import './global/decorations.css';
 @import './global/ornaments.css';
+@import './global/command-palette.css';
+@import './global/tiling-dock.css';

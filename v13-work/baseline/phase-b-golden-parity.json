@@ -1,0 +1,1004 @@
+{
+  "digest": "c31c1b97ce18b84107e4fad9f96de6947d0b92e46446582ea742469f7ffdbb98",
+  "golden": {
+    "supportedParameters": [
+      "so2",
+      "no2",
+      "pm25"
+    ],
+    "limits": {
+      "MAX_FILE_BYTES": 10485760,
+      "MAX_COLUMNS": 100,
+      "MAX_RECORDS": 100000,
+      "MAX_CELLS": 500000,
+      "MAX_CHART_POINTS": 5000,
+      "MAX_PREVIEW_ROWS": 5
+    },
+    "aqiResults": [
+      {
+        "input": {
+          "parameter": "so2",
+          "concentration": 0,
+          "unit": "µg/m³",
+          "averagingPeriod": "24h"
+        },
+        "output": {
+          "status": "valid",
+          "value": 0,
+          "valueRounded": 0,
+          "category": {
+            "status": "valid",
+            "token": "baik",
+            "label": "Baik",
+            "range": "0–50",
+            "color": "#16A34A",
+            "description": "Tidak ada dampak bagi kesehatan manusia dan hewan ataupun bangunan."
+          },
+          "basisMatched": true,
+          "detail": "Pita 0–52 µg/m³ → ISPU 0–50."
+        }
+      },
+      {
+        "input": {
+          "parameter": "so2",
+          "concentration": 13.61,
+          "unit": "µg/m³",
+          "averagingPeriod": "24h"
+        },
+        "output": {
+          "status": "valid",
+          "value": 13.086538461538462,
+          "valueRounded": 13,
+          "category": {
+            "status": "valid",
+            "token": "baik",
+            "label": "Baik",
+            "range": "0–50",
+            "color": "#16A34A",
+            "description": "Tidak ada dampak bagi kesehatan manusia dan hewan ataupun bangunan."
+          },
+          "basisMatched": true,
+          "detail": "Pita 0–52 µg/m³ → ISPU 0–50."
+        }
+      },
+      {
+        "input": {
+          "parameter": "so2",
+          "concentration": 52,
+          "unit": "µg/m³",
+          "averagingPeriod": "24h"
+        },
+        "output": {
+          "status": "valid",
+          "value": 50,
+          "valueRounded": 50,
+          "category": {
+            "status": "valid",
+            "token": "baik",
+            "label": "Baik",
+            "range": "0–50",
+            "color": "#16A34A",
+            "description": "Tidak ada dampak bagi kesehatan manusia dan hewan ataupun bangunan."
+          },
+          "basisMatched": true,
+          "detail": "Pita 0–52 µg/m³ → ISPU 0–50."
+        }
+      },
+      {
+        "input": {
+          "parameter": "so2",
+          "concentration": 52.000001,
+          "unit": "µg/m³",
+          "averagingPeriod": "24h"
+        },
+        "output": {
+          "status": "valid",
+          "value": 51.0000003828125,
+          "valueRounded": 51,
+          "category": {
+            "status": "valid",
+            "token": "sedang",
+            "label": "Sedang",
+            "range": "51–100",
+            "color": "#D9A406",
+            "description": "Tidak berpengaruh bagi kesehatan manusia atau hewan tetapi berpengaruh pada tumbuhan sensitif."
+          },
+          "basisMatched": true,
+          "detail": "Pita 52–180 µg/m³ → ISPU 51–100."
+        }
+      },
+      {
+        "input": {
+          "parameter": "so2",
+          "concentration": 83.9,
+          "unit": "µg/m³",
+          "averagingPeriod": "24h"
+        },
+        "output": {
+          "status": "valid",
+          "value": 63.21171875,
+          "valueRounded": 63,
+          "category": {
+            "status": "valid",
+            "token": "sedang",
+            "label": "Sedang",
+            "range": "51–100",
+            "color": "#D9A406",
+            "description": "Tidak berpengaruh bagi kesehatan manusia atau hewan tetapi berpengaruh pada tumbuhan sensitif."
+          },
+          "basisMatched": true,
+          "detail": "Pita 52–180 µg/m³ → ISPU 51–100."
+        }
+      },
+      {
+        "input": {
+          "parameter": "so2",
+          "concentration": 180,
+          "unit": "µg/m³",
+          "averagingPeriod": "24h"
+        },
+        "output": {
+          "status": "valid",
+          "value": 100,
+          "valueRounded": 100,
+          "category": {
+            "status": "valid",
+            "token": "sedang",
+            "label": "Sedang",
+            "range": "51–100",
+            "color": "#D9A406",
+            "description": "Tidak berpengaruh bagi kesehatan manusia atau hewan tetapi berpengaruh pada tumbuhan sensitif."
+          },
+          "basisMatched": true,
+          "detail": "Pita 52–180 µg/m³ → ISPU 51–100."
+        }
+      },
+      {
+        "input": {
+          "parameter": "so2",
+          "concentration": 400,
+          "unit": "µg/m³",
+          "averagingPeriod": "24h"
+        },
+        "output": {
+          "status": "valid",
+          "value": 200,
+          "valueRounded": 200,
+          "category": {
+            "status": "valid",
+            "token": "tidak-sehat",
+            "label": "Tidak Sehat",
+            "range": "101–200",
+            "color": "#DC2626",
+            "description": "Merugikan manusia atau golongan sensitif, dapat merugikan tumbuhan atau nilai estetika."
+          },
+          "basisMatched": true,
+          "detail": "Pita 180–400 µg/m³ → ISPU 101–200."
+        }
+      },
+      {
+        "input": {
+          "parameter": "so2",
+          "concentration": 800,
+          "unit": "µg/m³",
+          "averagingPeriod": "24h"
+        },
+        "output": {
+          "status": "valid",
+          "value": 300,
+          "valueRounded": 300,
+          "category": {
+            "status": "valid",
+            "token": "sangat-tidak-sehat",
+            "label": "Sangat Tidak Sehat",
+            "range": "201–300",
+            "color": "#9333EA",
+            "description": "Berpotensi merugikan kesehatan manusia pada sejumlah segmen populasi yang terpapar."
+          },
+          "basisMatched": true,
+          "detail": "Pita 400–800 µg/m³ → ISPU 201–300."
+        }
+      },
+      {
+        "input": {
+          "parameter": "so2",
+          "concentration": 1200,
+          "unit": "µg/m³",
+          "averagingPeriod": "24h"
+        },
+        "output": {
+          "status": "valid",
+          "value": 500,
+          "valueRounded": 500,
+          "category": {
+            "status": "valid",
+            "token": "berbahaya",
+            "label": "Berbahaya",
+            "range": "> 300",
+            "color": "#0F172A",
+            "description": "Berbahaya secara umum dan dapat merugikan kesehatan serius."
+          },
+          "basisMatched": true,
+          "detail": "Pita 800–1200 µg/m³ → ISPU 301–500."
+        }
+      },
+      {
+        "input": {
+          "parameter": "so2",
+          "concentration": 1201,
+          "unit": "µg/m³",
+          "averagingPeriod": "24h"
+        },
+        "output": {
+          "status": "out-of-range",
+          "value": null,
+          "valueRounded": null,
+          "category": {
+            "status": "beyond-scale",
+            "token": "berbahaya",
+            "label": "Berbahaya",
+            "range": "> 300",
+            "color": "#0F172A",
+            "description": "Berbahaya secara umum dan dapat merugikan kesehatan serius."
+          },
+          "basisMatched": true,
+          "detail": "Konsentrasi 1201 melebihi batas tabel µg/m³ 1200; kategori Berbahaya tanpa nilai indeks numerik."
+        }
+      },
+      {
+        "input": {
+          "parameter": "no2",
+          "concentration": 80,
+          "unit": "µg/m³",
+          "averagingPeriod": "24h"
+        },
+        "output": {
+          "status": "valid",
+          "value": 50,
+          "valueRounded": 50,
+          "category": {
+            "status": "valid",
+            "token": "baik",
+            "label": "Baik",
+            "range": "0–50",
+            "color": "#16A34A",
+            "description": "Tidak ada dampak bagi kesehatan manusia dan hewan ataupun bangunan."
+          },
+          "basisMatched": true,
+          "detail": "Pita 0–80 µg/m³ → ISPU 0–50."
+        }
+      },
+      {
+        "input": {
+          "parameter": "no2",
+          "concentration": 200,
+          "unit": "µg/m³",
+          "averagingPeriod": "24h"
+        },
+        "output": {
+          "status": "valid",
+          "value": 100,
+          "valueRounded": 100,
+          "category": {
+            "status": "valid",
+            "token": "sedang",
+            "label": "Sedang",
+            "range": "51–100",
+            "color": "#D9A406",
+            "description": "Tidak berpengaruh bagi kesehatan manusia atau hewan tetapi berpengaruh pada tumbuhan sensitif."
+          },
+          "basisMatched": true,
+          "detail": "Pita 80–200 µg/m³ → ISPU 51–100."
+        }
+      },
+      {
+        "input": {
+          "parameter": "no2",
+          "concentration": 1130,
+          "unit": "µg/m³",
+          "averagingPeriod": "24h"
+        },
+        "output": {
+          "status": "valid",
+          "value": 200,
+          "valueRounded": 200,
+          "category": {
+            "status": "valid",
+            "token": "tidak-sehat",
+            "label": "Tidak Sehat",
+            "range": "101–200",
+            "color": "#DC2626",
+            "description": "Merugikan manusia atau golongan sensitif, dapat merugikan tumbuhan atau nilai estetika."
+          },
+          "basisMatched": true,
+          "detail": "Pita 200–1130 µg/m³ → ISPU 101–200."
+        }
+      },
+      {
+        "input": {
+          "parameter": "no2",
+          "concentration": 2260,
+          "unit": "µg/m³",
+          "averagingPeriod": "24h"
+        },
+        "output": {
+          "status": "valid",
+          "value": 300,
+          "valueRounded": 300,
+          "category": {
+            "status": "valid",
+            "token": "sangat-tidak-sehat",
+            "label": "Sangat Tidak Sehat",
+            "range": "201–300",
+            "color": "#9333EA",
+            "description": "Berpotensi merugikan kesehatan manusia pada sejumlah segmen populasi yang terpapar."
+          },
+          "basisMatched": true,
+          "detail": "Pita 1130–2260 µg/m³ → ISPU 201–300."
+        }
+      },
+      {
+        "input": {
+          "parameter": "no2",
+          "concentration": 3000,
+          "unit": "µg/m³",
+          "averagingPeriod": "24h"
+        },
+        "output": {
+          "status": "valid",
+          "value": 500,
+          "valueRounded": 500,
+          "category": {
+            "status": "valid",
+            "token": "berbahaya",
+            "label": "Berbahaya",
+            "range": "> 300",
+            "color": "#0F172A",
+            "description": "Berbahaya secara umum dan dapat merugikan kesehatan serius."
+          },
+          "basisMatched": true,
+          "detail": "Pita 2260–3000 µg/m³ → ISPU 301–500."
+        }
+      },
+      {
+        "input": {
+          "parameter": "pm25",
+          "concentration": 15.5,
+          "unit": "µg/m³",
+          "averagingPeriod": "24h"
+        },
+        "output": {
+          "status": "valid",
+          "value": 50,
+          "valueRounded": 50,
+          "category": {
+            "status": "valid",
+            "token": "baik",
+            "label": "Baik",
+            "range": "0–50",
+            "color": "#16A34A",
+            "description": "Tidak ada dampak bagi kesehatan manusia dan hewan ataupun bangunan."
+          },
+          "basisMatched": true,
+          "detail": "Pita 0–15.5 µg/m³ → ISPU 0–50."
+        }
+      },
+      {
+        "input": {
+          "parameter": "pm25",
+          "concentration": 31.4,
+          "unit": "µg/m³",
+          "averagingPeriod": "24h"
+        },
+        "output": {
+          "status": "valid",
+          "value": 70.52631578947368,
+          "valueRounded": 71,
+          "category": {
+            "status": "valid",
+            "token": "sedang",
+            "label": "Sedang",
+            "range": "51–100",
+            "color": "#D9A406",
+            "description": "Tidak berpengaruh bagi kesehatan manusia atau hewan tetapi berpengaruh pada tumbuhan sensitif."
+          },
+          "basisMatched": true,
+          "detail": "Pita 15.5–55.4 µg/m³ → ISPU 51–100."
+        }
+      },
+      {
+        "input": {
+          "parameter": "pm25",
+          "concentration": 55.4,
+          "unit": "µg/m³",
+          "averagingPeriod": "24h"
+        },
+        "output": {
+          "status": "valid",
+          "value": 100,
+          "valueRounded": 100,
+          "category": {
+            "status": "valid",
+            "token": "sedang",
+            "label": "Sedang",
+            "range": "51–100",
+            "color": "#D9A406",
+            "description": "Tidak berpengaruh bagi kesehatan manusia atau hewan tetapi berpengaruh pada tumbuhan sensitif."
+          },
+          "basisMatched": true,
+          "detail": "Pita 15.5–55.4 µg/m³ → ISPU 51–100."
+        }
+      },
+      {
+        "input": {
+          "parameter": "pm25",
+          "concentration": 150.4,
+          "unit": "µg/m³",
+          "averagingPeriod": "24h"
+        },
+        "output": {
+          "status": "valid",
+          "value": 200,
+          "valueRounded": 200,
+          "category": {
+            "status": "valid",
+            "token": "tidak-sehat",
+            "label": "Tidak Sehat",
+            "range": "101–200",
+            "color": "#DC2626",
+            "description": "Merugikan manusia atau golongan sensitif, dapat merugikan tumbuhan atau nilai estetika."
+          },
+          "basisMatched": true,
+          "detail": "Pita 55.4–150.4 µg/m³ → ISPU 101–200."
+        }
+      },
+      {
+        "input": {
+          "parameter": "pm25",
+          "concentration": 250.4,
+          "unit": "µg/m³",
+          "averagingPeriod": "24h"
+        },
+        "output": {
+          "status": "valid",
+          "value": 300,
+          "valueRounded": 300,
+          "category": {
+            "status": "valid",
+            "token": "sangat-tidak-sehat",
+            "label": "Sangat Tidak Sehat",
+            "range": "201–300",
+            "color": "#9333EA",
+            "description": "Berpotensi merugikan kesehatan manusia pada sejumlah segmen populasi yang terpapar."
+          },
+          "basisMatched": true,
+          "detail": "Pita 150.4–250.4 µg/m³ → ISPU 201–300."
+        }
+      },
+      {
+        "input": {
+          "parameter": "pm25",
+          "concentration": 350.4,
+          "unit": "µg/m³",
+          "averagingPeriod": "24h"
+        },
+        "output": {
+          "status": "valid",
+          "value": 400,
+          "valueRounded": 400,
+          "category": {
+            "status": "valid",
+            "token": "berbahaya",
+            "label": "Berbahaya",
+            "range": "> 300",
+            "color": "#0F172A",
+            "description": "Berbahaya secara umum dan dapat merugikan kesehatan serius."
+          },
+          "basisMatched": true,
+          "detail": "Pita 250.4–350.4 µg/m³ → ISPU 301–400."
+        }
+      },
+      {
+        "input": {
+          "parameter": "pm25",
+          "concentration": 500.4,
+          "unit": "µg/m³",
+          "averagingPeriod": "24h"
+        },
+        "output": {
+          "status": "valid",
+          "value": 500,
+          "valueRounded": 500,
+          "category": {
+            "status": "valid",
+            "token": "berbahaya",
+            "label": "Berbahaya",
+            "range": "> 300",
+            "color": "#0F172A",
+            "description": "Berbahaya secara umum dan dapat merugikan kesehatan serius."
+          },
+          "basisMatched": true,
+          "detail": "Pita 350.4–500.4 µg/m³ → ISPU 401–500."
+        }
+      },
+      {
+        "input": {
+          "parameter": "so2",
+          "concentration": null,
+          "unit": "µg/m³",
+          "averagingPeriod": "24h"
+        },
+        "output": {
+          "status": "missing",
+          "value": null,
+          "valueRounded": null,
+          "category": null,
+          "basisMatched": false,
+          "detail": "Konsentrasi tidak tersedia (null)."
+        }
+      },
+      {
+        "input": {
+          "parameter": "so2",
+          "concentration": -1,
+          "unit": "µg/m³",
+          "averagingPeriod": "24h"
+        },
+        "output": {
+          "status": "invalid-input",
+          "value": null,
+          "valueRounded": null,
+          "category": null,
+          "basisMatched": false,
+          "detail": "Konsentrasi negatif tidak valid secara fisik untuk polutan udara ambien."
+        }
+      },
+      {
+        "input": {
+          "parameter": "so2",
+          "concentration": 25,
+          "unit": "µg/m³",
+          "averagingPeriod": "1h",
+          "allowBasisMismatch": false
+        },
+        "output": {
+          "status": "unsupported-averaging-period",
+          "value": null,
+          "valueRounded": null,
+          "category": null,
+          "basisMatched": false,
+          "detail": "Basis waktu data (\"1h\") ≠ basis tabel (24h). ISPU resmi tidak dihitung tanpa basis yang sesuai."
+        }
+      },
+      {
+        "input": {
+          "parameter": "so2",
+          "concentration": 25,
+          "unit": "µg/m³",
+          "averagingPeriod": "1h",
+          "allowBasisMismatch": true
+        },
+        "output": {
+          "status": "valid",
+          "value": 24.03846153846154,
+          "valueRounded": 24,
+          "category": {
+            "status": "valid",
+            "token": "baik",
+            "label": "Baik",
+            "range": "0–50",
+            "color": "#16A34A",
+            "description": "Tidak ada dampak bagi kesehatan manusia dan hewan ataupun bangunan."
+          },
+          "basisMatched": false,
+          "detail": "Pita 0–52 µg/m³ → ISPU 0–50."
+        }
+      },
+      {
+        "input": {
+          "parameter": "so2",
+          "concentration": 25,
+          "unit": "µg/m³",
+          "averagingPeriod": "24h",
+          "validPercent": 60
+        },
+        "output": {
+          "status": "insufficient-data",
+          "value": null,
+          "valueRounded": null,
+          "category": null,
+          "basisMatched": false,
+          "detail": "Kelengkapan data 60% di bawah ambang 75%; sub-indeks tidak dihitung."
+        }
+      },
+      {
+        "input": {
+          "parameter": "pm10",
+          "concentration": 40,
+          "unit": "µg/m³",
+          "averagingPeriod": "24h"
+        },
+        "output": {
+          "status": "unsupported-parameter",
+          "value": null,
+          "valueRounded": null,
+          "category": null,
+          "basisMatched": false,
+          "detail": "Parameter \"pm10\" belum punya tabel breakpoint terverifikasi."
+        }
+      }
+    ],
+    "statsResults": [
+      {
+        "mean": null,
+        "median": null,
+        "min": null,
+        "max": null,
+        "sdPop": null,
+        "sdSample": null,
+        "countValid": 0,
+        "countMissing": 0,
+        "validPct": null
+      },
+      {
+        "mean": null,
+        "median": null,
+        "min": null,
+        "max": null,
+        "sdPop": null,
+        "sdSample": null,
+        "countValid": 0,
+        "countMissing": 5,
+        "validPct": 0
+      },
+      {
+        "mean": 0,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sdPop": 0,
+        "sdSample": 0,
+        "countValid": 3,
+        "countMissing": 0,
+        "validPct": 100
+      },
+      {
+        "mean": 15,
+        "median": 15,
+        "min": 10,
+        "max": 20,
+        "sdPop": 5,
+        "sdSample": 7.0710678118654755,
+        "countValid": 2,
+        "countMissing": 1,
+        "validPct": 66.7
+      },
+      {
+        "mean": 5,
+        "median": 5,
+        "min": -10,
+        "max": 20,
+        "sdPop": 11.180339887498949,
+        "sdSample": 12.909944487358056,
+        "countValid": 4,
+        "countMissing": 0,
+        "validPct": 100
+      },
+      {
+        "mean": 2.75,
+        "median": 2.75,
+        "min": 1.1,
+        "max": 4.4,
+        "sdPop": 1.2298373876248845,
+        "sdSample": 1.4200938936093863,
+        "countValid": 4,
+        "countMissing": 0,
+        "validPct": 100
+      },
+      {
+        "mean": 7,
+        "median": 7,
+        "min": 7,
+        "max": 7,
+        "sdPop": 0,
+        "sdSample": null,
+        "countValid": 1,
+        "countMissing": 0,
+        "validPct": 100
+      }
+    ],
+    "datasets": [
+      {
+        "year": 2021,
+        "validation": {
+          "ok": true,
+          "issues": []
+        },
+        "dominant": {
+          "status": "valid",
+          "counts": {
+            "so2": 12,
+            "no2": 12,
+            "pm25": 0
+          },
+          "leader": "so2",
+          "sampleSize": 24
+        }
+      },
+      {
+        "year": 2022,
+        "validation": {
+          "ok": true,
+          "issues": []
+        },
+        "dominant": {
+          "status": "valid",
+          "counts": {
+            "so2": 17,
+            "no2": 7,
+            "pm25": 0
+          },
+          "leader": "so2",
+          "sampleSize": 24
+        }
+      },
+      {
+        "year": 2023,
+        "validation": {
+          "ok": true,
+          "issues": []
+        },
+        "dominant": {
+          "status": "valid",
+          "counts": {
+            "so2": 20,
+            "no2": 4,
+            "pm25": 0
+          },
+          "leader": "so2",
+          "sampleSize": 24
+        }
+      },
+      {
+        "year": 2024,
+        "validation": {
+          "ok": true,
+          "issues": []
+        },
+        "dominant": {
+          "status": "valid",
+          "counts": {
+            "so2": 22,
+            "no2": 2,
+            "pm25": 0
+          },
+          "leader": "so2",
+          "sampleSize": 24
+        }
+      },
+      {
+        "year": 2025,
+        "validation": {
+          "ok": true,
+          "issues": []
+        },
+        "dominant": {
+          "status": "valid",
+          "counts": {
+            "so2": 4,
+            "no2": 0,
+            "pm25": 0
+          },
+          "leader": "so2",
+          "sampleSize": 4
+        }
+      }
+    ],
+    "csvParsed": [
+      [
+        [
+          "name",
+          "description",
+          "value"
+        ],
+        [
+          "A",
+          "x",
+          "1"
+        ],
+        [
+          "B",
+          "y",
+          "2"
+        ]
+      ],
+      [
+        [
+          "name",
+          "description",
+          "value"
+        ],
+        [
+          "A",
+          "Data dengan, koma",
+          "100"
+        ]
+      ],
+      [
+        [
+          "name",
+          "description",
+          "value"
+        ],
+        [
+          "B",
+          "Teks dengan \"kutip\"",
+          "200"
+        ]
+      ],
+      [
+        [
+          "name",
+          "description",
+          "value"
+        ],
+        [
+          "C",
+          "Baris pertama\nbaris kedua",
+          "300"
+        ]
+      ],
+      [
+        [
+          "h1",
+          "h2"
+        ],
+        [
+          "a",
+          "b"
+        ],
+        [
+          "c",
+          "d"
+        ]
+      ],
+      [
+        [
+          "h1",
+          "h2"
+        ],
+        [
+          "a",
+          "b"
+        ]
+      ]
+    ],
+    "csvErrors": [
+      {
+        "code": "CSV_UNCLOSED_QUOTE",
+        "recordIndex": 2,
+        "columnIndex": 2,
+        "safe": {
+          "code": "CSV_UNCLOSED_QUOTE",
+          "message": "Tanda kutip tidak ditutup sampai akhir file (record 2, kolom 2)."
+        }
+      },
+      {
+        "code": "CSV_ILLEGAL_QUOTE",
+        "recordIndex": 2,
+        "columnIndex": 2,
+        "safe": {
+          "code": "CSV_ILLEGAL_QUOTE",
+          "message": "Tanda kutip ilegal di dalam field tanpa kutip (record 2, kolom 2). Bungkus field dengan kutip atau hapus kutipnya."
+        }
+      },
+      {
+        "code": "CSV_TRAILING_CHARS",
+        "recordIndex": 2,
+        "columnIndex": 2,
+        "safe": {
+          "code": "CSV_TRAILING_CHARS",
+          "message": "Karakter tidak diizinkan setelah tanda kutip penutup (record 2, kolom 2). Perbaiki format kutip pada CSV."
+        }
+      }
+    ],
+    "analysisOut": {
+      "file": {
+        "name": "sample.csv",
+        "sizeBytes": 112
+      },
+      "columnCount": 3,
+      "rowCount": 4,
+      "columns": [
+        {
+          "id": "column-0",
+          "index": 0,
+          "name": "tanggal",
+          "displayName": "tanggal",
+          "type": "date",
+          "validCount": 4,
+          "missingCount": 0
+        },
+        {
+          "id": "column-1",
+          "index": 1,
+          "name": "kota",
+          "displayName": "kota",
+          "type": "categorical",
+          "validCount": 4,
+          "missingCount": 0
+        },
+        {
+          "id": "column-2",
+          "index": 2,
+          "name": "nilai",
+          "displayName": "nilai",
+          "type": "numeric",
+          "validCount": 3,
+          "missingCount": 1
+        }
+      ],
+      "preview": {
+        "requestedRows": 5,
+        "rows": [
+          [
+            "2024-01-01",
+            "Cirebon",
+            "12.5"
+          ],
+          [
+            "2024-01-02",
+            "Bandung",
+            ""
+          ],
+          [
+            "2024-01-03",
+            "Jakarta",
+            "-4.2"
+          ],
+          [
+            "2024-01-04",
+            "Surabaya",
+            "18.0"
+          ]
+        ]
+      },
+      "stats": {
+        "column-2": {
+          "mean": 8.766666666666667,
+          "median": 12.5,
+          "min": -4.2,
+          "max": 18,
+          "validCount": 3,
+          "missingCount": 1
+        }
+      },
+      "warnings": {
+        "normalizedRecordCount": 0,
+        "blankLinesSkipped": 0,
+        "hasWarnings": false
+      }
+    },
+    "chartOut": {
+      "xColumnId": "column-0",
+      "yColumnId": "column-2",
+      "xType": "date",
+      "labels": [
+        "2024-01-01",
+        "2024-01-02",
+        "2024-01-03",
+        "2024-01-04"
+      ],
+      "values": [
+        12.5,
+        null,
+        -4.2,
+        18
+      ],
+      "totalRecords": 4,
+      "pointsSent": 4,
+      "sampled": false,
+      "sampleStride": null
+    }
+  }
+}

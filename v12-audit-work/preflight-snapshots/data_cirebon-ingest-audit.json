@@ -1,0 +1,176 @@
+{
+  "generatedAt": "2026-11-01T09:16:20.396Z",
+  "input": {
+    "path": "/home/z/my-project/v11-work/portfolio-astro/data/sources/data_kualitas_udara_2.csv",
+    "sha256": "9ce4de3d0466c71d1ce10447941236e9b7cfc19af255c6831fec89a5d25a31a0",
+    "bytes": 22288
+  },
+  "parsed": {
+    "dataRows": 200,
+    "parameters": {
+      "SO₂ (µg/Nm³)": "so2",
+      "NO₂ (µg/Nm³)": "no2"
+    },
+    "uniqueLocations": 23,
+    "groups": 100
+  },
+  "perYear": {
+    "2021": {
+      "records": 24,
+      "locations": 12,
+      "stages": [
+        "TAHAP I",
+        "TAHAP II"
+      ],
+      "valid": {
+        "so2": 24,
+        "no2": 24
+      },
+      "missing": {
+        "so2": 0,
+        "no2": 0
+      },
+      "zeroCells": 0
+    },
+    "2022": {
+      "records": 24,
+      "locations": 12,
+      "stages": [
+        "TAHAP I",
+        "TAHAP II"
+      ],
+      "valid": {
+        "so2": 24,
+        "no2": 24
+      },
+      "missing": {
+        "so2": 0,
+        "no2": 0
+      },
+      "zeroCells": 0
+    },
+    "2023": {
+      "records": 24,
+      "locations": 12,
+      "stages": [
+        "TAHAP I",
+        "TAHAP II"
+      ],
+      "valid": {
+        "so2": 24,
+        "no2": 24
+      },
+      "missing": {
+        "so2": 0,
+        "no2": 0
+      },
+      "zeroCells": 12
+    },
+    "2024": {
+      "records": 24,
+      "locations": 12,
+      "stages": [
+        "TAHAP I",
+        "TAHAP II"
+      ],
+      "valid": {
+        "so2": 24,
+        "no2": 23
+      },
+      "missing": {
+        "so2": 0,
+        "no2": 1
+      },
+      "zeroCells": 0
+    },
+    "2025": {
+      "records": 4,
+      "locations": 4,
+      "stages": [
+        "TAHAP I"
+      ],
+      "valid": {
+        "so2": 4,
+        "no2": 4
+      },
+      "missing": {
+        "so2": 0,
+        "no2": 0
+      },
+      "zeroCells": 0
+    }
+  },
+  "missingByParameter": {
+    "so2": 0,
+    "no2": 1
+  },
+  "zeroValueGroups": [
+    {
+      "year": 2023,
+      "stage": "TAHAP I",
+      "location": "AREA PELABUHAN (PT. DOK KODJA BAHARI)",
+      "recordId": "2023-tahap-i-area-pelabuhan-pt-dok-kodja-bahari"
+    },
+    {
+      "year": 2023,
+      "stage": "TAHAP I",
+      "location": "DEPAN KANTOR DISUKCAPIL BIMA, JL. BRIGJEN DARSONO",
+      "recordId": "2023-tahap-i-depan-kantor-disukcapil-bima-jl-brigjen-darsono"
+    },
+    {
+      "year": 2023,
+      "stage": "TAHAP I",
+      "location": "JL. AHMAD YANI (TERMINAL) KEL. LARANGAN, HARJAMUKTI",
+      "recordId": "2023-tahap-i-jl-ahmad-yani-terminal-kel-larangan-harjamukti"
+    },
+    {
+      "year": 2023,
+      "stage": "TAHAP I",
+      "location": "PERUMNAS GUNUNG, DEPAN KEL. KECAPI",
+      "recordId": "2023-tahap-i-perumnas-gunung-depan-kel-kecapi"
+    },
+    {
+      "year": 2023,
+      "stage": "TAHAP I",
+      "location": "STASIUN KEJAKSAAN CIREBON",
+      "recordId": "2023-tahap-i-stasiun-kejaksaan-cirebon"
+    },
+    {
+      "year": 2023,
+      "stage": "TAHAP II",
+      "location": "RW 02 PERUMAHAN GRIYA NUSANTARA KEL. ARGASURYA",
+      "recordId": "2023-tahap-ii-rw-02-perumahan-griya-nusantara-kel-argasurya"
+    }
+  ],
+  "duplicateGroups": [
+    {
+      "location": "DEPAN KANTOR DISUKCAPIL BIMA, JL. BRIGJEN DARSONO",
+      "year": 2024,
+      "stage": "TAHAP II",
+      "parameter": "no2"
+    }
+  ],
+  "transformations": [
+    "Kolom `indeks_kualitas_udara` dipakai sebagai KONSENTRASI µg/Nm³ (nama kolom sumber menyesatkan; dikonfirmasi pemilik data: nilai masih konsentrasi, ISPU dihitung dengan rumus P.14/2020).",
+    "Nama lokasi dinormalisasi whitespace (newline/spasi beruntuk → satu spasi) tanpa mengubah karakter lain.",
+    "Baris SO₂/NO₂ yang terpisah diagregasi per kombinasi (lokasi, tahun, tahap) menjadi satu record.",
+    "Sub-indeks & ISPU dihitung build-time dengan modul bersama src/scripts/lab/core/aqi-calculator.js (P.14/2020, allowBasisMismatch eksplisit — basis waktu tahap ≠ 1 jam tabel, ditandai derived).",
+    "Tidak ada penghapusan/outlier/smoothing/interpolasi. Nilai null dipertahankan.",
+    "Anomali duplikat ditangani transparan: bila satu kombinasi (lokasi, tahun, tahap, parameter) memuat >1 baris, nilai kemunculan pertama (urutan sumber) dipakai dan SEMUA kemunculan disimpan pada record.duplicates — tidak ada yang dihapus diam-diam."
+  ],
+  "outputs": [
+    "/home/z/my-project/v11-work/portfolio-astro/public/data/aqi/cirebon-2021.json",
+    "/home/z/my-project/v11-work/portfolio-astro/public/data/aqi/cirebon-2022.json",
+    "/home/z/my-project/v11-work/portfolio-astro/public/data/aqi/cirebon-2023.json",
+    "/home/z/my-project/v11-work/portfolio-astro/public/data/aqi/cirebon-2024.json",
+    "/home/z/my-project/v11-work/portfolio-astro/public/data/aqi/cirebon-2025.json",
+    "/home/z/my-project/v11-work/portfolio-astro/public/data/aqi/regions.json"
+  ],
+  "ispuMethodology": {
+    "formula": "I = ((Ia - Ib) / (Xa - Xb)) * (Xx - Xb) + Ib",
+    "so2Table": "0-52→0-50; >52-180→51-100; >180-400→101-200; >400-800→201-300; >800-1200→301-500 (µg/m³)",
+    "no2Table": "0-80→0-50; >80-200→51-100; >101-200; >1130-2260→201-300; >2260-3000→301-500 (µg/m³)",
+    "finalIndex": "ISPU = round(max(subIndex so2, subIndex no2)) — hanya parameter valid yang dibandingkan",
+    "basisNote": "allowBasisMismatch=true (basis tahap ≠ 1 jam); seluruh nilai ditandai derived."
+  }
+}

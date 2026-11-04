@@ -1,0 +1,267 @@
+{
+  "graph": {
+    "scripts/about.js": [
+      {
+        "spec": "./core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/archive/companion.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      },
+      {
+        "spec": "./shared/pet-blink.js",
+        "resolved": "scripts/archive/shared/pet-blink.js"
+      }
+    ],
+    "scripts/archive/credentials.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/archive/game-deck/crt.js": [
+      {
+        "spec": "../../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/archive/game-deck/entrance-data.js": [
+      {
+        "spec": "../../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/archive/game-deck/index.js": [
+      {
+        "spec": "../../core.js",
+        "resolved": "scripts/core.js"
+      },
+      {
+        "spec": "./crt.js",
+        "resolved": "scripts/archive/game-deck/crt.js"
+      },
+      {
+        "spec": "./entrance-data.js",
+        "resolved": "scripts/archive/game-deck/entrance-data.js"
+      },
+      {
+        "spec": "./scene-data.js",
+        "resolved": "scripts/archive/game-deck/scene-data.js"
+      }
+    ],
+    "scripts/archive/game-deck/scene-data.js": [
+      {
+        "spec": "../../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/archive/github.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/archive/index.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      },
+      {
+        "spec": "./github.js",
+        "resolved": "scripts/archive/github.js"
+      },
+      {
+        "spec": "./game-deck/index.js",
+        "resolved": "scripts/archive/game-deck/index.js"
+      },
+      {
+        "spec": "./konami.js",
+        "resolved": "scripts/archive/konami.js"
+      },
+      {
+        "spec": "./motion.js",
+        "resolved": "scripts/archive/motion.js"
+      },
+      {
+        "spec": "./credentials.js",
+        "resolved": "scripts/archive/credentials.js"
+      },
+      {
+        "spec": "./off-screen.js",
+        "resolved": "scripts/archive/off-screen.js"
+      },
+      {
+        "spec": "./companion.js",
+        "resolved": "scripts/archive/companion.js"
+      }
+    ],
+    "scripts/archive/konami.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/archive/motion.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/archive/off-screen.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      },
+      {
+        "spec": "./shared/pet-blink.js",
+        "resolved": "scripts/archive/shared/pet-blink.js"
+      }
+    ],
+    "scripts/archive/shared/pet-blink.js": [
+      {
+        "spec": "../../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/archive.js": [
+      {
+        "spec": "./archive/index.js",
+        "resolved": "scripts/archive/index.js"
+      }
+    ],
+    "scripts/case-narrative.js": [
+      {
+        "spec": "gsap",
+        "resolved": "(external:gsap)"
+      },
+      {
+        "spec": "gsap/ScrollTrigger",
+        "resolved": "(external:gsap/ScrollTrigger)"
+      },
+      {
+        "spec": "./core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/connect.js": [
+      {
+        "spec": "./global.js",
+        "resolved": "scripts/global.js"
+      },
+      {
+        "spec": "./core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/core.js": [
+      {
+        "spec": "../data/content.js",
+        "resolved": "data/content.js"
+      }
+    ],
+    "scripts/curtain-controller.js": [
+      {
+        "spec": "gsap",
+        "resolved": "(external:gsap)"
+      },
+      {
+        "spec": "./core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/generative-ambient.js": [],
+    "scripts/global.js": [
+      {
+        "spec": "gsap",
+        "resolved": "(external:gsap)"
+      },
+      {
+        "spec": "gsap/ScrollTrigger",
+        "resolved": "(external:gsap/ScrollTrigger)"
+      },
+      {
+        "spec": "lenis",
+        "resolved": "(external:lenis)"
+      },
+      {
+        "spec": "./home.js",
+        "resolved": "scripts/home.js"
+      },
+      {
+        "spec": "./curtain-controller.js",
+        "resolved": "scripts/curtain-controller.js"
+      },
+      {
+        "spec": "./hero-webgl/index.js",
+        "resolved": "scripts/hero-webgl/index.js"
+      },
+      {
+        "spec": "./core.js",
+        "resolved": "scripts/core.js"
+      },
+      {
+        "spec": "./page-transitions.js",
+        "resolved": "scripts/page-transitions.js"
+      }
+    ],
+    "scripts/hero-webgl/controller.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      },
+      {
+        "spec": "./scene.js",
+        "resolved": "scripts/hero-webgl/scene.js"
+      }
+    ],
+    "scripts/hero-webgl/geometry.js": [
+      {
+        "spec": "ogl",
+        "resolved": "(external:ogl)"
+      }
+    ],
+    "scripts/hero-webgl/index.js": [
+      {
+        "spec": "./controller.js",
+        "resolved": "scripts/hero-webgl/controller.js"
+      }
+    ],
+    "scripts/hero-webgl/scene.js": [
+      {
+        "spec": "./shaders.js",
+        "resolved": "scripts/hero-webgl/shaders.js"
+      },
+      {
+        "spec": "./geometry.js",
+        "resolved": "scripts/hero-webgl/geometry.js"
+      }
+    ],
+    "scripts/hero-webgl/shaders.js": [],
+    "scripts/home.js": [
+      {
+        "spec": "./core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/page-transitions.js": [
+      {
+        "spec": "./core.js",
+        "resolved": "scripts/core.js"
+      },
+      {
+        "spec": "gsap",
+        "resolved": "(external:gsap)"
+      }
+    ],
+    "scripts/work.js": [
+      {
+        "spec": "./core.js",
+        "resolved": "scripts/core.js"
+      }
+    ]
+  },
+  "cycles": []
+}

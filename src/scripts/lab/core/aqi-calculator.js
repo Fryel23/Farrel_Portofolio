@@ -1,3 +1,4 @@
+// @ts-check
 /*!
  * lab/core/aqi-calculator.js - Sub-indeks & ISPU berdasarkan PermenLHK P.14/2020.
  *
@@ -42,6 +43,20 @@
  * eksplisit tersebut; label "terderivasi" dipertahankan di seluruh UI.
  */
 
+/**
+ * @typedef {import('../../../types/lab-aqi.ts').SupportedPollutant} SupportedPollutant
+ * @typedef {import('../../../types/lab-aqi.ts').BreakpointInterval} BreakpointInterval
+ * @typedef {import('../../../types/lab-aqi.ts').PollutantBreakpointTable} PollutantBreakpointTable
+ * @typedef {import('../../../types/lab-aqi.ts').P14_2020Contract} P14_2020Contract
+ * @typedef {import('../../../types/lab-aqi.ts').IspuCategoryDefinition} IspuCategoryDefinition
+ * @typedef {import('../../../types/lab-aqi.ts').IspuCategoryResult} IspuCategoryResult
+ * @typedef {import('../../../types/lab-aqi.ts').CalculateSubIndexInput} CalculateSubIndexInput
+ * @typedef {import('../../../types/lab-aqi.ts').SubIndexCalculationResult} SubIndexCalculationResult
+ * @typedef {import('../../../types/lab-aqi.ts').IspuStatus} IspuStatus
+ * @typedef {import('../../../types/lab-aqi.ts').AggregateIspuResult} AggregateIspuResult
+ * @typedef {import('../../../types/lab-aqi.ts').DominantParameterSummaryResult} DominantParameterSummaryResult
+ */
+
 /* Toleransi floating point untuk perbandingan batas. */
 export const EPS = 1e-9;
 
@@ -50,6 +65,7 @@ export const EPS = 1e-9;
  * Setiap interval: { low, high, iLow, iHigh } dengan semantik:
  *   low < X <= high  (kecuali interval pertama: 0 <= X <= high)
  * iLow/iHigh = rentang ISPU pita (Ib/Ia pada rumus interpolasi).
+ * @type {P14_2020Contract}
  */
 export const P14_2020 = {
   method: 'P14-2020',
@@ -100,8 +116,11 @@ export const P14_2020 = {
   },
 };
 
-/** Parameter yang tabelnya benar-benar diimplementasikan. */
-export const SUPPORTED_PARAMETERS = Object.keys(P14_2020.tables);
+/**
+ * Parameter yang tabelnya benar-benar diimplementasikan.
+ * @type {SupportedPollutant[]}
+ */
+export const SUPPORTED_PARAMETERS = /** @type {SupportedPollutant[]} */ (Object.keys(P14_2020.tables));
 
 /**
  * Periode referensi tabel ISPU P.14/2020 untuk SO₂/NO₂ (kontrak aplikasi,
@@ -112,7 +131,9 @@ export const SUPPORTED_PARAMETERS = Object.keys(P14_2020.tables);
 export const ISPU_TABLE_REFERENCE_PERIOD = '24 jam (PermenLHK P.14/2020)';
 
 /** Kategori ISPU (P.14/2020). Batas: <=50 Baik, <=100 Sedang, <=200 Tidak
- *  Sehat, <=300 Sangat Tidak Sehat, >300 Berbahaya. token = kunci CSS. */
+ *  Sehat, <=300 Sangat Tidak Sehat, >300 Berbahaya. token = kunci CSS.
+ *  @type {readonly IspuCategoryDefinition[]}
+ */
 export const ISPU_CATEGORIES = [
   { token: 'baik', label: 'Baik', max: 50, range: '0–50', color: '#16A34A', description: 'Tidak ada dampak bagi kesehatan manusia dan hewan ataupun bangunan.' },
   { token: 'sedang', label: 'Sedang', max: 100, range: '51–100', color: '#D9A406', description: 'Tidak berpengaruh bagi kesehatan manusia atau hewan tetapi berpengaruh pada tumbuhan sensitif.' },
@@ -124,14 +145,22 @@ export const ISPU_CATEGORIES = [
 /** Normalisasi satuan untuk perbandingan: 'µg/Nm³' dan 'µg/m³' diperlakukan
  *  setara SESUAI PELAPORAN SUMBER (basis referensi volume tidak dikonversi;
  *  faktor konversi Nm³→m³ tidak tersedia dan tidak dikarang; dicatat pada
- *  limitations dataset). */
+ *  limitations dataset).
+ *  @param {unknown} unit
+ *  @returns {string | null}
+ */
 export function normalizeUnit(unit) {
   if (typeof unit !== 'string') return null;
   const compact = unit.replace(/\s+/g, '').replace(/[Nn]m³/g, 'm³');
   return compact.toLowerCase();
 }
 
-/** Cari interval breakpoint yang memuat konsentrasi c (c >= 0). */
+/**
+ * Cari interval breakpoint yang memuat konsentrasi c (c >= 0).
+ * @param {PollutantBreakpointTable} table
+ * @param {number} concentration
+ * @returns {BreakpointInterval | null}
+ */
 export function findInterval(table, concentration) {
   for (const interval of table.intervals) {
     const aboveLow = concentration > interval.low + EPS || interval.low === 0;
@@ -142,28 +171,37 @@ export function findInterval(table, concentration) {
 }
 
 /* Interpolasi linear murni. Prasyarat: interval valid (high > low). */
+/**
+ * @param {number} concentration
+ * @param {BreakpointInterval} interval
+ * @returns {number}
+ */
 export function interpolate(concentration, interval) {
   const { low, high, iLow, iHigh } = interval;
   return iLow + ((iHigh - iLow) / (high - low)) * (concentration - low);
 }
 
 /* Pembulatan ISPU akhir ke integer terdekat (praktik pelaporan ISPU). */
+/**
+ * @param {number} value
+ * @returns {number}
+ */
 export function roundIndex(value) {
   return Math.round(value);
 }
 
 /**
+ * @param {unknown} parameter
+ * @returns {parameter is SupportedPollutant}
+ */
+function isSupportedPollutantKey(parameter) {
+  return typeof parameter === 'string' && Object.prototype.hasOwnProperty.call(P14_2020.tables, parameter);
+}
+
+/**
  * Hitung sub-indeks satu parameter.
- * @param {object} input
- * @param {string} input.parameter    'so2' | 'no2' | 'pm25'
- * @param {number|null} input.concentration  konsentrasi (null = tidak ada data)
- * @param {string} [input.unit]       satuan konsentrasi
- * @param {string} [input.averagingPeriod]  basis waktu data pemanggil
- * @param {string} [input.method]     hanya 'P14-2020' yang didukung
- * @param {boolean} [input.allowBasisMismatch]  override eksplisit basis waktu
- *        (hasil tetap ditandai basisMatched:false)
- * @returns {{status:string, value:number|null, valueRounded:number|null,
- *          category:object|null, basisMatched:boolean, detail:string}}
+ * @param {CalculateSubIndexInput} [input]
+ * @returns {SubIndexCalculationResult}
  *  status ∈ valid | missing | invalid-input | unsupported-parameter |
  *  unsupported-averaging-period | unsupported-method | out-of-range
  */
@@ -176,12 +214,17 @@ export function calculateSubIndex({
   method = 'P14-2020',
   allowBasisMismatch = false,
 } = {}) {
+  /**
+   * @param {IspuStatus} status
+   * @param {string} detail
+   * @returns {SubIndexCalculationResult}
+   */
   const fail = (status, detail) => ({
     status, value: null, valueRounded: null, category: null,
     basisMatched: false, detail,
   });
 
-  if (typeof parameter !== 'string' || !P14_2020.tables[parameter]) {
+  if (!isSupportedPollutantKey(parameter)) {
     return fail('unsupported-parameter', `Parameter "${String(parameter)}" belum punya tabel breakpoint terverifikasi.`);
   }
   if (method !== P14_2020.method) {
@@ -256,8 +299,8 @@ export function calculateSubIndex({
 
 /**
  * Peta nilai indeks → kategori ISPU.
- * @returns {{status:'valid'|'missing'|'invalid'|'beyond-scale', token,
- *          label, range, color, description}}
+ * @param {number | null | undefined | unknown} indexValue
+ * @returns {IspuCategoryResult}
  */
 export function getISPUCategory(indexValue) {
   if (indexValue === null || indexValue === undefined) {
@@ -297,19 +340,19 @@ export function getISPUCategory(indexValue) {
  * ISPU final = sub-indeks maksimum di antara parameter yang valid
  * (polutan dominan). Hanya membandingkan sub-indeks yang statusnya 'valid'
  * (metodologi setara, P.14/2020), bukan konsentrasi mentah (spec §7.5).
- * @param {Object<string,{status:string,value:number|null}>} subIndexResults
- * @returns {{status:'valid'|'missing'|'invalid', value:number|null,
- *          dominantParameter:string|null, availableParameters:string[],
- *          category:object}}
+ * @param {Record<string,{status?:string,value?:number|null} | null | undefined> | null | undefined} subIndexResults
+ * @returns {AggregateIspuResult}
  */
 export function getISPUFromSubIndices(subIndexResults) {
   if (!subIndexResults || typeof subIndexResults !== 'object') {
     return { status: 'invalid', value: null, dominantParameter: null, availableParameters: [], category: getISPUCategory(null) };
   }
+  /** @type {string[]} */
   const availableParameters = [];
+  /** @type {{ parameter: string; value: number } | null} */
   let best = null;
   for (const [parameter, result] of Object.entries(subIndexResults)) {
-    if (result && result.status === 'valid' && Number.isFinite(result.value)) {
+    if (result && result.status === 'valid' && typeof result.value === 'number' && Number.isFinite(result.value)) {
       availableParameters.push(parameter);
       if (!best || result.value > best.value + EPS) best = { parameter, value: result.value };
     }
@@ -331,20 +374,23 @@ export function getISPUFromSubIndices(subIndexResults) {
  * parameter yang paling sering menjadi argmax sub-indeks. Hanya parameter
  * tersedia yang dipertimbangkan; bila tidak ada sub-indeks valid sama
  * sekali → null dengan status eksplisit (spec §7.5 poin 5).
- * @param {Array<{derived: {subIndex: Object<string,{status,value}>}}>} records
+ * @param {readonly Array<{derived?: {subIndex?: Record<string,{status?:string,value?:number|null}>}}> | unknown} records
+ * @returns {DominantParameterSummaryResult}
  */
 export function getDominantParameterSummary(records) {
   if (!Array.isArray(records) || records.length === 0) {
     return { status: 'no-data', counts: {}, leader: null, sampleSize: 0 };
   }
+  /** @type {Record<string, number>} */
   const counts = { so2: 0, no2: 0, pm25: 0 };
   let considered = 0;
   for (const record of records) {
     const subIndex = record && record.derived && record.derived.subIndex;
     if (!subIndex) continue;
+    /** @type {{ parameter: string; value: number } | null} */
     let localBest = null;
     for (const [parameter, result] of Object.entries(subIndex)) {
-      if (result && result.status === 'valid' && Number.isFinite(result.value)) {
+      if (result && result.status === 'valid' && typeof result.value === 'number' && Number.isFinite(result.value)) {
         if (!localBest || result.value > localBest.value + EPS) localBest = { parameter, value: result.value };
       }
     }
@@ -354,6 +400,7 @@ export function getDominantParameterSummary(records) {
     }
   }
   if (considered === 0) return { status: 'no-data', counts, leader: null, sampleSize: 0 };
+  /** @type {string | null} */
   let leader = null;
   for (const parameter of Object.keys(counts)) {
     if (counts[parameter] > 0 && (!leader || counts[parameter] > counts[leader])) leader = parameter;

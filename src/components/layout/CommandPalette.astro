@@ -1,0 +1,72 @@
+---
+/* src/components/layout/CommandPalette.astro - Global Command Palette (V13.0-D).
+   Menggunakan native <dialog> pada top layer browser. Data indeks
+   (/api/world-index.json) hanya di-fetch secara malas (lazy) saat dialog
+   pertama kali dibuka, tidak pernah membebani initial page load. */
+---
+
+<dialog
+  id="world-command-dialog"
+  class="world-cmd-dialog"
+  aria-label="Global Command Palette"
+>
+  <div class="world-cmd-shell">
+    <header class="world-cmd-header">
+      <div class="world-cmd-input-wrap">
+        <label class="sr-only" for="world-cmd-input">
+          Search territories, Codex notes, Engineering records, Case studies, or type a command (:warp, :split, :audio, :top)
+        </label>
+        <span class="world-cmd-prompt" aria-hidden="true">⌘K</span>
+        <input
+          id="world-cmd-input"
+          class="world-cmd-input"
+          type="text"
+          role="combobox"
+          aria-expanded="false"
+          aria-autocomplete="list"
+          aria-controls="world-cmd-listbox"
+          aria-activedescendant=""
+          placeholder="Search territories, Codex 100-600, ADR, or type :warp, :split, :audio, :top..."
+          autocomplete="off"
+          spellcheck="false"
+        />
+      </div>
+      <button
+        id="world-cmd-close-btn"
+        class="world-cmd-close-btn"
+        type="button"
+        aria-label="Close Command Palette"
+      >
+        Esc
+      </button>
+    </header>
+
+    <div class="world-cmd-status-bar">
+      <span id="world-cmd-status" role="status" aria-live="polite">
+        PALETTE READY · Type to filter or run :commands
+      </span>
+      <button
+        id="world-cmd-retry-btn"
+        class="world-cmd-retry-btn"
+        type="button"
+        hidden
+      >
+        Retry Index Fetch
+      </button>
+    </div>
+
+    <div
+      id="world-cmd-listbox"
+      class="world-cmd-listbox"
+      role="listbox"
+      aria-label="Search results and commands"
+    ></div>
+
+    <footer class="world-cmd-footer" aria-label="Keyboard shortcuts">
+      <span><kbd>↑</kbd><kbd>↓</kbd> Navigate</span>
+      <span><kbd>Enter</kbd> Open / Run</span>
+      <span><kbd>Alt</kbd>+<kbd>Enter</kbd> Open in Reference Dock (Desktop)</span>
+      <span><kbd>:warp</kbd> <kbd>:split</kbd> <kbd>:audio</kbd> <kbd>:top</kbd></span>
+    </footer>
+  </div>
+</dialog>

@@ -1,3 +1,4 @@
+// @ts-check
 /*!
  * lab/shared/stats.js - Statistik deskriptif null-safe (murni, tanpa DOM).
  *
@@ -24,11 +25,19 @@
  * (µg/m³) dengan statistik indeks (tanpa satuan) dalam satu nilai tampilan.
  */
 
+/**
+ * @param {unknown} value
+ * @returns {value is number}
+ */
 function isUsableNumber(value) {
   return typeof value === 'number' && Number.isFinite(value);
 }
 
 /* Saring nilai numerik valid TANPA memutasi input. */
+/**
+ * @param {readonly unknown[] | unknown} values
+ * @returns {number[]}
+ */
 export function validValues(values) {
   if (!Array.isArray(values)) return [];
   return values.filter(isUsableNumber);
@@ -37,6 +46,8 @@ export function validValues(values) {
 /**
  * Rata-rata. null ketika tidak ada nilai valid.
  * Contoh wajib (spec §17.3): [10, null, 20] → 15 (null diabaikan, bukan 0).
+ * @param {readonly unknown[] | unknown} values
+ * @returns {number | null}
  */
 export function mean(values) {
   const valid = validValues(values);
@@ -46,7 +57,11 @@ export function mean(values) {
   return sum / valid.length;
 }
 
-/** Median. Array genap: rata-rata dua nilai tengah. */
+/**
+ * Median. Array genap: rata-rata dua nilai tengah.
+ * @param {readonly unknown[] | unknown} values
+ * @returns {number | null}
+ */
 export function median(values) {
   const valid = validValues(values);
   if (valid.length === 0) return null;
@@ -56,7 +71,11 @@ export function median(values) {
   return (sorted[mid - 1] + sorted[mid]) / 2;
 }
 
-/** Minimum nilai valid; null bila kosong. */
+/**
+ * Minimum nilai valid; null bila kosong.
+ * @param {readonly unknown[] | unknown} values
+ * @returns {number | null}
+ */
 export function min(values) {
   const valid = validValues(values);
   if (valid.length === 0) return null;
@@ -65,7 +84,11 @@ export function min(values) {
   return result;
 }
 
-/** Maksimum nilai valid; null bila kosong. */
+/**
+ * Maksimum nilai valid; null bila kosong.
+ * @param {readonly unknown[] | unknown} values
+ * @returns {number | null}
+ */
 export function max(values) {
   const valid = validValues(values);
   if (valid.length === 0) return null;
@@ -76,7 +99,7 @@ export function max(values) {
 
 /**
  * Simpangan baku.
- * @param {Array<number|null>} values
+ * @param {readonly Array<number|null> | readonly unknown[] | unknown} values
  * @param {{type?: 'population'|'sample'}} [options] default 'population'
  * @returns {number|null}
  */
@@ -86,19 +109,28 @@ export function standardDeviation(values, options = {}) {
   if (valid.length === 0) return null;
   if (type === 'sample' && valid.length < 2) return null;
   const avg = mean(valid);
+  if (avg === null) return null;
   let sumSquares = 0;
   for (const value of valid) sumSquares += (value - avg) * (value - avg);
   const divisor = type === 'sample' ? valid.length - 1 : valid.length;
   return Math.sqrt(sumSquares / divisor);
 }
 
-/** Jumlah nilai valid (angka finite). Non-array → 0. */
+/**
+ * Jumlah nilai valid (angka finite). Non-array → 0.
+ * @param {readonly unknown[] | unknown} values
+ * @returns {number}
+ */
 export function countValid(values) {
   if (!Array.isArray(values)) return 0;
   return validValues(values).length;
 }
 
-/** Jumlah nilai missing: null, undefined, NaN, non-finite. */
+/**
+ * Jumlah nilai missing: null, undefined, NaN, non-finite.
+ * @param {readonly unknown[] | unknown} values
+ * @returns {number}
+ */
 export function countMissing(values) {
   if (!Array.isArray(values)) return 0;
   return values.length - validValues(values).length;
@@ -106,11 +138,13 @@ export function countMissing(values) {
 
 /**
  * Persentase valid (0–100). null bila array kosong (bukan 0%).
+ * @param {readonly unknown[] | unknown} values
  * @param {{decimals?: number}} [options]
+ * @returns {number | null}
  */
 export function validPercentage(values, options = {}) {
   if (!Array.isArray(values) || values.length === 0) return null;
-  const decimals = Number.isFinite(options.decimals) ? options.decimals : 1;
+  const decimals = typeof options.decimals === 'number' && Number.isFinite(options.decimals) ? options.decimals : 1;
   const pct = (validValues(values).length / values.length) * 100;
   return Number(pct.toFixed(decimals));
 }

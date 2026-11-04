@@ -1,0 +1,261 @@
+---
+adrId: "v12-3-implementation-report"
+versionTag: "V12.3"
+sequenceOrder: 13
+title: "V12.3 Implementation Report: CSV Explorer & Shared Primitives"
+summary: "Ekstraksi primitif statistik bersama ke lab/shared/stats.js dan pembangunan CSV Explorer berbasis FSM parser RFC 4180 serta Web Worker pada rute /lab/csv."
+category: "data-pipeline-and-provenance"
+recordType: "implementation"
+recordStatus: "active-contract"
+targetRoutes: ["/lab","/lab/csv"]
+relatedWorkIds: ["aqi-cirebon"]
+keyMetrics:
+  - label: "CSV Explorer Unit Tests"
+    value: "60/60"
+    unit: "tests"
+    evidenceSection: "§8 Pengujian"
+  - label: "Max CSV File Limit"
+    value: "10"
+    unit: "MiB"
+    evidenceSection: "§6 CSV Analysis Engine"
+  - label: "Max Chart Sample Points"
+    value: "5000"
+    unit: "points"
+    evidenceSection: "§6 CSV Analysis Engine"
+provenance:
+  sourcePath: "V12.3_IMPLEMENTATION_REPORT.md"
+  sourceFilename: "V12.3_IMPLEMENTATION_REPORT.md"
+  sourceSha256: "e3dac4d9b8fe9560c043d618de3905606a7db321987e5a981468c30fff0719f0"
+  sourceBytes: 26227
+  sourceWordCount: 3496
+  sourceLineCount: 227
+  normalizedContentSha256: "19677da89562305612792097ca06fe87a7af85f80f373c94f6f09ba9844baa11"
+  normalizationCount: 53
+---
+# V12.3 IMPLEMENTATION REPORT
+## CSV Explorer & Shared Primitives Extraction
+
+**Status akhir: READY FOR USER REVIEW** - seluruh acceptance criteria wajib (spec §17 A–H) terpenuhi dan terverifikasi; keterbatasan non-blocking terdokumentasi di §9.
+
+- Tidak ada operasi Git/VCS yang dijalankan (konfirmasi §11).
+- Tidak ada dependency baru (spec §1.2): seluruh implementasi memakai JavaScript native, Web Worker, Chart.js 4.6.1 yang sudah terpasang, Astro 7.4.4, dan test runner mini yang sudah ada.
+- Laporan ini disusun dari hasil pengukuran aktual di workspace, bukan asumsi prompt (spec §1.6).
+
+---
+
+## 1. Executive Summary
+
+V12.3 menghasilkan dua tool yang berjalan independen pada level fitur dan berbagi primitive pada level fungsi:
+
+1. **AQI Explorer** (eksisting, /lab): tetap berfungsi penuh - 54 test regresi PASS, build tidak berubah perilakunya, dan verifikasi browser menunjukkan "Dataset siap." setelah ekstraksi.
+2. **CSV Explorer** (baru, /lab/csv): tool analisis CSV yang berjalan sepenuhnya di browser - parsing, klasifikasi kolom, statistik deskriptif, dan penyusunan data chart dieksekusi Web Worker; main thread hanya memvalidasi file, merender UI, dan mengelola Chart.js.
+
+**Yang diekstraksi:** `core/stats.js` (9 fungsi statistik generik) dipindahkan utuh ke `lab/shared/stats.js` setelah audit membuktikan seluruh isinya generik. **Yang dibuat:** browser CSV parser RFC 4180 berbasis finite-state machine, CSV analysis engine (klasifikasi numeric/date/categorical + statistik + batas resource terpusat), Web Worker dengan kontrak pesan ber-requestId, halaman `/lab/csv` dengan upload drag-and-drop + pratinjau 5 baris + ikhtisar kolom + tabel statistik + grafik garis, dan pintasan navigasi dari halaman /lab.
+
+**Hubungan kedua tool:** keduanya memakai `shared/stats.js` (mean/median/min/max dihitung dari fungsi yang sama) dan `charts/line-chart.js` (controller chart yang sama) - tanpa saling mengimpor. CSV Explorer tidak menambahkan kode apa pun ke homepage/global layout.
+
+### Status acceptance criteria (ringkas; bukti di §8)
+
+| Grup | Hasil |
+|---|---|
+| A. Shared primitives | 6/6 ✓ |
+| B. CSV parser | 10/10 ✓ |
+| C. CSV analysis | 12/12 ✓ |
+| D. Web Worker | 8/8 ✓ |
+| E. UI | 11/11 ✓ |
+| F. Chart | 9/9 ✓ |
+| G. Integration | 7/7 ✓ |
+| H. Quality | 8/8 ✓ |
+
+---
+
+## 2. Konteks & Baseline (pengukuran sebelum perubahan)
+
+| Item | Nilai aktual |
+|---|---|
+| Project root | `/home/z/my-project/v11-work/portfolio-astro` |
+| State awal | V12.2 selesai (`V12.2_IMPLEMENTATION_REPORT.md` ada; konten terstruktur + case study sudah berjalan) |
+| Astro | 7.4.4 (node_modules); `package.json` `^7.4.2` (tidak diubah) |
+| Chart.js | 4.6.1 |
+| Test runner | mini runner `node:assert` (`scripts/test-lab-core.mjs`) - tanpa framework |
+| `node scripts/test-lab-core.mjs` | **54 PASS, 0 FAIL** |
+| `npm run build` | **PASS - 11 page(s)**: `/`, `/about`, `/archive` +3 sub, `/connect`, `/lab`, `/lab/methodology`, `/work`, `/work/aqi-cirebon` |
+| Error/warning baseline | tidak ada |
+
+Baseline sehat; tidak ada kegagalan lama yang perlu dipisahkan dari regresi V12.3.
+
+---
+
+## 3. FASE 0 - Hasil Audit (ringkas)
+
+1. **Struktur**: `src/pages/lab/` (2 halaman), `src/scripts/lab/` (charts/core/data/ui + index.js), `src/styles/lab.css` + direktori `src/styles/lab/` (ada, kosong), test di `scripts/*.mjs`.
+2. **AQI Explorer**: orchestrator `lab/index.js` (state tunggal, request token, AbortController, teardown di `astro:before-swap` module-level); boot per-epoch lewat facade `lab.js` → `core/page-lifecycle.js` `bootPage()` (latch navEpoch); Chart.js dynamic via `charts/chart-loader.js` (`import('chart.js')` + registrasi selektif).
+3. **stats.js (§3.3 spec)**: 9 export (validValues, mean, median, min, max, standardDeviation, countValid, countMissing, validPercentage) - murni, tanpa DOM/window/Chart.js/data AQI/state global → **seluruh modul digolongkan generik dan dipindahkan utuh** (spec §3.3: "Jika seluruh stats.js memang generik, pindahkan seluruh modul"). Konsumen aktual (grep): `lab/index.js:33` dan `scripts/test-lab-core.mjs:30`. **`ui/metrics.js` TIDAK mengimpor stats.js** (hanya `core/formatters.js`) - diverifikasi, tidak ada perubahan yang diperlukan di sana.
+4. **Parser Node (§3.4)**: `scripts/data/csv-parser.mjs` `parseCsv(text) → string[][]`; toleran (tanpa deteksi error), tanpa BOM handling, mempertahankan baris kosong sebagai `['']`, tanpa trim. Dipakai pipeline build; **tidak diubah**. Parser browser mengikuti perilakunya pada CSV valid dan LEBIH KETAT pada input tidak valid (kebutuhan §5.2).
+5. **Chart.js (§3.5)**: controller `line-chart.js` audit-nya generik (`{canvas, overlay}` + `render(config)` + `showEmpty/showError/destroy`) → **digunakan ulang** oleh CSV (bukan controller kedua). `chart-config.js` terikat data AQI → tidak dipakai ulang (token visualnya dicerminkan).
+6. **Lifecycle (§3.6)**: `astro:page-load` via `bootPage` + `astro:before-swap` teardown module-level - pola ini yang diikuti CSV.
+
+---
+
+## 4. Shared Primitives Extraction (FASE 1)
+
+| Keputusan | Bukti/alasan |
+|---|---|
+| Pindah seluruh `core/stats.js` → `shared/stats.js` | Semua fungsi generik (audit §3.3); tanpa dependensi apa pun selain array |
+| Kontrak TIDAK diubah | Nama export, parameter, return, pembulatan, penanganan null/NaN/Infinity, presisi numerik, non-mutasi - identik; file berisi salinan verbatim + header provenance |
+| Import diperbarui | `lab/index.js` (`./core/stats.js` → `./shared/stats.js`); `scripts/test-lab-core.mjs` (path Node) |
+| `ui/metrics.js` | **Tidak diubah** - terverifikasi tidak pernah mengimpor stats.js (amanat tambahan FASE 1 disebut metrics.js; pengecekan aktual menunjukkan tidak ada import stats di file itu, sesuai §2.2 "Periksa dan ubah hanya jika diperlukan") |
+| Modul lama DIHAPUS | `core/stats.js` dihapus; `grep -rn "core/stats"` tersisa hanya komentar provenance - tidak ada stale import, tidak ada compatibility shim, tidak ada duplikasi implementasi |
+| Gate 1 | `npm run test:lab` → **54 PASS, 0 FAIL** (identik baseline) |
+
+---
+
+## 5. CSV Parser Browser (FASE 2)
+
+**File:** `src/scripts/lab/shared/csv-parser.js` - murni, tanpa Node API, dapat dites tanpa DOM.
+
+- **Algoritma**: finite-state machine (state: `field-start | unquoted | quoted | after-quote`) berbasis indeks dengan `slice` per field; field ber-escape (`""`) dikumpulkan sebagai segmen lalu digabung - efisien untuk file besar. API **generator** `iterateCsvRecords(text)` menghasilkan satu record per `yield` sehingga Worker memproses bertahap tanpa menampung seluruh array baris (spec §5.3).
+- **Didukung**: field berkutip, koma & newline dalam kutip, escaped `""`, CRLF, LF, BOM (dilepas sekali), empty field (termasuk di akhir record), baris terakhir tanpa newline, trailing newline tanpa record palsu.
+- **Malformed** (error `CsvParseError` berkode stabil + `recordIndex`/`columnIndex` 1-based, header = record 1): `CSV_UNCLOSED_QUOTE`, `CSV_ILLEGAL_QUOTE` (kutip di unquoted field), `CSV_TRAILING_CHARS` (karakter - termasuk spasi - setelah closing quote). Pesan error TIDAK memuat isi field (diuji eksplisit).
+- **Hubungan dengan parser Node**: kompatibilitas perilaku DIJAGA LEWAT TEST - fixture valid yang sama dijalankan pada kedua parser dan hasilnya dideep-equal (spec §5.4: bukan klaim identik, melainkan bukti). Divergensi terdokumentasi dan diuji: (1) browser melepas BOM, Node tidak; (2) CR tunggal (bukan CRLF) jadi konten di browser, Node menghapus semua CR; (3) browser menolak CSV malformed, Node toleran.
+- **Delimiter**: koma tetap (tanpa auto-deteksi). **Encoding**: UTF-8; decoding di Worker dengan `TextDecoder('utf-8', { fatal: true })` sehingga byte bukan-UTF-8 menghasilkan error jelas (`CSV_ENCODING`), bukan hasil decode ber-U+FFFD secara diam-diam.
+
+---
+
+## 6. CSV Analysis Engine (FASE 3)
+
+**File:** `src/scripts/lab/shared/csv-analysis.js` - pure, tanpa DOM/Chart.js; juga dipanggil langsung oleh Worker sehingga kontrak payload dapat diuji di Node.
+
+- **Header**: record pertama = header; identitas kolom = ID posisi stabil `column-N` (bukan nama); header kosong → tampil `Kolom N`; header duplikat → label tampil dibedakan (`harga`, `harga · 2`); nama asli dipertahankan sebagai metadata (`name`, `title` berisi nama mentah).
+- **Klasifikasi tipe** (konservatif): `numeric` (regex format eksplisit sebelum `Number()`: integer, negatif, desimal titik, `+`, `.5`, notasi ilmiah; hasil wajib finite - `1e999` ditolak; `1,000` BUKAN angka), `date` (ISO `YYYY-MM-DD` dengan validasi kalender termasuk kabisat, atau ISO datetime T dengan rentang valid), `categorical` (selain itu, termasuk kolom kosong semua & kolom campuran). Token `NA`/`null`/`N/A` = string biasa (kebijakan eksplisit).
+- **Missing value**: string kosong, whitespace-only, atau field hasil padding - dihitung missing, tidak pernah dijadikan 0.
+- **Konsistensi kolom** (§6.2): record lebih pendek → dinormalisasi (pad `''`) + dihitung `normalizedRecordCount` (warning); lebih panjang → `CSV_RECORD_TOO_LONG` (ditolak, bukan dibuang diam-diam). Baris kosong fisik (satu field kosong pada file multi-kolom) dilewati dan dihitung `blankLinesSkipped`; pada file satu kolom baris kosong adalah data sah (missing) karena tidak bisa dibedakan.
+- **Statistik** (per kolom numerik): Mean, Median (ganjil/genap, dari `shared/stats.js` - primitive bersama terpakai nyata), Min, Max, validCount, missingCount - dihitung dari **dataset lengkap** di Worker, tanpa pembulatan internal; pemformatan hanya di UI (`formatNumber`, id-ID).
+- **Batas resource terpusat** (`LIMITS`, `Object.freeze`, satu sumber kebenaran, diimpor UI & Worker): 10 MiB file, 100 kolom, 100.000 record, 500.000 sel, 5.000 titik chart, 5 pratinjau. Validasi inkremental selama streaming (batas terlampaui → error `CSV_LIMIT_*`, tidak ada hasil parsial).
+- **Memori (§6.6)**: array numerik per kolom hanya dipertahankan selama kolom masih kandidat numeric (dibebaskan begitu tertodong nilai non-numerik); tidak ada salinan dataset ganda; sampling bekerja di atas seri per-kolom yang dibuang setelah payload tersusun.
+- **Sampling chart** (§9.3): stride deterministik `ceil(n/5000)`, titik awal & akhir selalu dipertahankan, urutan asli terjaga, plus *gap pass* upaya-terbaik (menyisipkan null pertama antar dua titik terpilih yang keduanya valid agar `spanGaps:false` tetap menampilkan gap) dengan kuota keras 5.000 titik; metadata sampling jujur (`sampled`, `pointsSent`, `sampleStride`) dan ditampilkan di caption grafik. Statistik TIDAK terpengaruh sampling (teruji: file 6.000 baris → mean 3.000,5 eksak sementara chart mengirim 3.001 titik).
+
+---
+
+## 7. Web Worker & UI (FASE 4–7)
+
+### Worker (`src/scripts/lab/workers/csv-worker.js`)
+
+- **Sintaks Vite (amanat tambahan FASE 4)** - dipakai persis, tanpa import statis file Worker:
+  ```js
+  const worker = new Worker(new URL('./workers/csv-worker.js', import.meta.url), { type: 'module' });
+  ```
+  Catatan jujur: contoh amanat memakai segmen `'../workers/...'`; segmen yang benar untuk layout file sesuai spec §2.1 (csv.js di `src/scripts/lab/`, worker di `src/scripts/lab/workers/`) adalah `'./workers/csv-worker.js'` - substansi amanat (sintaks `new URL` + `type: 'module'` + tanpa import statis) dipenuhi sepenuhnya, dan bundling Worker terverifikasi di build (chunk `csv-worker-DDQhE7XR.js`).
+- **Kontrak pesan** (requestId di-echo): `ANALYZE_FILE` → `ANALYSIS_SUCCESS` | `WORKER_ERROR`; `GET_CHART_DATA` → `CHART_SUCCESS` | `WORKER_ERROR`; request tak dikenal → `CSV_UNKNOWN_REQUEST`. `WORKER_ERROR` berisi kode stabil + pesan aman - tanpa stack, tanpa isi CSV (spec §7.3).
+- **Amanat tambahan FASE 5 (anti-OOM)** - bentuk payload DIDIKTEKAN oleh fungsi pure yang dites: Worker hanya mengirim (1) metadata kolom, (2) maksimal **5** baris pratinjau, (3) hasil statistik, (4) data chart maksimal **5.000 titik**. Tidak ada array 100.000 baris yang pernah dikirim ke Main Thread (diuji: payload 50-record hanya punya 5 baris pratinjau dan tidak ada properti dataset mentah; payload chart selalu `pointsSent ≤ 5000`).
+- **File & memori**: worker memegang SATU referensi file aktif; `GET_CHART_DATA` membaca ulang + mem-parse ulang file (deterministik) daripada menyimpan dataset mentah - trade-off yang disengaja untuk kesederhanaan memori (biaya: parse ulang per pergantian konfigurasi chart, berjalan di worker, user-paced).
+- **Pembatalan (§7.5)**: penggantian file = terminate() Worker lama + instance baru (pembatalan yang dapat diandalkan untuk pekerjaan sinkron), ditambah generation counter + requestId di main thread sehingga hasil usang tidak pernah menimpa state baru.
+
+### UI (`src/pages/lab/csv.astro` + `src/scripts/lab/csv.js` + `src/styles/lab/csv.css`)
+
+- Mengikuti design system Lab: `.lab-panel`, `.lab-status`, `.lab-table`, `.lab-chart-canvas-wrap`, `.lab-chart-overlay` (struktur overlay identik AQI), `.lab-control`, `.lab-retry` - CSS khusus CSV hanya untuk dropzone/error/ringkasan file.
+- **Upload**: drag-and-drop + file input (`accept=".csv,text/csv"`) + tombol berlabel (akses keyboard); MIME tidak dipercaya (ekstensi `.csv` case-insensitive + `File.size` + isi divalidasi parser); lebih dari satu file ditolak dengan pesan jelas; drop di luar area tidak membuat browser membuka file; setelah reset, file yang sama dapat dipilih ulang (`input.value` dibersihkan).
+- **Validasi bertingkat dengan pesan spesifik**: belum memilih / bukan .csv / 0 byte / >10 MiB / encoding bukan UTF-8 / CSV_EMPTY / CSV_NO_DATA / CSV_LIMIT_COLUMNS / CSV_RECORD_TOO_LONG / CSV_LIMIT_RECORDS / CSV_LIMIT_CELLS / error parse dengan posisi record-kolom.
+- **Loading state**: kontrol dinonaktifkan, double submission dicegah, hasil file lama disembunyikan/dibersihkan sebelum pemrosesan file baru.
+- **Pratinjau**: tabel semantik (`caption`, `thead`, `scope="col"`), maksimal 5 record, seluruh nilai via `textContent` (TIDAK ada innerHTML untuk data CSV), dapat scroll horizontal.
+- **Ikhtisar kolom & statistik**: tipe + valid/missing per kolom; tabel statistik hanya kolom numerik; empty state eksplisit bila tidak ada kolom numerik.
+- **Reset & lifecycle**: reset mengosongkan semuanya (metadata, pratinjau, statistik, pilihan chart, destroy Chart, terminate Worker, lepaskan referensi file, kembali ke empty state); meninggalkan halaman menjalankan hal yang sama via `astro:before-swap`; listener terikat satu AbortController; inisialisasi idempoten per epoch navigasi (teruji dua kali navigasi bolak-balik → tidak ada instance ganda).
+- **Aksesibilitas**: label eksplisit untuk input & select, `role="status"` + `aria-live="polite"` untuk status, `role="alert"` untuk error, tabel semantik, fokus terlihat (focus-within pada dropzone), error tidak hanya dibedakan warna (teks + border), drag-and-drop bukan satu-satunya jalur upload.
+- **Routing & isolasi**: route `/lab/csv` (build menghasilkan `/lab/csv/index.html`); modul entry hanya diimpor `csv.astro`; Chart.js dimuat dynamic hanya saat chart dirender; **Header.astro tidak diubah** - navigasi utama memang memiliki tautan tunggal "Data Lab" → /lab (keputusan terdokumentasi V12.0 di file Header), sehingga pintasan CSV Explorer ditambahkan di halaman /lab (panel "TOOL LAB LAINNYA") tanpa merusak hierarki navigasi.
+
+---
+
+## 8. Testing Evidence (perintah aktual yang dijalankan)
+
+| Pengujian | Baseline | Setelah V12.3 | Status |
+|---|---|---|---|
+| `node scripts/test-lab-core.mjs` (AQI) | 54 PASS / 0 FAIL | 54 PASS / 0 FAIL | **PASS** |
+| `node scripts/test-csv-explorer.mjs` (baru) | belum ada | **60 PASS / 0 FAIL** | **PASS** |
+| `npm run build` | PASS - 11 page(s) | PASS - **12 page(s)** (+`/lab/csv`) | **PASS** |
+| Worker bundle | - | chunk `csv-worker-DDQhE7XR.js` di `dist/_astro/` | **PASS** |
+| Chart.js dynamic bundle | chunk `chart.DiAkBhGT.js` (AQI) | sama; CSV memuatnya hanya saat render chart | **PASS** |
+| Homepage isolation (runtime) | - | `/` memuat hanya 2 chunk (ClientRouter + home); resource match `chart|csv` = **0 request** (performance entries) | **PASS** |
+| Browser acceptance (21 skenario §12.7) | - | seluruh skenario dijalankan (lihat di bawah) | **PASS** |
+
+### Rincian test unit baru (60) - `scripts/test-csv-explorer.mjs`
+
+- `[1]` parser: 22 test - format valid (quoted, escaped, embedded newline, CRLF/LF, BOM, empty/trailing field, tanpa trailing newline, quoted-empty, lazy generator), **ekuivalensi lintas-parser pada 8 fixture valid yang sama** (termasuk divergensi BOM yang didokumentasikan), malformed (unclosed/illegal-quote/trailing-chars + konteks record-kolom), pesan error bebas isi CSV.
+- `[2]` analisis: 25 test - klasifikasi numeric/date/categorical/mixed/empty, negatif/desimal/ilmiah, missing vs nol, `NA` sebagai string, `1,000`/`1e999`/`5.`/`.5`/`+5`, kalender ISO (kabisat), header duplikat/kosong, normalisasi record pendek + warning, record panjang ditolak, baris kosong multi vs satu kolom, batas kolom/record/sel, CSV_EMPTY/NO_DATA, payload pratinjau ≤5 tanpa dataset mentah, sampling (deterministik, awal+akhir, urutan, gap terwakili, kuota keras), payload chart (pemetaan, null missing, X numerik ditolak, Y kategorikal ditolak, columnId tak dikenal, ≤5000 titik + metadata jujur).
+- `[3]` regresi ekstraksi stats (§4.3): zero, negatif, desimal, data kecil & besar (1..1000), kontrak invalid-input, non-mutasi.
+- `[4]` kontrak Worker: pemetaan error aman (parser + ad-hoc CSV_ + fallback generik), payload siap structured-clone, LIMITS beku.
+
+### Browser acceptance test (agent-browser, `astro preview` build produksi, port 4322)
+
+Skenario §12.7 - semuanya dijalankan:
+
+1. Buka `/lab/csv` ✓ · 2. Upload `uji-valid.csv` (7 baris, 5 kolom campuran) ✓ · 3. File diterima (ringkasan nama/ukuran/baris/kolom) ✓ · 4. Pratinjau tepat **5 baris** dari 7 ✓ · 5. Header benar ✓ · 6. Tipe terdeteksi: kota=Kategorikal, tanggal=Tanggal, penduduk=Numerik, curah_mm=Numerik, suhu_c=Kategorikal (karena `"31,5"` - perilaku sesuai kebijakan) ✓ · 7. Statistik benar - diverifikasi manual: penduduk mean 1.450.000 / median 1.250.000 / min 300.000 / max 2.500.000 / missing 1; curah_mm mean 46,333 / median 44 / min −2,5 / max 100 ✓ · 8–9. Pilih X (kota→tanggal) dan Y (penduduk→curah_mm) via select ✓ · 10. Chart muncul (canvas 1012px, `chart.DiAkBhGT.js` dimuat dynamic; `window.Chart` tidak bocor global) ✓ · 11–12. Ganti X → chart diperbarui (caption ikut berubah) ✓ · 13. Ganti file (valid → 6.000 baris) ✓ · 14. Hasil lama tidak tersisa (ringkasan/pratinjau/statistik terganti penuh) ✓ · 15–16. Hapus file → UI kembali empty state (input kosong, panel hasil tersembunyi, status "Menunggu file CSV…") ✓ · 17. Upload invalid (kutip tak ditutup) ✓ · 18. Error tampil spesifik: *"Tanda kutip tidak ditutup sampai akhir file (record 2, kolom 2)."* dengan `role="alert"` ✓ · 19. Navigasi keluar ke `/lab` (AQI tetap "Dataset siap.") ✓ · 20. Navigasi kembali ke `/lab/csv` (client-side) ✓ · 21. Tidak ada duplikasi listener/Worker/chart (upload ulang → tepat 1 tabel pratinjau, 1 tabel statistik, 1 canvas; console & page errors kosong) ✓
+
+Skenario tambahan yang dijalankan:
+
+- **Sampling**: file 6.000 baris → caption jujur *"sampel 3.001 titik dari 6.000 record (langkah tetap 2, titik awal & akhir dipertahankan)"*; statistik tetap dihitung penuh (mean 3.000,5 eksak untuk 1..6000) ✓
+- **Drag & drop**: drop programatik via DataTransfer diterima (file diproses) ✓
+- **Multi-file**: 2 file sekaligus → *"Hanya satu file yang didukung."* ✓
+- **Ukuran >10 MiB** (11 MiB) → *"Ukuran file 11 MiB melebihi batas 10 MiB."* ✓
+- **Ekstensi salah** (.txt) → *"Format file tidak didukung…"* ✓
+- **Gap jujur**: nilai missing dirender gap (Surabaya tanpa penduduk tidak dihubungkan - `spanGaps: false`) ✓
+- **Responsif**: 390×844 tanpa horizontal overflow; screenshot mobile & desktop diperiksa visual ✓
+- **Console/page errors**: kosong sepanjang seluruh sesi pengujian ✓
+
+---
+
+## 9. Known Limitations (jujur, tidak disembunyikan)
+
+1. **Ukuran file** ≤ 10 MiB; **kolom** ≤ 100; **record** ≤ 100.000; **sel** ≤ 500.000 - pelanggaran menghentikan pemrosesan dengan pesan jelas (bukan klaim bahwa semua file di bawah batas pasti lancar di semua perangkat).
+2. **Delimiter**: hanya koma - tidak ada auto-deteksi (`;`/tab → kategorikal/error sesuai isi).
+3. **Encoding**: hanya UTF-8 (fatal decoder); legacy encoding tidak didukung dan tidak dijanjikan.
+4. **Format angka**: desimal titik; pemisah ribuan locale (mis. `1,000`) tidak didukung sebagai angka.
+5. **Format tanggal**: hanya ISO (`YYYY-MM-DD`, ISO datetime T); `Date.parse()` tidak dipakai; tanggal ambigu → kategorikal.
+6. **Sampling chart**: upaya terbaik mempertahankan representasi gap DI BAWAH kuota keras 5.000 titik - pada data dengan gap sangat banyak, sebagian gap antar-window dapat tidak terwakili (setiap titik yang tampil tetap data asli pada posisi aslinya; statistik tidak pernah terpengaruh).
+7. **Pemrosesan ulang chart**: pergantian konfigurasi chart mem-parse ulang file di Worker (desain memori-lebih-penting; biaya parse ulang terasa hanya pada file mendekati batas).
+8. **Kompatibilitas browser**: diverifikasi pada Chromium automation (agent-browser). Browser lain tidak diuji - Worker module, `File.arrayBuffer()`, dan `TextDecoder` adalah API standar modern, tetapi tidak dinyatakan "didukung semua browser".
+9. **Kemajuan pemrosesan**: tidak ada progress bar real-time (parsing sinkron di Worker); UI menampilkan status jujur "Memproses…" / "Menyiapkan data grafik…".
+
+---
+
+## 10. Residual Technical Debt
+
+- **Utang baru V12.3**: tidak ada yang diketahui (tidak ada TODO fitur inti, tidak ada placeholder, tidak ada console.log, tidak ada kode duplikat tanpa alasan, tidak ada listener tanpa cleanup, tidak ada Worker/chart yang hidup setelah navigasi).
+- **Utang lama yang relevan (dipertahankan, didokumentasikan)**: `standardDeviation` & `countMissing` di `shared/stats.js` saat ini hanya memiliki konsumen test (bukan AQI/CSV produksi). Keduanya bagian kontrak publik stats.js sejak V12.0 (spec V12.0 §7.4) dan punya test aktif; dihapus = mengubah kontrak eksisting (melanggar §1.5). Keputusan: dipertahankan.
+- **Risiko yang belum teruji otomatis**: pembatalan terminate() saat file sangat besar sedang diproses diuji lewat jalur kode + guard generation/requestId (unit), bukan skenario timing nyata di browser; race tersebut ter-handle secara struktural (Worker baru = tidak menerima pesan Worker lama).
+- **Keputusan yang ditunda + alasan**: (a) worker untuk pipeline Node tidak disatukan dengan parser browser - spec §2.3 melarang mengubah pipeline Node dan §2.1 memisahkan parser browser; kompatibilitas dijaga lewat test fixture bersama. (b) time scale/date adapter tidak ditambahkan (spec §9.1 - kategori untuk tanggal).
+
+---
+
+## 11. Version Control Confirmation
+
+Tidak ada operasi Git/VCS yang dijalankan selama seluruh pekerjaan V12.3: tidak ada `git status/add/commit/push/pull/diff/checkout/stash/branch` maupun tool version control lainnya. Verifikasi dilakukan melalui pembacaan file langsung, pencarian teks (grep), pengujian aplikasi, dan build.
+
+---
+
+## 12. File Changes (semua file yang benar-benar disentuh)
+
+| File | Tindakan | Alasan |
+|---|---|---|
+| `src/scripts/lab/shared/stats.js` | **Created** | Ekstraksi primitive statistik generik (FASE 1); konten verbatim dari core, + header provenance |
+| `src/scripts/lab/core/stats.js` | **Removed** | Seluruh konsumen diperbarui; modul lama tidak dibutuhkan (spec §4.2: hapus, jangan duplikat) |
+| `src/scripts/lab/index.js` | **Modified** (1 baris import) | Konsumen stats.js → path `shared/` |
+| `scripts/test-lab-core.mjs` | **Modified** (1 baris import) | Konsumen stats.js → path `shared/` (regresi AQI tetap valid) |
+| `src/scripts/lab/shared/csv-parser.js` | **Created** | Parser CSV RFC 4180 browser (FSM + generator + error kontekstual) |
+| `src/scripts/lab/shared/csv-analysis.js` | **Created** | Engine analisis: klasifikasi, statistik, LIMITS terpusat, sampling, payload pure |
+| `src/scripts/lab/workers/csv-worker.js` | **Created** | Web Worker: baca/decode/parsing/analisis/chart; kontrak pesan requestId |
+| `src/scripts/lab/csv.js` | **Created** | Entry CSV Explorer: state UI, event, lifecycle Worker, Chart.js, race guards |
+| `src/pages/lab/csv.astro` | **Created** | Halaman `/lab/csv` (markup + label a11y + catatan privasi/batasan) |
+| `src/styles/lab/csv.css` | **Created** | Gaya khusus dropzone/error/ringkasan (struktur umum memakai lab.css) |
+| `src/pages/lab/index.astro` | **Modified** (panel tambahan) | Pintasan "CSV Explorer ↗" dari halaman Lab (FASE 8); Header tidak diubah |
+| `scripts/test-csv-explorer.mjs` | **Created** | 60 unit test (parser/analisis/stats/kontrak worker) - runner pola yang ada |
+| `V12.3_IMPLEMENTATION_REPORT.md` | **Created** | Laporan ini |
+
+**Tidak diubah** (eksplisit): `package.json` & lockfile (tanpa script/dependency baru), `astro.config.mjs`, `Header.astro`, `scripts/data/csv-parser.mjs`, seluruh pipeline data AQI & dataset, konfigurasi build, homepage, hero, game deck, archive, dan section portfolio lainnya.
+
+---
+
+## 13. Kepatuhan terhadap Amanat Tambahan Pengguna
+
+1. **FASE 1** - stats.js dipindah ke `shared/`; import `lab/index.js` diperbarui; `ui/metrics.js` DIPERIKSA dan terbukti tidak pernah mengimpor stats.js (tidak ada perubahan yang diperlukan - didokumentasikan faktual, sesuai §2.2); `npm run test:lab` dijalankan sebelum melanjutkan → **54 PASS, 0 FAIL** ✓
+2. **FASE 4** - Worker diinisialisasi dengan sintaks Vite yang diwajibkan (`new Worker(new URL(...), { type: 'module' })`), tanpa import statis file Worker; segmen path relatif disesuaikan lokasi file aktual per §2.1 (terdokumentasi di header worker dan di §7 laporan ini) ✓
+3. **FASE 5** - UI tidak pernah menerima data mentah: Worker hanya mengirim metadata kolom, maksimal 5 baris pratinjau, hasil statistik, dan data chart maksimal 5.000 titik; tidak ada array 100.000 baris yang pernah dikirim ke Main Thread (bentuk payload dienforce fungsi pure + dites otomatis; diuji juga di browser dengan file 6.000 baris) ✓

@@ -1,0 +1,147 @@
+{
+  "graph": {
+    "scripts/about.js": [
+      {
+        "spec": "./core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/archive.js": [
+      {
+        "spec": "./core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/case-narrative.js": [
+      {
+        "spec": "gsap",
+        "resolved": "(external:gsap)"
+      },
+      {
+        "spec": "gsap/ScrollTrigger",
+        "resolved": "(external:gsap/ScrollTrigger)"
+      },
+      {
+        "spec": "./core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/connect.js": [
+      {
+        "spec": "./global.js",
+        "resolved": "scripts/global.js"
+      },
+      {
+        "spec": "./core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/core.js": [
+      {
+        "spec": "../data/content.js",
+        "resolved": "data/content.js"
+      }
+    ],
+    "scripts/curtain-controller.js": [
+      {
+        "spec": "gsap",
+        "resolved": "(external:gsap)"
+      },
+      {
+        "spec": "./core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/generative-ambient.js": [],
+    "scripts/global.js": [
+      {
+        "spec": "gsap",
+        "resolved": "(external:gsap)"
+      },
+      {
+        "spec": "gsap/ScrollTrigger",
+        "resolved": "(external:gsap/ScrollTrigger)"
+      },
+      {
+        "spec": "lenis",
+        "resolved": "(external:lenis)"
+      },
+      {
+        "spec": "./home.js",
+        "resolved": "scripts/home.js"
+      },
+      {
+        "spec": "./curtain-controller.js",
+        "resolved": "scripts/curtain-controller.js"
+      },
+      {
+        "spec": "./hero-webgl/index.js",
+        "resolved": "scripts/hero-webgl/index.js"
+      },
+      {
+        "spec": "./core.js",
+        "resolved": "scripts/core.js"
+      },
+      {
+        "spec": "./page-transitions.js",
+        "resolved": "scripts/page-transitions.js"
+      }
+    ],
+    "scripts/hero-webgl/controller.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      },
+      {
+        "spec": "./scene.js",
+        "resolved": "scripts/hero-webgl/scene.js"
+      }
+    ],
+    "scripts/hero-webgl/geometry.js": [
+      {
+        "spec": "ogl",
+        "resolved": "(external:ogl)"
+      }
+    ],
+    "scripts/hero-webgl/index.js": [
+      {
+        "spec": "./controller.js",
+        "resolved": "scripts/hero-webgl/controller.js"
+      }
+    ],
+    "scripts/hero-webgl/scene.js": [
+      {
+        "spec": "./shaders.js",
+        "resolved": "scripts/hero-webgl/shaders.js"
+      },
+      {
+        "spec": "./geometry.js",
+        "resolved": "scripts/hero-webgl/geometry.js"
+      }
+    ],
+    "scripts/hero-webgl/shaders.js": [],
+    "scripts/home.js": [
+      {
+        "spec": "./core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/page-transitions.js": [
+      {
+        "spec": "./core.js",
+        "resolved": "scripts/core.js"
+      },
+      {
+        "spec": "gsap",
+        "resolved": "(external:gsap)"
+      }
+    ],
+    "scripts/work.js": [
+      {
+        "spec": "./core.js",
+        "resolved": "scripts/core.js"
+      }
+    ]
+  },
+  "cycles": []
+}

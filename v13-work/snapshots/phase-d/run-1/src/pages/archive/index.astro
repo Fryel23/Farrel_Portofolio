@@ -1,0 +1,122 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/home.css';
+import '../../styles/archive.css';
+import '../../styles/work.css';
+---
+
+<BaseLayout
+  title="Archive · Farrel Islami Putra"
+  pageKey="archive-index"
+  description="Hub arsip Farrel Islami Putra: game deck interaktif, milestones dan credentials, kegiatan off-screen, dan arsip GitHub. Semua bagian pendukung portofolio dalam satu pintu."
+>
+  <!-- ============ ARCHIVE HUB (Fase 4.5) ============ -->
+  <section class="archive-hub section-shell" id="archive-hub" aria-labelledby="archive-hub-heading">
+    <div class="geo geo-four" aria-hidden="true"></div>
+    <div class="section-heading">
+      <div>
+        <p class="section-kicker">03 / THE SIDE ARCHIVE</p>
+        <h1 class="display-heading" id="archive-hub-heading">
+          <span class="line-mask"><span class="line">Everything</span></span>
+          <span class="line-mask"><span class="line">behind the <em>work.</em></span></span>
+        </h1>
+      </div>
+      <p class="heading-aside" id="archive-hub-aside">Pintu masuk ke bagian arsip: deck game, kredensial, dan kegiatan di luar layar. Semua masih bagian dari catatan yang sama.</p>
+    </div>
+
+    <div class="archive-hub-grid">
+      <a class="archive-hub-card" href="/archive/play">
+        <span class="archive-hub-card-kicker">03 / INSERT COIN</span>
+        <h3 class="archive-hub-card-title">Game deck</h3>
+        <p class="archive-hub-card-text">A self-reported deck of games I actually play. Stats are casual, not competitive.</p>
+        <span class="archive-hub-card-cta">OPEN THE DECK <span aria-hidden="true">↗</span></span>
+      </a>
+      <a class="archive-hub-card" href="/archive/credentials">
+        <span class="archive-hub-card-kicker">05 / MILESTONES</span>
+        <h3 class="archive-hub-card-title">Credentials</h3>
+        <p class="archive-hub-card-text">Sertifikat, penghargaan, dan publikasi diarsipkan di sini saat benar-benar didapatkan. Tidak ada yang ditampilkan sebelum ada buktinya.</p>
+        <span class="archive-hub-card-cta">OPEN CREDENTIALS <span aria-hidden="true">↗</span></span>
+      </a>
+      <a class="archive-hub-card" href="/archive/off-screen">
+        <span class="archive-hub-card-kicker">05 / OFF-SCREEN</span>
+        <h3 class="archive-hub-card-title">Off-screen</h3>
+        <p class="archive-hub-card-text">Yang saya lakukan saat tidak sedang menatap terminal: hobi, musik, dan companion kecil.</p>
+        <span class="archive-hub-card-cta">OPEN OFF-SCREEN <span aria-hidden="true">↗</span></span>
+      </a>
+      <a class="archive-hub-card" href="/archive/adr">
+        <span class="archive-hub-card-kicker">06 / ENGINEERING RECORDS</span>
+        <h3 class="archive-hub-card-title">Records vault</h3>
+        <p class="archive-hub-card-text">Arsip laporan diagnostik, eksperimen, keputusan teknis, implementasi, dan audit V10.3 sampai V12.3 dengan checksum SHA-256.</p>
+        <span class="archive-hub-card-cta">OPEN RECORDS VAULT <span aria-hidden="true">↗</span></span>
+      </a>
+      <a class="archive-hub-card" href="/codex">
+        <span class="archive-hub-card-kicker">07 / THE GRAND CODEX</span>
+        <h3 class="archive-hub-card-title">Knowledge base (100-600)</h3>
+        <p class="archive-hub-card-text">Basis pengetahuan teknis berbasis bukti repositori dengan taksonomi desimal 100-600, persamaan MathML statis, dan graf backlink.</p>
+        <span class="archive-hub-card-cta">OPEN THE CODEX <span aria-hidden="true">↗</span></span>
+      </a>
+    </div>
+
+    <div class="archive-hub-footnote">
+      <span>PERSONAL ARCHIVE / SIDE ROOMS</span>
+      <span>EVERYTHING HERE IS SELF-REPORTED</span>
+    </div>
+  </section>
+
+  <div class="transition-ribbon" aria-hidden="true"><span></span></div>
+
+  <!-- ============ GITHUB ACTIVITY (V4 §7) ============ -->
+  <section class="github-section" id="github" aria-labelledby="github-heading">
+    <div class="desktop-frame desktop-frame--tl" aria-hidden="true"></div>
+    <div class="desktop-frame desktop-frame--br" aria-hidden="true"></div>
+    <div class="section-inner github-inner">
+      <div class="ornament ornament-github-pulse" aria-hidden="true">
+        <svg viewBox="0 0 200 40" focusable="false">
+          <path class="ornament-github-pulse-path" d="M0 20 L30 20 L40 10 L50 30 L60 20 L90 20 L100 8 L110 32 L120 20 L150 20 L160 15 L170 25 L180 20 L200 20" fill="none" stroke="currentColor" stroke-width="1.5" />
+          <circle cx="30" cy="20" r="2" fill="currentColor" />
+          <circle cx="90" cy="20" r="2" fill="currentColor" />
+          <circle cx="150" cy="20" r="2" fill="currentColor" />
+        </svg>
+      </div>
+      <div class="ornament ornament-github-terminal" aria-hidden="true">&gt; git log --oneline</div>
+      <div class="section-heading section-heading-light">
+        <div>
+          <p class="section-kicker" id="github-kicker">06 / OPEN SOURCE PULSE</p>
+          <h2 class="display-heading" id="github-heading">
+            <span class="line-mask"><span class="line">Commits,</span></span>
+            <span class="line-mask"><span class="line">not <em>claims.</em></span></span>
+          </h2>
+        </div>
+        <p class="heading-aside" id="github-intro">Aktivitas publik dari GitHub, diambil langsung dan di-cache selama satu jam.</p>
+      </div>
+
+      <div class="github-grid" id="github-grid"></div>
+      <p class="github-fallback" id="github-fallback">
+        <span>GITHUB STATS REQUIRE JAVASCRIPT.</span>
+        <a href="https://github.com/Fryel32" target="_blank" rel="noopener noreferrer">VISIT THE PROFILE DIRECTLY <span aria-hidden="true">↗</span></a>
+      </p>
+      <svg class="github-skeleton" viewBox="0 0 160 56" preserveAspectRatio="xMinYMin meet" aria-hidden="true" focusable="false">
+        <defs>
+          <pattern id="gh-skel-pattern" width="8" height="8" patternUnits="userSpaceOnUse">
+            <rect x="0" y="0" width="6" height="6" rx="1" fill="rgba(147, 197, 253, 0.07)" />
+          </pattern>
+        </defs>
+        <rect width="160" height="56" fill="url(#gh-skel-pattern)"></rect>
+        <rect x="24" y="8" width="6" height="6" rx="1" fill="rgba(147, 197, 253, 0.20)" />
+        <rect x="72" y="16" width="6" height="6" rx="1" fill="rgba(147, 197, 253, 0.16)" />
+        <rect x="112" y="40" width="6" height="6" rx="1" fill="rgba(147, 197, 253, 0.20)" />
+        <rect x="40" y="32" width="6" height="6" rx="1" fill="rgba(147, 197, 253, 0.13)" />
+        <rect x="136" y="8" width="6" height="6" rx="1" fill="rgba(147, 197, 253, 0.16)" />
+      </svg>
+      <div class="github-brackets" aria-hidden="true"><span>GIT LOG / FRYEL32</span></div>
+
+      <div class="github-pulse" aria-hidden="true"></div>
+      <p class="github-note"><span>LIVE FROM THE GITHUB REST API</span><span>CACHED FOR ONE HOUR · NOTHING INFLATED</span></p>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import '../../scripts/global.js';
+  import '../../scripts/archive.js';
+</script>

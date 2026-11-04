@@ -1,0 +1,251 @@
+{
+  "schemaVersion": 1,
+  "regionId": "cirebon",
+  "year": 2025,
+  "dataset": {
+    "title": "Kualitas Udara Ambien Kota Cirebon 2025 — SO₂ & NO₂ (DLH Kota Cirebon)",
+    "sourceId": "dlh-cirebon-2021-2025",
+    "sourceUrl": null,
+    "sourceNote": "Dataset resmi Dinas Lingkungan Hidup Kota Cirebon, diterima pemilik situs sebagai lampiran CSV + PDF metadata (portal data terbuka DLH Kota Cirebon). Kontak produsen: (0231) 202223 — dlh@cirebonkota.go.id.",
+    "accessedAt": "2026-11-01",
+    "license": "unverified — dataset resmi pemerintah daerah tanpa pernyataan lisensi eksplisit pada metadata sumber",
+    "station": {
+      "id": null,
+      "name": null,
+      "latitude": null,
+      "longitude": null,
+      "classification": "Jaringan pemantauan multi-lokasi (lokasi tepat tidak diberi koordinat oleh sumber)"
+    },
+    "measurement": {
+      "method": null,
+      "qualityControl": null,
+      "timezone": "Asia/Jakarta",
+      "frequency": "Tahunan, 2 tahap pengukuran per tahun (basis waktu per tahap tidak dilaporkan sumber)"
+    },
+    "parameterDefinitions": {
+      "so2": {
+        "unit": "µg/Nm³ (sebagaimana dilaporkan sumber)",
+        "averagingPeriod": "agregat tahap pengukuran (basis waktu tidak dilaporkan sumber)",
+        "aggregation": "source-defined",
+        "measurementMethod": null
+      },
+      "no2": {
+        "unit": "µg/Nm³ (sebagaimana dilaporkan sumber)",
+        "averagingPeriod": "agregat tahap pengukuran (basis waktu tidak dilaporkan sumber)",
+        "aggregation": "source-defined",
+        "measurementMethod": null
+      }
+    },
+    "limitations": [
+      "Sumber hanya melaporkan SO₂ dan NO₂. ISPU yang tampil adalah nilai TERDERIVASI dari sub-indeks maksimum dua parameter tersebut — bukan ISPU resmi tujuh parameter P.14/2020 (PM10, PM2.5, O₃, CO, HC tidak diukur sumber).",
+      "Basis waktu pengukuran per tahap tidak dilaporkan sumber. Tabel P.14/2020 diturunkan untuk konsentrasi 1 jam (SO₂/NO₂), sehingga sub-indeks bersifat estimasi terderivasi (basisMatched=false), bukan ISPU resmi berbasis 1 jam.",
+      "Satuan sumber \"µg/Nm³\" dipertahankan apa adanya; tidak ada konversi ke \"µg/m³\" karena kondisi referensi volume tidak disediakan sumber.",
+      "Tidak semua lokasi diukur pada semua tahun/tahap; parameter yang tidak dilaporkan disimpan sebagai null (tanpa interpolasi atau pengisian).",
+      "Enam kombinasi lokasi×tahap tahun 2023 melaporkan 0,0 µg/Nm³ untuk SO₂ dan NO₂ serentak (12 baris sumber). Nilai dipertahankan sebagai pengukuran valid bernilai nol sesuai sumber; kemungkinan makna \"periode tanpa pengukuran\" tidak dapat dikonfirmasi dari metadata yang tersedia dan diberi catatan eksplisit di UI.",
+      "Anomali duplikat sumber: kombinasi \"DEPAN KANTOR DISUKCAPIL BIMA, JL. BRIGJEN DARSONO\" 2024 TAHAP II memuat dua baris NO₂ (11,42 dan 9,73 µg/Nm³; baris id 10 dan 12). Nilai kemunculan pertama sesuai urutan sumber dipakai; keduanya disimpan pada field duplicates record terkait. Label tahap baris pertama diduga salah ketik (harusnya TAHAP I) namun TIDAK diubah karena tidak dapat diverifikasi.",
+      "Cakupan 2025 parsial: hanya 4 lokasi dengan TAHAP I pada sumber."
+    ]
+  },
+  "records": [
+    {
+      "id": "2025-tahap-i-balai-kota-cirebon",
+      "date": null,
+      "period": {
+        "year": 2025,
+        "stage": "TAHAP I"
+      },
+      "locationId": "balai-kota-cirebon",
+      "location": "BALAI KOTA CIREBON",
+      "values": {
+        "so2": 23.2,
+        "no2": 18.2
+      },
+      "quality": {
+        "so2": {
+          "status": "valid",
+          "sourceRowId": "1"
+        },
+        "no2": {
+          "status": "valid",
+          "sourceRowId": "2"
+        }
+      },
+      "duplicates": {},
+      "derived": {
+        "method": "P14-2020 (terderivasi; basis waktu tahap, bukan 1-jam resmi)",
+        "subIndex": {
+          "so2": {
+            "status": "valid",
+            "value": 22.3077
+          },
+          "no2": {
+            "status": "valid",
+            "value": 11.375
+          }
+        },
+        "ispuStatus": "valid",
+        "ispu": 22,
+        "dominantParameter": "so2",
+        "availableParameters": [
+          "so2",
+          "no2"
+        ],
+        "category": "Baik"
+      },
+      "reportedIndices": {
+        "ispu": null,
+        "note": "Sumber melaporkan konsentrasi, bukan ISPU. Nilai ISPU pada record ini dihitung (derived) dengan P.14/2020."
+      }
+    },
+    {
+      "id": "2025-tahap-i-pt-arteria-daya-mulia",
+      "date": null,
+      "period": {
+        "year": 2025,
+        "stage": "TAHAP I"
+      },
+      "locationId": "pt-arteria-daya-mulia",
+      "location": "PT. ARTERIA DAYA MULIA",
+      "values": {
+        "so2": 42.8,
+        "no2": 19.53
+      },
+      "quality": {
+        "so2": {
+          "status": "valid",
+          "sourceRowId": "7"
+        },
+        "no2": {
+          "status": "valid",
+          "sourceRowId": "8"
+        }
+      },
+      "duplicates": {},
+      "derived": {
+        "method": "P14-2020 (terderivasi; basis waktu tahap, bukan 1-jam resmi)",
+        "subIndex": {
+          "so2": {
+            "status": "valid",
+            "value": 41.1538
+          },
+          "no2": {
+            "status": "valid",
+            "value": 12.2063
+          }
+        },
+        "ispuStatus": "valid",
+        "ispu": 41,
+        "dominantParameter": "so2",
+        "availableParameters": [
+          "so2",
+          "no2"
+        ],
+        "category": "Baik"
+      },
+      "reportedIndices": {
+        "ispu": null,
+        "note": "Sumber melaporkan konsentrasi, bukan ISPU. Nilai ISPU pada record ini dihitung (derived) dengan P.14/2020."
+      }
+    },
+    {
+      "id": "2025-tahap-i-rw-04-kebon-benteng-tengah",
+      "date": null,
+      "period": {
+        "year": 2025,
+        "stage": "TAHAP I"
+      },
+      "locationId": "rw-04-kebon-benteng-tengah",
+      "location": "RW 04 KEBON BENTENG TENGAH",
+      "values": {
+        "so2": 31.8,
+        "no2": 4.8
+      },
+      "quality": {
+        "so2": {
+          "status": "valid",
+          "sourceRowId": "5"
+        },
+        "no2": {
+          "status": "valid",
+          "sourceRowId": "6"
+        }
+      },
+      "duplicates": {},
+      "derived": {
+        "method": "P14-2020 (terderivasi; basis waktu tahap, bukan 1-jam resmi)",
+        "subIndex": {
+          "so2": {
+            "status": "valid",
+            "value": 30.5769
+          },
+          "no2": {
+            "status": "valid",
+            "value": 3
+          }
+        },
+        "ispuStatus": "valid",
+        "ispu": 31,
+        "dominantParameter": "so2",
+        "availableParameters": [
+          "so2",
+          "no2"
+        ],
+        "category": "Baik"
+      },
+      "reportedIndices": {
+        "ispu": null,
+        "note": "Sumber melaporkan konsentrasi, bukan ISPU. Nilai ISPU pada record ini dihitung (derived) dengan P.14/2020."
+      }
+    },
+    {
+      "id": "2025-tahap-i-stasiun-parujakan",
+      "date": null,
+      "period": {
+        "year": 2025,
+        "stage": "TAHAP I"
+      },
+      "locationId": "stasiun-parujakan",
+      "location": "STASIUN PARUJAKAN",
+      "values": {
+        "so2": 26.4,
+        "no2": 17.6
+      },
+      "quality": {
+        "so2": {
+          "status": "valid",
+          "sourceRowId": "3"
+        },
+        "no2": {
+          "status": "valid",
+          "sourceRowId": "4"
+        }
+      },
+      "duplicates": {},
+      "derived": {
+        "method": "P14-2020 (terderivasi; basis waktu tahap, bukan 1-jam resmi)",
+        "subIndex": {
+          "so2": {
+            "status": "valid",
+            "value": 25.3846
+          },
+          "no2": {
+            "status": "valid",
+            "value": 11
+          }
+        },
+        "ispuStatus": "valid",
+        "ispu": 25,
+        "dominantParameter": "so2",
+        "availableParameters": [
+          "so2",
+          "no2"
+        ],
+        "category": "Baik"
+      },
+      "reportedIndices": {
+        "ispu": null,
+        "note": "Sumber melaporkan konsentrasi, bukan ISPU. Nilai ISPU pada record ini dihitung (derived) dengan P.14/2020."
+      }
+    }
+  ]
+}

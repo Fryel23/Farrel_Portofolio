@@ -1,0 +1,550 @@
+{
+  "graph": {
+    "scripts/about/curiosity-map.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/about/interactions.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/about/motion.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/about/renderers.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/about.js": [
+      {
+        "spec": "./core.js",
+        "resolved": "scripts/core.js"
+      },
+      {
+        "spec": "./about/renderers.js",
+        "resolved": "scripts/about/renderers.js"
+      },
+      {
+        "spec": "./about/curiosity-map.js",
+        "resolved": "scripts/about/curiosity-map.js"
+      },
+      {
+        "spec": "./about/interactions.js",
+        "resolved": "scripts/about/interactions.js"
+      },
+      {
+        "spec": "./about/motion.js",
+        "resolved": "scripts/about/motion.js"
+      }
+    ],
+    "scripts/archive/companion.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      },
+      {
+        "spec": "./shared/pet-blink.js",
+        "resolved": "scripts/archive/shared/pet-blink.js"
+      }
+    ],
+    "scripts/archive/credentials.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/archive/game-deck/crt.js": [
+      {
+        "spec": "../../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/archive/game-deck/entrance-data.js": [
+      {
+        "spec": "../../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/archive/game-deck/index.js": [
+      {
+        "spec": "../../core.js",
+        "resolved": "scripts/core.js"
+      },
+      {
+        "spec": "./crt.js",
+        "resolved": "scripts/archive/game-deck/crt.js"
+      },
+      {
+        "spec": "./entrance-data.js",
+        "resolved": "scripts/archive/game-deck/entrance-data.js"
+      },
+      {
+        "spec": "./scene-data.js",
+        "resolved": "scripts/archive/game-deck/scene-data.js"
+      }
+    ],
+    "scripts/archive/game-deck/scene-data.js": [
+      {
+        "spec": "../../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/archive/github.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/archive/index.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      },
+      {
+        "spec": "./github.js",
+        "resolved": "scripts/archive/github.js"
+      },
+      {
+        "spec": "./game-deck/index.js",
+        "resolved": "scripts/archive/game-deck/index.js"
+      },
+      {
+        "spec": "./konami.js",
+        "resolved": "scripts/archive/konami.js"
+      },
+      {
+        "spec": "./motion.js",
+        "resolved": "scripts/archive/motion.js"
+      },
+      {
+        "spec": "./credentials.js",
+        "resolved": "scripts/archive/credentials.js"
+      },
+      {
+        "spec": "./off-screen.js",
+        "resolved": "scripts/archive/off-screen.js"
+      },
+      {
+        "spec": "./companion.js",
+        "resolved": "scripts/archive/companion.js"
+      }
+    ],
+    "scripts/archive/konami.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/archive/motion.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/archive/off-screen.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      },
+      {
+        "spec": "./shared/pet-blink.js",
+        "resolved": "scripts/archive/shared/pet-blink.js"
+      }
+    ],
+    "scripts/archive/shared/pet-blink.js": [
+      {
+        "spec": "../../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/archive.js": [
+      {
+        "spec": "./archive/index.js",
+        "resolved": "scripts/archive/index.js"
+      }
+    ],
+    "scripts/case-narrative.js": [
+      {
+        "spec": "gsap",
+        "resolved": "(external:gsap)"
+      },
+      {
+        "spec": "gsap/ScrollTrigger",
+        "resolved": "(external:gsap/ScrollTrigger)"
+      },
+      {
+        "spec": "./core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/connect.js": [
+      {
+        "spec": "./global.js",
+        "resolved": "scripts/global.js"
+      },
+      {
+        "spec": "./core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/core/audio-runtime.js": [
+      {
+        "spec": "./environment.js",
+        "resolved": "scripts/core/environment.js"
+      }
+    ],
+    "scripts/core/dom.js": [],
+    "scripts/core/environment.js": [],
+    "scripts/core/magnetic-buttons.js": [
+      {
+        "spec": "./environment.js",
+        "resolved": "scripts/core/environment.js"
+      },
+      {
+        "spec": "./dom.js",
+        "resolved": "scripts/core/dom.js"
+      },
+      {
+        "spec": "./motion-registry.js",
+        "resolved": "scripts/core/motion-registry.js"
+      }
+    ],
+    "scripts/core/motion-config.js": [],
+    "scripts/core/motion-registry.js": [
+      {
+        "spec": "./environment.js",
+        "resolved": "scripts/core/environment.js"
+      },
+      {
+        "spec": "./scroll-runtime.js",
+        "resolved": "scripts/core/scroll-runtime.js"
+      }
+    ],
+    "scripts/core/page-lifecycle.js": [
+      {
+        "spec": "./dom.js",
+        "resolved": "scripts/core/dom.js"
+      },
+      {
+        "spec": "./environment.js",
+        "resolved": "scripts/core/environment.js"
+      },
+      {
+        "spec": "./motion-registry.js",
+        "resolved": "scripts/core/motion-registry.js"
+      }
+    ],
+    "scripts/core/scroll-runtime.js": [
+      {
+        "spec": "./environment.js",
+        "resolved": "scripts/core/environment.js"
+      }
+    ],
+    "scripts/core.js": [
+      {
+        "spec": "../data/content.js",
+        "resolved": "data/content.js"
+      }
+    ],
+    "scripts/curtain-controller.js": [
+      {
+        "spec": "gsap",
+        "resolved": "(external:gsap)"
+      },
+      {
+        "spec": "./core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/generative-ambient/effects/constellation.js": [],
+    "scripts/generative-ambient/effects/isometric-grid.js": [],
+    "scripts/generative-ambient/effects/orbital.js": [],
+    "scripts/generative-ambient.js": [
+      {
+        "spec": "./generative-ambient/effects/isometric-grid.js",
+        "resolved": "scripts/generative-ambient/effects/isometric-grid.js"
+      },
+      {
+        "spec": "./generative-ambient/effects/orbital.js",
+        "resolved": "scripts/generative-ambient/effects/orbital.js"
+      },
+      {
+        "spec": "./generative-ambient/effects/constellation.js",
+        "resolved": "scripts/generative-ambient/effects/constellation.js"
+      }
+    ],
+    "scripts/global/audio-feedback.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/global/decorations.js": [
+      {
+        "spec": "gsap",
+        "resolved": "(external:gsap)"
+      },
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/global/identity.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/global/navigation.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/global/now-playing.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/global/scroll.js": [
+      {
+        "spec": "gsap",
+        "resolved": "(external:gsap)"
+      },
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/global/section-motion.js": [
+      {
+        "spec": "gsap",
+        "resolved": "(external:gsap)"
+      },
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/global.js": [
+      {
+        "spec": "gsap",
+        "resolved": "(external:gsap)"
+      },
+      {
+        "spec": "gsap/ScrollTrigger",
+        "resolved": "(external:gsap/ScrollTrigger)"
+      },
+      {
+        "spec": "lenis",
+        "resolved": "(external:lenis)"
+      },
+      {
+        "spec": "./home/hero-motion.js",
+        "resolved": "scripts/home/hero-motion.js"
+      },
+      {
+        "spec": "./curtain-controller.js",
+        "resolved": "scripts/curtain-controller.js"
+      },
+      {
+        "spec": "./hero-webgl/index.js",
+        "resolved": "scripts/hero-webgl/index.js"
+      },
+      {
+        "spec": "./core.js",
+        "resolved": "scripts/core.js"
+      },
+      {
+        "spec": "./page-transitions.js",
+        "resolved": "scripts/page-transitions.js"
+      },
+      {
+        "spec": "./global/identity.js",
+        "resolved": "scripts/global/identity.js"
+      },
+      {
+        "spec": "./global/navigation.js",
+        "resolved": "scripts/global/navigation.js"
+      },
+      {
+        "spec": "./global/scroll.js",
+        "resolved": "scripts/global/scroll.js"
+      },
+      {
+        "spec": "./global/section-motion.js",
+        "resolved": "scripts/global/section-motion.js"
+      },
+      {
+        "spec": "./global/decorations.js",
+        "resolved": "scripts/global/decorations.js"
+      },
+      {
+        "spec": "./global/now-playing.js",
+        "resolved": "scripts/global/now-playing.js"
+      },
+      {
+        "spec": "./global/audio-feedback.js",
+        "resolved": "scripts/global/audio-feedback.js"
+      }
+    ],
+    "scripts/hero-webgl/controller.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      },
+      {
+        "spec": "./scene.js",
+        "resolved": "scripts/hero-webgl/scene.js"
+      }
+    ],
+    "scripts/hero-webgl/geometry.js": [
+      {
+        "spec": "ogl",
+        "resolved": "(external:ogl)"
+      }
+    ],
+    "scripts/hero-webgl/index.js": [
+      {
+        "spec": "./controller.js",
+        "resolved": "scripts/hero-webgl/controller.js"
+      }
+    ],
+    "scripts/hero-webgl/scene.js": [
+      {
+        "spec": "./shaders.js",
+        "resolved": "scripts/hero-webgl/shaders.js"
+      },
+      {
+        "spec": "./geometry.js",
+        "resolved": "scripts/hero-webgl/geometry.js"
+      }
+    ],
+    "scripts/hero-webgl/shaders.js": [],
+    "scripts/home/archive-search.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/home/hero-interactions.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/home/hero-motion.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/home.js": [
+      {
+        "spec": "./core.js",
+        "resolved": "scripts/core.js"
+      },
+      {
+        "spec": "./home/archive-search.js",
+        "resolved": "scripts/home/archive-search.js"
+      },
+      {
+        "spec": "./home/hero-motion.js",
+        "resolved": "scripts/home/hero-motion.js"
+      },
+      {
+        "spec": "./home/hero-interactions.js",
+        "resolved": "scripts/home/hero-interactions.js"
+      }
+    ],
+    "scripts/page-transitions.js": [
+      {
+        "spec": "./core.js",
+        "resolved": "scripts/core.js"
+      },
+      {
+        "spec": "gsap",
+        "resolved": "(external:gsap)"
+      }
+    ],
+    "scripts/work/batch-motion.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/work/filters.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/work/project-reveal.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/work/renderers.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      },
+      {
+        "spec": "./filters.js",
+        "resolved": "scripts/work/filters.js"
+      },
+      {
+        "spec": "./batch-motion.js",
+        "resolved": "scripts/work/batch-motion.js"
+      },
+      {
+        "spec": "./webgl-hover.js",
+        "resolved": "scripts/work/webgl-hover.js"
+      }
+    ],
+    "scripts/work/webgl-hover.js": [
+      {
+        "spec": "../core.js",
+        "resolved": "scripts/core.js"
+      }
+    ],
+    "scripts/work.js": [
+      {
+        "spec": "./core.js",
+        "resolved": "scripts/core.js"
+      },
+      {
+        "spec": "./work/filters.js",
+        "resolved": "scripts/work/filters.js"
+      },
+      {
+        "spec": "./work/renderers.js",
+        "resolved": "scripts/work/renderers.js"
+      },
+      {
+        "spec": "./work/batch-motion.js",
+        "resolved": "scripts/work/batch-motion.js"
+      },
+      {
+        "spec": "./work/project-reveal.js",
+        "resolved": "scripts/work/project-reveal.js"
+      },
+      {
+        "spec": "./work/webgl-hover.js",
+        "resolved": "scripts/work/webgl-hover.js"
+      }
+    ]
+  },
+  "cycles": []
+}

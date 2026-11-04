@@ -1,0 +1,1250 @@
+{
+  "schemaVersion": 1,
+  "regionId": "cirebon",
+  "year": 2021,
+  "dataset": {
+    "title": "Kualitas Udara Ambien Kota Cirebon 2021 — SO₂ & NO₂ (DLH Kota Cirebon)",
+    "sourceId": "dlh-cirebon-2021-2025",
+    "sourceUrl": null,
+    "sourceNote": "Dataset resmi Dinas Lingkungan Hidup Kota Cirebon, diterima pemilik situs sebagai lampiran CSV + PDF metadata (portal data terbuka DLH Kota Cirebon). Kontak produsen: (0231) 202223 — dlh@cirebonkota.go.id.",
+    "accessedAt": "2026-11-01",
+    "license": "unverified — dataset resmi pemerintah daerah tanpa pernyataan lisensi eksplisit pada metadata sumber",
+    "station": {
+      "id": null,
+      "name": null,
+      "latitude": null,
+      "longitude": null,
+      "classification": "Jaringan pemantauan multi-lokasi (lokasi tepat tidak diberi koordinat oleh sumber)"
+    },
+    "measurement": {
+      "method": null,
+      "qualityControl": null,
+      "timezone": "Asia/Jakarta",
+      "frequency": "Tahunan, 2 tahap pengukuran per tahun (basis waktu per tahap tidak dilaporkan sumber)"
+    },
+    "parameterDefinitions": {
+      "so2": {
+        "unit": "µg/Nm³ (sebagaimana dilaporkan sumber)",
+        "averagingPeriod": "agregat tahap pengukuran (basis waktu tidak dilaporkan sumber)",
+        "aggregation": "source-defined",
+        "measurementMethod": null
+      },
+      "no2": {
+        "unit": "µg/Nm³ (sebagaimana dilaporkan sumber)",
+        "averagingPeriod": "agregat tahap pengukuran (basis waktu tidak dilaporkan sumber)",
+        "aggregation": "source-defined",
+        "measurementMethod": null
+      }
+    },
+    "limitations": [
+      "Sumber hanya melaporkan SO₂ dan NO₂. ISPU yang tampil adalah nilai TERDERIVASI dari sub-indeks maksimum dua parameter tersebut — bukan ISPU resmi tujuh parameter P.14/2020 (PM10, PM2.5, O₃, CO, HC tidak diukur sumber).",
+      "Basis waktu pengukuran per tahap tidak dilaporkan sumber. Tabel P.14/2020 diturunkan untuk konsentrasi 1 jam (SO₂/NO₂), sehingga sub-indeks bersifat estimasi terderivasi (basisMatched=false), bukan ISPU resmi berbasis 1 jam.",
+      "Satuan sumber \"µg/Nm³\" dipertahankan apa adanya; tidak ada konversi ke \"µg/m³\" karena kondisi referensi volume tidak disediakan sumber.",
+      "Tidak semua lokasi diukur pada semua tahun/tahap; parameter yang tidak dilaporkan disimpan sebagai null (tanpa interpolasi atau pengisian).",
+      "Enam kombinasi lokasi×tahap tahun 2023 melaporkan 0,0 µg/Nm³ untuk SO₂ dan NO₂ serentak (12 baris sumber). Nilai dipertahankan sebagai pengukuran valid bernilai nol sesuai sumber; kemungkinan makna \"periode tanpa pengukuran\" tidak dapat dikonfirmasi dari metadata yang tersedia dan diberi catatan eksplisit di UI.",
+      "Anomali duplikat sumber: kombinasi \"DEPAN KANTOR DISUKCAPIL BIMA, JL. BRIGJEN DARSONO\" 2024 TAHAP II memuat dua baris NO₂ (11,42 dan 9,73 µg/Nm³; baris id 10 dan 12). Nilai kemunculan pertama sesuai urutan sumber dipakai; keduanya disimpan pada field duplicates record terkait. Label tahap baris pertama diduga salah ketik (harusnya TAHAP I) namun TIDAK diubah karena tidak dapat diverifikasi."
+    ]
+  },
+  "records": [
+    {
+      "id": "2021-tahap-i-depan-kantor-disukcapil-bima-jl-brigjen-darsono",
+      "date": null,
+      "period": {
+        "year": 2021,
+        "stage": "TAHAP I"
+      },
+      "locationId": "depan-kantor-disukcapil-bima-jl-brigjen-darsono",
+      "location": "DEPAN KANTOR DISUKCAPIL BIMA, JL. BRIGJEN DARSONO",
+      "values": {
+        "so2": 4.16,
+        "no2": 10.47
+      },
+      "quality": {
+        "so2": {
+          "status": "valid",
+          "sourceRowId": "153"
+        },
+        "no2": {
+          "status": "valid",
+          "sourceRowId": "154"
+        }
+      },
+      "duplicates": {},
+      "derived": {
+        "method": "P14-2020 (terderivasi; basis waktu tahap, bukan 1-jam resmi)",
+        "subIndex": {
+          "so2": {
+            "status": "valid",
+            "value": 4
+          },
+          "no2": {
+            "status": "valid",
+            "value": 6.5438
+          }
+        },
+        "ispuStatus": "valid",
+        "ispu": 7,
+        "dominantParameter": "no2",
+        "availableParameters": [
+          "so2",
+          "no2"
+        ],
+        "category": "Baik"
+      },
+      "reportedIndices": {
+        "ispu": null,
+        "note": "Sumber melaporkan konsentrasi, bukan ISPU. Nilai ISPU pada record ini dihitung (derived) dengan P.14/2020."
+      }
+    },
+    {
+      "id": "2021-tahap-i-depan-pabrik-saos-sumber-tirta-jl-petireman-kel-pegambiran",
+      "date": null,
+      "period": {
+        "year": 2021,
+        "stage": "TAHAP I"
+      },
+      "locationId": "depan-pabrik-saos-sumber-tirta-jl-petireman-kel-pegambiran",
+      "location": "DEPAN PABRIK SAOS SUMBER TIRTA JL. PETIREMAN KEL PEGAMBIRAN",
+      "values": {
+        "so2": 19,
+        "no2": 13.3
+      },
+      "quality": {
+        "so2": {
+          "status": "valid",
+          "sourceRowId": "173"
+        },
+        "no2": {
+          "status": "valid",
+          "sourceRowId": "174"
+        }
+      },
+      "duplicates": {},
+      "derived": {
+        "method": "P14-2020 (terderivasi; basis waktu tahap, bukan 1-jam resmi)",
+        "subIndex": {
+          "so2": {
+            "status": "valid",
+            "value": 18.2692
+          },
+          "no2": {
+            "status": "valid",
+            "value": 8.3125
+          }
+        },
+        "ispuStatus": "valid",
+        "ispu": 18,
+        "dominantParameter": "so2",
+        "availableParameters": [
+          "so2",
+          "no2"
+        ],
+        "category": "Baik"
+      },
+      "reportedIndices": {
+        "ispu": null,
+        "note": "Sumber melaporkan konsentrasi, bukan ISPU. Nilai ISPU pada record ini dihitung (derived) dengan P.14/2020."
+      }
+    },
+    {
+      "id": "2021-tahap-i-depan-upt-parkir-dan-pju-terminal-duku-semar",
+      "date": null,
+      "period": {
+        "year": 2021,
+        "stage": "TAHAP I"
+      },
+      "locationId": "depan-upt-parkir-dan-pju-terminal-duku-semar",
+      "location": "DEPAN UPT PARKIR DAN PJU TERMINAL DUKU SEMAR",
+      "values": {
+        "so2": 15,
+        "no2": 14.6
+      },
+      "quality": {
+        "so2": {
+          "status": "valid",
+          "sourceRowId": "169"
+        },
+        "no2": {
+          "status": "valid",
+          "sourceRowId": "170"
+        }
+      },
+      "duplicates": {},
+      "derived": {
+        "method": "P14-2020 (terderivasi; basis waktu tahap, bukan 1-jam resmi)",
+        "subIndex": {
+          "so2": {
+            "status": "valid",
+            "value": 14.4231
+          },
+          "no2": {
+            "status": "valid",
+            "value": 9.125
+          }
+        },
+        "ispuStatus": "valid",
+        "ispu": 14,
+        "dominantParameter": "so2",
+        "availableParameters": [
+          "so2",
+          "no2"
+        ],
+        "category": "Baik"
+      },
+      "reportedIndices": {
+        "ispu": null,
+        "note": "Sumber melaporkan konsentrasi, bukan ISPU. Nilai ISPU pada record ini dihitung (derived) dengan P.14/2020."
+      }
+    },
+    {
+      "id": "2021-tahap-i-jl-ahmad-yani-terminal-kel-larangan-harjamukti",
+      "date": null,
+      "period": {
+        "year": 2021,
+        "stage": "TAHAP I"
+      },
+      "locationId": "jl-ahmad-yani-terminal-kel-larangan-harjamukti",
+      "location": "JL. AHMAD YANI (TERMINAL) KEL. LARANGAN, HARJAMUKTI",
+      "values": {
+        "so2": 8.6,
+        "no2": 2.57
+      },
+      "quality": {
+        "so2": {
+          "status": "valid",
+          "sourceRowId": "185"
+        },
+        "no2": {
+          "status": "valid",
+          "sourceRowId": "186"
+        }
+      },
+      "duplicates": {},
+      "derived": {
+        "method": "P14-2020 (terderivasi; basis waktu tahap, bukan 1-jam resmi)",
+        "subIndex": {
+          "so2": {
+            "status": "valid",
+            "value": 8.2692
+          },
+          "no2": {
+            "status": "valid",
+            "value": 1.6062
+          }
+        },
+        "ispuStatus": "valid",
+        "ispu": 8,
+        "dominantParameter": "so2",
+        "availableParameters": [
+          "so2",
+          "no2"
+        ],
+        "category": "Baik"
+      },
+      "reportedIndices": {
+        "ispu": null,
+        "note": "Sumber melaporkan konsentrasi, bukan ISPU. Nilai ISPU pada record ini dihitung (derived) dengan P.14/2020."
+      }
+    },
+    {
+      "id": "2021-tahap-i-jl-buyut-no-80-kel-pegambiran-kec-lemahwunguk",
+      "date": null,
+      "period": {
+        "year": 2021,
+        "stage": "TAHAP I"
+      },
+      "locationId": "jl-buyut-no-80-kel-pegambiran-kec-lemahwunguk",
+      "location": "JL. BUYUT NO.80 KEL. PEGAMBIRAN, KEC. LEMAHWUNGUK",
+      "values": {
+        "so2": 26.93,
+        "no2": 21.17
+      },
+      "quality": {
+        "so2": {
+          "status": "valid",
+          "sourceRowId": "189"
+        },
+        "no2": {
+          "status": "valid",
+          "sourceRowId": "190"
+        }
+      },
+      "duplicates": {},
+      "derived": {
+        "method": "P14-2020 (terderivasi; basis waktu tahap, bukan 1-jam resmi)",
+        "subIndex": {
+          "so2": {
+            "status": "valid",
+            "value": 25.8942
+          },
+          "no2": {
+            "status": "valid",
+            "value": 13.2313
+          }
+        },
+        "ispuStatus": "valid",
+        "ispu": 26,
+        "dominantParameter": "so2",
+        "availableParameters": [
+          "so2",
+          "no2"
+        ],
+        "category": "Baik"
+      },
+      "reportedIndices": {
+        "ispu": null,
+        "note": "Sumber melaporkan konsentrasi, bukan ISPU. Nilai ISPU pada record ini dihitung (derived) dengan P.14/2020."
+      }
+    },
+    {
+      "id": "2021-tahap-i-jl-samadikun-gg-bandeng",
+      "date": null,
+      "period": {
+        "year": 2021,
+        "stage": "TAHAP I"
+      },
+      "locationId": "jl-samadikun-gg-bandeng",
+      "location": "JL. SAMADIKUN GG BANDENG",
+      "values": {
+        "so2": 5.2,
+        "no2": 21.2
+      },
+      "quality": {
+        "so2": {
+          "status": "valid",
+          "sourceRowId": "193"
+        },
+        "no2": {
+          "status": "valid",
+          "sourceRowId": "194"
+        }
+      },
+      "duplicates": {},
+      "derived": {
+        "method": "P14-2020 (terderivasi; basis waktu tahap, bukan 1-jam resmi)",
+        "subIndex": {
+          "so2": {
+            "status": "valid",
+            "value": 5
+          },
+          "no2": {
+            "status": "valid",
+            "value": 13.25
+          }
+        },
+        "ispuStatus": "valid",
+        "ispu": 13,
+        "dominantParameter": "no2",
+        "availableParameters": [
+          "so2",
+          "no2"
+        ],
+        "category": "Baik"
+      },
+      "reportedIndices": {
+        "ispu": null,
+        "note": "Sumber melaporkan konsentrasi, bukan ISPU. Nilai ISPU pada record ini dihitung (derived) dengan P.14/2020."
+      }
+    },
+    {
+      "id": "2021-tahap-i-jl-teratai-kesambi",
+      "date": null,
+      "period": {
+        "year": 2021,
+        "stage": "TAHAP I"
+      },
+      "locationId": "jl-teratai-kesambi",
+      "location": "JL. TERATAI KESAMBI",
+      "values": {
+        "so2": 4.6,
+        "no2": 26.77
+      },
+      "quality": {
+        "so2": {
+          "status": "valid",
+          "sourceRowId": "181"
+        },
+        "no2": {
+          "status": "valid",
+          "sourceRowId": "182"
+        }
+      },
+      "duplicates": {},
+      "derived": {
+        "method": "P14-2020 (terderivasi; basis waktu tahap, bukan 1-jam resmi)",
+        "subIndex": {
+          "so2": {
+            "status": "valid",
+            "value": 4.4231
+          },
+          "no2": {
+            "status": "valid",
+            "value": 16.7312
+          }
+        },
+        "ispuStatus": "valid",
+        "ispu": 17,
+        "dominantParameter": "no2",
+        "availableParameters": [
+          "so2",
+          "no2"
+        ],
+        "category": "Baik"
+      },
+      "reportedIndices": {
+        "ispu": null,
+        "note": "Sumber melaporkan konsentrasi, bukan ISPU. Nilai ISPU pada record ini dihitung (derived) dengan P.14/2020."
+      }
+    },
+    {
+      "id": "2021-tahap-i-kantor-dlh-jl-wahidin",
+      "date": null,
+      "period": {
+        "year": 2021,
+        "stage": "TAHAP I"
+      },
+      "locationId": "kantor-dlh-jl-wahidin",
+      "location": "KANTOR DLH JL. WAHIDIN",
+      "values": {
+        "so2": 12,
+        "no2": 13.4
+      },
+      "quality": {
+        "so2": {
+          "status": "valid",
+          "sourceRowId": "165"
+        },
+        "no2": {
+          "status": "valid",
+          "sourceRowId": "166"
+        }
+      },
+      "duplicates": {},
+      "derived": {
+        "method": "P14-2020 (terderivasi; basis waktu tahap, bukan 1-jam resmi)",
+        "subIndex": {
+          "so2": {
+            "status": "valid",
+            "value": 11.5385
+          },
+          "no2": {
+            "status": "valid",
+            "value": 8.375
+          }
+        },
+        "ispuStatus": "valid",
+        "ispu": 12,
+        "dominantParameter": "so2",
+        "availableParameters": [
+          "so2",
+          "no2"
+        ],
+        "category": "Baik"
+      },
+      "reportedIndices": {
+        "ispu": null,
+        "note": "Sumber melaporkan konsentrasi, bukan ISPU. Nilai ISPU pada record ini dihitung (derived) dengan P.14/2020."
+      }
+    },
+    {
+      "id": "2021-tahap-i-perumahan-kelurahan-drajat-depan-kantor-kelurahan-drajat",
+      "date": null,
+      "period": {
+        "year": 2021,
+        "stage": "TAHAP I"
+      },
+      "locationId": "perumahan-kelurahan-drajat-depan-kantor-kelurahan-drajat",
+      "location": "PERUMAHAN KELURAHAN DRAJAT DEPAN KANTOR KELURAHAN DRAJAT",
+      "values": {
+        "so2": 10,
+        "no2": 9.75
+      },
+      "quality": {
+        "so2": {
+          "status": "valid",
+          "sourceRowId": "177"
+        },
+        "no2": {
+          "status": "valid",
+          "sourceRowId": "178"
+        }
+      },
+      "duplicates": {},
+      "derived": {
+        "method": "P14-2020 (terderivasi; basis waktu tahap, bukan 1-jam resmi)",
+        "subIndex": {
+          "so2": {
+            "status": "valid",
+            "value": 9.6154
+          },
+          "no2": {
+            "status": "valid",
+            "value": 6.0938
+          }
+        },
+        "ispuStatus": "valid",
+        "ispu": 10,
+        "dominantParameter": "so2",
+        "availableParameters": [
+          "so2",
+          "no2"
+        ],
+        "category": "Baik"
+      },
+      "reportedIndices": {
+        "ispu": null,
+        "note": "Sumber melaporkan konsentrasi, bukan ISPU. Nilai ISPU pada record ini dihitung (derived) dengan P.14/2020."
+      }
+    },
+    {
+      "id": "2021-tahap-i-perumnas-gunung-depan-kel-kecapi",
+      "date": null,
+      "period": {
+        "year": 2021,
+        "stage": "TAHAP I"
+      },
+      "locationId": "perumnas-gunung-depan-kel-kecapi",
+      "location": "PERUMNAS GUNUNG, DEPAN KEL. KECAPI",
+      "values": {
+        "so2": 26.69,
+        "no2": 61.13
+      },
+      "quality": {
+        "so2": {
+          "status": "valid",
+          "sourceRowId": "197"
+        },
+        "no2": {
+          "status": "valid",
+          "sourceRowId": "198"
+        }
+      },
+      "duplicates": {},
+      "derived": {
+        "method": "P14-2020 (terderivasi; basis waktu tahap, bukan 1-jam resmi)",
+        "subIndex": {
+          "so2": {
+            "status": "valid",
+            "value": 25.6635
+          },
+          "no2": {
+            "status": "valid",
+            "value": 38.2063
+          }
+        },
+        "ispuStatus": "valid",
+        "ispu": 38,
+        "dominantParameter": "no2",
+        "availableParameters": [
+          "so2",
+          "no2"
+        ],
+        "category": "Baik"
+      },
+      "reportedIndices": {
+        "ispu": null,
+        "note": "Sumber melaporkan konsentrasi, bukan ISPU. Nilai ISPU pada record ini dihitung (derived) dengan P.14/2020."
+      }
+    },
+    {
+      "id": "2021-tahap-i-pt-japfa-comfeed-jl-siliwangi",
+      "date": null,
+      "period": {
+        "year": 2021,
+        "stage": "TAHAP I"
+      },
+      "locationId": "pt-japfa-comfeed-jl-siliwangi",
+      "location": "PT JAPFA COMFEED JL. SILIWANGI",
+      "values": {
+        "so2": 19.79,
+        "no2": 45.09
+      },
+      "quality": {
+        "so2": {
+          "status": "valid",
+          "sourceRowId": "161"
+        },
+        "no2": {
+          "status": "valid",
+          "sourceRowId": "162"
+        }
+      },
+      "duplicates": {},
+      "derived": {
+        "method": "P14-2020 (terderivasi; basis waktu tahap, bukan 1-jam resmi)",
+        "subIndex": {
+          "so2": {
+            "status": "valid",
+            "value": 19.0288
+          },
+          "no2": {
+            "status": "valid",
+            "value": 28.1813
+          }
+        },
+        "ispuStatus": "valid",
+        "ispu": 28,
+        "dominantParameter": "no2",
+        "availableParameters": [
+          "so2",
+          "no2"
+        ],
+        "category": "Baik"
+      },
+      "reportedIndices": {
+        "ispu": null,
+        "note": "Sumber melaporkan konsentrasi, bukan ISPU. Nilai ISPU pada record ini dihitung (derived) dengan P.14/2020."
+      }
+    },
+    {
+      "id": "2021-tahap-i-stasiun-kejaksaan-cirebon",
+      "date": null,
+      "period": {
+        "year": 2021,
+        "stage": "TAHAP I"
+      },
+      "locationId": "stasiun-kejaksaan-cirebon",
+      "location": "STASIUN KEJAKSAAN CIREBON",
+      "values": {
+        "so2": 9.42,
+        "no2": 24.14
+      },
+      "quality": {
+        "so2": {
+          "status": "valid",
+          "sourceRowId": "157"
+        },
+        "no2": {
+          "status": "valid",
+          "sourceRowId": "158"
+        }
+      },
+      "duplicates": {},
+      "derived": {
+        "method": "P14-2020 (terderivasi; basis waktu tahap, bukan 1-jam resmi)",
+        "subIndex": {
+          "so2": {
+            "status": "valid",
+            "value": 9.0577
+          },
+          "no2": {
+            "status": "valid",
+            "value": 15.0875
+          }
+        },
+        "ispuStatus": "valid",
+        "ispu": 15,
+        "dominantParameter": "no2",
+        "availableParameters": [
+          "so2",
+          "no2"
+        ],
+        "category": "Baik"
+      },
+      "reportedIndices": {
+        "ispu": null,
+        "note": "Sumber melaporkan konsentrasi, bukan ISPU. Nilai ISPU pada record ini dihitung (derived) dengan P.14/2020."
+      }
+    },
+    {
+      "id": "2021-tahap-ii-depan-kantor-disukcapil-bima-jl-brigjen-darsono",
+      "date": null,
+      "period": {
+        "year": 2021,
+        "stage": "TAHAP II"
+      },
+      "locationId": "depan-kantor-disukcapil-bima-jl-brigjen-darsono",
+      "location": "DEPAN KANTOR DISUKCAPIL BIMA, JL. BRIGJEN DARSONO",
+      "values": {
+        "so2": 16.65,
+        "no2": 39.88
+      },
+      "quality": {
+        "so2": {
+          "status": "valid",
+          "sourceRowId": "155"
+        },
+        "no2": {
+          "status": "valid",
+          "sourceRowId": "156"
+        }
+      },
+      "duplicates": {},
+      "derived": {
+        "method": "P14-2020 (terderivasi; basis waktu tahap, bukan 1-jam resmi)",
+        "subIndex": {
+          "so2": {
+            "status": "valid",
+            "value": 16.0096
+          },
+          "no2": {
+            "status": "valid",
+            "value": 24.925
+          }
+        },
+        "ispuStatus": "valid",
+        "ispu": 25,
+        "dominantParameter": "no2",
+        "availableParameters": [
+          "so2",
+          "no2"
+        ],
+        "category": "Baik"
+      },
+      "reportedIndices": {
+        "ispu": null,
+        "note": "Sumber melaporkan konsentrasi, bukan ISPU. Nilai ISPU pada record ini dihitung (derived) dengan P.14/2020."
+      }
+    },
+    {
+      "id": "2021-tahap-ii-depan-pabrik-saos-sumber-tirta-jl-petireman-kel-pegambiran",
+      "date": null,
+      "period": {
+        "year": 2021,
+        "stage": "TAHAP II"
+      },
+      "locationId": "depan-pabrik-saos-sumber-tirta-jl-petireman-kel-pegambiran",
+      "location": "DEPAN PABRIK SAOS SUMBER TIRTA JL. PETIREMAN KEL PEGAMBIRAN",
+      "values": {
+        "so2": 18,
+        "no2": 7.72
+      },
+      "quality": {
+        "so2": {
+          "status": "valid",
+          "sourceRowId": "175"
+        },
+        "no2": {
+          "status": "valid",
+          "sourceRowId": "176"
+        }
+      },
+      "duplicates": {},
+      "derived": {
+        "method": "P14-2020 (terderivasi; basis waktu tahap, bukan 1-jam resmi)",
+        "subIndex": {
+          "so2": {
+            "status": "valid",
+            "value": 17.3077
+          },
+          "no2": {
+            "status": "valid",
+            "value": 4.825
+          }
+        },
+        "ispuStatus": "valid",
+        "ispu": 17,
+        "dominantParameter": "so2",
+        "availableParameters": [
+          "so2",
+          "no2"
+        ],
+        "category": "Baik"
+      },
+      "reportedIndices": {
+        "ispu": null,
+        "note": "Sumber melaporkan konsentrasi, bukan ISPU. Nilai ISPU pada record ini dihitung (derived) dengan P.14/2020."
+      }
+    },
+    {
+      "id": "2021-tahap-ii-depan-upt-parkir-dan-pju-terminal-duku-semar",
+      "date": null,
+      "period": {
+        "year": 2021,
+        "stage": "TAHAP II"
+      },
+      "locationId": "depan-upt-parkir-dan-pju-terminal-duku-semar",
+      "location": "DEPAN UPT PARKIR DAN PJU TERMINAL DUKU SEMAR",
+      "values": {
+        "so2": 12,
+        "no2": 3.43
+      },
+      "quality": {
+        "so2": {
+          "status": "valid",
+          "sourceRowId": "171"
+        },
+        "no2": {
+          "status": "valid",
+          "sourceRowId": "172"
+        }
+      },
+      "duplicates": {},
+      "derived": {
+        "method": "P14-2020 (terderivasi; basis waktu tahap, bukan 1-jam resmi)",
+        "subIndex": {
+          "so2": {
+            "status": "valid",
+            "value": 11.5385
+          },
+          "no2": {
+            "status": "valid",
+            "value": 2.1438
+          }
+        },
+        "ispuStatus": "valid",
+        "ispu": 12,
+        "dominantParameter": "so2",
+        "availableParameters": [
+          "so2",
+          "no2"
+        ],
+        "category": "Baik"
+      },
+      "reportedIndices": {
+        "ispu": null,
+        "note": "Sumber melaporkan konsentrasi, bukan ISPU. Nilai ISPU pada record ini dihitung (derived) dengan P.14/2020."
+      }
+    },
+    {
+      "id": "2021-tahap-ii-jl-ahmad-yani-terminal-kel-larangan-harjamukti",
+      "date": null,
+      "period": {
+        "year": 2021,
+        "stage": "TAHAP II"
+      },
+      "locationId": "jl-ahmad-yani-terminal-kel-larangan-harjamukti",
+      "location": "JL. AHMAD YANI (TERMINAL) KEL. LARANGAN, HARJAMUKTI",
+      "values": {
+        "so2": 11.82,
+        "no2": 39.24
+      },
+      "quality": {
+        "so2": {
+          "status": "valid",
+          "sourceRowId": "187"
+        },
+        "no2": {
+          "status": "valid",
+          "sourceRowId": "188"
+        }
+      },
+      "duplicates": {},
+      "derived": {
+        "method": "P14-2020 (terderivasi; basis waktu tahap, bukan 1-jam resmi)",
+        "subIndex": {
+          "so2": {
+            "status": "valid",
+            "value": 11.3654
+          },
+          "no2": {
+            "status": "valid",
+            "value": 24.525
+          }
+        },
+        "ispuStatus": "valid",
+        "ispu": 25,
+        "dominantParameter": "no2",
+        "availableParameters": [
+          "so2",
+          "no2"
+        ],
+        "category": "Baik"
+      },
+      "reportedIndices": {
+        "ispu": null,
+        "note": "Sumber melaporkan konsentrasi, bukan ISPU. Nilai ISPU pada record ini dihitung (derived) dengan P.14/2020."
+      }
+    },
+    {
+      "id": "2021-tahap-ii-jl-buyut-no-80-kel-pegambiran-kec-lemahwunguk",
+      "date": null,
+      "period": {
+        "year": 2021,
+        "stage": "TAHAP II"
+      },
+      "locationId": "jl-buyut-no-80-kel-pegambiran-kec-lemahwunguk",
+      "location": "JL. BUYUT NO.80 KEL. PEGAMBIRAN, KEC. LEMAHWUNGUK",
+      "values": {
+        "so2": 10.84,
+        "no2": 13.92
+      },
+      "quality": {
+        "so2": {
+          "status": "valid",
+          "sourceRowId": "191"
+        },
+        "no2": {
+          "status": "valid",
+          "sourceRowId": "192"
+        }
+      },
+      "duplicates": {},
+      "derived": {
+        "method": "P14-2020 (terderivasi; basis waktu tahap, bukan 1-jam resmi)",
+        "subIndex": {
+          "so2": {
+            "status": "valid",
+            "value": 10.4231
+          },
+          "no2": {
+            "status": "valid",
+            "value": 8.7
+          }
+        },
+        "ispuStatus": "valid",
+        "ispu": 10,
+        "dominantParameter": "so2",
+        "availableParameters": [
+          "so2",
+          "no2"
+        ],
+        "category": "Baik"
+      },
+      "reportedIndices": {
+        "ispu": null,
+        "note": "Sumber melaporkan konsentrasi, bukan ISPU. Nilai ISPU pada record ini dihitung (derived) dengan P.14/2020."
+      }
+    },
+    {
+      "id": "2021-tahap-ii-jl-samadikun-gg-bandeng",
+      "date": null,
+      "period": {
+        "year": 2021,
+        "stage": "TAHAP II"
+      },
+      "locationId": "jl-samadikun-gg-bandeng",
+      "location": "JL. SAMADIKUN GG BANDENG",
+      "values": {
+        "so2": 9.43,
+        "no2": 14.84
+      },
+      "quality": {
+        "so2": {
+          "status": "valid",
+          "sourceRowId": "195"
+        },
+        "no2": {
+          "status": "valid",
+          "sourceRowId": "196"
+        }
+      },
+      "duplicates": {},
+      "derived": {
+        "method": "P14-2020 (terderivasi; basis waktu tahap, bukan 1-jam resmi)",
+        "subIndex": {
+          "so2": {
+            "status": "valid",
+            "value": 9.0673
+          },
+          "no2": {
+            "status": "valid",
+            "value": 9.275
+          }
+        },
+        "ispuStatus": "valid",
+        "ispu": 9,
+        "dominantParameter": "no2",
+        "availableParameters": [
+          "so2",
+          "no2"
+        ],
+        "category": "Baik"
+      },
+      "reportedIndices": {
+        "ispu": null,
+        "note": "Sumber melaporkan konsentrasi, bukan ISPU. Nilai ISPU pada record ini dihitung (derived) dengan P.14/2020."
+      }
+    },
+    {
+      "id": "2021-tahap-ii-jl-teratai-kesambi",
+      "date": null,
+      "period": {
+        "year": 2021,
+        "stage": "TAHAP II"
+      },
+      "locationId": "jl-teratai-kesambi",
+      "location": "JL. TERATAI KESAMBI",
+      "values": {
+        "so2": 4.11,
+        "no2": 22.37
+      },
+      "quality": {
+        "so2": {
+          "status": "valid",
+          "sourceRowId": "183"
+        },
+        "no2": {
+          "status": "valid",
+          "sourceRowId": "184"
+        }
+      },
+      "duplicates": {},
+      "derived": {
+        "method": "P14-2020 (terderivasi; basis waktu tahap, bukan 1-jam resmi)",
+        "subIndex": {
+          "so2": {
+            "status": "valid",
+            "value": 3.9519
+          },
+          "no2": {
+            "status": "valid",
+            "value": 13.9813
+          }
+        },
+        "ispuStatus": "valid",
+        "ispu": 14,
+        "dominantParameter": "no2",
+        "availableParameters": [
+          "so2",
+          "no2"
+        ],
+        "category": "Baik"
+      },
+      "reportedIndices": {
+        "ispu": null,
+        "note": "Sumber melaporkan konsentrasi, bukan ISPU. Nilai ISPU pada record ini dihitung (derived) dengan P.14/2020."
+      }
+    },
+    {
+      "id": "2021-tahap-ii-kantor-dlh-jl-wahidin",
+      "date": null,
+      "period": {
+        "year": 2021,
+        "stage": "TAHAP II"
+      },
+      "locationId": "kantor-dlh-jl-wahidin",
+      "location": "KANTOR DLH JL. WAHIDIN",
+      "values": {
+        "so2": 18,
+        "no2": 7.72
+      },
+      "quality": {
+        "so2": {
+          "status": "valid",
+          "sourceRowId": "167"
+        },
+        "no2": {
+          "status": "valid",
+          "sourceRowId": "168"
+        }
+      },
+      "duplicates": {},
+      "derived": {
+        "method": "P14-2020 (terderivasi; basis waktu tahap, bukan 1-jam resmi)",
+        "subIndex": {
+          "so2": {
+            "status": "valid",
+            "value": 17.3077
+          },
+          "no2": {
+            "status": "valid",
+            "value": 4.825
+          }
+        },
+        "ispuStatus": "valid",
+        "ispu": 17,
+        "dominantParameter": "so2",
+        "availableParameters": [
+          "so2",
+          "no2"
+        ],
+        "category": "Baik"
+      },
+      "reportedIndices": {
+        "ispu": null,
+        "note": "Sumber melaporkan konsentrasi, bukan ISPU. Nilai ISPU pada record ini dihitung (derived) dengan P.14/2020."
+      }
+    },
+    {
+      "id": "2021-tahap-ii-perumahan-kelurahan-drajat-depan-kantor-kelurahan-drajat",
+      "date": null,
+      "period": {
+        "year": 2021,
+        "stage": "TAHAP II"
+      },
+      "locationId": "perumahan-kelurahan-drajat-depan-kantor-kelurahan-drajat",
+      "location": "PERUMAHAN KELURAHAN DRAJAT DEPAN KANTOR KELURAHAN DRAJAT",
+      "values": {
+        "so2": 8,
+        "no2": 2.88
+      },
+      "quality": {
+        "so2": {
+          "status": "valid",
+          "sourceRowId": "179"
+        },
+        "no2": {
+          "status": "valid",
+          "sourceRowId": "180"
+        }
+      },
+      "duplicates": {},
+      "derived": {
+        "method": "P14-2020 (terderivasi; basis waktu tahap, bukan 1-jam resmi)",
+        "subIndex": {
+          "so2": {
+            "status": "valid",
+            "value": 7.6923
+          },
+          "no2": {
+            "status": "valid",
+            "value": 1.8
+          }
+        },
+        "ispuStatus": "valid",
+        "ispu": 8,
+        "dominantParameter": "so2",
+        "availableParameters": [
+          "so2",
+          "no2"
+        ],
+        "category": "Baik"
+      },
+      "reportedIndices": {
+        "ispu": null,
+        "note": "Sumber melaporkan konsentrasi, bukan ISPU. Nilai ISPU pada record ini dihitung (derived) dengan P.14/2020."
+      }
+    },
+    {
+      "id": "2021-tahap-ii-perumnas-gunung-depan-kel-kecapi",
+      "date": null,
+      "period": {
+        "year": 2021,
+        "stage": "TAHAP II"
+      },
+      "locationId": "perumnas-gunung-depan-kel-kecapi",
+      "location": "PERUMNAS GUNUNG, DEPAN KEL. KECAPI",
+      "values": {
+        "so2": 83.9,
+        "no2": 109.31
+      },
+      "quality": {
+        "so2": {
+          "status": "valid",
+          "sourceRowId": "199"
+        },
+        "no2": {
+          "status": "valid",
+          "sourceRowId": "200"
+        }
+      },
+      "duplicates": {},
+      "derived": {
+        "method": "P14-2020 (terderivasi; basis waktu tahap, bukan 1-jam resmi)",
+        "subIndex": {
+          "so2": {
+            "status": "valid",
+            "value": 63.2117
+          },
+          "no2": {
+            "status": "valid",
+            "value": 62.9682
+          }
+        },
+        "ispuStatus": "valid",
+        "ispu": 63,
+        "dominantParameter": "so2",
+        "availableParameters": [
+          "so2",
+          "no2"
+        ],
+        "category": "Sedang"
+      },
+      "reportedIndices": {
+        "ispu": null,
+        "note": "Sumber melaporkan konsentrasi, bukan ISPU. Nilai ISPU pada record ini dihitung (derived) dengan P.14/2020."
+      }
+    },
+    {
+      "id": "2021-tahap-ii-pt-japfa-comfeed-jl-siliwangi",
+      "date": null,
+      "period": {
+        "year": 2021,
+        "stage": "TAHAP II"
+      },
+      "locationId": "pt-japfa-comfeed-jl-siliwangi",
+      "location": "PT JAPFA COMFEED JL. SILIWANGI",
+      "values": {
+        "so2": 35,
+        "no2": 86.61
+      },
+      "quality": {
+        "so2": {
+          "status": "valid",
+          "sourceRowId": "163"
+        },
+        "no2": {
+          "status": "valid",
+          "sourceRowId": "164"
+        }
+      },
+      "duplicates": {},
+      "derived": {
+        "method": "P14-2020 (terderivasi; basis waktu tahap, bukan 1-jam resmi)",
+        "subIndex": {
+          "so2": {
+            "status": "valid",
+            "value": 33.6538
+          },
+          "no2": {
+            "status": "valid",
+            "value": 53.6991
+          }
+        },
+        "ispuStatus": "valid",
+        "ispu": 54,
+        "dominantParameter": "no2",
+        "availableParameters": [
+          "so2",
+          "no2"
+        ],
+        "category": "Sedang"
+      },
+      "reportedIndices": {
+        "ispu": null,
+        "note": "Sumber melaporkan konsentrasi, bukan ISPU. Nilai ISPU pada record ini dihitung (derived) dengan P.14/2020."
+      }
+    },
+    {
+      "id": "2021-tahap-ii-stasiun-kejaksaan-cirebon",
+      "date": null,
+      "period": {
+        "year": 2021,
+        "stage": "TAHAP II"
+      },
+      "locationId": "stasiun-kejaksaan-cirebon",
+      "location": "STASIUN KEJAKSAAN CIREBON",
+      "values": {
+        "so2": 27.56,
+        "no2": 51.96
+      },
+      "quality": {
+        "so2": {
+          "status": "valid",
+          "sourceRowId": "159"
+        },
+        "no2": {
+          "status": "valid",
+          "sourceRowId": "160"
+        }
+      },
+      "duplicates": {},
+      "derived": {
+        "method": "P14-2020 (terderivasi; basis waktu tahap, bukan 1-jam resmi)",
+        "subIndex": {
+          "so2": {
+            "status": "valid",
+            "value": 26.5
+          },
+          "no2": {
+            "status": "valid",
+            "value": 32.475
+          }
+        },
+        "ispuStatus": "valid",
+        "ispu": 32,
+        "dominantParameter": "no2",
+        "availableParameters": [
+          "so2",
+          "no2"
+        ],
+        "category": "Baik"
+      },
+      "reportedIndices": {
+        "ispu": null,
+        "note": "Sumber melaporkan konsentrasi, bukan ISPU. Nilai ISPU pada record ini dihitung (derived) dengan P.14/2020."
+      }
+    }
+  ]
+}

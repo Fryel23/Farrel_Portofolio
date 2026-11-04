@@ -1,0 +1,22 @@
+
+> portfolio-astro@0.0.1 data:build
+> node scripts/data/build-cirebon-dataset.mjs
+
+=== BUILD DATASET CIREBON (DLH) SELESAI ===
+Sumber       : data/sources/data_kualitas_udara_2.csv
+sha256       : 9ce4de3d0466c71d…
+Baris data   : 200 (baris kosong dilewati: 0) → grup (lokasi×tahun×tahap): 100
+Lokasi unik  : 23
+  2021: 24 record, 12 lokasi, tahap [TAHAP I, TAHAP II], valid so2=24 no2=24, missing so2=0 no2=0, sel 0,0=0
+  2022: 24 record, 12 lokasi, tahap [TAHAP I, TAHAP II], valid so2=24 no2=24, missing so2=0 no2=0, sel 0,0=0
+  2023: 24 record, 12 lokasi, tahap [TAHAP I, TAHAP II], valid so2=24 no2=24, missing so2=0 no2=0, sel 0,0=12
+  2024: 24 record, 12 lokasi, tahap [TAHAP I, TAHAP II], valid so2=24 no2=23, missing so2=0 no2=1, sel 0,0=0
+  2025: 4 record, 4 lokasi, tahap [TAHAP I], valid so2=4 no2=4, missing so2=0 no2=0, sel 0,0=0
+Keluaran     :
+  /home/z/my-project/v11-work/portfolio-astro/public/data/aqi/cirebon-2021.json
+  /home/z/my-project/v11-work/portfolio-astro/public/data/aqi/cirebon-2022.json
+  /home/z/my-project/v11-work/portfolio-astro/public/data/aqi/cirebon-2023.json
+  /home/z/my-project/v11-work/portfolio-astro/public/data/aqi/cirebon-2024.json
+  /home/z/my-project/v11-work/portfolio-astro/public/data/aqi/cirebon-2025.json
+  /home/z/my-project/v11-work/portfolio-astro/public/data/aqi/regions.json
+  /home/z/my-project/v11-work/portfolio-astro/data/cirebon-ingest-audit.json

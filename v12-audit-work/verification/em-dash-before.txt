@@ -1,0 +1,220 @@
+src/styles/lab.css:2:   lab.css — The Data Lab / AQI Explorer (V12.0).
+src/scripts/lab.js:7: * Tidak ada logika lain di sini — implementasi hidup di lab/.
+src/scripts/work.js:5: * Single responsibility: konfigurasi route-aware bootPage() —
+src/scripts/lab/index.js:2: * lab/index.js — Orchestrator Data Lab (spec §12.1).
+src/scripts/lab/index.js:10: * | ready | empty | unavailable | error — satu sumber kebenaran di objek
+src/scripts/lab/index.js:13: * Race protection (spec §8.2): request token + AbortController — hasil
+src/scripts/lab/index.js:51:  if (!root) return; /* bukan halaman /lab — tidak ada yang dilakukan */
+src/scripts/lab/index.js:94:  let lastAction = null; /* 'manifest' | 'dataset' — untuk retry */
+src/scripts/lab/index.js:120:      state.locationTouched = true; /* pilihan eksplisit user — jangan diganti otomatis */
+src/scripts/lab/index.js:214:      if (token !== requestSequence) return; /* stale — buang tanpa render */
+src/scripts/lab/index.js:225:    if (isAbort) return; /* dibatalkan karena request lebih baru — bukan error nyata */
+src/scripts/lab/index.js:244:  /* RENDER: konteks, metrik, tabel, chart — dari dataset yang sama        */
+src/scripts/lab/index.js:294:  /* homepage — hanya ketika user berada di /lab dengan view trend).        */
+src/scripts/lab/index.js:306:    if (token !== trendToken) return null; /* usang — dibuang tanpa render */
+src/scripts/lab/index.js:331:        chart.showEmpty('Tidak ada titik data untuk kombinasi lokasi/tahun/metric ini — gap bukan nol (spec §11.3).');
+src/scripts/lab/index.js:336:      /* Chart.js gagal import/inisialisasi — tabel tetap tersedia
+src/scripts/lab/index.js:376:        location: maxRecord ? maxRecord.location : '—',
+src/scripts/lab/index.js:377:        stage: maxRecord ? maxRecord.period.stage : '—',
+src/scripts/lab/index.js:378:        category: maxRecord ? maxRecord.derived.category : '—',
+src/scripts/lab/charts/chart-config.js:2: * lab/charts/chart-config.js — Pembangun konfigurasi chart (murni, tanpa DOM).
+src/scripts/lab/charts/chart-config.js:7: *  - spanGaps: false — gap tidak pernah disambungkan.
+src/scripts/lab/charts/chart-config.js:13: * DM Mono untuk angka — konsisten dengan seluruh situs.
+src/scripts/lab/charts/chart-config.js:28:    axisTitle: 'ISPU — sub-indeks maksimum SO₂/NO₂ (terderivasi)',
+src/scripts/lab/charts/chart-config.js:38:    axisTitle: 'SO₂ — konsentrasi (µg/Nm³, sebagaimana sumber)',
+src/scripts/lab/charts/chart-config.js:48:    axisTitle: 'NO₂ — konsentrasi (µg/Nm³, sebagaimana sumber)',
+src/scripts/lab/charts/chart-config.js:118:       agar legenda jujur — dataset tetap ada di stage list. */
+src/scripts/lab/charts/chart-config.js:127: * dalam — pemanggil tidak perlu menyiapkan recordsByLabel/metric).
+src/scripts/lab/charts/chart-config.js:137:    parts.push(`SO₂: ${record.values.so2 === null ? '—' : record.values.so2} µg/Nm³`);
+src/scripts/lab/charts/chart-config.js:138:    parts.push(`NO₂: ${record.values.no2 === null ? '—' : record.values.no2} µg/Nm³`);
+src/scripts/lab/charts/chart-config.js:142:      parts.push(`Sub-indeks SO₂: ${so2Sub && so2Sub.status === 'valid' ? so2Sub.value.toFixed(2) : '—'}`);
+src/scripts/lab/charts/chart-config.js:143:      parts.push(`Sub-indeks NO₂: ${no2Sub && no2Sub.status === 'valid' ? no2Sub.value.toFixed(2) : '—'}`);
+src/scripts/lab/charts/chart-config.js:145:        parts.push(`ISPU: ${record.derived.ispu} (${record.derived.category}) — polutan dominan: ${record.derived.dominantParameter === 'so2' ? 'SO₂' : 'NO₂'}`);
+src/scripts/lab/charts/chart-config.js:147:        parts.push('ISPU: — (tidak ada sub-indeks valid)');
+src/scripts/lab/charts/chart-config.js:160:      /* Tooltip bukan satu-satunya cara memperoleh angka — data table
+src/scripts/lab/charts/chart-config.js:175:              if (state.view === 'trend') return `${label} — ${state.locationLabel}`;
+src/scripts/lab/charts/chart-loader.js:2: * lab/charts/chart-loader.js — Pemuat Chart.js yang diisolasi rute.
+src/scripts/lab/charts/chart-loader.js:6: * diimpor oleh BaseLayout, global.js, atau entry homepage — hanya oleh
+src/scripts/lab/charts/chart-loader.js:25:         root package — satu dynamic import, lalu registrasi selektif. */
+src/scripts/lab/charts/chart-loader.js:48:      /* Gagal import tidak boleh tertahan permanen — reset agar retry
+src/scripts/lab/charts/line-chart.js:2: * lab/charts/line-chart.js — Controller satu instance chart (spec §11.4).
+src/scripts/lab/charts/line-chart.js:9: * Chart.js bukan resource WebGL — TIDAK didaftarkan ke motionRegistry
+src/scripts/lab/charts/line-chart.js:36:   * create kedua di canvas yang sama — spec §11.4).
+src/scripts/lab/data/dataset-cache.js:2: * lab/data/dataset-cache.js — Cache in-memory terbatas untuk dataset statis.
+src/scripts/lab/data/dataset-loader.js:2: * lab/data/dataset-loader.js — Loader dataset tahunan (spec §8.1–8.3).
+src/scripts/lab/data/manifest-loader.js:2: * lab/data/manifest-loader.js — Loader manifest regions.json.
+src/scripts/lab/core/aqi-calculator.js:2: * lab/core/aqi-calculator.js — Sub-indeks & ISPU berdasarkan PermenLHK P.14/2020.
+src/scripts/lab/core/aqi-calculator.js:35: * eksplisit mem-pass allowBasisMismatch: true — dan hasilnya selalu
+src/scripts/lab/core/aqi-calculator.js:109: *  setara SESUAI PELAPORAN SUMBER (basis referensi volume tidak dikonversi —
+src/scripts/lab/core/aqi-calculator.js:188:      return fail('insufficient-data', `Kelengkapan data ${validPercent}% di bawah ambang 75% — sub-indeks tidak dihitung.`);
+src/scripts/lab/core/aqi-calculator.js:208:    basisMatched = false; /* override eksplisit — tetap ditandai */
+src/scripts/lab/core/aqi-calculator.js:251:    /* Dipakai internally untuk "melebihi skala tabel" — kategori
+src/scripts/lab/core/aqi-calculator.js:283: * (metodologi setara, P.14/2020) — bukan konsentrasi mentah (spec §7.5).
+src/scripts/lab/core/stats.js:2: * lab/core/stats.js — Statistik deskriptif null-safe (murni, tanpa DOM).
+src/scripts/lab/core/validate-dataset.js:2: * lab/core/validate-dataset.js — Validator schema dataset AQI Data Lab.
+src/scripts/lab/core/validate-dataset.js:5: * (schemaVersion 1) dan mengembalikan DAFTAR ISSUE yang bisa ditampilkan —
+src/scripts/lab/core/validate-dataset.js:195:      /* reportedIndices: null atau numeric — jangan string */
+src/scripts/lab/core/formatters.js:2: * lab/core/formatters.js — Format tampilan (murni, tanpa DOM).
+src/scripts/lab/core/formatters.js:5: * UI tidak punya logika format tersebar. Missing SELALU jadi em-dash "—"
+src/scripts/lab/core/formatters.js:12: * Format angka desimal. null/undefined/NaN → '—'.
+src/scripts/lab/core/formatters.js:17:  if (typeof value !== 'number' || !Number.isFinite(value)) return '—';
+src/scripts/lab/core/formatters.js:23:/** Format indeks ISPU (integer). null/invalid → '—'. */
+src/scripts/lab/core/formatters.js:25:  if (typeof value !== 'number' || !Number.isFinite(value)) return '—';
+src/scripts/lab/core/formatters.js:29:/** Format persentase dari angka 0–100. null → '—'. */
+src/scripts/lab/core/formatters.js:31:  if (typeof value !== 'number' || !Number.isFinite(value)) return '—';
+src/scripts/lab/core/formatters.js:51: * href kosong) — spec §13.7.
+src/scripts/lab/ui/status-view.js:2: * lab/ui/status-view.js — Status & pengumuman aksesibel (spec §13, §14.1).
+src/scripts/lab/ui/metrics.js:2: * lab/ui/metrics.js — Metric cards (maksimal 4, hanya yang didukung data).
+src/scripts/lab/ui/metrics.js:6: * diberi kualifikasi "terderivasi dari SO₂/NO₂" — bukan ISPU resmi 7 parameter.
+src/scripts/lab/ui/metrics.js:7: * Tidak ada data valid → '—' (bukan 0). Angka pakai DM Mono (class lab-number).
+src/scripts/lab/ui/metrics.js:61:        kicker: '—',
+src/scripts/lab/ui/metrics.js:62:        value: '—',
+src/scripts/lab/ui/metrics.js:74:    value: meanIspu.value === null ? '—' : formatIndex(meanIspu.value),
+src/scripts/lab/ui/metrics.js:83:    value: maxIspu.value === null ? '—' : formatIndex(maxIspu.value),
+src/scripts/lab/ui/controls.js:2: * lab/ui/controls.js — Kontrol seleksi (region/tahun/lokasi/metric/view).
+src/scripts/lab/ui/controls.js:39:    { value: 'ispu', label: 'ISPU — sub-indeks maksimum (terderivasi)' },
+src/scripts/lab/ui/controls.js:40:    { value: 'so2', label: 'SO₂ — konsentrasi (µg/Nm³)' },
+src/scripts/lab/ui/controls.js:41:    { value: 'no2', label: 'NO₂ — konsentrasi (µg/Nm³)' },
+src/scripts/lab/ui/controls.js:59:        : `${region.name} — ${region.status}`,
+src/scripts/lab/ui/controls.js:67:      label: `${yearEntry.year}${yearEntry.status === 'partial' ? ' — parsial' : ''}${yearEntry.status === 'no-data' ? ' — tanpa data' : ''}`,
+src/scripts/lab/ui/render.js:2: * lab/ui/render.js — Renderer konteks dataset & catatan sumber (spec §9.2-B, §9.2-G).
+src/scripts/lab/ui/render.js:39:  fillDefinition(list, 'Periode', `${dataset.year}${yearEntry && yearEntry.status === 'partial' ? ' (parsial)' : ''} — tahap: ${(yearEntry && yearEntry.stages ? yearEntry.stages.join(', ') : dataset.records.map((record) => record.period.stage).join(', '))}`);
+src/scripts/lab/ui/render.js:63:    paragraph.appendChild(document.createTextNode(`${source.publisher} — ${source.name}. `));
+src/scripts/lab/ui/render.js:97:  derivationNote.textContent = 'Seluruh nilai ISPU di halaman ini adalah nilai TERDERIVASI yang dihitung dari konsentrasi SO₂/NO₂ menggunakan rumus interpolasi PermenLHK P.14/2020 (basis waktu tahap pengukuran, bukan 1-jam resmi). Sumber hanya melaporkan konsentrasi — reportedIndices.ispu = null. Rinciannya di halaman methodology.';
+src/scripts/lab/ui/data-table.js:2: * lab/ui/data-table.js — Tabel data alternatif chart (spec §9.2-F, §14.4).
+src/scripts/lab/ui/data-table.js:4: * Single responsibility: merender tabel record tahun terpilih — nilai ASLI
+src/scripts/lab/ui/data-table.js:5: * yang sama dengan chart, missing = '—' (bukan 0), caption + thead/tbody,
+src/scripts/lab/ui/data-table.js:21:  return value === null || value === undefined ? '—' : formatNumber(value, { maxFractionDigits: fractionDigits });
+src/scripts/lab/ui/data-table.js:25:  if (!entry || entry.status !== 'valid' || !Number.isFinite(entry.value)) return '—';
+src/scripts/lab/ui/data-table.js:33:    fragment.appendChild(document.createTextNode('—'));
+src/scripts/lab/ui/data-table.js:56:  caption.textContent = `Record pengukuran Kota Cirebon tahun ${dataset.year} — nilai konsentrasi sebagaimana sumber (µg/Nm³) dan sub-indeks/ISPU terderivasi P.14/2020 dari SO₂ & NO₂.`;
+src/scripts/lab/ui/data-table.js:87:      Number.isFinite(record.derived && record.derived.ispu) ? String(record.derived.ispu) : '—',
+src/scripts/about.js:5: * Single responsibility: konfigurasi bootPage() halaman About —
+src/scripts/about.js:17: *   initSkillConstellation — pemilik dokumentasinya yang sebenarnya.
+src/scripts/global.js:4: * Single responsibility: mengatur urutan boot sitewide — bridge
+src/scripts/global.js:7: * teruji. Implementasi fitur hidup di modul global/ (M01/M08) —
+src/scripts/global.js:15: *   5. initHeroWebGL() — non-blocking (void)
+src/scripts/hero-webgl/index.js:3: * PUBLIC LIFECYCLE ENTRY — thin orchestrator.
+src/scripts/hero-webgl/index.js:11: * Implementasi tidak lagi hidup di file ini (M01/M08) — jangan
+src/scripts/home.js:10: * konfigurasi bootPage() — submodule tidak pernah memanggil
+src/scripts/core.js:8: * page-lifecycle). Facade HANYA melakukan re-export — tidak ada logika
+src/scripts/core.js:14: * re-export — nilai terbaru selalu terbaca oleh consumer.
+src/pages/lab/index.astro:2:/* V12.0 — The Data Lab / AQI Explorer (halaman utama).
+src/pages/lab/index.astro:3:   Sumber data: /data/aqi/regions.json + dataset tahunan (statis, historis —
+src/pages/lab/index.astro:8:   dan error — missing selalu tampil sebagai gap/dash, bukan nol. */
+src/pages/lab/index.astro:33:        Dataset bersifat <strong>historis tahunan</strong> — bukan real-time.
+src/pages/lab/index.astro:103:          bawah — grafik bukan satu-satunya cara membaca angka.
+src/pages/lab/methodology.astro:2:/* V12.0 — The Data Lab / Methodology (spec §10).
+src/pages/lab/methodology.astro:4:   Lab — sumber data, rumus ISPU, tabel breakpoint, kategori, penanganan
+src/pages/lab/methodology.astro:18:  contact: '(0231) 202223 — dlh@cirebonkota.go.id',
+src/pages/lab/methodology.astro:56:        ada pipeline real-time, tidak ada backend — hanya data statis
+src/pages/lab/methodology.astro:78:        <em>ISPU terderivasi dari dua parameter tersebut</em> — bukan ISPU resmi
+src/pages/lab/methodology.astro:92:        diverifikasi — tidak ada region palsu untuk kelulusan tes.
+src/pages/lab/methodology.astro:107:            <tr><th scope="row">Lisensi</th><td>Unverified — metadata sumber tidak memuat pernyataan lisensi; data digunakan untuk keperluan edukasi/portofolio dengan atribusi produsen.</td></tr>
+src/pages/lab/methodology.astro:118:        <li><strong>Lokasi:</strong> 23 titik pengukuran (kantor kelurahan, jalan arteri, kawasan industri/pelabuhan, fasilitas publik). Koordinat GPS tidak disediakan sumber, sehingga tidak ditampilkan — tidak dikarang.</li>
+src/pages/lab/methodology.astro:121:        <li><strong>Averaging period:</strong> sumber tidak melaporkan basis waktu per pengukuran (misal 1-jam atau 24-jam) — hanya “tahun” dan “tahap”. Tabel resmi P.14/2020 diturunkan untuk konsentrasi berbasis waktu tertentu (SO₂/NO₂: 1 jam; PM2.5: 24 jam). Ketidakcocokan basis ini diungkapkan apa adanya: sub-indeks di sini adalah <em>estimasi terderivasi</em>, bukan ISPU resmi berbasis 1 jam (lihat bagian 16).</li>
+src/pages/lab/methodology.astro:154:        diverifikasi dari sumber primer — panggilan ke kalkulator untuk
+src/pages/lab/methodology.astro:176:            <tr><th scope="row">401–500</th><td>Berbahaya</td><td class="lab-number">—</td><td class="lab-number">—</td><td class="lab-number">&gt;350.4 – 500.4</td></tr>
+src/pages/lab/methodology.astro:186:        <em>tanpa</em> nilai indeks numerik — tidak ada ekstrapolasi.
+src/pages/lab/methodology.astro:207:        <li><span class="lab-category-chip is-baik">Baik (0–50)</span> — tidak ada dampak.</li>
+src/pages/lab/methodology.astro:208:        <li><span class="lab-category-chip is-sedang">Sedang (51–100)</span> — tidak berpengaruh pada manusia/hewan, berpengaruh pada tumbuhan sensitif.</li>
+src/pages/lab/methodology.astro:209:        <li><span class="lab-category-chip is-tidak-sehat">Tidak Sehat (101–200)</span> — merugikan golongan sensitif.</li>
+src/pages/lab/methodology.astro:210:        <li><span class="lab-category-chip is-sangat-tidak-sehat">Sangat Tidak Sehat (201–300)</span> — berpotensi merugikan segmen populasi terpapar.</li>
+src/pages/lab/methodology.astro:211:        <li><span class="lab-category-chip is-berbahaya">Berbahaya (&gt;300)</span> — berbahaya secara umum.</li>
+src/pages/lab/methodology.astro:220:        <li><strong>0</strong> = pengukuran valid bernilai nol. Enam kombinasi lokasi×tahap tahun 2023 melaporkan 0,0 µg/Nm³ untuk SO₂ <em>dan</em> NO₂ serentak; nilai dipertahankan sesuai sumber (ISPU 0, kategori Baik) dan diberi catatan keterbatasan karena kemungkinan berarti “tidak terukur” — namun makna itu tidak dapat dikonfirmasi dari metadata, jadi tidak dikarang.</li>
+src/pages/lab/methodology.astro:221:        <li><strong>null</strong> = tidak ada nilai. Contoh nyata: NO₂ DISUKCAPIL BIMA TAHAP I 2024 tidak ada di baris sumber manapun → disimpan null, tampil “—”, dan grafik menampilkan gap (chart.js <code>spanGaps: false</code>). Statistik mengabaikan null, tidak menghitungnya 0.</li>
+src/pages/lab/methodology.astro:222:        <li><strong>invalid</strong> = nilai ada tetapi gagal validasi (mis. bukan angka finite, negatif) — validator menolak dataset sebelum tampil.</li>
+src/pages/lab/methodology.astro:228:        9,73 µg/Nm³ — baris id 10 dan 12 pada CSV). Nilai <em>kemunculan
+src/pages/lab/methodology.astro:241:        <li><strong>Statistik</strong> (rata-rata, maksimum, cakupan) dihitung dari nilai valid saja; null/undefined/non-finite diabaikan — bukan dihitung nol. Array kosong menghasilkan “—”, bukan 0%. Rata-rata ISPU pada kartu metrik adalah mean sub-indeks maksimum per record (bukan mean konsentrasi — konsentrasi dan indeks tidak pernah dicampur).</li>
+src/pages/lab/methodology.astro:242:        <li><strong>Polutan dominan</strong> ditentukan dari sub-indeks yang metodologinya setara (keduanya P.14/2020), bukan dari konsentrasi mentah SO₂ vs NO₂ yang unit skala pita berbeda. Ringkasan tahun = parameter yang paling sering menjadi argmax; bila tidak ada sub-indeks valid, statusnya “Tidak dapat ditentukan” — bukan tebakan.</li>
+src/pages/lab/methodology.astro:252:        <li>Hanya SO₂ &amp; NO₂ — ISPU tampil adalah derivasi dua parameter, bukan ISPU resmi tujuh parameter.</li>
+src/pages/lab/methodology.astro:256:        <li>Satuan indeks “indeks_kualitas_udara” pada CSV ternyata berisi konsentrasi (dikonfirmasi pemilik data) — dipakai sebagai konsentrasi.</li>
+src/pages/lab/methodology.astro:268:        dataset menyimpan keduanya terpisah — <code>values</code> vs
+src/pages/lab/methodology.astro:269:        <code>derived</code> — dan <code>reportedIndices.ispu</code> sengaja
+src/pages/lab/methodology.astro:284:        <code>node scripts/data/build-cirebon-dataset.mjs</code> — seluruh
+src/pages/lab/methodology.astro:289:        <li>Penjelasan ISPU — Direktorat Pengendalian Pencemaran Udara, KLHK: ppmu.kemenlh.go.id.</li>
+src/pages/lab/methodology.astro:290:        <li>Dinas Lingkungan Hidup Kota Cirebon — Data Kualitas Udara 2021–2025 (CSV + metadata PDF).</li>
+src/pages/lab/methodology.astro:291:        <li>Chart.js v4 — dokumentasi Line Chart &amp; Performance (chartjs.org).</li>
+src/pages/lab/methodology.astro:292:        <li>Astro — Client-side Scripts &amp; View Transitions (docs.astro.build).</li>
+scripts/data/build-cirebon-dataset.mjs:2: * scripts/data/build-cirebon-dataset.mjs — Ingestion resmi Data Lab V12.0.
+scripts/data/build-cirebon-dataset.mjs:7: * SHARED src/scripts/lab/core/aqi-calculator.js (satu sumber kebenaran —
+scripts/data/build-cirebon-dataset.mjs:87:transformations.push('Sub-indeks & ISPU dihitung build-time dengan modul bersama src/scripts/lab/core/aqi-calculator.js (P.14/2020, allowBasisMismatch eksplisit — basis waktu tahap ≠ 1 jam tabel, ditandai derived).');
+scripts/data/build-cirebon-dataset.mjs:89:transformations.push('Anomali duplikat ditangani transparan: bila satu kombinasi (lokasi, tahun, tahap, parameter) memuat >1 baris, nilai kemunculan pertama (urutan sumber) dipakai dan SEMUA kemunculan disimpan pada record.duplicates — tidak ada yang dihapus diam-diam.');
+scripts/data/build-cirebon-dataset.mjs:115:  if (!PARAMETER_MAP[paramKey]) throw new Error(`Baris ${i + 1} (id ${idCell}): parameter tak dikenal "${parameterRaw}" — build digagalkan (anti pemetaan diam-diam).`);
+scripts/data/build-cirebon-dataset.mjs:208:      throw new Error(`Sub-indeks ${parameter} untuk "${group.location}" ${group.year} ${group.stage}: status tak terduga ${result.status} — ${result.detail}`);
+scripts/data/build-cirebon-dataset.mjs:231:    date: null, /* sumber tidak melaporkan tanggal sub-tahun — tidak dikarang */
+scripts/data/build-cirebon-dataset.mjs:291:  'Sumber hanya melaporkan SO₂ dan NO₂. ISPU yang tampil adalah nilai TERDERIVASI dari sub-indeks maksimum dua parameter tersebut — bukan ISPU resmi tujuh parameter P.14/2020 (PM10, PM2.5, O₃, CO, HC tidak diukur sumber).',
+scripts/data/build-cirebon-dataset.mjs:308:      title: `Kualitas Udara Ambien Kota Cirebon ${year} — SO₂ & NO₂ (DLH Kota Cirebon)`,
+scripts/data/build-cirebon-dataset.mjs:311:      sourceNote: 'Dataset resmi Dinas Lingkungan Hidup Kota Cirebon, diterima pemilik situs sebagai lampiran CSV + PDF metadata (portal data terbuka DLH Kota Cirebon). Kontak produsen: (0231) 202223 — dlh@cirebonkota.go.id.',
+scripts/data/build-cirebon-dataset.mjs:313:      license: 'unverified — dataset resmi pemerintah daerah tanpa pernyataan lisensi eksplisit pada metadata sumber',
+scripts/data/build-cirebon-dataset.mjs:411:      contact: '(0231) 202223 — dlh@cirebonkota.go.id',
+scripts/data/build-cirebon-dataset.mjs:416:      ispuMethod: 'PermenLHK P.14/2020 — tabel SO₂/NO₂ diverifikasi pemilik data; PM2.5 dari lampiran spek V12.0; parameter lain sengaja belum diimplementasikan.',
+scripts/data/build-cirebon-dataset.mjs:454:    finalIndex: 'ISPU = round(max(subIndex so2, subIndex no2)) — hanya parameter valid yang dibandingkan',
+scripts/data/csv-parser.mjs:2: * scripts/data/csv-parser.mjs — Parser CSV RFC 4180 murni (tanpa dependency).
+scripts/data/csv-parser.mjs:6: * dalam kutip, CRLF. Tidak mengubah nilai (tanpa trim otomatis — normalisasi
+scripts/test-lab-core.mjs:2: * scripts/test-lab-core.mjs — Test harness unit untuk core Data Lab V12.0.
+scripts/test-lab-core.mjs:70:  /* Catatan terdokumentasi: spesifikasi menyebut "≈69.92 → 70" — angka itu
+scripts/test-lab-core.mjs:400:test('formatNumber/formatIndex: null & NaN → — (bukan 0)', () => {
+scripts/test-lab-core.mjs:401:  assert.equal(formatNumber(null), '—');
+scripts/test-lab-core.mjs:402:  assert.equal(formatIndex(undefined), '—');
+scripts/test-lab-core.mjs:403:  assert.equal(formatPercent(Number.NaN), '—');
+data/cirebon-ingest-audit.json:157:    "Sub-indeks & ISPU dihitung build-time dengan modul bersama src/scripts/lab/core/aqi-calculator.js (P.14/2020, allowBasisMismatch eksplisit — basis waktu tahap ≠ 1 jam tabel, ditandai derived).",
+data/cirebon-ingest-audit.json:159:    "Anomali duplikat ditangani transparan: bila satu kombinasi (lokasi, tahun, tahap, parameter) memuat >1 baris, nilai kemunculan pertama (urutan sumber) dipakai dan SEMUA kemunculan disimpan pada record.duplicates — tidak ada yang dihapus diam-diam."
+data/cirebon-ingest-audit.json:173:    "finalIndex": "ISPU = round(max(subIndex so2, subIndex no2)) — hanya parameter valid yang dibandingkan",
+public/data/aqi/cirebon-2021.json:6:    "title": "Kualitas Udara Ambien Kota Cirebon 2021 — SO₂ & NO₂ (DLH Kota Cirebon)",
+public/data/aqi/cirebon-2021.json:9:    "sourceNote": "Dataset resmi Dinas Lingkungan Hidup Kota Cirebon, diterima pemilik situs sebagai lampiran CSV + PDF metadata (portal data terbuka DLH Kota Cirebon). Kontak produsen: (0231) 202223 — dlh@cirebonkota.go.id.",
+public/data/aqi/cirebon-2021.json:11:    "license": "unverified — dataset resmi pemerintah daerah tanpa pernyataan lisensi eksplisit pada metadata sumber",
+public/data/aqi/cirebon-2021.json:40:      "Sumber hanya melaporkan SO₂ dan NO₂. ISPU yang tampil adalah nilai TERDERIVASI dari sub-indeks maksimum dua parameter tersebut — bukan ISPU resmi tujuh parameter P.14/2020 (PM10, PM2.5, O₃, CO, HC tidak diukur sumber).",
+public/data/aqi/cirebon-2023.json:6:    "title": "Kualitas Udara Ambien Kota Cirebon 2023 — SO₂ & NO₂ (DLH Kota Cirebon)",
+public/data/aqi/cirebon-2023.json:9:    "sourceNote": "Dataset resmi Dinas Lingkungan Hidup Kota Cirebon, diterima pemilik situs sebagai lampiran CSV + PDF metadata (portal data terbuka DLH Kota Cirebon). Kontak produsen: (0231) 202223 — dlh@cirebonkota.go.id.",
+public/data/aqi/cirebon-2023.json:11:    "license": "unverified — dataset resmi pemerintah daerah tanpa pernyataan lisensi eksplisit pada metadata sumber",
+public/data/aqi/cirebon-2023.json:40:      "Sumber hanya melaporkan SO₂ dan NO₂. ISPU yang tampil adalah nilai TERDERIVASI dari sub-indeks maksimum dua parameter tersebut — bukan ISPU resmi tujuh parameter P.14/2020 (PM10, PM2.5, O₃, CO, HC tidak diukur sumber).",
+public/data/aqi/cirebon-2022.json:6:    "title": "Kualitas Udara Ambien Kota Cirebon 2022 — SO₂ & NO₂ (DLH Kota Cirebon)",
+public/data/aqi/cirebon-2022.json:9:    "sourceNote": "Dataset resmi Dinas Lingkungan Hidup Kota Cirebon, diterima pemilik situs sebagai lampiran CSV + PDF metadata (portal data terbuka DLH Kota Cirebon). Kontak produsen: (0231) 202223 — dlh@cirebonkota.go.id.",
+public/data/aqi/cirebon-2022.json:11:    "license": "unverified — dataset resmi pemerintah daerah tanpa pernyataan lisensi eksplisit pada metadata sumber",
+public/data/aqi/cirebon-2022.json:40:      "Sumber hanya melaporkan SO₂ dan NO₂. ISPU yang tampil adalah nilai TERDERIVASI dari sub-indeks maksimum dua parameter tersebut — bukan ISPU resmi tujuh parameter P.14/2020 (PM10, PM2.5, O₃, CO, HC tidak diukur sumber).",
+public/data/aqi/regions.json:232:      "contact": "(0231) 202223 — dlh@cirebonkota.go.id",
+public/data/aqi/regions.json:237:      "ispuMethod": "PermenLHK P.14/2020 — tabel SO₂/NO₂ diverifikasi pemilik data; PM2.5 dari lampiran spek V12.0; parameter lain sengaja belum diimplementasikan."
+public/data/aqi/cirebon-2025.json:6:    "title": "Kualitas Udara Ambien Kota Cirebon 2025 — SO₂ & NO₂ (DLH Kota Cirebon)",
+public/data/aqi/cirebon-2025.json:9:    "sourceNote": "Dataset resmi Dinas Lingkungan Hidup Kota Cirebon, diterima pemilik situs sebagai lampiran CSV + PDF metadata (portal data terbuka DLH Kota Cirebon). Kontak produsen: (0231) 202223 — dlh@cirebonkota.go.id.",
+public/data/aqi/cirebon-2025.json:11:    "license": "unverified — dataset resmi pemerintah daerah tanpa pernyataan lisensi eksplisit pada metadata sumber",
+public/data/aqi/cirebon-2025.json:40:      "Sumber hanya melaporkan SO₂ dan NO₂. ISPU yang tampil adalah nilai TERDERIVASI dari sub-indeks maksimum dua parameter tersebut — bukan ISPU resmi tujuh parameter P.14/2020 (PM10, PM2.5, O₃, CO, HC tidak diukur sumber).",
+public/data/aqi/cirebon-2024.json:6:    "title": "Kualitas Udara Ambien Kota Cirebon 2024 — SO₂ & NO₂ (DLH Kota Cirebon)",
+public/data/aqi/cirebon-2024.json:9:    "sourceNote": "Dataset resmi Dinas Lingkungan Hidup Kota Cirebon, diterima pemilik situs sebagai lampiran CSV + PDF metadata (portal data terbuka DLH Kota Cirebon). Kontak produsen: (0231) 202223 — dlh@cirebonkota.go.id.",
+public/data/aqi/cirebon-2024.json:11:    "license": "unverified — dataset resmi pemerintah daerah tanpa pernyataan lisensi eksplisit pada metadata sumber",
+public/data/aqi/cirebon-2024.json:40:      "Sumber hanya melaporkan SO₂ dan NO₂. ISPU yang tampil adalah nilai TERDERIVASI dari sub-indeks maksimum dua parameter tersebut — bukan ISPU resmi tujuh parameter P.14/2020 (PM10, PM2.5, O₃, CO, HC tidak diukur sumber).",
+V12.0_IMPLEMENTATION_REPORT.md:1:# V12.0 IMPLEMENTATION REPORT — THE DATA LAB / AQI EXPLORER
+V12.0_IMPLEMENTATION_REPORT.md:12:| Fitur dibuat | The Data Lab — Multi-Region AQI/ISPU Explorer: `/lab` (explorer penuh: konteks dataset, kontrol, 4 metric cards, grafik Chart.js, tabel data mentah, catatan sumber & keterbatasan) + `/lab/methodology` (18 poin metodologi). |
+V12.0_IMPLEMENTATION_REPORT.md:17:| Batasan data (dokumentasi wajib) | ISPU di sini **terderivasi dua parameter** (SO₂, NO₂) dengan basis waktu tahap (bukan 1-jam resmi) — bukan ISPU resmi tujuh parameter. Hanya satu region berdata (Cirebon); arsitektur multi-region siap di manifest. Detail di bagian C, I, dan halaman methodology. |
+V12.0_IMPLEMENTATION_REPORT.md:44:- **Sumber:** `data_kualitas_udara_2.csv` (200 baris data) + `data_kualitas_udara_2_metadata.pdf` (produsen: Dinas Lingkungan Hidup Kota Cirebon; kontak (0231) 202223 — dlh@cirebonkota.go.id; frekuensi tahunan; cakupan seluruh Kota Cirebon). Salinan mentah + sha256 (`9ce4de3d0466c71d…`) tersimpan di `data/sources/` dan tercatat di `data/cirebon-ingest-audit.json` serta manifest `sources[].sourceSha256`.
+V12.0_IMPLEMENTATION_REPORT.md:47:- **Lisensi:** unverified — metadata tidak memuat pernyataan lisensi; dicatat jujur di manifest & methodology.
+V12.0_IMPLEMENTATION_REPORT.md:53:- **Tabel terverifikasi:** SO₂ (0-52→0-50; >52-180→51-100; >180-400→101-200; >400-800→201-300; >800-1200→301-500) dan NO₂ (0-80; >80-200; >200-1130; >1130-2260; >2260-3000) — **diverifikasi dan disediakan eksplisit oleh pemilik data**. PM2.5 dari lampiran spek V12.0 (6 pita hingga 500.4). PM10/O₃/CO/HC **sengaja tidak diimplementasikan** (belum terverifikasi sumber primer) → status `unsupported-parameter`, bukan angka karangan.
+V12.0_IMPLEMENTATION_REPORT.md:54:- **Tafsiran kontinu** ">52–180" dipakai agar tidak ada celah antar pita (uji: 52→50, 52.000001→51.0000x, 180→100, tanpa overlap/gap — spec §7.2).
+V12.0_IMPLEMENTATION_REPORT.md:56:- **Basis waktu:** data = agregat tahap (sumber tidak melaporkan basis); tabel = 1 jam. Jalur eksplisit `allowBasisMismatch:true` → seluruh sub-indeks tercatat `basisMatched:false` dan diberi label "terderivasi" di seluruh UI (aturan spek 11, D10, D11 dipenuhi — tidak ada klaim ISPU resmi 1-jam).
+V12.0_IMPLEMENTATION_REPORT.md:57:- **Contoh terverifikasi:** PERUMNAS GUNUNG 2021 T-II: SO₂ 83,9 → 63,21; NO₂ 109,31 → 62,97; ISPU 63 (Sedang), dominan SO₂. Contoh resmi spek PM2.5 31,4 → 70,53 (pita 51–100) → 71; catatan selisih konvensi 69,92 (peta kontinu 50–100) didokumentasikan di methodology §9 — selisih <1 ISPU.
+V12.0_IMPLEMENTATION_REPORT.md:63:| NO₂ DISUKCAPIL BIMA T-I 2024 tidak ada di sumber | `values.no2 = null`, `quality.no2.status='missing'`, tabel "—", chart gap, statistik mengabaikan — **tidak pernah 0** |
+V12.0_IMPLEMENTATION_REPORT.md:86:    │   │                       formatters.js (— untuk missing, safeExternalUrl)
+V12.0_IMPLEMENTATION_REPORT.md:96:                                '—' saat kosong), data-table.js (caption/thead/tbody,
+V12.0_IMPLEMENTATION_REPORT.md:102:- **Data flow:** manifest (7,2 KB) → dataset tahun terpilih (8–34 KB) di-fetch on-demand; view "Tren" memuat dataset lintas tahun via loader yang sama (cached) hanya saat dibutuhkan di /lab — homepage tidak pernah memuat data maupun chart.
+V12.0_IMPLEMENTATION_REPORT.md:111:| `scripts/data/csv-parser.mjs` | CREATE | Parser RFC 4180 murni (kutip, escape, multi-baris) — tanpa dependency |
+V12.0_IMPLEMENTATION_REPORT.md:113:| `scripts/test-lab-core.mjs` | CREATE | Test harness node:assert — 50 test (kalkulator/statistik/validator/formatter/integrasi dataset) |
+V12.0_IMPLEMENTATION_REPORT.md:115:| `src/scripts/lab/core/stats.js` | CREATE | mean/median/min/max/SD (populasi default)/count/validPercentage — null-safe, non-mutasi |
+V12.0_IMPLEMENTATION_REPORT.md:117:| `src/scripts/lab/core/formatters.js` | CREATE | Format id-ID; missing='—'; safeExternalUrl (http/s only) |
+V12.0_IMPLEMENTATION_REPORT.md:146:| Homepage requests (`astro preview` + performance API) | `ClientRouter*.js`, `index.astro…1mCWMMKz.js` (2,6 KB gzip), `global.js`, `work.js`, CSS — **NOL request chart** (verifikasi `performance.getEntriesByType('resource')`: tidak ada nama mengandung "chart") |
+V12.0_IMPLEMENTATION_REPORT.md:149:| Data payload | manifest 7,2 KB; dataset per tahun 8–34 KB — di-fetch on-demand, cache bounded; **tidak ada dataset dalam HTML** |
+V12.0_IMPLEMENTATION_REPORT.md:154:**Tooling:** `node scripts/test-lab-core.mjs` (node:assert — tanpa framework baru, sesuai §17) + verifikasi manual Agent Browser (dev `:4321` + produksi `astro preview :4322`). Status lainnya sesuai kriteria spek §18.
+V12.0_IMPLEMENTATION_REPORT.md:156:### H.1 Unit/Integration — 50 PASS / 0 FAIL
+V12.0_IMPLEMENTATION_REPORT.md:162:| Formatter (2) | missing '—'; safeExternalUrl | **PASS** |
+V12.0_IMPLEMENTATION_REPORT.md:167:**A. Architectural** — A01 PASS (pola V11.x diikuti; pemetaan features→scripts/lab terdokumentasi) · A02 PASS (statis murni) · A03 PASS (hanya chart.js) · A04 PASS (dynamic import dalam init) · **A05 PASS (homepage 0 chart request — terukur)** · A06 PASS (domain terisolasi) · A07 PASS (core tanpa DOM) · A08 PASS (loader terpisah) · A09 PASS (validator terpisah) · A10 PASS (dataset JSON = sumber tunggal nilai; manifest = sumber daftar) · A11 PASS (import graph: facade→orchestrator→modul; core tidak mengimpor UI) · A12 PASS (semua listener/chart/fetch ber-owner) · A13 PASS (bootPage sekali per epoch) · A14 PASS (destroy terverifikasi navigasi) · A15 PASS (tidak ada import mati — diverifikasi saat refactor; Vite build bersih)
+V12.0_IMPLEMENTATION_REPORT.md:169:**D. Data integrity** — D01 PASS · D02 PASS (URL tak diverifikasi → null + urlNote, bukan tautan karangan) · D03 PASS (µg/Nm³ as-reported) · D04 PASS (basis tahap, ketidakcocokan 1-jam diungkap) · D05 PASS (semua nilai dari CSV; sha256 tercatat) · D06 PASS · D07 PASS · D08 PASS (quality per record + coverage) · D09 PASS · D10 PASS (reportedIndices.ispu=null; blok derived terpisah; label "terderivasi" di UI) · D11 PASS (label metrik selalu berkualifikasi SO₂&NO₂) · D12 PASS (dominan dari sub-indeks setara) · D13 PASS (satu region berdata; manifest mendukung multi; klaim perbandingan tidak dibuat) · D14 PASS (2025 partial jujur di manifest+UI)
+V12.0_IMPLEMENTATION_REPORT.md:171:**P. Product** — P01–P02 PASS (route 200 + render) · P03 PASS (region select; 1 region aktif, arsitektur multi siap) · P04 PASS (year select; 2025 partial berlabel) · P05 PASS (metrik merespons — terverifikasi 2024: mean 11, max 18) · P06 PASS (chart merespons metric/year/location/view) · **P07 PASS (gap chart terverifikasi visual: tren PERUMNAS [38,12,0,8,null]/[63,5,25,9,null])** · P08 PASS (tabel dengan caption/thead; tersedia tanpa chart) · P09 PASS (source note + kontak) · P10 PASS (loading/ready/empty/unavailable/error+retry terverifikasi; chart-import-fail → tabel tetap) · P11 PASS (nav) · P12 PASS (footer)
+V12.0_IMPLEMENTATION_REPORT.md:173:**V. Visual & performance** — V01 PASS (token V11.x) · V02 PASS (editorial, bukan SaaS) · V03 PASS (1440/1280) · V04 PASS (390×844 + 412; tanpa overflow horizontal — terukur `scrollWidth<=innerWidth`) · V05 PASS · V06 PASS (animasi ≤300ms) · V07 PASS (reduced-motion: animasi 0 + guard CSS) · V08 PASS (work/about/connect/home/archive utuh — screenshot; nav/footer hanya bertambah 1 item) · **V09 PASS (terbukti di produksi)** · V10 PASS
+V12.0_IMPLEMENTATION_REPORT.md:175:**Multi-region & switching (§17.5–17.6):** satu region berdata → region manifest + unavailable state diuji; data pembanding TIDAK dibuat palsu. Year switching 2021→2025 konsisten (kontrol/chart/metrik/tabel); no-data tahun tak ada pada Cirebon (semua 5 tahun berdata) — jalur `no-data` tetap terimplementasi lewat manifest status. **Chart lifecycle (§17.9):** satu instance; update saat ganti state; destroy saat navigasi; tidak ada "canvas already in use" (bersih pada semua siklus navigasi). **Astro navigation (§17.10):** direct load, home→lab, lab→home, lab↔methodology, back/forward/reload — semuanya boot/cleanup bersih (error log kosong setelah siklus). **Keyboard (§17.11):** fokus `Tab` menjangkau select (`focus → lab-year`), focus-visible biru, native select (arrow keys native).
+V12.0_IMPLEMENTATION_REPORT.md:179:1. **ISPU = derivasi dua parameter** (SO₂, NO₂, basis tahap) — bukan ISPU resmi tujuh parameter; PM10/PM2.5/O₃/CO/HC tidak diukur sumber.
+V12.0_IMPLEMENTATION_REPORT.md:183:5. **Nol serentak 2023** (6 grup) kemungkinan berarti tidak terukur — tidak dapat diverifikasi; dipertahankan sebagai valid nol + limitation.
+V12.0_IMPLEMENTATION_REPORT.md:184:6. **Duplikat NO₂ 2024** (1 grup) — first-occurrence + duplicates tersimpan; dugaan typo tahap tidak diubah.
+V12.0_IMPLEMENTATION_REPORT.md:186:8. **Region pembanding belum ada** — sengaja; menunggu data terverifikasi (Jawa Barat DLH open data adalah kandidat).
+V12.0_IMPLEMENTATION_REPORT.md:187:9. **Contoh resmi PM2.5 31,4** → 70,53 (71) vs konvensi 69,92 (70) — selisih konvensi pita didokumentasikan di methodology §9.
+V12.0_IMPLEMENTATION_REPORT.md:199:| Dependency baru selain Chart.js? | **Tidak ada.** Parser CSV, test harness, cache, formatter — semuanya hand-rolled. |
+V12.0_IMPLEMENTATION_REPORT.md:204:Sisa debt sadar (tidak memblokir): view "Tren" memuat 4–5 dataset on-demand (~130 KB, cached) — diperlukan agar tren lintas tahun jujur tanpa menduplikasi data di manifest; satu-satunya alternatif (ringkasan di manifest) justru menciptakan sumber kebenaran ganda.
+V12.0_IMPLEMENTATION_REPORT.md:210:Alasan bukan "ALL PASSED tanpa catatan": satu-satunya region berdata hanya menyediakan SO₂+NO₂ dengan basis waktu tahap, sehingga seluruh ISPU yang ditampilkan adalah derivasi dua parameter yang diberi label jujur — sesuai jalur yang disediakan spek (§18: *complete with documented data limitations*; aturan 11–12: tidak mengklaim ISPU resmi tanpa basis/parameter lengkap). Seluruh kriteria arsitektur, produk, visual, dan performa PASS dengan bukti terukur; keterbatasan data didokumentasikan di manifest, dataset JSON, halaman methodology, dan laporan ini.

@@ -1,0 +1,22 @@
+{
+  "2021": {
+    "recordCount": 24,
+    "sha256": "68550843182400e59045dd87ba942df3515b9b9aacd934094f1c9b9acc44e5f4"
+  },
+  "2022": {
+    "recordCount": 24,
+    "sha256": "f803c18eafb10ed78dccfc2bb998d303a4b12d08ec613d7faac928937d515e0e"
+  },
+  "2023": {
+    "recordCount": 24,
+    "sha256": "1fd4e8fe86f9e2cfd3af7615f0bed964032b67cc0c91ec8d3f7fd1e160ae9a89"
+  },
+  "2024": {
+    "recordCount": 24,
+    "sha256": "baa67b78264ed5655b21ce7441f9c1f1948883d98ee3bfc5a62cb892830e876c"
+  },
+  "2025": {
+    "recordCount": 4,
+    "sha256": "d92e15a306684b095743030ac5571a2e61f43316fa1578f257ce35899aab022d"
+  }
+}

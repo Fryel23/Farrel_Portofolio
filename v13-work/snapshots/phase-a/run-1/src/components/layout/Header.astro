@@ -1,0 +1,156 @@
+---
+/* Header sitewide. Navigasi kini antar halaman (Hub-and-Spoke V7.0):
+   tidak ada lagi data-section / scroll spy. Status aktif diset saat
+   build lewat aria-current="page" + class "active".
+
+   V7.1 Fase 2.1: navigasi utama hanya berisi enam pintasan utama
+   (Home, Work, Games, About, GitHub, Contact). Off-screen, Credentials,
+   dan Companion pindah ke Quick Menu agar tidak redundan.
+
+   V7.3 Fase 1: di bawah 980px nav horizontal + tombol titik hilang dan
+   digantikan laci hamburger (#mobile-menu-drawer) yang menggabungkan
+   keenam tautan utama dan tautan Deep Dive dalam satu daftar. Di
+   desktop tombol dan laci tidak pernah tampil (display none), sehingga
+   desain desktop tidak berubah. Logika buka/tutup ada di global.js
+   (initMobileMenu, V7.3 Fase 2). */
+const path = Astro.url.pathname;
+const normalize = (p: string) => {
+  const cleaned = p.replace(/\/+$/, '');
+  return cleaned === '' ? '/' : cleaned;
+};
+const here = normalize(path);
+const NAV = [
+  { href: '/', label: 'Home' },
+  { href: '/work', label: 'Work' },
+  { href: '/archive/play', label: 'Games' },
+  { href: '/about', label: 'About' },
+  /* V12.0: pintasan The Data Lab (/lab). Tautan tunggal, tidak duplikat;
+     laci hamburger merender array yang sama sehingga ikut otomatis. */
+  { href: '/lab', label: 'Data Lab' },
+  { href: 'https://github.com/Fryel32', label: 'GitHub', external: true },
+  { href: '/connect', label: 'Contact' },
+];
+---
+
+<header class="site-header" id="top">
+  <a href="/" class="brand-mark" aria-label="Farrel Islami Putra · kembali ke beranda">
+    <span class="brand-icon">FIP</span>
+    <span class="brand-name">PORTFOLIO / ARCHIVE</span>
+  </a>
+  <nav class="main-nav" aria-label="Main navigation">
+    {
+      NAV.map((item) => {
+        const active = normalize(item.href) === here;
+        return (
+          <a
+            href={item.href}
+            class:list={['nav-link', { active }]}
+            target={item.external ? '_blank' : undefined}
+            rel={item.external ? 'noopener noreferrer' : undefined}
+            aria-current={active ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        );
+      })
+    }
+  </nav>
+  <!-- V4 §6.5: indikator Now Playing, diisi script dari endpoint Spotify.
+       Tersembunyi sampai data nyata datang; tidak pernah dipalsukan. -->
+  <a class="now-playing" id="now-playing" hidden>
+    <span class="now-playing-art"><img id="now-playing-img" alt="" width="24" height="24" hidden /></span>
+    <span class="now-playing-dot" aria-hidden="true"></span>
+    <span class="now-playing-text" id="now-playing-text" aria-live="polite"></span>
+  </a>
+  <!-- V8.0 Fase 2: tombol mute/unmute efek suara antarmuka (Web Audio
+       API, sintesis oscillator). Preferensi tersimpan di localStorage
+       (fip-audio-muted) dan ikon disinkronkan oleh initAudioFeedback di
+       global.js. Ikon memakai aria-hidden sesuai spesifikasi; label
+       aksesibel hidup di aria-label tombol. -->
+  <button class="audio-toggle" id="audio-toggle" type="button" aria-label="Mute interface sounds" aria-pressed="false">
+    <svg class="audio-icon-on" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M11 5 6 9H2v6h4l5 4V5z"></path>
+      <path d="M15.5 8.5a5 5 0 0 1 0 7"></path>
+      <path d="M18.5 5.5a9 9 0 0 1 0 13"></path>
+    </svg>
+    <svg class="audio-icon-off" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden>
+      <path d="M11 5 6 9H2v6h4l5 4V5z"></path>
+      <path d="m22 9-6 6M16 9l6 6"></path>
+    </svg>
+  </button>
+  <!-- V7.3 Fase 1: tombol hamburger, hanya tampil di bawah 980px
+       (dikendalikan CSS); ditempatkan sebelum tombol menu-dots sesuai
+       spesifikasi. -->
+  <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobile-menu-drawer">
+    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" aria-hidden="true"><path d="M3 12h18M3 6h18M3 18h18"></path></svg>
+  </button>
+  <button class="menu-dots" id="menu-dots" aria-label="Open quick menu" aria-expanded="false" aria-controls="quick-menu">
+    <span></span><span></span><span></span>
+  </button>
+  <!-- V7.1 Fase 2.2: Quick Menu kini "Menu Pintas / Deep Dive". Tautan
+       internal redundan dengan navigasi utama dihapus (Selected projects,
+       Game deck, About the creator, GitHub activity, Learning journey,
+       Say hello).
+
+       Catatan penyimpangan terdokumentasi: spesifikasi menyarankan
+       /archive/play#companion dengan asumsi habitat Companion berada di
+       halaman Archive/Play. Audit DOM membuktikan section id="companion"
+       hanya ada di src/pages/archive/off-screen.astro, sehingga href
+       dipertahankan ke /archive/off-screen#companion agar deep link
+       berfungsi sempurna (bukan anchor mati). -->
+  <div class="quick-menu" id="quick-menu" hidden>
+    <!-- Now Playing Row (tetap ada, diisi oleh JS) -->
+    <span class="quick-now-playing" id="quick-now-playing" hidden></span>
+
+    <!-- Deep Dive Links -->
+    <a href="/archive/off-screen">Off-screen hobbies</a>
+    <a href="/archive/credentials">Milestones &amp; credentials</a>
+    <a href="/archive/off-screen#companion">Meet the companion</a>
+
+    <!-- External Links -->
+    <a href="https://github.com/Fryel32" target="_blank" rel="noopener noreferrer">GitHub profile ↗</a>
+    <a href="https://drive.google.com/drive/folders/1YaoRkFvdlk29vdRAFQxj5ypVD-7WDtTl?usp=drive_link" target="_blank" rel="noopener noreferrer">Documentation archive ↗</a>
+  </div>
+
+  <!-- V7.3 Fase 1: laci navigasi mobile. Di luar <nav> utama, di dalam
+       <header>, sesuai spesifikasi. Menyatukan menu utama (enam tautan,
+       dirender dari array NAV yang sama agar href selalu sinkron) dan
+       menu Deep Dive (Quick Menu). ID #mobile-menu-toggle,
+       #mobile-menu-drawer, dan #mobile-menu-close dipakai oleh
+       initMobileMenu di global.js. -->
+  <div class="mobile-menu-drawer" id="mobile-menu-drawer" hidden>
+    <div class="mobile-menu-inner">
+      <div class="mobile-menu-header">
+        <span class="brand-icon">FIP</span>
+        <button class="mobile-menu-close" id="mobile-menu-close" aria-label="Close navigation menu">
+          <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+        </button>
+      </div>
+      <nav class="mobile-nav-list" aria-label="Mobile navigation">
+        {NAV.map((item) => {
+          const active = normalize(item.href) === here;
+          return (
+            <a
+              href={item.href}
+              class:list={['mobile-nav-link', { 'is-active': active }]}
+              target={item.external ? '_blank' : undefined}
+              rel={item.external ? 'noopener noreferrer' : undefined}
+              aria-current={active ? 'page' : undefined}
+            >
+              {item.label}
+              {item.external ? <span class="mobile-nav-ext" aria-hidden="true">↗</span> : null}
+            </a>
+          );
+        })}
+
+        <hr class="mobile-menu-divider" />
+
+        <p class="mobile-menu-label">DEEP DIVE</p>
+        <a href="/archive/off-screen" class="mobile-nav-link mobile-nav-link--deep">Off-screen hobbies</a>
+        <a href="/archive/credentials" class="mobile-nav-link mobile-nav-link--deep">Milestones &amp; credentials</a>
+        <a href="/archive/off-screen#companion" class="mobile-nav-link mobile-nav-link--deep">Meet the companion</a>
+        <a href="https://drive.google.com/drive/folders/1YaoRkFvdlk29vdRAFQxj5ypVD-7WDtTl?usp=drive_link" target="_blank" rel="noopener noreferrer" class="mobile-nav-link mobile-nav-link--deep">Documentation archive <span class="mobile-nav-ext" aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </div>
+</header>

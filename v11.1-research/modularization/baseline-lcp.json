@@ -1,0 +1,47 @@
+{
+  "desktop": {
+    "label": "desktop-1440",
+    "lcpRuns": [
+      824,
+      388,
+      420
+    ],
+    "lcpMedian": 420,
+    "fcpRuns": [
+      824,
+      388,
+      420
+    ],
+    "fcpMedian": 420,
+    "clsRuns": [
+      0.011,
+      0.0121,
+      0.0435
+    ],
+    "clsMedian": 0.0121,
+    "lcpElement": "hero-subtitle"
+  },
+  "mobile": {
+    "label": "mobile-390",
+    "lcpRuns": [
+      284,
+      248,
+      264
+    ],
+    "lcpMedian": 264,
+    "fcpRuns": [
+      284,
+      248,
+      264
+    ],
+    "fcpMedian": 264,
+    "clsRuns": [
+      0,
+      0,
+      0
+    ],
+    "clsMedian": 0,
+    "lcpElement": "hero-subtitle"
+  },
+  "note": "Playwright PerformanceObserver, local preview (no network throttling), 3 runs each; V11.0 baseline figures were Lighthouse lab runs - not directly comparable, absolute targets only."
+}

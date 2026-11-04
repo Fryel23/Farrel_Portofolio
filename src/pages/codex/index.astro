@@ -1,0 +1,408 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { assertV13ContentIntegrity } from '../../data/content-integrity.js';
+import {
+  CODEX_DOMAINS,
+  CODEX_MATURITY_LEVELS,
+  CODEX_MATURITY_CRITERIA,
+} from '../../lib/codex-taxonomy.ts';
+import {
+  buildCodexKnowledgeGraph,
+  getCodexRouteSlug,
+} from '../../lib/codex-graph-builder.ts';
+import '../../styles/codex.css';
+
+const workEntries = await getCollection('work');
+const adrEntries = await getCollection('adr');
+const rawCodexEntries = await getCollection('codex');
+
+const projectRoot = process.cwd();
+const existingSourcePaths = new Set<string>();
+const sourceHashesByPath = new Map<string, string>();
+
+for (const entry of adrEntries) {
+  const relPath = entry.data.provenance.sourcePath;
+  const candidate = path.resolve(projectRoot, relPath);
+  if (fs.existsSync(candidate) && fs.statSync(candidate).isFile()) {
+    existingSourcePaths.add(relPath);
+    const sha = crypto.createHash('sha256').update(fs.readFileSync(candidate)).digest('hex');
+    sourceHashesByPath.set(relPath, sha);
+  }
+}
+
+for (const entry of rawCodexEntries) {
+  for (const sf of entry.data.sourceFiles) {
+    const candidate = path.resolve(projectRoot, sf);
+    if (fs.existsSync(candidate) && fs.statSync(candidate).isFile()) {
+      existingSourcePaths.add(sf);
+    }
+  }
+  for (const ev of entry.data.sourceEvidence) {
+    const candidate = path.resolve(projectRoot, ev.file);
+    if (fs.existsSync(candidate) && fs.statSync(candidate).isFile()) {
+      existingSourcePaths.add(ev.file);
+    }
+  }
+}
+
+assertV13ContentIntegrity({
+  workEntries,
+  adrEntries,
+  codexEntries: rawCodexEntries,
+  existingSourcePaths,
+  source: 'codex/index.astro',
+});
+
+const codexEntries = [...rawCodexEntries].sort((a, b) =>
+  a.data.decimalCode.localeCompare(b.data.decimalCode, undefined, { numeric: true })
+);
+
+const graph = buildCodexKnowledgeGraph({
+  codexEntries,
+  workEntries,
+  adrEntries,
+});
+
+const totalNotes = codexEntries.length;
+const totalDomains = CODEX_DOMAINS.length;
+const evergreenCount = codexEntries.filter((e) => e.data.maturity === 'EVERGREEN').length;
+const buddingCount = codexEntries.filter((e) => e.data.maturity === 'BUDDING').length;
+const seedlingCount = codexEntries.filter((e) => e.data.maturity === 'SEEDLING').length;
+const totalSourceFilesReferenced = new Set(
+  codexEntries.flatMap((e) => e.data.sourceFiles)
+).size;
+
+const serializedGraphJson = JSON.stringify(graph);
+---
+
+<BaseLayout
+  title="The Grand Codex (100-600) · Farrel Islami Putra"
+  description="Basis pengetahuan teknis berbasis bukti repositori dengan klasifikasi desimal proyek 100-600, rumus MathML statis, backlink dua arah, dan graf pengetahuan deterministik."
+  pageKey="codex"
+>
+  <section class="container codex-page" aria-labelledby="codex-page-heading">
+    <header class="codex-hero">
+      <p class="codex-kicker">THE LIVING ARCHIVE / THE GRAND CODEX</p>
+      <h1 class="codex-title" id="codex-page-heading">
+        Technical Knowledge Base &amp; Custom Decimal Index (100-600)
+      </h1>
+      <p class="codex-lead">
+        The Grand Codex mendokumentasikan mekanisme rekayasa, struktur data, persamaan grafis,
+        dan aturan regulasi yang benar-benar terimplementasi di repositori ini. Klasifikasi 100-600
+        adalah taksonomi desimal khusus proyek yang terinspirasi oleh Johnny.Decimal (bukan klaim
+        kepatuhan formal terhadap struktur Area/Category/ID Johnny.Decimal murni). Setiap catatan
+        wajib menyertakan berkas sumber terverifikasi, status bukti eksplisit, dan batasan sistem.
+      </p>
+    </header>
+
+    <!-- Summary Strip berbasis data build-time -->
+    <div class="codex-summary-strip" aria-label="Ringkasan metrik The Grand Codex">
+      <div class="codex-stat-card">
+        <span class="codex-stat-label">FOUNDATION NOTES</span>
+        <span class="codex-stat-value">{totalNotes}</span>
+        <span class="codex-stat-sub">EVIDENCE-BACKED ENTRIES</span>
+      </div>
+      <div class="codex-stat-card">
+        <span class="codex-stat-label">DECIMAL DOMAINS</span>
+        <span class="codex-stat-value">{totalDomains} (100-600)</span>
+        <span class="codex-stat-sub">CUSTOM PROJECT TAXONOMY</span>
+      </div>
+      <div class="codex-stat-card">
+        <span class="codex-stat-label">KNOWLEDGE GRAPH</span>
+        <span class="codex-stat-value">{graph.nodes.length} N · {graph.edges.length} E</span>
+        <span class="codex-stat-sub">DEDUPLICATED CROSS-COLLECTION</span>
+      </div>
+      <div class="codex-stat-card">
+        <span class="codex-stat-label">MATURITY DISTRIBUTION</span>
+        <span class="codex-stat-value">{evergreenCount}E / {buddingCount}B / {seedlingCount}S</span>
+        <span class="codex-stat-sub">EVERGREEN · BUDDING · SEEDLING</span>
+      </div>
+      <div class="codex-stat-card">
+        <span class="codex-stat-label">VERIFIED SOURCE FILES</span>
+        <span class="codex-stat-value">{totalSourceFilesReferenced}</span>
+        <span class="codex-stat-sub">CANONICAL REPO PATHS</span>
+      </div>
+      <div class="codex-stat-card">
+        <span class="codex-stat-label">REFERENCE-ONLY NODES</span>
+        <span class="codex-stat-value">{graph.referenceOnlyNodes.length}</span>
+        <span class="codex-stat-sub">RESERVED · NON-ROUTEABLE</span>
+      </div>
+    </div>
+
+    <!-- Knowledge Graph Visualization + Accessible Keyboard Alternative -->
+    <section class="codex-graph-section" aria-labelledby="codex-graph-heading">
+      <div class="codex-graph-header">
+        <div>
+          <h2 class="codex-graph-title" id="codex-graph-heading">
+            Cross-Collection Knowledge Graph &amp; Backlink Topology
+          </h2>
+          <p class="codex-graph-subtitle">
+            Menghubungkan {codexEntries.length} catatan Codex, {workEntries.length} studi kasus Work,
+            dan {adrEntries.length} rekam ADR ({graph.relationCounts.total} relasi tervalidasi).
+            Simpul berstatus RESERVED ditampilkan sebagai referensi transparan tanpa tautan mati.
+          </p>
+        </div>
+
+        <div class="codex-graph-legend" aria-label="Legenda tipe simpul graf">
+          <span class="codex-legend-item">
+            <span class="codex-legend-dot codex-legend-dot--codex" aria-hidden="true"></span>
+            Codex Note
+          </span>
+          <span class="codex-legend-item">
+            <span class="codex-legend-dot codex-legend-dot--work" aria-hidden="true"></span>
+            Work (Routeable)
+          </span>
+          <span class="codex-legend-item">
+            <span class="codex-legend-dot codex-legend-dot--adr" aria-hidden="true"></span>
+            Engineering Record (ADR)
+          </span>
+          <span class="codex-legend-item">
+            <span class="codex-legend-dot codex-legend-dot--refonly" aria-hidden="true"></span>
+            Work RESERVED (Reference-Only)
+          </span>
+        </div>
+      </div>
+
+      <div class="codex-graph-layout">
+        <div class="codex-canvas-wrap">
+          <canvas
+            id="codex-graph-canvas"
+            class="codex-graph-canvas"
+            role="img"
+            aria-label="Visualisasi kanvas graf pengetahuan antara catatan Codex, studi kasus Work, dan rekam ADR. Gunakan daftar simpul di sebelah kanan untuk navigasi keyboard lengkap."
+          ></canvas>
+          <div class="codex-graph-status-bar">
+            <span id="codex-graph-status-text" role="status" aria-live="polite">
+              Pilih atau arahkan kursor pada simpul untuk menyorot ketetanggaan langsung.
+            </span>
+            <span id="codex-graph-mode-badge">
+              {graph.layoutMode === 'small-graph-spring'
+                ? `BOUNDED SPRING (CAP <= ${graph.scaleLimits.MAX_SPRING_NODES}N)`
+                : 'CLUSTERED DETERMINISTIC'}
+            </span>
+          </div>
+        </div>
+
+        <div
+          class="codex-graph-list-panel"
+          role="region"
+          aria-labelledby="codex-accessible-list-heading"
+        >
+          <h3 class="codex-graph-list-heading" id="codex-accessible-list-heading">
+            Accessible Node &amp; Backlink Directory ({graph.nodes.length} Nodes)
+          </h3>
+          <ul class="codex-graph-node-list" id="codex-graph-accessible-list" role="list">
+            {
+              graph.nodes.map((node) => {
+                const outgoingCount = (graph.outgoingByNodeId[node.id] || []).length;
+                const incomingCount = (graph.incomingBacklinksByNodeId[node.id] || []).length;
+                return (
+                  <li class="codex-graph-node-item" data-graph-node-id={node.id}>
+                    <div class="codex-graph-node-top">
+                      <span>
+                        <strong>{node.codeOrTag}</strong> · {node.type.toUpperCase()}
+                      </span>
+                      <span>
+                        out:{outgoingCount} / in:{incomingCount}
+                      </span>
+                    </div>
+                    {node.routeable && node.url ? (
+                      <a class="codex-graph-node-link" href={node.url}>
+                        {node.label}
+                      </a>
+                    ) : (
+                      <div>
+                        <span class="codex-graph-node-refonly">{node.label}</span>
+                        <div style="margin-top: 0.25rem;">
+                          <span class="codex-refonly-badge">
+                            REFERENCE-ONLY ({node.statusOrMaturity} · NON-ROUTEABLE)
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  </li>
+                );
+              })
+            }
+          </ul>
+        </div>
+      </div>
+
+      <script
+        id="codex-graph-data"
+        type="application/json"
+        is:inline
+        set:html={serializedGraphJson}
+      />
+    </section>
+
+    <!-- Search & Filter Section -->
+    <div id="codex-catalog-section">
+      <div class="codex-controls" aria-label="Filter dan pencarian catatan The Grand Codex">
+        <div class="codex-search-row">
+          <label class="sr-only" for="codex-search-input">
+            Cari kode desimal, judul, domain, berkas sumber, atau topik teknis
+          </label>
+          <input
+            id="codex-search-input"
+            class="codex-search-input"
+            type="search"
+            placeholder="Cari kode desimal (101.1, 501.1), judul, MathML, ISPU, CSV, Fresnel..."
+            autocomplete="off"
+          />
+          <span class="codex-filter-status" id="codex-visible-count" role="status" aria-live="polite">
+            Menampilkan {totalNotes} dari {totalNotes} catatan pengetahuan
+          </span>
+          <button id="codex-reset-filters" class="codex-filter-btn" type="button">
+            Reset Filter
+          </button>
+        </div>
+
+        <div class="codex-filter-group" role="group" aria-label="Filter berdasarkan domain desimal 100-600">
+          <span class="codex-filter-label">DOMAIN:</span>
+          <button
+            class="codex-filter-btn"
+            type="button"
+            data-codex-filter-domain="all"
+            aria-pressed="true"
+          >
+            <span class="codex-filter-indicator" aria-hidden="true">[•] </span>
+            <span>All Domains (100-600)</span>
+          </button>
+          {
+            CODEX_DOMAINS.map((dom) => (
+              <button
+                class="codex-filter-btn"
+                type="button"
+                data-codex-filter-domain={dom.id}
+                aria-pressed="false"
+              >
+                <span class="codex-filter-indicator" aria-hidden="true"></span>
+                <span>
+                  {dom.code} · {dom.label}
+                </span>
+              </button>
+            ))
+          }
+        </div>
+
+        <div class="codex-filter-group" role="group" aria-label="Filter berdasarkan tingkat kematangan catatan">
+          <span class="codex-filter-label">MATURITY:</span>
+          <button
+            class="codex-filter-btn"
+            type="button"
+            data-codex-filter-maturity="all"
+            aria-pressed="true"
+          >
+            <span class="codex-filter-indicator" aria-hidden="true">[•] </span>
+            <span>All Maturity Levels</span>
+          </button>
+          {
+            CODEX_MATURITY_LEVELS.map((mat) => (
+              <button
+                class="codex-filter-btn"
+                type="button"
+                data-codex-filter-maturity={mat}
+                aria-pressed="false"
+                title={CODEX_MATURITY_CRITERIA[mat]}
+              >
+                <span class="codex-filter-indicator" aria-hidden="true"></span>
+                <span>{mat}</span>
+              </button>
+            ))
+          }
+        </div>
+      </div>
+
+      <div id="codex-empty-state" class="codex-panel" role="status" aria-live="polite" hidden>
+        Tidak ada catatan Codex yang cocok dengan kata kunci atau filter aktif saat ini.
+      </div>
+
+      <!-- Daftar Catatan per Domain 100-600 -->
+      {
+        CODEX_DOMAINS.map((domainInfo) => {
+          const domainNotes = codexEntries.filter((e) => e.data.domain === domainInfo.id);
+          return (
+            <section
+              class="codex-domain-block"
+              data-domain-section={domainInfo.id}
+              aria-labelledby={`domain-heading-${domainInfo.code}`}
+            >
+              <div class="codex-domain-header">
+                <div>
+                  <span class="codex-domain-code">DOMAIN {domainInfo.code}</span>
+                  <h2 class="codex-domain-title" id={`domain-heading-${domainInfo.code}`}>
+                    {domainInfo.label}
+                  </h2>
+                </div>
+                <p class="codex-domain-focus">Fokus: {domainInfo.focus}</p>
+              </div>
+
+              <div class="codex-card-grid">
+                {domainNotes.map((entry) => {
+                  const d = entry.data;
+                  const slug = getCodexRouteSlug(entry.id);
+                  const nodeId = `codex:${d.codexId}`;
+                  const outCount = (graph.outgoingByNodeId[nodeId] || []).length;
+                  const inCount = (graph.incomingBacklinksByNodeId[nodeId] || []).length;
+                  const haystack = [
+                    d.decimalCode,
+                    d.codexId,
+                    d.title,
+                    d.domain,
+                    domainInfo.label,
+                    d.maturity,
+                    d.summary,
+                    ...d.sourceFiles,
+                  ].join(' ');
+
+                  return (
+                    <article
+                      class="codex-card"
+                      data-domain={d.domain}
+                      data-maturity={d.maturity}
+                      data-search-haystack={haystack}
+                    >
+                      <div>
+                        <div class="codex-card-top">
+                          <span class="codex-decimal-badge">{d.decimalCode}</span>
+                          <span class={`codex-maturity-badge codex-maturity-badge--${d.maturity}`}>
+                            {d.maturity}
+                          </span>
+                        </div>
+
+                        <h3 class="codex-card-title">
+                          <a href={`/codex/${slug}`}>{d.title}</a>
+                        </h3>
+
+                        <p class="codex-card-summary">{d.summary}</p>
+                      </div>
+
+                      <div class="codex-card-meta">
+                        <span>SOURCES: {d.sourceFiles.length} files</span>
+                        <span>FORMULAS: {d.formulas ? d.formulas.length : 0}</span>
+                        <span>
+                          LINKS: {outCount} out / {inCount} backlinks
+                        </span>
+                        <span>UPDATED: {d.updatedAt}</span>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            </section>
+          );
+        })
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import '../../scripts/global.js';
+  import '../../scripts/codex.js';
+</script>

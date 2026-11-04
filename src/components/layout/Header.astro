@@ -62,6 +62,20 @@ const NAV = [
     <span class="now-playing-dot" aria-hidden="true"></span>
     <span class="now-playing-text" id="now-playing-text" aria-live="polite"></span>
   </a>
+  <!-- V13.0-D: Workspace Status Indicator & Command Palette Trigger -->
+  <button
+    class="world-status-trigger"
+    id="world-workspace-status-btn"
+    type="button"
+    aria-label="Workspace Status and Global Command Palette (Ctrl+K or Cmd+K)"
+    aria-haspopup="dialog"
+    aria-controls="world-command-dialog"
+  >
+    <span class="world-status-dot" aria-hidden="true"></span>
+    <span class="world-status-territory" id="world-status-territory">WORKSPACE</span>
+    <span class="world-status-state" id="world-status-state">PALETTE READY</span>
+    <kbd class="world-status-kbd" aria-hidden="true">Ctrl+K</kbd>
+  </button>
   <!-- V8.0 Fase 2: tombol mute/unmute efek suara antarmuka (Web Audio
        API, sintesis oscillator). Preferensi tersimpan di localStorage
        (fip-audio-muted) dan ikon disinkronkan oleh initAudioFeedback di
@@ -103,6 +117,9 @@ const NAV = [
     <span class="quick-now-playing" id="quick-now-playing" hidden></span>
 
     <!-- Deep Dive Links -->
+    <a href="/codex">The Grand Codex (100-600)</a>
+    <a href="/archive/adr">Engineering records</a>
+    <a href="/atlas">Progressive World Atlas</a>
     <a href="/archive/off-screen">Off-screen hobbies</a>
     <a href="/archive/credentials">Milestones &amp; credentials</a>
     <a href="/archive/off-screen#companion">Meet the companion</a>
@@ -146,6 +163,9 @@ const NAV = [
         <hr class="mobile-menu-divider" />
 
         <p class="mobile-menu-label">DEEP DIVE</p>
+        <a href="/codex" class="mobile-nav-link mobile-nav-link--deep">The Grand Codex (100-600)</a>
+        <a href="/archive/adr" class="mobile-nav-link mobile-nav-link--deep">Engineering records</a>
+        <a href="/atlas" class="mobile-nav-link mobile-nav-link--deep">Progressive World Atlas</a>
         <a href="/archive/off-screen" class="mobile-nav-link mobile-nav-link--deep">Off-screen hobbies</a>
         <a href="/archive/credentials" class="mobile-nav-link mobile-nav-link--deep">Milestones &amp; credentials</a>
         <a href="/archive/off-screen#companion" class="mobile-nav-link mobile-nav-link--deep">Meet the companion</a>

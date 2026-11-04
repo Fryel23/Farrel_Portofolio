@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "contractId": "living-archive-offline-etl-v1",
+  "source": {
+    "relativePath": "data/sources/data_kualitas_udara_2.csv",
+    "sha256": "9ce4de3d0466c71d1ce10447941236e9b7cfc19af255c6831fec89a5d25a31a0",
+    "bytes": 22288,
+    "encoding": "utf-8",
+    "accessedAt": "2026-11-01"
+  },
+  "sampleRecords": [
+    {
+      "recordId": "2024-tahap-i-balai-kota-cirebon",
+      "year": 2024,
+      "stage": "TAHAP I",
+      "date": null,
+      "values": {
+        "so2": 83.9,
+        "no2": 14.2
+      },
+      "units": {
+        "so2": "µg/Nm³",
+        "no2": "µg/Nm³"
+      },
+      "quality": {
+        "so2": "valid",
+        "no2": "valid"
+      },
+      "derived": {
+        "so2SubIndex": 63,
+        "no2SubIndex": 9,
+        "dominantParameter": "so2",
+        "ispu": 63,
+        "category": "Sedang",
+        "tableReferencePeriod": "24h",
+        "basisMatched": false
+      }
+    },
+    {
+      "recordId": "2023-tahap-i-area-pelabuhan-pt-dok-kodja-bahari",
+      "year": 2023,
+      "stage": "TAHAP I",
+      "date": null,
+      "values": {
+        "so2": 0,
+        "no2": 0
+      },
+      "units": {
+        "so2": "µg/Nm³",
+        "no2": "µg/Nm³"
+      },
+      "quality": {
+        "so2": "valid-zero",
+        "no2": "valid-zero"
+      },
+      "derived": {
+        "so2SubIndex": 0,
+        "no2SubIndex": 0,
+        "dominantParameter": "so2",
+        "ispu": 0,
+        "category": "Baik",
+        "tableReferencePeriod": "24h",
+        "basisMatched": false
+      }
+    },
+    {
+      "recordId": "2024-tahap-ii-missing-no2-sample",
+      "year": 2024,
+      "stage": "TAHAP II",
+      "date": null,
+      "values": {
+        "so2": 41.6,
+        "no2": null
+      },
+      "units": {
+        "so2": "µg/Nm³",
+        "no2": "µg/Nm³"
+      },
+      "quality": {
+        "so2": "valid",
+        "no2": "missing"
+      },
+      "derived": {
+        "so2SubIndex": 40,
+        "no2SubIndex": null,
+        "dominantParameter": "so2",
+        "ispu": 40,
+        "category": "Baik",
+        "tableReferencePeriod": "24h",
+        "basisMatched": false
+      }
+    }
+  ]
+}

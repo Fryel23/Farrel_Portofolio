@@ -1,0 +1,250 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import {
+  assertWorkIntegrity,
+  assertAdrIntegrity,
+  resolveAdrWorkReferences,
+} from '../../../data/content-integrity.js';
+import {
+  adrCategoryLabel,
+  adrRecordTypeLabel,
+  adrRecordStatusLabel,
+} from '../../../lib/adr-taxonomy.ts';
+import '../../../styles/archive/adr.css';
+
+export async function getStaticPaths() {
+  const workEntries = await getCollection('work');
+  const rawAdrEntries = await getCollection('adr');
+
+  const projectRoot = process.cwd();
+  const existingSourcePaths = new Set<string>();
+  const sourceHashesByPath = new Map<string, string>();
+
+  for (const entry of rawAdrEntries) {
+    const relPath = entry.data.provenance.sourcePath;
+    const candidate = path.resolve(projectRoot, relPath);
+    if (fs.existsSync(candidate) && fs.statSync(candidate).isFile()) {
+      existingSourcePaths.add(relPath);
+      const sha = crypto.createHash('sha256').update(fs.readFileSync(candidate)).digest('hex');
+      sourceHashesByPath.set(relPath, sha);
+    }
+  }
+
+  assertWorkIntegrity(workEntries, 'archive/adr/[slug].astro getStaticPaths');
+  assertAdrIntegrity(rawAdrEntries, workEntries, 'archive/adr/[slug].astro getStaticPaths', {
+    existingSourcePaths,
+    sourceHashesByPath,
+  });
+
+  const sorted = [...rawAdrEntries].sort((a, b) => a.data.sequenceOrder - b.data.sequenceOrder);
+
+  return sorted.map((entry, idx) => {
+    const prevEntry = idx > 0 ? sorted[idx - 1] : null;
+    const nextEntry = idx < sorted.length - 1 ? sorted[idx + 1] : null;
+    return {
+      params: { slug: entry.id },
+      props: {
+        entry,
+        prevEntry,
+        nextEntry,
+        workEntries,
+      },
+    };
+  });
+}
+
+const { entry, prevEntry, nextEntry, workEntries } = Astro.props;
+const { Content, headings } = await render(entry);
+const d = entry.data;
+const p = d.provenance;
+
+const catLabel = adrCategoryLabel(d.category) || d.category;
+const typeLabel = adrRecordTypeLabel(d.recordType) || d.recordType;
+const statusLabel = adrRecordStatusLabel(d.recordStatus) || d.recordStatus;
+const workRefs = resolveAdrWorkReferences(d.relatedWorkIds, workEntries);
+const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+<BaseLayout
+  title={`${d.versionTag} · ${d.title} · Engineering Records`}
+  description={d.summary}
+  pageKey="archive-adr-detail"
+>
+  <article class="adr-detail-section" aria-labelledby="adr-detail-title">
+    <nav class="adr-breadcrumb" aria-label="Breadcrumb">
+      <a href="/archive">Archive</a>
+      <span aria-hidden="true">/</span>
+      <a href="/archive/adr">Engineering Records</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">{d.versionTag}</span>
+    </nav>
+
+    <header class="adr-detail-header">
+      <div class="adr-card-badges">
+        <span class="adr-version-badge">
+          #{String(d.sequenceOrder).padStart(2, '0')} · {d.versionTag}
+        </span>
+        <span class="adr-type-badge">{typeLabel}</span>
+        <span class="adr-status-badge" data-status={d.recordStatus}>
+          {statusLabel}
+        </span>
+        <span class="adr-category-badge">{catLabel}</span>
+        {d.publishedAt && <span class="adr-type-badge">DATE: {d.publishedAt}</span>}
+      </div>
+
+      <h1 class="adr-detail-title" id="adr-detail-title">{d.title}</h1>
+      <p class="adr-card-summary">{d.summary}</p>
+    </header>
+
+    <!-- Provenance Sheet -->
+    <section class="adr-provenance-sheet" aria-labelledby="adr-provenance-heading">
+      <h2 class="adr-provenance-heading" id="adr-provenance-heading">
+        PROVENANCE &amp; INTEGRITY METADATA
+      </h2>
+
+      <div class="adr-provenance-grid">
+        <div class="adr-prov-cell">
+          <span class="adr-prov-label">SOURCE FILENAME</span>
+          <span class="adr-prov-value">{p.sourceFilename}</span>
+        </div>
+        <div class="adr-prov-cell">
+          <span class="adr-prov-label">RELATIVE SOURCE PATH</span>
+          <span class="adr-prov-value">{p.sourcePath}</span>
+        </div>
+        <div class="adr-prov-cell">
+          <span class="adr-prov-label">RAW SOURCE BYTES</span>
+          <span class="adr-prov-value">{p.sourceBytes.toLocaleString('id-ID')} bytes</span>
+        </div>
+        <div class="adr-prov-cell">
+          <span class="adr-prov-label">WORD &amp; LINE COUNT</span>
+          <span class="adr-prov-value">
+            {p.sourceWordCount.toLocaleString('id-ID')} words · {p.sourceLineCount.toLocaleString('id-ID')} lines
+          </span>
+        </div>
+        <div class="adr-prov-cell">
+          <span class="adr-prov-label">COPY NORMALIZATION (U+2014 -> -)</span>
+          <span class="adr-prov-value">{p.normalizationCount} replacements on public copy</span>
+        </div>
+        <div class="adr-prov-cell">
+          <span class="adr-prov-label">TARGET ROUTES &amp; WORK</span>
+          <div class="adr-route-pills">
+            {d.targetRoutes.map((route) => (
+              <a class="adr-route-pill" href={route}>
+                {route}
+              </a>
+            ))}
+            {workRefs.map((ref) =>
+              ref.routeable && ref.href ? (
+                <a class="adr-route-pill" href={ref.href}>
+                  Work: {ref.contentId}
+                </a>
+              ) : (
+                <span class="adr-ref-only">
+                  Work: {ref.contentId} ({ref.status})
+                </span>
+              )
+            )}
+          </div>
+        </div>
+      </div>
+
+      {d.keyMetrics && d.keyMetrics.length > 0 && (
+        <div class="adr-metrics-grid" style="margin-top: 12px;" aria-label="Metrik kunci dokumen">
+          {d.keyMetrics.map((m) => (
+            <div class="adr-metric-item">
+              <span class="adr-metric-label">{m.label}</span>
+              <span class="adr-metric-val">
+                {m.value}
+                {m.unit && <span class="adr-metric-unit">{m.unit}</span>}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div class="adr-hash-bar">
+        <div>
+          <span class="adr-prov-label">RAW SOURCE SHA-256 CHECKSUM</span>
+          <code class="adr-hash-code" id="adr-hash-value">{p.sourceSha256}</code>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span class="adr-copy-status" id="adr-copy-status" role="status" aria-live="polite"></span>
+          <button
+            class="adr-copy-hash-btn"
+            id="adr-copy-hash-btn"
+            type="button"
+            data-copy-hash={p.sourceSha256}
+          >
+            Copy SHA-256
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Two-Column Layout: Sticky TOC + Markdown Content -->
+    <div class="adr-detail-layout">
+      <aside class="adr-toc-sidebar" aria-labelledby="adr-toc-heading">
+        <h2 class="adr-toc-title" id="adr-toc-heading">TABLE OF CONTENTS</h2>
+        {tocHeadings.length > 0 ? (
+          <ol class="adr-toc-list" role="list">
+            {tocHeadings.map((heading) => (
+              <li class={heading.depth === 3 ? 'adr-toc-item--h3' : 'adr-toc-item--h2'}>
+                <a class="adr-toc-link" href={`#${heading.slug}`}>
+                  {heading.text}
+                </a>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p class="adr-prov-value" style="margin: 0; color: var(--text-3);">
+            Dokumen verifikasi ringkas tanpa sub-bagian heading.
+          </p>
+        )}
+      </aside>
+
+      <div class="adr-article-body">
+        <Content />
+      </div>
+    </div>
+
+    <!-- Prev / Next Sequence Navigation -->
+    <nav class="adr-sequence-nav" aria-label="Navigasi urutan dokumen rekayasa">
+      {prevEntry ? (
+        <a class="adr-seq-card" href={`/archive/adr/${prevEntry.id}`}>
+          <span class="adr-seq-dir">← PREVIOUS RECORD (#{String(prevEntry.data.sequenceOrder).padStart(2, '0')})</span>
+          <span class="adr-seq-title">
+            {prevEntry.data.versionTag} · {prevEntry.data.title}
+          </span>
+        </a>
+      ) : (
+        <div class="adr-seq-card adr-seq-card--disabled" aria-disabled="true">
+          <span class="adr-seq-dir">START OF SEQUENCE</span>
+          <span class="adr-seq-title">Record pertama dalam urutan historis</span>
+        </div>
+      )}
+
+      {nextEntry ? (
+        <a class="adr-seq-card" href={`/archive/adr/${nextEntry.id}`}>
+          <span class="adr-seq-dir">NEXT RECORD (#{String(nextEntry.data.sequenceOrder).padStart(2, '0')}) →</span>
+          <span class="adr-seq-title">
+            {nextEntry.data.versionTag} · {nextEntry.data.title}
+          </span>
+        </a>
+      ) : (
+        <div class="adr-seq-card adr-seq-card--disabled" aria-disabled="true">
+          <span class="adr-seq-dir">END OF SEQUENCE</span>
+          <span class="adr-seq-title">Record terakhir dalam urutan historis</span>
+        </div>
+      )}
+    </nav>
+  </article>
+</BaseLayout>
+
+<script>
+  import '../../../scripts/global.js';
+  import '../../../scripts/archive/adr.js';
+</script>

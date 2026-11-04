@@ -1,0 +1,194 @@
+{
+  "base-v105-desktop": {
+    "LCP": {
+      "median": 5557,
+      "min": 5329,
+      "max": 5988
+    },
+    "FCP": {
+      "median": 755,
+      "min": 521,
+      "max": 1208
+    },
+    "TBT": {
+      "median": 0,
+      "min": 0,
+      "max": 0
+    },
+    "Score": {
+      "median": 69,
+      "min": 66,
+      "max": 71
+    },
+    "CLS": 0.0009209464105000501,
+    "LCPelement": "?",
+    "runs": [
+      {
+        "LCP": 5329,
+        "FCP": 521,
+        "CLS": 0.0009209464105000501,
+        "TBT": 0,
+        "Score": 71,
+        "LCPelement": "?"
+      },
+      {
+        "LCP": 5988,
+        "FCP": 1208,
+        "CLS": 0.0009209464105000501,
+        "TBT": 0,
+        "Score": 66,
+        "LCPelement": "?"
+      },
+      {
+        "LCP": 5557,
+        "FCP": 755,
+        "CLS": 0.009922475109707571,
+        "TBT": 0,
+        "Score": 69,
+        "LCPelement": "?"
+      }
+    ]
+  },
+  "base-v105-mobile": {
+    "LCP": {
+      "median": 3677,
+      "min": 1557,
+      "max": 3677
+    },
+    "FCP": {
+      "median": 1557,
+      "min": 1451,
+      "max": 1557
+    },
+    "TBT": {
+      "median": 393,
+      "min": 296,
+      "max": 393
+    },
+    "Score": {
+      "median": 88,
+      "min": 80,
+      "max": 88
+    },
+    "CLS": 0.0003014638832569169,
+    "LCPelement": "?",
+    "runs": [
+      {
+        "LCP": 3677,
+        "FCP": 1451,
+        "CLS": 0.0001462096093554914,
+        "TBT": 393,
+        "Score": 80,
+        "LCPelement": "?"
+      },
+      {
+        "LCP": 1557,
+        "FCP": 1557,
+        "CLS": 0.0003014638832569169,
+        "TBT": 296,
+        "Score": 88,
+        "LCPelement": "?"
+      }
+    ]
+  },
+  "v11-desktop": {
+    "LCP": {
+      "median": 328,
+      "min": 309,
+      "max": 595
+    },
+    "FCP": {
+      "median": 328,
+      "min": 309,
+      "max": 595
+    },
+    "TBT": {
+      "median": 0,
+      "min": 0,
+      "max": 0
+    },
+    "Score": {
+      "median": 100,
+      "min": 100,
+      "max": 100
+    },
+    "CLS": 0.011624043603702066,
+    "LCPelement": "?",
+    "runs": [
+      {
+        "LCP": 595,
+        "FCP": 595,
+        "CLS": 0.012508093212706847,
+        "TBT": 0,
+        "Score": 100,
+        "LCPelement": "?"
+      },
+      {
+        "LCP": 309,
+        "FCP": 309,
+        "CLS": 0.010289832071081318,
+        "TBT": 0,
+        "Score": 100,
+        "LCPelement": "?"
+      },
+      {
+        "LCP": 328,
+        "FCP": 328,
+        "CLS": 0.011624043603702066,
+        "TBT": 0,
+        "Score": 100,
+        "LCPelement": "?"
+      }
+    ]
+  },
+  "v11-mobile": {
+    "LCP": {
+      "median": 1456,
+      "min": 1444,
+      "max": 1597
+    },
+    "FCP": {
+      "median": 1456,
+      "min": 1444,
+      "max": 1597
+    },
+    "TBT": {
+      "median": 143,
+      "min": 142,
+      "max": 161
+    },
+    "Score": {
+      "median": 98,
+      "min": 95,
+      "max": 98
+    },
+    "CLS": 0.009127693083807332,
+    "LCPelement": "?",
+    "runs": [
+      {
+        "LCP": 1456,
+        "FCP": 1456,
+        "CLS": 0.009192986542469148,
+        "TBT": 161,
+        "Score": 98,
+        "LCPelement": "?"
+      },
+      {
+        "LCP": 1444,
+        "FCP": 1444,
+        "CLS": 0.009127693083807332,
+        "TBT": 143,
+        "Score": 98,
+        "LCPelement": "?"
+      },
+      {
+        "LCP": 1597,
+        "FCP": 1597,
+        "CLS": 0,
+        "TBT": 142,
+        "Score": 95,
+        "LCPelement": "?"
+      }
+    ]
+  }
+}

@@ -1,0 +1,240 @@
+{
+  "schemaVersion": 1,
+  "datasetVersion": "1.0.0",
+  "updatedAt": "2026-11-01",
+  "defaultRegionId": "cirebon",
+  "regions": [
+    {
+      "id": "cirebon",
+      "name": "Kota Cirebon",
+      "province": "Jawa Barat",
+      "country": "Indonesia",
+      "timezone": "Asia/Jakarta",
+      "coordinates": null,
+      "status": "available",
+      "sourceIds": [
+        "dlh-cirebon-2021-2025"
+      ],
+      "locations": [
+        {
+          "id": "area-pelabuhan-pt-dok-kodja-bahari",
+          "name": "AREA PELABUHAN (PT. DOK KODJA BAHARI)"
+        },
+        {
+          "id": "balai-kota-cirebon",
+          "name": "BALAI KOTA CIREBON"
+        },
+        {
+          "id": "depan-kantor-disukcapil-bima-jl-brigjen-darsono",
+          "name": "DEPAN KANTOR DISUKCAPIL BIMA, JL. BRIGJEN DARSONO"
+        },
+        {
+          "id": "depan-pabrik-saos-sumber-tirta-jl-petireman-kel-pegambiran",
+          "name": "DEPAN PABRIK SAOS SUMBER TIRTA JL. PETIREMAN KEL PEGAMBIRAN"
+        },
+        {
+          "id": "depan-upt-parkir-dan-pju-terminal-duku-semar",
+          "name": "DEPAN UPT PARKIR DAN PJU TERMINAL DUKU SEMAR"
+        },
+        {
+          "id": "dinas-koperasi-usaha-kecil-menengah-perdagangan-perindustrian",
+          "name": "DINAS KOPERASI, USAHA KECIL, MENENGAH, PERDAGANGAN & PERINDUSTRIAN"
+        },
+        {
+          "id": "gereja-katolik-st-yusuf-jl-yos-sudarso",
+          "name": "GEREJA KATOLIK ST. YUSUF, JL. YOS SUDARSO"
+        },
+        {
+          "id": "jl-ahmad-yani-terminal-kel-larangan-harjamukti",
+          "name": "JL. AHMAD YANI (TERMINAL) KEL. LARANGAN, HARJAMUKTI"
+        },
+        {
+          "id": "jl-buyut-no-80-kel-pegambiran-kec-lemahwunguk",
+          "name": "JL. BUYUT NO.80 KEL. PEGAMBIRAN, KEC. LEMAHWUNGUK"
+        },
+        {
+          "id": "jl-jendral-sudirman-gg-cendrawasih-iii",
+          "name": "JL. JENDRAL SUDIRMAN (GG. CENDRAWASIH III)"
+        },
+        {
+          "id": "jl-samadikun-gg-bandeng",
+          "name": "JL. SAMADIKUN GG BANDENG"
+        },
+        {
+          "id": "jl-teratai-kesambi",
+          "name": "JL. TERATAI KESAMBI"
+        },
+        {
+          "id": "kantor-dlh-jl-wahidin",
+          "name": "KANTOR DLH JL. WAHIDIN"
+        },
+        {
+          "id": "perempatan-kedung-mendeng-arah-tpa-kopi-luhur-mendeng",
+          "name": "PEREMPATAN KEDUNG MENDENG (ARAH TPA KOPI LUHUR) MENDENG"
+        },
+        {
+          "id": "perumahan-gsp",
+          "name": "PERUMAHAN GSP"
+        },
+        {
+          "id": "perumahan-kelurahan-drajat-depan-kantor-kelurahan-drajat",
+          "name": "PERUMAHAN KELURAHAN DRAJAT DEPAN KANTOR KELURAHAN DRAJAT"
+        },
+        {
+          "id": "perumnas-gunung-depan-kel-kecapi",
+          "name": "PERUMNAS GUNUNG, DEPAN KEL. KECAPI"
+        },
+        {
+          "id": "pt-japfa-comfeed-jl-siliwangi",
+          "name": "PT JAPFA COMFEED JL. SILIWANGI"
+        },
+        {
+          "id": "pt-arteria-daya-mulia",
+          "name": "PT. ARTERIA DAYA MULIA"
+        },
+        {
+          "id": "rw-02-perumahan-griya-nusantara-kel-argasurya",
+          "name": "RW 02 PERUMAHAN GRIYA NUSANTARA KEL. ARGASURYA"
+        },
+        {
+          "id": "rw-04-kebon-benteng-tengah",
+          "name": "RW 04 KEBON BENTENG TENGAH"
+        },
+        {
+          "id": "stasiun-kejaksaan-cirebon",
+          "name": "STASIUN KEJAKSAAN CIREBON"
+        },
+        {
+          "id": "stasiun-parujakan",
+          "name": "STASIUN PARUJAKAN"
+        }
+      ],
+      "years": [
+        {
+          "year": 2021,
+          "status": "available",
+          "dataPath": "/data/aqi/cirebon-2021.json",
+          "coverageStart": "2021",
+          "coverageEnd": "2021",
+          "parameters": [
+            "so2",
+            "no2"
+          ],
+          "recordCount": 24,
+          "locationCount": 12,
+          "stages": [
+            "TAHAP I",
+            "TAHAP II"
+          ],
+          "missing": {
+            "so2": 0,
+            "no2": 0
+          },
+          "coverageNote": "Kampanye 12 lokasi × 2 tahap (kecuali lokasi yang tidak diukur)."
+        },
+        {
+          "year": 2022,
+          "status": "available",
+          "dataPath": "/data/aqi/cirebon-2022.json",
+          "coverageStart": "2022",
+          "coverageEnd": "2022",
+          "parameters": [
+            "so2",
+            "no2"
+          ],
+          "recordCount": 24,
+          "locationCount": 12,
+          "stages": [
+            "TAHAP I",
+            "TAHAP II"
+          ],
+          "missing": {
+            "so2": 0,
+            "no2": 0
+          },
+          "coverageNote": "Kampanye 12 lokasi × 2 tahap (kecuali lokasi yang tidak diukur)."
+        },
+        {
+          "year": 2023,
+          "status": "available",
+          "dataPath": "/data/aqi/cirebon-2023.json",
+          "coverageStart": "2023",
+          "coverageEnd": "2023",
+          "parameters": [
+            "so2",
+            "no2"
+          ],
+          "recordCount": 24,
+          "locationCount": 12,
+          "stages": [
+            "TAHAP I",
+            "TAHAP II"
+          ],
+          "missing": {
+            "so2": 0,
+            "no2": 0
+          },
+          "coverageNote": "Kampanye 12 lokasi × 2 tahap (kecuali lokasi yang tidak diukur)."
+        },
+        {
+          "year": 2024,
+          "status": "available",
+          "dataPath": "/data/aqi/cirebon-2024.json",
+          "coverageStart": "2024",
+          "coverageEnd": "2024",
+          "parameters": [
+            "so2",
+            "no2"
+          ],
+          "recordCount": 24,
+          "locationCount": 12,
+          "stages": [
+            "TAHAP I",
+            "TAHAP II"
+          ],
+          "missing": {
+            "so2": 0,
+            "no2": 1
+          },
+          "coverageNote": "Sebagian kecil kombinasi lokasi/tahap tidak melaporkan salah satu parameter (null)."
+        },
+        {
+          "year": 2025,
+          "status": "partial",
+          "dataPath": "/data/aqi/cirebon-2025.json",
+          "coverageStart": "2025",
+          "coverageEnd": "2025",
+          "parameters": [
+            "so2",
+            "no2"
+          ],
+          "recordCount": 4,
+          "locationCount": 4,
+          "stages": [
+            "TAHAP I"
+          ],
+          "missing": {
+            "so2": 0,
+            "no2": 0
+          },
+          "coverageNote": "Parsial: 4 lokasi, TAHAP I saja (sumber belum melaporkan TAHAP II/lokasi lain)."
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "dlh-cirebon-2021-2025",
+      "name": "Data Kualitas Udara Kota Cirebon 2021–2025",
+      "publisher": "Dinas Lingkungan Hidup (DLH) Kota Cirebon",
+      "url": null,
+      "urlNote": "Diterima sebagai lampiran resmi (CSV + PDF metadata) dari pemilik situs; dataset juga tersedia pada portal data terbuka DLH Kota Cirebon.",
+      "contact": "(0231) 202223 — dlh@cirebonkota.go.id",
+      "accessedAt": "2026-11-01",
+      "license": "unverified",
+      "providedVia": "Lampiran pemilik situs (data_kualitas_udara_2.csv + data_kualitas_udara_2_metadata.pdf)",
+      "sourceSha256": "9ce4de3d0466c71d1ce10447941236e9b7cfc19af255c6831fec89a5d25a31a0",
+      "ispuMethod": "PermenLHK P.14/2020 — tabel SO₂/NO₂ diverifikasi pemilik data; PM2.5 dari lampiran spek V12.0; parameter lain sengaja belum diimplementasikan."
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+
+> portfolio-astro@0.0.1 build
+> astro build
+
+12:32:17 [content] Syncing content
+12:32:17 [content] Synced content
+12:32:17 [types] Generated 645ms
+12:32:17 [build] output: "static"
+12:32:17 [build] mode: "static"
+12:32:17 [build] directory: /home/z/my-project/v11-work/portfolio-astro/dist/
+12:32:17 [build] Collecting build info...
+12:32:17 [build] ✓ Completed in 704ms.
+12:32:17 [build] Building static entrypoints...
+12:32:18 [vite] ✓ built in 417ms
+12:32:18 [vite] ✓ built in 415ms
+12:32:18 [build] Rearranging server assets...
+
+ generating static routes 
+12:32:18   ├─ /about/index.html (+14ms) 
+12:32:18   ├─ /archive/credentials/index.html (+4ms) 
+12:32:18   ├─ /archive/off-screen/index.html (+5ms) 
+12:32:18   ├─ /archive/play/index.html (+4ms) 
+12:32:18   ├─ /archive/index.html (+5ms) 
+12:32:18   ├─ /connect/index.html (+11ms) 
+12:32:18   ├─ /lab/methodology/index.html (+6ms) 
+12:32:18   ├─ /lab/index.html (+6ms) 
+12:32:18   ├─ /work/aqi-cirebon/index.html (+5ms) 
+12:32:18   ├─ /work/index.html (+26ms) 
+12:32:18   ├─ /index.html (+5ms) 
+12:32:18 ✓ Completed in 148ms.
+
+12:32:18 [build] ✓ Completed in 1.04s.
+12:32:18 [build] 11 page(s) built in 1.75s
+12:32:18 [build] Complete!

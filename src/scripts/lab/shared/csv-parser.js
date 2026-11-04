@@ -1,3 +1,4 @@
+// @ts-check
 /*!
  * lab/shared/csv-parser.js - Parser CSV RFC 4180 untuk browser (murni, tanpa
  * DOM, tanpa Node.js API, tanpa dependency).
@@ -47,18 +48,27 @@
  * whitespace diproses pada tahap analisis bila relevan.
  */
 
+/**
+ * @typedef {import('../../../types/lab-csv.ts').CsvParserState} CsvParserState
+ * @typedef {import('../../../types/lab-csv.ts').CsvParseErrorCode} CsvParseErrorCode
+ * @typedef {import('../../../types/lab-csv.ts').CsvErrorPositionContext} CsvErrorPositionContext
+ */
+
 /** Error parsing dengan konteks posisi; pesan aman untuk ditampilkan. */
 export class CsvParseError extends Error {
   /**
-   * @param {string} code kode stabil (CSV_UNCLOSED_QUOTE | CSV_ILLEGAL_QUOTE | CSV_TRAILING_CHARS)
+   * @param {CsvParseErrorCode} code kode stabil (CSV_UNCLOSED_QUOTE | CSV_ILLEGAL_QUOTE | CSV_TRAILING_CHARS)
    * @param {string} message pesan aman (tanpa isi CSV)
-   * @param {{recordIndex?: number, columnIndex?: number}} [context]
+   * @param {CsvErrorPositionContext} [context]
    */
   constructor(code, message, context = {}) {
     super(message);
     this.name = 'CsvParseError';
+    /** @type {CsvParseErrorCode} */
     this.code = code;
+    /** @type {number | null} */
     this.recordIndex = typeof context.recordIndex === 'number' ? context.recordIndex : null;
+    /** @type {number | null} */
     this.columnIndex = typeof context.columnIndex === 'number' ? context.columnIndex : null;
   }
 }
@@ -75,6 +85,7 @@ const CHAR_BOM = 0xFEFF;
  * @param {string} text isi CSV (sudah didekode UTF-8; BOM boleh ada)
  * @yields {string[]} satu record (array field; panjang bervariasi antar
  *          record - validasi jumlah kolom adalah tanggung jawab analisis)
+ * @returns {Generator<string[], void, unknown>}
  * @throws {CsvParseError} saat struktur CSV tidak valid
  */
 export function* iterateCsvRecords(text) {
@@ -89,14 +100,19 @@ export function* iterateCsvRecords(text) {
      Field dibangun via slice (cepat); bila mengandung escaped quote ("" ),
      segmen sebelum escape dikumpulkan di `parts` lalu digabung - hanya
      field ber-escape yang membayar biaya alokasi tambahan. */
+  /** @type {string[]} */
   let record = [];
   let fieldStart = i;
+  /** @type {string[] | null} */
   let parts = null; /* Array<string>|null : segmen field ber-escape */
+  /** @type {CsvParserState} */
   let state = 'field-start';
   let recordIndex = 1; /* header = record 1 */
   let columnIndex = 1; /* 1-based kolom saat ini */
 
+  /** @param {number} endIndex */
   const finishField = (endIndex) => {
+    /** @type {string} */
     let value;
     if (parts !== null) {
       if (endIndex > fieldStart) parts.push(text.slice(fieldStart, endIndex));

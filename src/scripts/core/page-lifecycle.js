@@ -13,6 +13,11 @@ import { doc, } from './dom.js';
 import { hasGSAP, hasScrollTrigger } from './environment.js';
 import { cleanupMotionRegistry } from './motion-registry.js';
 
+/**
+ * @typedef {import('../../types/core-lifecycle.ts').PageBootConfig} PageBootConfig
+ * @typedef {import('../../types/core-lifecycle.ts').PageBootResolvedConfig} PageBootResolvedConfig
+ */
+
 export const REDUCED_REVEAL_SELECTOR = [
   '.eyebrow', '.hero-tail', '.hero-description', '.hero-note', '.scroll-cue',
   '.hero-actions > *', '#pixel-frame', '.floating-tool', '.hero-sticker',
@@ -136,10 +141,15 @@ doc.addEventListener('astro:after-swap', () => {
  * ==================================================================== */
 export let pluginsRegistered = false;
 
+/**
+ * @param {PageBootConfig} [options]
+ * @returns {void}
+ */
 export function bootPage({ renders = [], interactions = [], motion = [], cleanups = [], resolve = null } = {}) {
   /* Latch per pemanggil: satu boot per epoch navigasi. */
   let bootedEpoch = -1;
 
+  /** @param {PageBootResolvedConfig} [config] */
   const run = (config = {}) => {
     const {
       renders: pageRenders = [],

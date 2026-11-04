@@ -1,0 +1,360 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import {
+  assertWorkIntegrity,
+  assertAdrIntegrity,
+  resolveAdrWorkReferences,
+} from '../../../data/content-integrity.js';
+import {
+  ADR_CATEGORIES,
+  ADR_RECORD_TYPES,
+  ADR_RECORD_STATUSES,
+  ADR_EXCLUDED_CANDIDATES,
+  adrCategoryLabel,
+  adrRecordTypeLabel,
+  adrRecordStatusLabel,
+} from '../../../lib/adr-taxonomy.ts';
+import '../../../styles/archive/adr.css';
+
+const workEntries = await getCollection('work');
+const rawAdrEntries = await getCollection('adr');
+
+const projectRoot = process.cwd();
+const existingSourcePaths = new Set<string>();
+const sourceHashesByPath = new Map<string, string>();
+
+for (const entry of rawAdrEntries) {
+  const relPath = entry.data.provenance.sourcePath;
+  const candidate = path.resolve(projectRoot, relPath);
+  if (fs.existsSync(candidate) && fs.statSync(candidate).isFile()) {
+    existingSourcePaths.add(relPath);
+    const sha = crypto.createHash('sha256').update(fs.readFileSync(candidate)).digest('hex');
+    sourceHashesByPath.set(relPath, sha);
+  }
+}
+
+assertWorkIntegrity(workEntries, 'archive/adr/index.astro');
+assertAdrIntegrity(rawAdrEntries, workEntries, 'archive/adr/index.astro', {
+  existingSourcePaths,
+  sourceHashesByPath,
+});
+
+const adrEntries = [...rawAdrEntries].sort((a, b) => a.data.sequenceOrder - b.data.sequenceOrder);
+
+const totalRecords = adrEntries.length;
+const oldestVersion = adrEntries.length > 0 ? adrEntries[0].data.versionTag : '-';
+const newestVersion = adrEntries.length > 0 ? adrEntries[adrEntries.length - 1].data.versionTag : '-';
+const totalSourceWords = adrEntries.reduce((sum, e) => sum + e.data.provenance.sourceWordCount, 0);
+const totalSourceBytes = adrEntries.reduce((sum, e) => sum + e.data.provenance.sourceBytes, 0);
+const totalCategories = new Set(adrEntries.map((e) => e.data.category)).size;
+const activeContractsCount = adrEntries.filter((e) => e.data.recordStatus === 'active-contract').length;
+const allHashesVerified = adrEntries.every(
+  (e) => sourceHashesByPath.get(e.data.provenance.sourcePath) === e.data.provenance.sourceSha256
+);
+const provenanceBadge = allHashesVerified ? 'SHA-256 VERIFIED' : 'PROVENANCE RECORDED';
+---
+
+<BaseLayout
+  title="Engineering Records Vault · Farrel Islami Putra"
+  description="Katalog laporan rekayasa historis V10.3 hingga V12.3: hasil diagnostik, eksperimen, keputusan teknis, implementasi, audit, verifikasi, dan baseline performa dengan provenance SHA-256."
+  pageKey="archive-adr"
+>
+  <section class="adr-vault-section" id="adr-vault" aria-labelledby="adr-vault-heading">
+    <div class="adr-header-block">
+      <p class="section-kicker">THE LIVING ARCHIVE / ENGINEERING RECORDS</p>
+      <h1 class="display-heading" id="adr-vault-heading">
+        <span class="line-mask"><span class="line">Architecture, Diagnostics</span></span>
+        <span class="line-mask"><span class="line">&amp; <em>Verification Records.</em></span></span>
+      </h1>
+      <p class="adr-lead">
+        Katalog ini mengarsipkan 13 artefak rekayasa historis dari siklus V10.3 sampai V12.3.
+        Dokumen yang terindeks mencakup laporan diagnostik, eksperimen komparatif, rekam keputusan,
+        implementasi fitur, audit penutupan, log verifikasi, dan baseline performa. Setiap salinan
+        publik ditautkan ke berkas sumber asli melalui checksum SHA-256 yang diverifikasi saat build.
+      </p>
+    </div>
+
+    <!-- Summary Strip berbasis data aktual koleksi -->
+    <div class="adr-summary-strip" aria-label="Ringkasan statistik Engineering Records Vault">
+      <div class="adr-summary-cell">
+        <span class="adr-summary-label">RECORDS INDEXED</span>
+        <span class="adr-summary-value">{totalRecords}</span>
+        <span class="adr-summary-sub">{ provenanceBadge }</span>
+      </div>
+      <div class="adr-summary-cell">
+        <span class="adr-summary-label">VERSION SPAN</span>
+        <span class="adr-summary-value">{oldestVersion} -> {newestVersion}</span>
+        <span class="adr-summary-sub">HISTORICAL SEQUENCE</span>
+      </div>
+      <div class="adr-summary-cell">
+        <span class="adr-summary-label">SOURCE WORD COUNT</span>
+        <span class="adr-summary-value">{totalSourceWords.toLocaleString('id-ID')}</span>
+        <span class="adr-summary-sub">UTF-8 WHITESPACE TOKENS</span>
+      </div>
+      <div class="adr-summary-cell">
+        <span class="adr-summary-label">SOURCE BYTES</span>
+        <span class="adr-summary-value">{totalSourceBytes.toLocaleString('id-ID')} B</span>
+        <span class="adr-summary-sub">{(totalSourceBytes / 1024).toFixed(1)} KiB RAW</span>
+      </div>
+      <div class="adr-summary-cell">
+        <span class="adr-summary-label">TECHNICAL CATEGORIES</span>
+        <span class="adr-summary-value">{totalCategories}</span>
+        <span class="adr-summary-sub">CANONICAL DOMAINS</span>
+      </div>
+      <div class="adr-summary-cell">
+        <span class="adr-summary-label">ACTIVE CONTRACTS</span>
+        <span class="adr-summary-value">{activeContractsCount}</span>
+        <span class="adr-summary-sub">PRODUCTION GUARDED</span>
+      </div>
+    </div>
+
+    <!-- Filter & Search Controls -->
+    <div class="adr-controls-panel" aria-label="Filter dan pencarian dokumen rekayasa">
+      <div class="adr-search-row">
+        <div class="adr-search-field">
+          <label class="adr-control-label" for="adr-search-input">
+            CARI JUDUL, VERSI, NAMA FILE, KATEGORI, ATAU RINGKASAN
+          </label>
+          <input
+            class="adr-search-input"
+            id="adr-search-input"
+            type="search"
+            placeholder="Contoh: V11.0, Curtain, ISPU, CSV, SHA-256..."
+            autocomplete="off"
+          />
+        </div>
+        <div class="adr-filter-status-bar">
+          <span id="adr-visible-count" role="status" aria-live="polite">
+            Menampilkan {totalRecords} dari {totalRecords} dokumen rekayasa
+          </span>
+          <button class="adr-reset-btn" id="adr-reset-filters" type="button">
+            Reset Filter
+          </button>
+        </div>
+      </div>
+
+      <div class="adr-filter-groups">
+        <div class="adr-filter-group" role="group" aria-label="Filter berdasarkan kategori teknis">
+          <span class="adr-control-label">CATEGORY</span>
+          <div class="adr-chip-row">
+            <button
+              class="adr-filter-btn"
+              type="button"
+              data-adr-filter-category="all"
+              aria-pressed="true"
+            >
+              <span class="adr-filter-indicator" aria-hidden="true">[•]</span>
+              <span>All Categories</span>
+            </button>
+            {
+              ADR_CATEGORIES.map((cat) => (
+                <button
+                  class="adr-filter-btn"
+                  type="button"
+                  data-adr-filter-category={cat.id}
+                  aria-pressed="false"
+                >
+                  <span class="adr-filter-indicator" aria-hidden="true"></span>
+                  <span>{cat.label}</span>
+                </button>
+              ))
+            }
+          </div>
+        </div>
+
+        <div class="adr-filter-group" role="group" aria-label="Filter berdasarkan jenis rekam">
+          <span class="adr-control-label">RECORD TYPE</span>
+          <div class="adr-chip-row">
+            <button
+              class="adr-filter-btn"
+              type="button"
+              data-adr-filter-type="all"
+              aria-pressed="true"
+            >
+              <span class="adr-filter-indicator" aria-hidden="true">[•]</span>
+              <span>All Types</span>
+            </button>
+            {
+              ADR_RECORD_TYPES.map((rType) => (
+                <button
+                  class="adr-filter-btn"
+                  type="button"
+                  data-adr-filter-type={rType}
+                  aria-pressed="false"
+                >
+                  <span class="adr-filter-indicator" aria-hidden="true"></span>
+                  <span>{adrRecordTypeLabel(rType)}</span>
+                </button>
+              ))
+            }
+          </div>
+        </div>
+
+        <div class="adr-filter-group" role="group" aria-label="Filter berdasarkan status historis">
+          <span class="adr-control-label">RECORD STATUS</span>
+          <div class="adr-chip-row">
+            <button
+              class="adr-filter-btn"
+              type="button"
+              data-adr-filter-status="all"
+              aria-pressed="true"
+            >
+              <span class="adr-filter-indicator" aria-hidden="true">[•]</span>
+              <span>All Statuses</span>
+            </button>
+            {
+              ADR_RECORD_STATUSES.map((rStatus) => (
+                <button
+                  class="adr-filter-btn"
+                  type="button"
+                  data-adr-filter-status={rStatus}
+                  aria-pressed="false"
+                >
+                  <span class="adr-filter-indicator" aria-hidden="true"></span>
+                  <span>{adrRecordStatusLabel(rStatus)}</span>
+                </button>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="adr-empty-state" id="adr-empty-state" role="status" aria-live="polite" hidden>
+      Tidak ada dokumen rekayasa yang cocok dengan kombinasi filter dan kata kunci saat ini.
+    </div>
+
+    <!-- Daftar Record Server-Rendered -->
+    <ol class="adr-record-list" id="adr-record-list" role="list">
+      {
+        adrEntries.map((entry) => {
+          const d = entry.data;
+          const catLabel = adrCategoryLabel(d.category) || d.category;
+          const typeLabel = adrRecordTypeLabel(d.recordType) || d.recordType;
+          const statusLabel = adrRecordStatusLabel(d.recordStatus) || d.recordStatus;
+          const workRefs = resolveAdrWorkReferences(d.relatedWorkIds, workEntries);
+          const haystack = [
+            d.versionTag,
+            d.title,
+            d.provenance.sourceFilename,
+            catLabel,
+            typeLabel,
+            statusLabel,
+            d.summary,
+          ].join(' ');
+
+          return (
+            <li
+              class="adr-card"
+              data-category={d.category}
+              data-record-type={d.recordType}
+              data-record-status={d.recordStatus}
+              data-search-haystack={haystack}
+            >
+              <div class="adr-card-top">
+                <div class="adr-card-badges">
+                  <span class="adr-version-badge">
+                    #{String(d.sequenceOrder).padStart(2, '0')} · {d.versionTag}
+                  </span>
+                  <span class="adr-type-badge">{typeLabel}</span>
+                  <span class="adr-status-badge" data-status={d.recordStatus}>
+                    {statusLabel}
+                  </span>
+                  <span class="adr-category-badge">{catLabel}</span>
+                </div>
+              </div>
+
+              <h2 class="adr-Card-title">
+                <a class="adr-card-title-link" href={`/archive/adr/${entry.id}`}>
+                  {d.title}
+                </a>
+              </h2>
+
+              <p class="adr-card-summary">{d.summary}</p>
+
+              {d.keyMetrics && d.keyMetrics.length > 0 && (
+                <div class="adr-metrics-grid" aria-label={`Metrik kunci ${d.versionTag}`}>
+                  {d.keyMetrics.map((m) => (
+                    <div class="adr-metric-item">
+                      <span class="adr-metric-label">{m.label}</span>
+                      <span class="adr-metric-val">
+                        {m.value}
+                        {m.unit && <span class="adr-metric-unit">{m.unit}</span>}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div class="adr-card-meta">
+                <span class="adr-meta-pair">
+                  <strong>SOURCE:</strong> <code>{d.provenance.sourceFilename}</code>
+                </span>
+                <span class="adr-meta-pair">
+                  <strong>WORDS:</strong> {d.provenance.sourceWordCount.toLocaleString('id-ID')}
+                </span>
+                <span class="adr-meta-pair">
+                  <strong>BYTES:</strong> {d.provenance.sourceBytes.toLocaleString('id-ID')} B
+                </span>
+                <span class="adr-meta-pair">
+                  <strong>SHA-256:</strong> <code>{d.provenance.sourceSha256.slice(0, 12)}...</code>
+                </span>
+              </div>
+
+              <div class="adr-card-foot">
+                <div class="adr-route-pills">
+                  {d.targetRoutes.map((route) => (
+                    <a class="adr-route-pill" href={route}>
+                      {route}
+                    </a>
+                  ))}
+                  {workRefs.map((ref) =>
+                    ref.routeable && ref.href ? (
+                      <a class="adr-route-pill" href={ref.href}>
+                        Work: {ref.contentId}
+                      </a>
+                    ) : (
+                      <span class="adr-ref-only">
+                        Work: {ref.contentId} ({ref.status} · non-routeable)
+                      </span>
+                    )
+                  )}
+                </div>
+
+                <a class="adr-detail-cta" href={`/archive/adr/${entry.id}`}>
+                  Read full record <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+            </li>
+          );
+        })
+      }
+    </ol>
+
+    <!-- Transparansi Dokumen Non-ADR yang Dikecualikan -->
+    <aside class="adr-excluded-panel" aria-labelledby="adr-excluded-heading">
+      <h2 class="adr-excluded-title" id="adr-excluded-heading">
+        EXCLUDED NON-ADR CANDIDATES (TRANSPARENCY LOG)
+      </h2>
+      <ul class="adr-excluded-list" role="list">
+        {
+          ADR_EXCLUDED_CANDIDATES.map((item) => (
+            <li class="adr-excluded-item">
+              <code>{item.sourcePath}</code>
+              <div>{item.exclusionReason}</div>
+            </li>
+          ))
+        }
+      </ul>
+    </aside>
+  </section>
+</BaseLayout>
+
+<script>
+  import '../../../scripts/global.js';
+  import '../../../scripts/archive/adr.js';
+</script>

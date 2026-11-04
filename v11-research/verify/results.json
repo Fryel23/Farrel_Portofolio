@@ -1,0 +1,213 @@
+{
+  "results": [
+    {
+      "name": "T1a hero tersedia saat curtain aktif (initial render)",
+      "pass": true,
+      "detail": {
+        "titleVisible": true,
+        "subtitleVisible": true,
+        "ctaVisible": true,
+        "searchVisible": true,
+        "tailVisible": true,
+        "actionsUsable": true
+      }
+    },
+    {
+      "name": "T1b curtain aktif + skip tampil",
+      "pass": true,
+      "detail": {
+        "active": true,
+        "hiddenDefault": true,
+        "skipShown": true
+      }
+    },
+    {
+      "name": "T1c natural completion: curtain hilang, tanpa inline clip/vars sisa",
+      "pass": true,
+      "detail": {
+        "curtainGone": true,
+        "skipHidden": true,
+        "noInlineClip": true,
+        "noFrameVars": true,
+        "heroStill": true
+      }
+    },
+    {
+      "name": "T1d console 0 error (natural run)",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "T2a CTA click saat curtain aktif -> navigasi /work",
+      "pass": true,
+      "detail": {
+        "url": "http://localhost:4321/work",
+        "errors": []
+      }
+    },
+    {
+      "name": "T2b search focus saat curtain aktif (caret aktif)",
+      "pass": true,
+      "detail": {
+        "focused": true
+      }
+    },
+    {
+      "name": "T2c search typing saat curtain aktif -> teks masuk",
+      "pass": true,
+      "detail": {
+        "typed": "archive data"
+      }
+    },
+    {
+      "name": "T2d scroll saat curtain aktif (tanpa body lock)",
+      "pass": true,
+      "detail": {
+        "scrollY": 416,
+        "bodyOverflow": "hidden auto/visible"
+      }
+    },
+    {
+      "name": "T2e keyboard: Tab mencapai search tanpa trap",
+      "pass": true,
+      "detail": {
+        "seq": [
+          "skip-link",
+          "brand-mark",
+          "nav-link active",
+          "nav-link",
+          "nav-link",
+          "nav-link",
+          "nav-link",
+          "nav-link"
+        ],
+        "back": "v11-skip"
+      }
+    },
+    {
+      "name": "T2f keyboard: Skip dapat diaktifkan Enter -> curtain selesai",
+      "pass": true,
+      "detail": {
+        "skipActivated": true,
+        "curtainAfterSkip": true,
+        "focusSafe": true
+      }
+    },
+    {
+      "name": "T2g pointer pass-through: CTA/search tertarget langsung, header di atas curtain",
+      "pass": true,
+      "detail": {
+        "cta": true,
+        "search": true,
+        "header": true,
+        "curtainIsNonePointer": true
+      }
+    },
+    {
+      "name": "T3 skip klik + repeated (awal animasi) -> selesai deterministik",
+      "pass": true,
+      "detail": {
+        "gone": true,
+        "skipHidden": true,
+        "noClip": true,
+        "focusOk": true,
+        "heroOk": true
+      }
+    },
+    {
+      "name": "T3b skip menjelang completion -> tetap satu kali, tanpa error",
+      "pass": true,
+      "detail": {
+        "late": true,
+        "errors": []
+      }
+    },
+    {
+      "name": "T4 reduced motion: curtain+skip tidak tampil, hero langsung interaktif",
+      "pass": true,
+      "detail": {
+        "curtainHidden": true,
+        "skipHidden": true,
+        "hero": true,
+        "cta": true
+      }
+    },
+    {
+      "name": "T4b console 0 error (reduce)",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "T5 JS disabled: curtain+skip display none, hero terbaca",
+      "pass": true,
+      "detail": {
+        "curtainDisplay": "none",
+        "skipDisplay": "none",
+        "title": true,
+        "subtitle": true,
+        "ctaHref": "/work"
+      }
+    },
+    {
+      "name": "T6 late JS 1.6s + user sudah scroll -> curtain TIDAK muncul mendadak",
+      "pass": true,
+      "detail": {
+        "curtainActive": false,
+        "skipShown": false,
+        "hero": true,
+        "interactedFirst": true
+      }
+    },
+    {
+      "name": "T7 session: reload & re-entry tidak me-replay curtain",
+      "pass": true,
+      "detail": {
+        "noReplay": true,
+        "reEntry": true
+      }
+    },
+    {
+      "name": "T8 resize mid-animation -> tanpa error/overflow, completion jalan",
+      "pass": true,
+      "detail": {
+        "noHScroll": true,
+        "completed": true,
+        "activeSeen": true,
+        "errors": []
+      }
+    },
+    {
+      "name": "T9 page transition home->about->home + rapid nav + overlay reset",
+      "pass": true,
+      "detail": {
+        "aboutOk": true,
+        "homeOk": {
+          "ok": true,
+          "isActive": false,
+          "seen": "1",
+          "heroVisible": true
+        },
+        "rapidOk": true,
+        "overlayReset": true,
+        "overlayReset2": true,
+        "errors": []
+      }
+    },
+    {
+      "name": "T10 halaman lain: tidak ada elemen curtain/skip (hanya homepage)",
+      "pass": true,
+      "detail": {
+        "routes": [
+          "/work",
+          "/about",
+          "/connect",
+          "/archive"
+        ]
+      }
+    }
+  ],
+  "summary": {
+    "total": 21,
+    "failed": 0
+  }
+}

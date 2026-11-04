@@ -1,3 +1,4 @@
+// @ts-check
 /*!
  * lab/workers/csv-worker.js - Web Worker CSV Explorer (module worker).
  *
@@ -44,13 +45,33 @@
 import { LIMITS, buildAnalysisPayload, buildChartPayload, toSafeErrorPayload } from '../shared/csv-analysis.js';
 import { CsvParseError } from '../shared/csv-parser.js';
 
-/** Referensi file aktif tunggal (dipecah saat ANALYZE_FILE berikutnya). */
+/**
+ * @typedef {import('../../../types/lab-csv.ts').CsvWorkerRequest} CsvWorkerRequest
+ * @typedef {import('../../../types/lab-csv.ts').CsvWorkerResponse} CsvWorkerResponse
+ * @typedef {import('../../../types/lab-csv.ts').CsvAnalysisPayload} CsvAnalysisPayload
+ * @typedef {import('../../../types/lab-csv.ts').CsvChartPayload} CsvChartPayload
+ */
+
+/**
+ * Kontrak minimal objek seperti File yang dapat dibaca di Worker maupun Node test.
+ * @typedef {Object} ReadableFileLike
+ * @property {string} [name]
+ * @property {number} size
+ * @property {() => Promise<ArrayBuffer>} arrayBuffer
+ */
+
+/**
+ * Referensi file aktif tunggal (dipecah saat ANALYZE_FILE berikutnya).
+ * @type {ReadableFileLike | null}
+ */
 let activeFile = null;
 
 /**
  * Baca + dekode file sebagai teks UTF-8 dengan error yang jelas.
  * fatal:true → byte bukan UTF-8 valid melempar TypeError, dipetakan ke
  * error berkode CSV_ENCODING (bukan hasil decode diam-diam berisi U+FFFD).
+ * @param {ReadableFileLike} file
+ * @returns {Promise<string>}
  */
 async function readFileText(file) {
   const buffer = await file.arrayBuffer();
@@ -58,6 +79,7 @@ async function readFileText(file) {
   try {
     return decoder.decode(buffer);
   } catch {
+    /** @type {Error & { code?: string }} */
     const error = new Error(
       'File bukan UTF-8 yang valid. Simpan ulang file sebagai UTF-8, lalu coba lagi.',
     );
@@ -66,84 +88,124 @@ async function readFileText(file) {
   }
 }
 
-function requireActiveFile(requestId) {
-  if (!activeFile) {
+/**
+ * @param {string | null | undefined} requestId
+ * @param {{ activeFile: ReadableFileLike | null }} state
+ * @returns {ReadableFileLike}
+ */
+function requireActiveFile(requestId, state) {
+  if (!state.activeFile) {
+    /** @type {Error & { code?: string; requestId?: string | null }} */
     const error = new Error('Tidak ada file aktif. Unggah file CSV terlebih dahulu.');
     error.code = 'CSV_NO_ACTIVE_FILE';
-    error.requestId = requestId;
+    error.requestId = requestId ?? null;
     throw error;
   }
-  return activeFile;
+  return state.activeFile;
 }
 
-function postSuccess(type, requestId, payload) {
-  self.postMessage({ type, requestId, payload });
-}
-
-function postError(requestId, error, fallbackCode, fallbackMessage) {
-  const safe = toSafeErrorPayload(error, fallbackCode, fallbackMessage);
-  self.postMessage({
-    type: 'WORKER_ERROR',
-    requestId: requestId === undefined ? null : requestId,
-    code: safe.code,
-    message: safe.message,
-  });
-}
-
-self.addEventListener('message', async (event) => {
-  const request = event.data;
-  if (!request || typeof request !== 'object') {
-    postError(null, null, 'CSV_MALFORMED_REQUEST', 'Permintaan tidak valid.');
-    return;
+/**
+ * Memproses satu pesan request Worker secara deterministik dan mengembalikan
+ * objek response terstruktur sesuai kontrak CsvWorkerResponse.
+ * Dapat diuji langsung di Node tanpa environment browser (V13.0-B).
+ *
+ * @param {unknown} request
+ * @param {{ activeFile: ReadableFileLike | null }} [state]
+ * @returns {Promise<CsvWorkerResponse>}
+ */
+export async function processWorkerRequest(
+  request,
+  state = {
+    get activeFile() {
+      return activeFile;
+    },
+    set activeFile(val) {
+      activeFile = val;
+    },
   }
-  const { requestId } = request;
+) {
+  if (!request || typeof request !== 'object') {
+    const safe = toSafeErrorPayload(null, 'CSV_MALFORMED_REQUEST', 'Permintaan tidak valid.');
+    return {
+      type: 'WORKER_ERROR',
+      requestId: null,
+      code: safe.code,
+      message: safe.message,
+    };
+  }
+
+  const reqObj = /** @type {Record<string, unknown>} */ (request);
+  const requestId = typeof reqObj.requestId === 'string' ? reqObj.requestId : null;
 
   try {
-    if (request.type === 'ANALYZE_FILE') {
-      const file = request.file;
+    if (reqObj.type === 'ANALYZE_FILE') {
+      const file = /** @type {ReadableFileLike | undefined} */ (reqObj.file);
       if (!file || typeof file.size !== 'number' || typeof file.arrayBuffer !== 'function') {
+        /** @type {Error & { code?: string }} */
         const error = new Error('File tidak dapat dibaca. Pilih file CSV dan coba lagi.');
         error.code = 'CSV_FILE_UNREADABLE';
         throw error;
       }
       if (file.size > LIMITS.MAX_FILE_BYTES) {
         const limitMb = Math.round(LIMITS.MAX_FILE_BYTES / (1024 * 1024));
+        /** @type {Error & { code?: string }} */
         const error = new Error(`Ukuran file melebihi batas ${limitMb} MiB.`);
         error.code = 'CSV_LIMIT_FILE_SIZE';
         throw error;
       }
       if (file.size === 0) {
+        /** @type {Error & { code?: string }} */
         const error = new Error('File kosong (0 byte).');
         error.code = 'CSV_EMPTY_FILE';
         throw error;
       }
 
-      activeFile = file; /* satu file aktif; referensi lama dilepas */
+      state.activeFile = file; /* satu file aktif; referensi lama dilepas */
       const text = await readFileText(file);
-      const payload = buildAnalysisPayload(text, { name: file.name, sizeBytes: file.size });
-      postSuccess('ANALYSIS_SUCCESS', requestId, payload);
-      return;
+      const payload = buildAnalysisPayload(text, { name: file.name ?? null, sizeBytes: file.size });
+      return {
+        type: 'ANALYSIS_SUCCESS',
+        requestId: requestId ?? '',
+        payload,
+      };
     }
 
-    if (request.type === 'GET_CHART_DATA') {
-      const file = requireActiveFile(requestId);
+    if (reqObj.type === 'GET_CHART_DATA') {
+      const file = requireActiveFile(requestId, state);
       const text = await readFileText(file); /* baca ulang; tanpa cache raw */
       const payload = buildChartPayload(text, {
-        xColumnId: request.xColumnId,
-        yColumnId: request.yColumnId,
+        xColumnId: String(reqObj.xColumnId ?? ''),
+        yColumnId: String(reqObj.yColumnId ?? ''),
       });
-      postSuccess('CHART_SUCCESS', requestId, payload);
-      return;
+      return {
+        type: 'CHART_SUCCESS',
+        requestId: requestId ?? '',
+        payload,
+      };
     }
 
+    /** @type {Error & { code?: string; requestId?: string | null }} */
     const error = new Error('Jenis permintaan tidak dikenal.');
     error.code = 'CSV_UNKNOWN_REQUEST';
     error.requestId = requestId;
     throw error;
   } catch (error) {
-    postError(requestId, error, 'ANALYSIS_FAILED', 'Gagal memproses file CSV.');
+    const safe = toSafeErrorPayload(error, 'ANALYSIS_FAILED', 'Gagal memproses file CSV.');
+    return {
+      type: 'WORKER_ERROR',
+      requestId,
+      code: safe.code,
+      message: safe.message,
+    };
   }
-});
+}
+
+if (typeof self !== 'undefined' && typeof self.addEventListener === 'function') {
+  self.addEventListener('message', async (event) => {
+    const response = await processWorkerRequest(event.data);
+    self.postMessage(response);
+  });
+}
 
 /* Catatan: error fatal worker (mis. bug implementasi) juga dilaporkan
    agar UI tidak menunggu selamanya. self.onerror ada di main thread

@@ -1,0 +1,11 @@
+src/scripts/work.js:5: * Single responsibility: konfigurasi route-aware bootPage() —
+src/scripts/about.js:5: * Single responsibility: konfigurasi bootPage() halaman About —
+src/scripts/about.js:17: *   initSkillConstellation — pemilik dokumentasinya yang sebenarnya.
+src/scripts/global.js:4: * Single responsibility: mengatur urutan boot sitewide — bridge
+src/scripts/global.js:7: * teruji. Implementasi fitur hidup di modul global/ (M01/M08) —
+src/scripts/global.js:15: *   5. initHeroWebGL() — non-blocking (void)
+src/scripts/hero-webgl/index.js:3: * PUBLIC LIFECYCLE ENTRY — thin orchestrator.
+src/scripts/hero-webgl/index.js:11: * Implementasi tidak lagi hidup di file ini (M01/M08) — jangan
+src/scripts/home.js:10: * konfigurasi bootPage() — submodule tidak pernah memanggil
+src/scripts/core.js:8: * page-lifecycle). Facade HANYA melakukan re-export — tidak ada logika
+src/scripts/core.js:14: * re-export — nilai terbaru selalu terbaca oleh consumer.

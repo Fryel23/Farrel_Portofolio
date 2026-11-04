@@ -1,3 +1,4 @@
+// @ts-check
 /*!
  * lab/core/validate-dataset.js - Validator schema dataset AQI Data Lab.
  *
@@ -18,12 +19,26 @@
 
 import { getISPUCategory } from './aqi-calculator.js';
 
+/**
+ * @typedef {import('../../../types/lab-aqi.ts').AqiValidationIssue} AqiValidationIssue
+ * @typedef {import('../../../types/lab-aqi.ts').AqiValidationIssueCode} AqiValidationIssueCode
+ * @typedef {import('../../../types/lab-aqi.ts').AqiValidationResult} AqiValidationResult
+ */
+
 const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
 
+/**
+ * @param {unknown} value
+ * @returns {value is Record<string, unknown>}
+ */
 function isPlainObject(value) {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
 
+/**
+ * @param {unknown} value
+ * @returns {value is string}
+ */
 function isHttpUrl(value) {
   if (typeof value !== 'string' || value === '') return false;
   try {
@@ -34,8 +49,12 @@ function isHttpUrl(value) {
   }
 }
 
+/**
+ * @param {unknown} value
+ * @returns {value is string}
+ */
 function isValidCalendarDate(value) {
-  if (!DATE_ONLY.test(value)) return false;
+  if (typeof value !== 'string' || !DATE_ONLY.test(value)) return false;
   const parsed = new Date(`${value}T00:00:00Z`);
   if (Number.isNaN(parsed.getTime())) return false;
   return parsed.toISOString().slice(0, 10) === value;
@@ -43,12 +62,19 @@ function isValidCalendarDate(value) {
 
 /**
  * Validasi dataset tahunan.
- * @param {object} datasetObj  objek {schemaVersion, regionId, year, dataset, records}
- * @param {{knownSourceIds?: string[]}} [options] daftar sourceId resmi (manifest)
- * @returns {{ok: boolean, issues: Array<{severity:'error'|'warning', code, message, path}>}}
+ * @param {unknown} datasetObj  objek {schemaVersion, regionId, year, dataset, records}
+ * @param {{knownSourceIds?: readonly string[]}} [options] daftar sourceId resmi (manifest)
+ * @returns {AqiValidationResult}
  */
 export function validateDataset(datasetObj, options = {}) {
+  /** @type {AqiValidationIssue[]} */
   const issues = [];
+  /**
+   * @param {'error' | 'warning'} severity
+   * @param {AqiValidationIssueCode} code
+   * @param {string} message
+   * @param {string} path
+   */
   const add = (severity, code, message, path) => issues.push({ severity, code, message, path });
 
   if (!isPlainObject(datasetObj)) {
@@ -64,7 +90,7 @@ export function validateDataset(datasetObj, options = {}) {
     add('error', 'REGION_ID', 'regionId wajib string non-kosong.', 'regionId');
   }
   const year = datasetObj.year;
-  if (!Number.isInteger(year) || year < 2000 || year > 2100) {
+  if (typeof year !== 'number' || !Number.isInteger(year) || year < 2000 || year > 2100) {
     add('error', 'YEAR', `year harus integer 2000–2100, dapat ${JSON.stringify(year)}.`, 'year');
   }
 

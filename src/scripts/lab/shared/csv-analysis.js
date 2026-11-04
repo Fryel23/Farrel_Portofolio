@@ -1,3 +1,4 @@
+// @ts-check
 /*!
  * lab/shared/csv-analysis.js - Engine analisis CSV (murni, tanpa DOM,
  * tanpa Chart.js, tanpa Node.js API).
@@ -50,9 +51,27 @@
 import { mean, median, min, max } from './stats.js';
 import { iterateCsvRecords, CsvParseError } from './csv-parser.js';
 
-/** Batas resource V12.3 - satu-satunya sumber kebenaran (spec §6.5). */
+/**
+ * @typedef {import('../../../types/lab-csv.ts').CsvColumnType} CsvColumnType
+ * @typedef {import('../../../types/lab-csv.ts').CsvAnalysisErrorCode} CsvAnalysisErrorCode
+ * @typedef {import('../../../types/lab-csv.ts').CsvResourceLimits} CsvResourceLimits
+ * @typedef {import('../../../types/lab-csv.ts').NumericParseOutcome} NumericParseOutcome
+ * @typedef {import('../../../types/lab-csv.ts').CsvColumnMetadata} CsvColumnMetadata
+ * @typedef {import('../../../types/lab-csv.ts').CsvColumnDescriptiveStats} CsvColumnDescriptiveStats
+ * @typedef {import('../../../types/lab-csv.ts').CsvFileMetadataInput} CsvFileMetadataInput
+ * @typedef {import('../../../types/lab-csv.ts').CsvAnalysisPayload} CsvAnalysisPayload
+ * @typedef {import('../../../types/lab-csv.ts').CsvChartSampleResult} CsvChartSampleResult
+ * @typedef {import('../../../types/lab-csv.ts').CsvChartSelection} CsvChartSelection
+ * @typedef {import('../../../types/lab-csv.ts').CsvChartPayload} CsvChartPayload
+ * @typedef {import('../../../types/lab-csv.ts').CsvSafeErrorPayload} CsvSafeErrorPayload
+ */
+
+/**
+ * Batas resource V12.3 - satu-satunya sumber kebenaran (spec §6.5).
+ * @type {CsvResourceLimits}
+ */
 export const LIMITS = Object.freeze({
-  MAX_FILE_BYTES: 10 * 1024 * 1024, /* 10 MiB */
+  MAX_FILE_BYTES: 10485760, /* 10 * 1024 * 1024 = 10 MiB */
   MAX_COLUMNS: 100,
   MAX_RECORDS: 100000,
   MAX_CELLS: 500000,
@@ -63,14 +82,16 @@ export const LIMITS = Object.freeze({
 /** Error analisis dengan kode stabil; pesan aman untuk pengguna. */
 export class CsvAnalysisError extends Error {
   /**
-   * @param {string} code kode stabil (CSV_*, CSV_LIMIT_*)
+   * @param {CsvAnalysisErrorCode} code kode stabil (CSV_*, CSV_LIMIT_*)
    * @param {string} message pesan aman tanpa isi CSV
    * @param {{recordIndex?: number}} [context]
    */
   constructor(code, message, context = {}) {
     super(message);
     this.name = 'CsvAnalysisError';
+    /** @type {CsvAnalysisErrorCode} */
     this.code = code;
+    /** @type {number | null} */
     this.recordIndex = typeof context.recordIndex === 'number' ? context.recordIndex : null;
   }
 }
@@ -80,17 +101,26 @@ const ISO_DATE_RE = /^(\d{4})-(\d{2})-(\d{2})$/;
 const ISO_DATETIME_RE = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{1,3}))?)?(?:Z|[+-]\d{2}:\d{2})?$/;
 const COLUMN_ID_RE = /^column-(\d+)$/;
 
+/** @param {number} year */
 function isLeapYear(year) {
   return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
 }
 
+/**
+ * @param {number} year
+ * @param {number} month
+ */
 function daysInMonth(year, month) {
   const lengths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
   if (month === 2 && isLeapYear(year)) return 29;
   return lengths[month - 1];
 }
 
-/** YYYY-MM-DD dengan validasi kalender (termasuk tahun kabisat). */
+/**
+ * YYYY-MM-DD dengan validasi kalender (termasuk tahun kabisat).
+ * @param {string} value
+ * @returns {boolean}
+ */
 export function isIsoDateString(value) {
   const match = ISO_DATE_RE.exec(value);
   if (!match) return false;
@@ -102,7 +132,11 @@ export function isIsoDateString(value) {
   return true;
 }
 
-/** ISO datetime (T, menit wajib; detik/ms dan zona opsional). */
+/**
+ * ISO datetime (T, menit wajib; detik/ms dan zona opsional).
+ * @param {string} value
+ * @returns {boolean}
+ */
 function isIsoDateTimeString(value) {
   const match = ISO_DATETIME_RE.exec(value);
   if (!match) return false;
@@ -121,6 +155,8 @@ function isIsoDateTimeString(value) {
 /**
  * Uji format angka eksplisit SEBELUM Number() (spec §6.3). Whitespace
  * diproses pemanggil (trim tingkat analisis, bukan parser).
+ * @param {string} raw
+ * @returns {NumericParseOutcome}
  */
 export function parseNumericValue(raw) {
   const trimmed = raw.trim();
@@ -131,6 +167,10 @@ export function parseNumericValue(raw) {
   return { status: 'numeric', value };
 }
 
+/**
+ * @param {{ nonEmptyCount: number; allNumeric: boolean; allDate: boolean }} state
+ * @returns {CsvColumnType}
+ */
 function classifyColumnState(state) {
   if (state.nonEmptyCount === 0) return 'categorical'; /* kolom kosong semua */
   if (state.allNumeric) return 'numeric';
@@ -138,6 +178,10 @@ function classifyColumnState(state) {
   return 'categorical';
 }
 
+/**
+ * @param {string[]} headerRecord
+ * @returns {CsvColumnMetadata[]}
+ */
 function createHeaderMetadata(headerRecord) {
   const columnCount = headerRecord.length;
   if (columnCount > LIMITS.MAX_COLUMNS) {
@@ -146,7 +190,9 @@ function createHeaderMetadata(headerRecord) {
       `Jumlah kolom (${columnCount}) melebihi batas maksimum ${LIMITS.MAX_COLUMNS}.`,
     );
   }
+  /** @type {Map<string, number>} */
   const seenTrimmed = new Map(); /* nama trimmed → jumlah kemunculan */
+  /** @type {CsvColumnMetadata[]} */
   const columns = headerRecord.map((rawName, index) => {
     const trimmed = rawName.trim();
     let displayName;
@@ -162,7 +208,7 @@ function createHeaderMetadata(headerRecord) {
       index,
       name: rawName === '' ? null : rawName, /* nama asli dipertahankan */
       displayName,
-      type: 'categorical', /* diperbarui setelah klasifikasi */
+      type: /** @type {CsvColumnType} */ ('categorical'), /* diperbarui setelah klasifikasi */
       validCount: 0,
       missingCount: 0,
     };
@@ -177,9 +223,9 @@ function createHeaderMetadata(headerRecord) {
  * kolom ternyata categorical/date) untuk menekan penggunaan memori (§6.6).
  *
  * @param {string} text isi CSV
- * @param {{name?: string|null, sizeBytes?: number|null}} [fileMeta] metadata
+ * @param {CsvFileMetadataInput} [fileMeta] metadata
  *        file untuk tampilan (TIDAK diambil dari isi CSV)
- * @returns {object} payload ANALYSIS_SUCCESS (tanpa type/requestId)
+ * @returns {CsvAnalysisPayload} payload ANALYSIS_SUCCESS (tanpa type/requestId)
  * @throws {CsvAnalysisError|CsvParseError} error dengan kode stabil
  */
 export function buildAnalysisPayload(text, fileMeta = {}) {
@@ -197,6 +243,7 @@ export function buildAnalysisPayload(text, fileMeta = {}) {
     allNumeric: true,
     allDate: true,
     nonEmptyCount: 0,
+    /** @type {number[] | null} */
     numericValues: [], /* array angka valid; null-ized bila kolom ternoda */
     tainted: false,
   }));
@@ -205,6 +252,7 @@ export function buildAnalysisPayload(text, fileMeta = {}) {
   let cells = 0;
   let normalizedRecordCount = 0;
   let blankLinesSkipped = 0;
+  /** @type {string[][]} */
   const previewRows = [];
 
   for (const record of iterator) {
@@ -262,7 +310,7 @@ export function buildAnalysisPayload(text, fileMeta = {}) {
       if (state.allNumeric) {
         const parsed = parseNumericValue(trimmed);
         if (parsed.status === 'numeric') {
-          if (!state.tainted) state.numericValues.push(parsed.value);
+          if (!state.tainted && state.numericValues !== null) state.numericValues.push(parsed.value);
         } else {
           state.allNumeric = false;
           state.numericValues = null; /* bebaskan array (§6.6) */
@@ -280,6 +328,7 @@ export function buildAnalysisPayload(text, fileMeta = {}) {
     throw new CsvAnalysisError('CSV_NO_DATA', 'Header terbaca, tetapi file tidak memuat satu baris data pun.');
   }
 
+  /** @type {Record<string, CsvColumnDescriptiveStats>} */
   const statsByColumnId = {};
   for (let columnIndex = 0; columnIndex < columnCount; columnIndex += 1) {
     const column = columns[columnIndex];
@@ -305,7 +354,7 @@ export function buildAnalysisPayload(text, fileMeta = {}) {
   return {
     file: {
       name: typeof fileMeta.name === 'string' ? fileMeta.name : null,
-      sizeBytes: Number.isFinite(fileMeta.sizeBytes) ? fileMeta.sizeBytes : null,
+      sizeBytes: typeof fileMeta.sizeBytes === 'number' && Number.isFinite(fileMeta.sizeBytes) ? fileMeta.sizeBytes : null,
     },
     columnCount,
     rowCount,
@@ -328,8 +377,8 @@ export function buildAnalysisPayload(text, fileMeta = {}) {
  * titik awal & akhir, dan upaya terbaik representasi gap missing-value
  * di bawah batas keras MAX_CHART_POINTS.
  *
- * @param {Array<number|null>} values seri Y (null = missing)
- * @returns {{indices: number[], sampled: boolean}}
+ * @param {readonly Array<number|null>} values seri Y (null = missing)
+ * @returns {CsvChartSampleResult}
  */
 export function sampleChartIndices(values) {
   const total = values.length;
@@ -340,6 +389,7 @@ export function sampleChartIndices(values) {
   }
 
   const stride = Math.ceil(total / LIMITS.MAX_CHART_POINTS);
+  /** @type {Set<number>} */
   const selected = new Set();
   for (let i = 0; i < total; i += stride) selected.add(i);
   selected.add(total - 1); /* titik akhir selalu dipertahankan */
@@ -373,12 +423,12 @@ export function sampleChartIndices(values) {
  * menjadi null (bukan 0) agar spanGaps:false menampilkan gap (spec §9.2).
  *
  * @param {string} text isi CSV
- * @param {{xColumnId: string, yColumnId: string}} selection
- * @returns {object} payload CHART_SUCCESS (tanpa type/requestId)
+ * @param {CsvChartSelection} selection
+ * @returns {CsvChartPayload} payload CHART_SUCCESS (tanpa type/requestId)
  */
 export function buildChartPayload(text, selection) {
-  const xMatch = COLUMN_ID_RE.exec(String(selection.xColumnId || ''));
-  const yMatch = COLUMN_ID_RE.exec(String(selection.yColumnId || ''));
+  const xMatch = COLUMN_ID_RE.exec(String((selection && selection.xColumnId) || ''));
+  const yMatch = COLUMN_ID_RE.exec(String((selection && selection.yColumnId) || ''));
   if (!xMatch) throw new CsvAnalysisError('CSV_COLUMN_UNKNOWN', 'Pilihan kolom X tidak dikenal.');
   if (!yMatch) throw new CsvAnalysisError('CSV_COLUMN_UNKNOWN', 'Pilihan kolom Y tidak dikenal.');
   const xIndex = Number(xMatch[1]);
@@ -394,7 +444,9 @@ export function buildChartPayload(text, selection) {
     throw new CsvAnalysisError('CSV_COLUMN_UNKNOWN', 'Pilihan kolom berada di luar jumlah kolom file.');
   }
 
+  /** @type {string[]} */
   const labels = [];
+  /** @type {Array<number | null>} */
   const values = [];
   let xAllNumeric = true;
   let xAllDate = true;
@@ -453,10 +505,13 @@ export function buildChartPayload(text, selection) {
   if (xAllNumeric) {
     throw new CsvAnalysisError('CSV_X_NOT_SUPPORTED', 'Sumbu X harus kolom kategori atau tanggal, bukan kolom numerik. Pilih kolom numerik sebagai sumbu Y.');
   }
+  /** @type {'date' | 'categorical'} */
   const xType = xAllDate ? 'date' : 'categorical';
 
   const { indices, sampled } = sampleChartIndices(values);
+  /** @type {string[]} */
   const outLabels = new Array(indices.length);
+  /** @type {Array<number | null>} */
   const outValues = new Array(indices.length);
   for (let k = 0; k < indices.length; k += 1) {
     outLabels[k] = labels[indices[k]];
@@ -484,6 +539,10 @@ export function buildChartPayload(text, selection) {
  * punya pesan yang dibangun tanpa isi CSV - itu yang menjadikannya aman
  * dikirim ke UI. Error lain (bug internal, TypeError, dsb.) jatuh ke
  * fallback generik agar detail internal tidak pernah bocor.
+ * @param {unknown} error
+ * @param {string} fallbackCode
+ * @param {string} fallbackMessage
+ * @returns {CsvSafeErrorPayload}
  */
 export function toSafeErrorPayload(error, fallbackCode, fallbackMessage) {
   if (error instanceof CsvParseError || error instanceof CsvAnalysisError) {
@@ -491,8 +550,11 @@ export function toSafeErrorPayload(error, fallbackCode, fallbackMessage) {
   }
   if (
     error &&
+    typeof error === 'object' &&
+    'code' in error &&
     typeof error.code === 'string' &&
     error.code.startsWith('CSV_') &&
+    'message' in error &&
     typeof error.message === 'string' &&
     error.message.length > 0
   ) {

@@ -1,0 +1,27 @@
+/* ==========================================================================
+   global.css: CSS AGGREGATOR / ENTRY (modularized V11.1-M).
+   Single responsibility: menyatukan modul style sitewide dengan urutan
+   yang MEREPRESENTASIKAN urutan blok source original (kaskade dipertahankan;
+   @import lokal diproses inline oleh Vite). Jangan menambah selector global
+   baru di file ini; tulis di modul terkait.
+   Modul = potongan kontigu source original (urutan byte sama):
+     tokens -> base -> header -> shared-components -> hero-foundation ->
+     site-chrome -> responsive-core -> arcade-v4 -> now-playing -> konami ->
+     arcade-responsive -> edge-archive -> archive-search -> decorations ->
+     ornaments (reduced-motion guards selalu setelah selector dasarnya).
+   ========================================================================== */
+@import './global/tokens.css';
+@import './global/base.css';
+@import './global/header.css';
+@import './global/shared-components.css';
+@import './global/hero-foundation.css';
+@import './global/site-chrome.css';
+@import './global/responsive-core.css';
+@import './global/arcade-v4.css';
+@import './global/now-playing.css';
+@import './global/konami.css';
+@import './global/arcade-responsive.css';
+@import './global/edge-archive.css';
+@import './global/archive-search.css';
+@import './global/decorations.css';
+@import './global/ornaments.css';

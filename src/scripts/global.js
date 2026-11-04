@@ -63,6 +63,8 @@ import {
 } from './global/decorations.js';
 import { initNowPlaying } from './global/now-playing.js';
 import { initAudioFeedback } from './global/audio-feedback.js';
+import { initCommandPalette } from './global/command-palette.ts';
+import { initReferenceDock } from './global/tiling-dock.ts';
 
 /* Compatibility exports: consumer lama (connect.js) masih mengimpor
    renderSocials dari './global.js' - named re-export menjaga path
@@ -105,7 +107,7 @@ bootPage({
      listener preventDefault yang memblokir klik ~0.8s per navigasi.
      Runtime guard + MQL listener di page-transitions.js menutup kasus
      preferensi berubah mid-session. */
-  interactions: [initMobileMenu, initQuickMenu, initAnchors, initNowPlaying, initPageProgressBar, fallbackReveal, initMagneticButtons, initAudioFeedback],
+  interactions: [initMobileMenu, initQuickMenu, initAnchors, initNowPlaying, initPageProgressBar, fallbackReveal, initMagneticButtons, initAudioFeedback, initReferenceDock, initCommandPalette],
   motion: [
     initSmoothScroll,
     initArchiveSpine,

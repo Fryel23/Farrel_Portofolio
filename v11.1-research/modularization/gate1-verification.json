@@ -1,0 +1,287 @@
+{
+  "pass": 56,
+  "fail": 0,
+  "results": [
+    {
+      "name": "PE01 SVG ada di initial HTML",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "PE02 SVG terlihat sebelum WebGL siap",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "Canvas default invisible",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "WG03 Desktop WebGL berjalan (is-webgl-ready)",
+      "pass": true,
+      "detail": "state=ready"
+    },
+    {
+      "name": "WG02 OGL tidak masuk initial bundle (dynamic chunk dimuat hanya via import)",
+      "pass": true,
+      "detail": "requests=1"
+    },
+    {
+      "name": "LC01 satu context WebGL saja",
+      "pass": true,
+      "detail": "contexts=1"
+    },
+    {
+      "name": "PE04 Canvas tampil setelah frame valid (opacity 1)",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "Fallback SVG fade-out saat ready",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "Canvas pointer-events none (WG interaksi)",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "WG08 F monogram watermark tampil saat ready",
+      "pass": true,
+      "detail": "opacity=0.16"
+    },
+    {
+      "name": "V1107 Curtain z-index tetap 80",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "Search tetap dapat difokus saat WebGL ready",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "Parallax pointer tidak melempar error",
+      "pass": true,
+      "detail": "pointer moved"
+    },
+    {
+      "name": "Zero console errors (desktop)",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "CTA berfungsi saat WebGL aktif (navigasi ke /work)",
+      "pass": true,
+      "detail": "/work"
+    },
+    {
+      "name": "LC02/PE11 Home->About: canvas tidak dibawa",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "LC02 Tidak ada context baru dibuat setelah swap (dispose bekerja)",
+      "pass": true,
+      "detail": "before=2 after=2"
+    },
+    {
+      "name": "Work->Home re-init: WebGL hidup lagi di homepage",
+      "pass": true,
+      "detail": "contexts total=3"
+    },
+    {
+      "name": "Zero console errors setelah siklus navigasi",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "PE07 No WebGL pada <=700px (tidak ready, fallback tampil)",
+      "pass": true,
+      "detail": "state=waiting"
+    },
+    {
+      "name": "PE07b Canvas invisible di mobile (no context dibuat)",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "PE08 No OGL request pada mobile",
+      "pass": true,
+      "detail": "requests=0"
+    },
+    {
+      "name": "No WebGL context pada mobile",
+      "pass": true,
+      "detail": "contexts=0"
+    },
+    {
+      "name": "SVG fallback terlihat di mobile",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "Tidak ada horizontal overflow",
+      "pass": true,
+      "detail": "scrollW=390 innerW=390"
+    },
+    {
+      "name": "PE11 /about tanpa OGL request (mobile)",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "PE09 No WebGL pada reduced motion",
+      "pass": true,
+      "detail": "state=fallback"
+    },
+    {
+      "name": "PE10 No OGL request pada reduced motion",
+      "pass": true,
+      "detail": "requests=0"
+    },
+    {
+      "name": "No context pada reduced motion",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "SVG fallback terlihat pada reduced motion",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "Zero console errors (reduced)",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "PE11 No OGL request di 8 route non-home",
+      "pass": true,
+      "detail": "requests=0"
+    },
+    {
+      "name": "Zero WebGL-related console errors di route non-home",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "LC10 Tidak ada context homepage tertinggal di /work",
+      "pass": true,
+      "detail": "homeCtx=0"
+    },
+    {
+      "name": "Resize test: ready awal",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "Resize 1440->700: WebGL dispose, fallback kembali",
+      "pass": true,
+      "detail": "state=waiting"
+    },
+    {
+      "name": "Resize 700->1440: re-init satu instance",
+      "pass": true,
+      "detail": "contexts=2"
+    },
+    {
+      "name": "Resize: OGL request tidak berulang (cached)",
+      "pass": true,
+      "detail": "requests=1"
+    },
+    {
+      "name": "Zero console errors (resize, abaikan ResizeObserver warning benign)",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "WG14 Context loss: fallback muncul",
+      "pass": true,
+      "detail": "state=fallback"
+    },
+    {
+      "name": "Context loss tanpa console error",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "LC06 Import terlambat tidak membuat context di halaman lain",
+      "pass": true,
+      "detail": "path=/about ctx=0 delayed=true"
+    },
+    {
+      "name": "Race tanpa console error",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "Setelah race, Home tetap dapat init",
+      "pass": true,
+      "detail": "ctx=1"
+    },
+    {
+      "name": "WG12 Offscreen -> kembali: resume tanpa error",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "Zero console errors (visibility)",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "ID01 Cormorant Garamond diterapkan pada closing",
+      "pass": true,
+      "detail": "\"Cormorant Garamond\", \"Iowan Old Style\","
+    },
+    {
+      "name": "ID02 Body tetap Space Grotesk",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "ID05 Fill metrics identik dengan outline",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "ID06 Tidak ada overflow di 1440",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "ID06 Tidak ada overflow di 1024px",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "ID06 Tidak ada overflow di 700px",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "ID06 Tidak ada overflow di 390px",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "ID06 Tidak ada overflow di 360px",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "ID06 Tidak ada overflow di 320px",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "Zero console errors (connect)",
+      "pass": true,
+      "detail": ""
+    }
+  ],
+  "oglChunk": "src.x4-qSuG4.js"
+}

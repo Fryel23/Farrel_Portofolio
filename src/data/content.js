@@ -200,7 +200,10 @@ export const DATA = {
       { targetId: 'companion', label: 'Companion habitat', aliases: ['pet', 'companion', 'summon', 'kok'] },
       { targetId: 'profiles', label: 'Social profiles', aliases: ['instagram', 'linkedin', 'social', 'social media', 'profiles', 'google drive', 'documentation', 'dokumentasi'] },
       { targetId: 'contact', label: 'Contact email', aliases: ['email', 'gmail', 'contact', 'contacts', 'kontak', 'reach me', 'say hello'] },
-      { targetId: 'closing', label: 'Closing & motto', aliases: ['footer', 'motto', 'back to top', 'closing'] }
+      { targetId: 'closing', label: 'Closing & motto', aliases: ['footer', 'motto', 'back to top', 'closing'] },
+      { targetId: 'adr', label: 'Engineering records vault', aliases: ['adr', 'audit', 'architecture', 'report', 'reports', 'benchmark', 'lcp', 'webgl', 'diagnostic', 'verification', 'records'] },
+      { targetId: 'codex', label: 'The Grand Codex (100-600)', aliases: ['codex', 'grand codex', 'knowledge', 'knowledge graph', 'graph', 'mathml', 'ispu', 'fresnel', 'decimal', 'taxonomy', 'backlinks'] },
+      { targetId: 'atlas', label: 'Progressive World Atlas', aliases: ['atlas', 'world atlas', 'topology', 'system topology', 'sectors', 'map', 'etl'] }
     ],
     /* One keyword, several honest destinations. Keep each entry short. */
     multiRoutes: [

@@ -6,6 +6,20 @@ import {
   STATUS_IDS,
   isValidContentId,
 } from './data/taxonomy.js';
+import {
+  ADR_CATEGORY_IDS,
+  ADR_RECORD_TYPES,
+  ADR_RECORD_STATUSES,
+  KNOWN_INTERNAL_ROUTES,
+  isValidAdrId,
+} from './lib/adr-taxonomy.ts';
+import {
+  CODEX_DOMAINS,
+  CODEX_MATURITY_LEVELS,
+  CODEX_EVIDENCE_STATUSES,
+  CODEX_MATHML_KINDS,
+  isValidDecimalCodeForDomain,
+} from './lib/codex-taxonomy.ts';
 
 /*
  * Content Collection "work" (Fase 3, PROMPT_EKSEKUSI_V7.0).
@@ -109,6 +123,201 @@ const workCollection = defineCollection({
     }),
 });
 
+const adrCollection = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/adr' }),
+  schema: z
+    .object({
+      adrId: z.string().refine(isValidAdrId, {
+        message: 'adrId harus lowercase kebab-case (contoh: v11-0-implementation-report).',
+      }),
+      versionTag: z.string().min(1),
+      sequenceOrder: z.number().int().positive(),
+      title: z.string().min(1),
+      summary: z.string().min(1),
+      category: z.enum(ADR_CATEGORY_IDS),
+      recordType: z.enum(ADR_RECORD_TYPES),
+      recordStatus: z.enum(ADR_RECORD_STATUSES),
+      publishedAt: z
+        .string()
+        .regex(/^\d{4}-\d{2}-\d{2}$/, 'publishedAt harus berformat YYYY-MM-DD.')
+        .optional(),
+      targetRoutes: z
+        .array(z.enum(KNOWN_INTERNAL_ROUTES))
+        .default([]),
+      relatedWorkIds: z
+        .array(
+          z.string().refine(isValidContentId, {
+            message: 'relatedWorkIds harus contentId lowercase kebab-case.',
+          })
+        )
+        .default([]),
+      keyMetrics: z
+        .array(
+          z.object({
+            label: z.string().min(1),
+            value: z.string().min(1),
+            unit: z.string().min(1).optional(),
+            evidenceSection: z.string().min(1).optional(),
+          })
+        )
+        .default([]),
+      provenance: z.object({
+        sourcePath: z.string().min(1),
+        sourceFilename: z.string().min(1),
+        sourceSha256: z.string().regex(/^[0-9a-f]{64}$/, 'sourceSha256 harus 64 hex lowercase.'),
+        sourceBytes: z.number().int().nonnegative(),
+        sourceWordCount: z.number().int().nonnegative(),
+        sourceLineCount: z.number().int().nonnegative(),
+        normalizedContentSha256: z
+          .string()
+          .regex(/^[0-9a-f]{64}$/, 'normalizedContentSha256 harus 64 hex lowercase.')
+          .optional(),
+        normalizationCount: z.number().int().nonnegative(),
+      }),
+    })
+    .superRefine((data, ctx) => {
+      const seenRoutes = new Set<string>();
+      data.targetRoutes.forEach((route, index) => {
+        if (seenRoutes.has(route)) {
+          ctx.addIssue({
+            code: 'custom',
+            path: ['targetRoutes', index],
+            message: `targetRoutes duplikat: "${route}".`,
+          });
+        }
+        seenRoutes.add(route);
+      });
+
+      const seenWork = new Set<string>();
+      data.relatedWorkIds.forEach((workId, index) => {
+        if (seenWork.has(workId)) {
+          ctx.addIssue({
+            code: 'custom',
+            path: ['relatedWorkIds', index],
+            message: `relatedWorkIds duplikat: "${workId}".`,
+          });
+        }
+        seenWork.add(workId);
+      });
+    }),
+});
+
+const CODEX_DOMAIN_IDS_TUPLE = CODEX_DOMAINS.map((d) => d.id) as [string, ...string[]];
+const CODEX_MATURITY_TUPLE = [...CODEX_MATURITY_LEVELS] as [string, ...string[]];
+const CODEX_EVIDENCE_STATUS_TUPLE = [...CODEX_EVIDENCE_STATUSES] as [string, ...string[]];
+const CODEX_MATHML_KIND_TUPLE = [...CODEX_MATHML_KINDS] as [string, ...string[]];
+
+const codexCollection = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/codex' }),
+  schema: z
+    .object({
+      codexId: z
+        .string()
+        .refine(isValidContentId, {
+          message: 'codexId harus lowercase kebab-case ([a-z0-9]+(-[a-z0-9]+)*).',
+        }),
+      decimalCode: z
+        .string()
+        .regex(/^[1-6]\d{2}\.\d+$/, 'decimalCode harus berformat [1-6]XX.Y (mis. 101.1, 501.1).'),
+      title: z.string().min(1),
+      domain: z.enum(CODEX_DOMAIN_IDS_TUPLE),
+      maturity: z.enum(CODEX_MATURITY_TUPLE),
+      summary: z.string().min(1),
+      sourceFiles: z.array(z.string().min(1)).min(1),
+      sourceEvidence: z
+        .array(
+          z.object({
+            claim: z.string().min(1),
+            status: z.enum(CODEX_EVIDENCE_STATUS_TUPLE),
+            file: z.string().min(1),
+            reference: z.string().min(1),
+            verifiedBy: z.string().min(1).optional(),
+          })
+        )
+        .min(1),
+      relatedCodexIds: z.array(z.string().refine(isValidContentId)).default([]),
+      relatedWorkIds: z.array(z.string().refine(isValidContentId)).default([]),
+      relatedAdrIds: z.array(z.string().refine(isValidAdrId)).default([]),
+      formulas: z
+        .array(
+          z.object({
+            id: z.string().refine(isValidContentId),
+            label: z.string().min(1),
+            sourceNotation: z.string().min(1),
+            plainExplanation: z.string().min(1),
+            mathmlKind: z.enum(CODEX_MATHML_KIND_TUPLE).default('none'),
+            variables: z
+              .array(
+                z.object({
+                  symbol: z.string().min(1),
+                  meaning: z.string().min(1),
+                  unit: z.string().min(1).optional(),
+                })
+              )
+              .default([]),
+          })
+        )
+        .default([]),
+      updatedAt: z
+        .string()
+        .regex(/^\d{4}-\d{2}-\d{2}$/, 'updatedAt harus format YYYY-MM-DD.'),
+    })
+    .superRefine((data, ctx) => {
+      if (!isValidDecimalCodeForDomain(data.decimalCode, data.domain)) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['decimalCode'],
+          message: `decimalCode "${data.decimalCode}" tidak sesuai dengan domain "${data.domain}".`,
+        });
+      }
+
+      const seenCodex = new Set<string>();
+      data.relatedCodexIds.forEach((targetId, index) => {
+        if (targetId === data.codexId) {
+          ctx.addIssue({
+            code: 'custom',
+            path: ['relatedCodexIds', index],
+            message: `Self-reference tidak diizinkan pada relatedCodexIds: "${targetId}".`,
+          });
+        }
+        if (seenCodex.has(targetId)) {
+          ctx.addIssue({
+            code: 'custom',
+            path: ['relatedCodexIds', index],
+            message: `relatedCodexIds duplikat: "${targetId}".`,
+          });
+        }
+        seenCodex.add(targetId);
+      });
+
+      const seenWork = new Set<string>();
+      data.relatedWorkIds.forEach((workId, index) => {
+        if (seenWork.has(workId)) {
+          ctx.addIssue({
+            code: 'custom',
+            path: ['relatedWorkIds', index],
+            message: `relatedWorkIds duplikat: "${workId}".`,
+          });
+        }
+        seenWork.add(workId);
+      });
+
+      const seenAdr = new Set<string>();
+      data.relatedAdrIds.forEach((adrId, index) => {
+        if (seenAdr.has(adrId)) {
+          ctx.addIssue({
+            code: 'custom',
+            path: ['relatedAdrIds', index],
+            message: `relatedAdrIds duplikat: "${adrId}".`,
+          });
+        }
+        seenAdr.add(adrId);
+      });
+    }),
+});
+
 export const collections = {
   work: workCollection,
+  adr: adrCollection,
+  codex: codexCollection,
 };

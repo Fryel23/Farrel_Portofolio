@@ -1,0 +1,66 @@
+
+> portfolio-astro@0.0.1 test:lab
+> node scripts/test-lab-core.mjs
+
+
+[1] aqi-calculator.js
+  PASS  SUPPORTED_PARAMETERS hanya parameter terverifikasi
+  PASS  SO₂ 13.61 µg/m³ (pita 1) → 13.0865 ≈ 13 (Baik)
+  PASS  Contoh resmi PM2.5 31.4 µg/m³ → 70.5264 (pita 51–100, dibulatkan 71)
+  PASS  Boundary SO₂: 0→0, 52→50, 52.000001→>51, 180→100, 400→200, 800→300, 1200→500
+  PASS  Boundary NO₂: 80→50, 200→100, 1130→200, 2260→300, 3000→500
+  PASS  Tidak ada overlap/gap: 52.5 masuk pita 2, nilai antara 51–52
+  PASS  Nol = pengukuran valid → ISPU 0, kategori Baik (bukan missing)
+  PASS  Negatif → invalid-input
+  PASS  null/undefined → missing
+  PASS  NaN / Infinity → invalid-input
+  PASS  String numerik ditolak → invalid-input
+  PASS  Averaging period salah → unsupported-averaging-period; dengan override tetap ditandai basisMatched=false
+  PASS  validPercent < 75 → insufficient-data
+  PASS  Parameter tak terverifikasi (pm10) → unsupported-parameter (bukan angka karangan)
+  PASS  Out-of-range SO₂ 1500 → out-of-range + kategori Berbahaya tanpa angka
+  PASS  Satuan salah → invalid-input; µg/Nm³ diterima setara µg/m³ sesuai pelaporan sumber
+  PASS  Kategori: 0/50 Baik, 50.5/100 Sedang, 100.5/200 Tidak Sehat, 200.5/300 Sangat Tidak Sehat, 300.5/600 Berbahaya
+  PASS  ISPU final = max sub-indeks valid; polutan dominan benar; missing bila tak ada yang valid
+  PASS  Ringkasan polutan dominan: hanya sub-indeks valid yang dihitung
+  PASS  Konsentrasi TIDAK dibulatkan sebelum interpolasi (31.4 ≠ dibulatkan)
+  PASS  Tabel P14_2020: pita tidak overlap & tidak bolong (so2/no2/pm25)
+
+[2] stats.js
+  PASS  mean([10, null, 20]) === 15 (null diabaikan, bukan 0)
+  PASS  Median ganjil & genap (genap = rata-rata dua tengah)
+  PASS  min/max mengabaikan null
+  PASS  SD populasi [2,4,4,4,5,5,7,9] = 2; sampel ≈ 2.13809
+  PASS  Empty & all-null → null (bukan 0)
+  PASS  Non-finite diabaikan (NaN/Infinity)
+  PASS  validPercentage: [10,null,20] → 66.7%
+  PASS  Input TIDAK dimutasi (median mengurutkan salinan)
+
+[3] validate-dataset.js
+  PASS  Dataset valid → ok tanpa error
+  PASS  schemaVersion salah → error
+  PASS  Tahun record ≠ dataset.year → error
+  PASS  Record id duplikat → error
+  PASS  Parameter tak dideklarasikan → error
+  PASS  Konsentrasi negatif → error; NaN → error; string numerik → error
+  PASS  sourceId tidak dikenal → error; sourceUrl jelek → error
+  PASS  derived.ispu di luar 0–500 → error; kategori tak konsisten → error
+  PASS  date invalid → error; date null sah (granularitas tahunan sumber)
+  PASS  records kosong → error (jangan samarkan ketidaktersediaan)
+  PASS  Validator tidak mengubah data
+
+[4] formatters.js
+  PASS  formatNumber/formatIndex: null & NaN → — (bukan 0)
+  PASS  safeExternalUrl: hanya http(s)
+
+[5] Dataset build Cirebon (integrasi)
+  PASS  cirebon-2021.json lolos validator
+  PASS  cirebon-2022.json lolos validator
+  PASS  cirebon-2023.json lolos validator
+  PASS  cirebon-2024.json lolos validator
+  PASS  cirebon-2025.json lolos validator
+  PASS  regions.json konsisten: path & record count
+  PASS  Null tetap null di JSON hasil build (missing NO₂ DISUKCAPIL 2024 TAHAP I)
+  PASS  Nol tetap nol (2023, bukan missing): 6 grup 0,0 → ISPU 0 kategori Baik dengan catatan limitation
+
+HASIL: 50 PASS, 0 FAIL

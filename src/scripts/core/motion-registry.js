@@ -13,6 +13,14 @@
 import { hasGSAP } from './environment.js';
 import { lenis, lenisTicker, setLenis } from './scroll-runtime.js';
 
+/**
+ * @typedef {import('../../types/core-lifecycle.ts').MotionRegistryState} MotionRegistryState
+ * @typedef {import('../../types/core-lifecycle.ts').DisconnectableObserver} DisconnectableObserver
+ * @typedef {import('../../types/core-lifecycle.ts').KillableMotionPrimitive} KillableMotionPrimitive
+ * @typedef {import('../../types/core-lifecycle.ts').QuickToFunction} QuickToFunction
+ * @typedef {import('../../types/core-lifecycle.ts').DisposerFn} DisposerFn
+ */
+
 /* Central registry for everything gsap.matchMedia() cannot revert on
    its own: tweens created asynchronously (from event handlers or
    onComplete callbacks), motion-only listeners, observers, timers,
@@ -20,6 +28,7 @@ import { lenis, lenisTicker, setLenis } from './scroll-runtime.js';
    iterable so cleanup can walk it. V7.4 additions: tickerCallbacks
    (fungsi gsap.ticker yang dibuat di luar konteks matchMedia, mis.
    data rain easter egg) supaya mati saat navigasi. */
+/** @type {MotionRegistryState} */
 export const motionRegistry = {
   observers: new Set(),
   timers: new Set(),

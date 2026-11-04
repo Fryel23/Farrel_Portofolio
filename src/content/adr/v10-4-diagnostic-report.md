@@ -1,0 +1,258 @@
+---
+adrId: "v10-4-diagnostic-report"
+versionTag: "V10.4"
+sequenceOrder: 3
+title: "Opening V9.1 LCP Diagnostic & Visual Prototyping"
+summary: "Verifikasi hipotesis oklusi LCP pada Opening V9.1 serta evaluasi empat prototipe overlay translusen V1-V4 pada lingkungan lab."
+category: "diagnostics-and-performance"
+recordType: "diagnostic"
+recordStatus: "superseded"
+targetRoutes: ["/"]
+relatedWorkIds: []
+keyMetrics:
+  - label: "V0 Re-measured Desktop LCP"
+    value: "5276"
+    unit: "ms"
+    evidenceSection: "§3.1 Tabel perbandingan"
+  - label: "Option C Desktop LCP"
+    value: "485"
+    unit: "ms"
+    evidenceSection: "§3.1 Tabel perbandingan"
+  - label: "Option C Mobile LCP"
+    value: "1448"
+    unit: "ms"
+    evidenceSection: "§3.1 Tabel perbandingan"
+provenance:
+  sourcePath: "V10.4_DIAGNOSTIC_REPORT.md"
+  sourceFilename: "V10.4_DIAGNOSTIC_REPORT.md"
+  sourceSha256: "6ac1ca6bdbd910e6716455accc3d67a442cc3675a8e81f0663e9773a568d4589"
+  sourceBytes: 18997
+  sourceWordCount: 2927
+  sourceLineCount: 224
+  normalizedContentSha256: "6ac1ca6bdbd910e6716455accc3d67a442cc3675a8e81f0663e9773a568d4589"
+  normalizationCount: 0
+---
+# V10.4 DIAGNOSTIC REPORT
+# OPENING V9.1 - LCP DIAGNOSTIC & VISUAL PROTOTYPING
+
+**Project:** The Living Archive - Personal Portfolio
+**Version:** V10.4 - Opening Diagnostic & Prototype
+**Execution Mode:** Experimental / Non-Shipping
+**Branch:** `v10.4-lcp-diagnostic` (base: V10.3 @ `e3dbfb0`)
+**Dokumen acuan:** `upload/PROMPT_FINAL_V10.4_OPENING_LCP_DIAGNOSTIC.md`
+
+---
+
+## 1. Executive Summary
+
+1. **Hipotesis occlusion [VERIFIED].** Opsi C (mengeluarkan `.hero-description` / `p#hero-subtitle` dari kelompok hide `opacity: 0`) menurunkan LCP desktop dari **5.572 ms → 485 ms (−91%)** dan mobile **3.420 ms → 1.448 ms (−58%)**, dengan elemen LCP tetap `p#hero-subtitle` pada keenam run. Chromium memang menghitung elemen yang tertutup overlay opaque sebagai kandidat LCP; hanya `opacity: 0` yang mengecualikannya. Angka LCP V10.3 dikonfirmasi bukan jaringan/aset, melainkan *element render delay* dari choreography hide hero.
+2. **Opsi C adalah metric-only improvement.** Bukti screenshot + penilaian visual: pada 2,0 detik (setelah LCP "tercapai" pada 485 ms) layar masih 100% tertutup overlay opaque - konten utama baru benar-benar terlihat ±5 detik. Pengunjung tidak mendapat informasi lebih awal. **Production decision: DO NOT SHIP OPTION C.**
+3. **Varian translusen V1–V4 TIDAK mengubah LCP** (desktop stabil ±5,3 s, mobile ±3,3 s; delta antar-variant ≤ 61 ms = noise). Waktu paint teks hero dikendalikan choreography GSAP (`opacity: 0` sampai ±4,87 s), bukan oleh opasitas overlay. Translusensi mengubah apa yang *terlihat pengguna*, bukan kapan elemen *ter-paint*.
+4. **Perceived experience lewat translusensi juga terbatas.** Pada mid-opening, teks hero (heading, subtitle, CTA) tetap tak terlihat di SEMUA variant karena GSAP menyembunyikannya sampai reveal; yang tembus hanya dekorasi statis (grid Data Atlas + label teknis "DATA POINT/OBSERVATION"). Transmisi maksimum yang diuji (35%, V4) pun tidak menampilkan satu kata pun konten utama lebih awal.
+5. **Temuan visual jujur:** overlay content tetap sangat terbaca dan terasa premium pada semua variant; V1 dan V2 visualnya nyaris identik (compositing ekuivalen); keadaan settle 6,2 s identik dengan V0; namun SEMUA variant menampilkan *re-occlusion snap* pada awal wipe (background yang tadinya terlihat mendadak tertutup opaque lalu fade 1 s) - kelemahan struktural karena selector variant wajib berhenti saat `.is-wiping` (spek §4.8), dan V0-lah satu-satunya yang bersih dari snap.
+6. **Kesimpulan §6.5: C - Further exploration required.** Kombinasi "translucent opening + hero yang di-paint lebih awal" adalah jalur yang secara empiris menjanjikan perbaikan metric DAN perceived sekaligus, tetapi berada di luar mandat V10.4 dan membutuhkan keputusan + approval pengguna (ruang lingkup V11.0). Tidak ada variant yang direkomendasikan untuk produksi dari data ini saja.
+
+---
+
+## 2. Environment & Reproducibility
+
+| Komponen | V10.3 Baseline (spek) | Lingkungan aktual V10.4 | Catatan |
+|---|---|---|---|
+| Chrome for Testing | 143.0.7499.4 | **156.0.8078.47** | beda versi; hasil lintas-versi tidak diklaim sepenuhnya comparable - karena itu V0 diukur ulang di branch yang sama sebagai pembanding utama |
+| Lighthouse | 13.6.0 | 13.6.0 | identik |
+| Desktop | 1440×900, no throttling (`provided`), CPU ×1 | identik | - |
+| Mobile | 412×823 @ DPR 1.75, Simulated Slow 4G, CPU ×4 | identik | - |
+| Server | `astro build` + `astro preview` :4321 | identik | - |
+| Chrome flags | `--headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage` | identik | `--disable-dev-shm-usage` wajib di container |
+| Benchmark index | ≈2061 | ≈2370–2430 | mesin uji sedikit lebih cepat |
+| Run | 3× per konfigurasi, median, sesi fresh | identik | Lighthouse selalu spawn profil Chrome baru → `sessionStorage` kosong → Opening V9.1 aktif di setiap run |
+
+Sumber data mentah: `v10.4-research/lighthouse/*.json` (36 run), `v10.4-research/lighthouse-summary.txt`, `v10.4-research/regression-results.txt`, `v10.4-research/AUDIT_NOTES.md`.
+
+---
+
+## 3. Option C Results (Subphase 1)
+
+### 3.1. Tabel perbandingan
+
+| Konfigurasi | V10.3 Baseline (Chrome 143) | V0 re-measured (Chrome 156, branch ini) | Option C (Chrome 156) | Delta vs V0 re-measured |
+|---|---:|---:|---:|---:|
+| Desktop LCP | 5.572 ms | 5.276 ms | **485 ms** | **−4.791 ms (−91%)** |
+| Mobile LCP | 3.420 ms | 3.311 ms | **1.448 ms** | **−1.863 ms (−56%)** |
+| Desktop FCP | 808 ms | 511 ms | 485 ms | −26 ms |
+| Mobile FCP | 2.357 ms | 1.448 ms | 1.448 ms | 0 ms |
+| Desktop CLS | 0,0051 | 0,0015 | 0,0015 | 0 |
+| Mobile CLS | 0,0001 | 0,0001 | 0,0001 | 0 |
+| Desktop TBT | 1 ms | 0 ms | 0 ms | 0 |
+| Mobile TBT | 335 ms | 133 ms | 80 ms | −53 ms |
+| Score (D/M) | 68 / 81 | 71 / 90 | **94 / 99** | +23 / +9 |
+
+Elemen LCP aktual: `main#main > section.hero > div.hero-copy > p#hero-subtitle` pada **keenam run** (desktop maupun mobile). Fase LCP desktop: TTFB ±10 ms + **elementRenderDelay ±474 ms** (subtotal 485 ms ≈ FCP) - elemen ter-paint bersamaan dengan first paint, bukan di 4,87 s.
+
+### 3.2. Kesimpulan wajib (template spek §3.6)
+
+```text
+OPTION C RESULT:
+- LCP improvement: YES - desktop 5.276→485 ms (−91%), mobile 3.311→1.448 ms (−56%)
+- LCP candidate: p#hero-subtitle (semua 6 run; konsisten)
+- Occlusion hypothesis: VERIFIED - elemen tertutup overlay opaque tetap kandidat LCP;
+  hanya opacity:0 yang mengecualikan (LCP fires bersama FCP saat opacity diset 1)
+- Perceived experience improvement: NO - screenshot 2,0 s (VLM): "NOT VISIBLE.
+  The screen is fully covered by the boot overlay"; konten utama baru terlihat ±5 s
+- Production recommendation: DO NOT SHIP OPTION C
+```
+
+### 3.3. Restore V10.3
+
+`src/scripts/home.js` dikembalikan **persis** ke kondisi V10.3 (`git diff e3dbfb0 -- .../home.js` = 0 baris), rebuild, dan diverifikasi runtime: `#hero-subtitle` kembali `opacity: 0` saat opening berjalan (smoke test). Screenshot diagnostic Opsi C tetap disimpan (8 file `optionc-*`).
+
+---
+
+## 4. Variant Comparison (Subphase 2+3)
+
+### 4.1. Performance matrix (median 3 run; sumber JSON mentah per run)
+
+| Variant | Desktop LCP | Mobile LCP | Desktop FCP | Mobile FCP | D-CLS | M-CLS | D-TBT | M-TBT | Score D | Score M | Elemen LCP (D / M) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
+| **V0** solid opaque | 5.276 | 3.311 | 511 | 1.448 | 0,0015 | 0,0001 | 0 | 133 | 71 | 90 | `p#hero-subtitle` / `p#opening-label` |
+| **V1** backdrop 85% | 5.288 | 3.302 | 525 | 1.450 | 0,0015 | 0,0001 | 0 | 115 | 73 | 91 | `p#hero-subtitle` / `p#opening-label` |
+| **V2** dialog 85% | 5.322 | 3.325 | 530 | 1.446 | 0,0015 | 0,0001 | 0 | 155 | 73 | 90 | `p#hero-subtitle` / `p#opening-label` |
+| **V3** 70%+70% (91%) | 5.297 | 3.361 | 536 | 1.449 | 0,0015 | 0,0001 | 0 | 130 | 71 | 90 | `p#hero-subtitle` / `p#opening-label` |
+| **V4** dialog 65% | 5.298 | 3.350 | 554 | 1.449 | 0,0015 | 0,0001 | 0 | 135 | 72 | 90 | `p#hero-subtitle` / `p#opening-label` |
+
+**Pembacaan:** seluruh angka LCP/FCP/CLS/TBT berada dalam rentang noise run-to-run (delta LCP terbesar antar-variant: 46 ms desktop / 59 ms mobile; band FCP desktop 479–576 ms pada V0 sendiri). **Tidak ada variant yang memperbaiki atau memperburuk metrik secara bermakna.** Skor 71–73 (desktop) dan 90–91 (mobile) praktis identik. Elemen LCP mobile kali ini konsisten `p#opening-label` (di baseline V10.3 terpilih 2 dari 3 run) - efek versi Chrome/jalur boot, bukan efek variant; dicatat apa adanya.
+
+### 4.2. Screenshot matrix (aktual, browser render, sesi fresh; akurasi frame ±5 ms)
+
+| Variant | Desktop (1440×900) | Mobile (412×823) |
+|---|---|---|
+| V0 | 2 s · 3,4 s · 3,55 s · 4 s · 6,2 s | 2 s · 4 s · 6,2 s |
+| V1 | 2 s · 3,4 s · 3,55 s · 4 s · 6,2 s | 2 s · 4 s · 6,2 s |
+| V2 | 2 s · 3,4 s · 3,55 s · 4 s · 6,2 s | 2 s · 4 s · 6,2 s |
+| V3 | 2 s · 3,4 s · 3,55 s · 4 s · 6,2 s | 2 s · 4 s · 6,2 s |
+| V4 | 2 s · 3,4 s · 3,55 s · 4 s · 6,2 s | 2 s · 4 s · 6,2 s |
+
+Total **40 screenshot variant** (25 desktop + 15 mobile) + 8 screenshot Option C = **48**. Tambahan momen 3,4 s / 3,55 s (di luar matrix wajib spek) adalah bukti empiris untuk kriteria §4.8 "tidak ada background yang tiba-tiba kembali opaque". Path: `v10.4-research/screenshots/{desktop,mobile}/`.
+
+### 4.3. Regression & console checks (14 pemeriksaan × 5 variant = 70)
+
+dialog open ✓ · counter choreography ✓ · wipe start (`is-wiping`) ✓ · dialog close ✓ · hero settled ✓ · focus handling (fokus jatuh ke BODY, tidak terjebak dialog tertutup) ✓ · **0 console/JS/GSAP error pada semua variant** ✓ · session-based no-replay setelah reload ✓ · skip button (klik 2 s → exit + hero settle) ✓ · Escape key ✓ · reduced-motion (tanpa opening, hero langsung terlihat) ✓ · mobile tanpa overflow (412 px) ✓ - **semua PASS** (`v10.4-research/regression-results.txt`).
+
+---
+
+## 5. Visual Assessment (§6.4 - sembilan pertanyaan, dinilai dari screenshot aktual + analisis VLM)
+
+1. **Apakah Hero benar-benar terlihat di belakang Opening?** Hanya **dekorasi statis** (grid Data Atlas, label teknis "DATA POINT/OBSERVATION/PATTERN", bentuk geometris) - pada V1 samar sekali, pada V4 jelas. **Teks hero (heading/subtitle/CTA) TIDAK terlihat pada variant mana pun di mid-opening** karena choreography GSAP menyembunyikannya (`opacity: 0` hingga ±4,87 s; title line ter-clip di dalam mask). `[VERIFIED via VLM]`
+2. **Apakah teks Hero dapat dibaca atau hanya samar?** Tidak hadir sama sekali sebelum reveal - jawabannya bukan "samar", melainkan "belum ada". Ini temuan terpenting bagi tujuan eksperimen: translusensi overlay saja tidak cukup.
+3. **Apakah konten Opening masih memiliki kontras cukup?** Ya - teks gelap di atas layer terang; ring biru + counter tetap tajam di semua variant (VLM: "perfectly clear and highly legible").
+4. **Apakah opening masih terasa cinematic?** Ya (VLM: "premium and sophisticated", "technical-luxury"). Transmisi 9–15% (V1–V3) praktis tak mengubah karakter; V4 menambah kedalaman tipis.
+5. **Transparansi premium atau menurunkan kualitas?** Premium pada 2 s - NAMUN ada **re-occlusion snap saat wipe mulai** (3,5 s): karena selector variant wajib berhenti saat `.is-wiping`, `::backdrop` mendadak kembali opaque, background yang tadinya terlihat langsung tertutup, lalu fade 1 s (VLM V4: "opacity snap ... significantly more opaque"). Magnitudo ∝ transmisi (V4 paling terlihat, V3 paling halus). V0 satu-satunya yang bebas snap. `[VERIFIED via pair-screenshot 3,4 s vs 3,55 s]`
+6. **Apakah komposisi menjadi terlalu ramai?** Tidak - grid yang tembus berpola teratur dan tidak bersaing dengan center ritual (VLM: "adds subtle depth without obscuring the primary loading information").
+7. **Apakah background hero mengganggu center ritual?** Tidak (pertanyaan 6).
+8. **Apakah mobile tetap memiliki keseimbangan visual?** Ya - V4 mobile terverifikasi terbaca dan seimbang, tanpa overflow/element terpotong.
+9. **Apakah transparansi mengurangi karakter Living Archive?** Sedikit: V0 terasa "arsip tersegel"; V1–V3 hampir tanpa perbedaan karakter, V4 terasa sedikit lebih terbuka/kurang ritual. Penilaian subjektif ini diserahkan ke keputusan pengguna.
+
+**Perbandingan V1 vs V2 (§4.5 spek, wajib bukti):** screenshot pada momen identik dinilai VLM **"visually near-identical"** - konfirmasi eksperimental bahwa dua layer implementasi (backdrop vs dialog background) menghasilkan compositing ekuivalen pada kasus ini. `[VERIFIED]`
+
+**Keadaan akhir:** settle 6,2 s **identik** di semua variant (VLM: "no visual differences") - variant tidak meninggalkan jejak setelah opening selesai.
+
+---
+
+## 6. Final Recommendation (§6.5)
+
+> **C. FURTHER EXPLORATION REQUIRED.**
+
+Alasan keputusan:
+
+- **Bukan A** (approve translucent variant): syarat A adalah "LCP dan perceived experience sama-sama membaik". Data menunjukkan LCP **tidak berubah sama sekali** pada V1–V4, dan perbaikan perceived bersifat kosmetik (grid dekoratif terlihat), bukan akses konten utama lebih awal - konten utama tetap tak terlihat sampai choreography reveal.
+- **Bukan B murni** (keep solid opaque): belum ada bukti bahwa V0 kalah secara visual - justru V0 paling bersih pada transisi wipe - tetapi menutup kemungkinan kombinasi yang menjanjikan akan terlalu dini.
+- **Bukan D** (metric-only): klasifikasi D sudah tepat untuk **Opsi C sendirian** (dan itu alasan DO NOT SHIP).
+- **Alternatif berikutnya yang paling masuk akal** (TIDAK diimplementasikan sekarang, menunggu approval): eksperimen lanjutan di level V10.5/V11.0 yang menguji **kombinasi** - (1) opening translusen pada tingkat transmisi ekvivalen V1–V4 untuk menjaga identitas ritual, DENGAN (2) choreography reveal hero yang dipercepat/di-paint lebih awal (mekanisme opacity Opsi C yang kali ini "jujur" karena overlay memang transparan sehingga pengunjung sungguh melihat konten lebih awal), plus (3) perbaikan mekanik wipe agar layer translusen tidak snap kembali opaque (mis. transisi `background-color` backdrop, bukan berhenti di `.is-wiping`). Ketiganya butuh desain choreography baru + keputusan artistik pengguna - di luar mandat V10.4 (zero feature creep, zero perubahan timing).
+
+**Jika pengguna lebih memilih tidak melanjutkan eksplorasi**, rekomendasi default yang aman dan didukung data: **B. Keep solid opaque** (pertahankan Opening V9.1, terima trade-off LCP sebagai keputusan artistik).
+
+---
+
+## 7. Summary Matrix (§7 spek)
+
+| Subphase | Status | Evidence |
+|---|---|---|
+| Preflight & Code Audit | **PASS** | `AUDIT_NOTES.md` - 9/9 pertanyaan wajib `[VERIFIED]`; 0 perubahan kode sebelum audit |
+| Option C Diagnostic | **PASS** | 6 LH run + 8 screenshot; LCP −91% desktop; hipotesis occlusion `[VERIFIED]`; kesimpulan template terisi lengkap |
+| Restore V10.3 Behavior | **PASS** | `git diff e3dbfb0 -- home.js` = 0; smoke test opacity kembali 0; rebuild bersih |
+| Prototype Variants | **PASS** | `opening-prototype-variants.css` + harness query-param deterministik; verifikasi fungsional 5/5 (bg dialog+backdrop sesuai spek per variant); CSS hanya ada di homepage |
+| Performance Testing | **PASS** | 36 LH run (30 variant + 6 Opsi C) sesuai rencana spek; median; elemen LCP tiap run tercatat |
+| Visual Assessment | **PASS** | 48 screenshot + 9 penilaian VLM terdokumentasi; V1≈V2 terbukti; snap wipe terdeteksi & dilaporkan jujur |
+| Regression Testing | **PASS** | 70/70 pemeriksaan lolos; 0 console error |
+
+---
+
+## 8. Key Findings
+
+1. **LCP root cause [VERIFIED]:** bukan jaringan/aset (TTFB ±10 ms), melainkan *element render delay* - `p#hero-subtitle` disembunyikan `gsap.set(..., {opacity: 0})` di `prepareHeroState()` (home.js L395) dan baru di-fade-in pada 3.500 + 650 + 720 = 4.870 ms (+600 ms durasi) - konsisten dengan LCP 5,3–5,6 s.
+2. **Occlusion verification [VERIFIED]:** LCP menghitung elemen di bawah overlay opaque (top layer `<dialog>` + `::backdrop`); hanya `opacity: 0` yang mengecualikan kandidat. Opsi C memindahkan LCP ke 485 ms (≈FCP) tanpa mengubah satu byte timing.
+3. **Performance improvements:** hanya Opsi C yang mengubah metrik (−91% desktop / −56% mobile; skor 71→94, 90→99). Variant: 0% (semua dalam noise).
+4. **Perceived experience:** Opsi C = tidak ada perbaikan (metric-only). Variant = perbaikan kosmetik terbatas (dekorasi statis tembus; teks hero tetap tersembunyi choreography). Konten utama baru terlihat ±5 s di semua konfigurasi yang diuji.
+5. **Visual trade-offs:** overlay tetap terbaca & premium di semua variant; V1≈V2; settle identik; kelemahan bersama variant = **re-occlusion snap di awal wipe** (§4.8) yang tidak dimiliki V0; mobilitas visual mobile aman.
+
+---
+
+## 9. Recommended Variant
+
+**Tidak ada variant yang layak diajukan sebagai implementasi produksi dari data V10.4 ini** (alasan di §6). Varian dengan data visual paling menarik untuk dieksplorasi lebih lanjut adalah **V1 (backdrop 85%)** -保全 identitas ritual paling kuat, compositing paling sederhana (satu layer), dan tidak menambah beban pada dialog layer - namun klaim itu pun harus diuji ulang dalam eksperimen kombinasi (§6 alternatif) sebelum keputusan produksi. Keputusan final tetap milik pengguna.
+
+---
+
+## 10. Git Status
+
+- Starting V10.3 commit: `e3dbfb0` (main, validated snapshot V10.3)
+- Feature branch: `v10.4-lcp-diagnostic` (dibuat dari `e3dbfb0`)
+- Commit eksperimen (berurutan):
+  - `6d07ede` - docs: subphase 0 preflight & code audit
+  - `a9778ea` - research: Option C occlusion diagnostic + restore home.js
+  - `73544d2` - feat: opening prototype variants v0–v4 + harness
+  - `6738e1a` - research: subphase 3 evidence (36 LH run, 48 screenshot, regresi)
+  - commit laporan ini - docs: V10.4 diagnostic report (subphase 4)
+- Working tree: bersih setelah commit laporan (tidak ada perubahan tak terlacak di `portfolio-astro/`)
+- Remote push: **tidak dilakukan** - tidak ada remote yang dikonfigurasi pada repositori ini (`git remote` kosong). Tidak ada klaim push.
+- `main`: **tidak disentuh** (seluruh pekerjaan di feature branch).
+
+---
+
+## 11. Production Readiness
+
+```text
+V10.4 STATUS: EXPERIMENTAL / NOT SHIPPED
+
+Production code approved: NO
+Deployment performed: NO
+Main branch modified: NO
+
+User visual approval required: YES
+User production approval required: YES
+```
+
+- Kode produksi V10.3 **utuh** (`home.js` byte-identical; hanya dua artifact eksperimen yang ditambahkan: `src/styles/opening-prototype-variants.css` + harness inline di `src/pages/index.astro`, keduanya non-aktif tanpa parameter, keduanya ter-commit di feature branch dan mudah di-rollback).
+- Tidak ada perubahan: logo FIP, font, warna brand, layout, copywriting, dependency, timing Opening V9.1, core.js/bootPage/Page Transitions, Game Deck/Companion/section lain, WebGL.
+- Harness aktif hanya via `?opening-variant=v[0-4]` pada homepage; default = V0.
+
+---
+
+## 12. Klasifikasi Temuan (§1.2 spek)
+
+| Temuan | Label |
+|---|---|
+| Root cause LCP = render delay choreography hide hero | `[VERIFIED]` |
+| Occlusion dihitung LCP; opacity:0 mengecualikan | `[VERIFIED]` (6/6 run Opsi C) |
+| Opsi C = metric-only (perceived tidak berubah) | `[VERIFIED]` (screenshot + VLM) |
+| Variant tidak mengubah LCP | `[VERIFIED]` (30 run, delta ≤ noise) |
+| Hero text tak terlihat di semua variant mid-opening (choreography) | `[VERIFIED]` (VLM V1/V4) |
+| V1 ≈ V2 secara visual | `[VERIFIED]` (VLM pair-compare) |
+| Re-occlusion snap saat wipe pada variant | `[VERIFIED]` (pair 3,4 s vs 3,55 s + VLM) |
+| Settle 6,2 s identik semua variant | `[VERIFIED]` (VLM) |
+| Kombinasi translucent + early-paint akan memperbaiki metric & perceived sekaligus | `[SUSPECTED]` - belum diuji (di luar scope V10.4) |
+| Field Core Web Vitals (Vercel) | `[NOT YET TESTED]` - tidak tersedia dari sandbox |
+
+---
+
+*Laporan ini dihasilkan dari 36 run Lighthouse nyata, 48 screenshot browser aktual, 70 pemeriksaan regresi otomatis, dan 9 penilaian visual berbantuan model visi. Tidak ada angka yang diklaim tanpa run. Prioritas tetap: **Preserve the identity. Improve the experience. Prove the performance.***
