@@ -47,7 +47,9 @@ export const DATA = {
   },
 
   links: {
-    github: 'https://github.com/Fryel32',
+    github: 'https://github.com/Fryel23',
+    githubRepo: 'https://github.com/Fryel23/Farrel_Portofolio',
+    githubArchive: 'https://github.com/Fryel32',
     // Google Drive documentation archive (research & learning log).
     docs: 'https://drive.google.com/drive/folders/1YaoRkFvdlk29vdRAFQxj5ypVD-7WDtTl?usp=drive_link'
   },
@@ -56,15 +58,16 @@ export const DATA = {
   /* Hero                                                                */
   /* ------------------------------------------------------------------ */
   hero: {
-    eyebrow: 'INFORMATICS ENGINEERING · UNIKOM · EST. 2026',
+    eyebrow: '01 / PERKENALAN · MAHASISWA INFORMATIKA & PENJELAJAH DATA',
     // Each entry is one masked display line. Keep lines short so they never clip.
-    headline: ['Curiosity,', 'grounded in data.'],
-    headlineAccent: 'data.',
-    headlineTail: 'Kadang bingung, kadang berhasil. Ini catatan prosesnya.',
+    headline: ['Belajar memahami dunia', 'lewat data & kode.'],
+    headlineAccent: 'data & kode.',
+    headlineTail: 'Dari pertanyaan sederhana ke sistem yang terukur.',
     description:
-      'Saya Farrel Islami Putra, mahasiswa S1 Teknik Informatika 2026 di Universitas Komputer Indonesia. Saya tertarik pada teknologi karena ingin tahu cara kerjanya, terutama yang bisa dipakai untuk menyelesaikan masalah sehari-hari. Fokus utama saya adalah tentang data, tapi saya juga penasaran dengan software dan sistem yang lebih luas. Portofolio ini bukan tempat memamerkan yang sudah selesai, melainkan tempat dari apa yang sedang saya pelajari.',
-    primaryCta: { label: 'Explore the work', href: '/work' },
-    docsCta: { label: 'View documentation', href: 'https://drive.google.com/drive/folders/1YaoRkFvdlk29vdRAFQxj5ypVD-7WDtTl?usp=drive_link' },
+      'Saya Farrel Islami Putra, mahasiswa S1 Teknik Informatika di UNIKOM (mulai 2026). Di sini saya mendokumentasikan riset kualitas udara Kota Cirebon (2021–2025), eksperimen pemrograman, dan catatan teknis yang saya bangun langkah demi langkah.',
+    primaryCta: { label: 'Lihat Proyek Utama', href: '/work' },
+    secondaryCta: { label: 'Tentang Saya', href: '/about' },
+    docsCta: { label: 'Tentang Saya', href: '/about' },
     note: 'DATA · SOFTWARE · AI · DATABASES · IOT',
     sticker: { top: 'Stay curious.', bottom: 'Stay rigorous.' },
     profileCard: {
@@ -83,7 +86,7 @@ export const DATA = {
        Purely illustrative microcopy: no measured values, no telemetry,
        no real coordinates. Keep labels short so they never clip. */
     dataAtlas: {
-      cornerLabel: 'FIELD / 01',
+      cornerLabel: 'FIELD / 01 · CIREBON 2021–2025',
       observations: ['OBSERVATION', 'DATA POINT', 'PATTERN'],
       axisNote: 'STRUCTURE · SIGNAL · CURIOSITY'
     }
@@ -97,52 +100,52 @@ export const DATA = {
      skill meters. `detail` is shown in the info panel when the node is
      selected (click / tap / keyboard). */
   curiosityMap: {
-    kicker: 'THE CURIOSITY MAP',
-    heading: ['How my interests', 'connect.'],
-    headingAccentWord: 'connect.',
+    kicker: '02 / MINAT & BIDANG EKSPLORASI',
+    heading: ['Bagaimana minat saya', 'saling terhubung.'],
+    headingAccentWord: 'terhubung.',
     intro:
-      'Data ada di tengah; sisanya tumbuh di sekitar itu. Pilih satu titik untuk membaca di mana posisi saya saat ini.',
-    hint: 'SELECT A NODE: CLICK, TAP, OR USE KEYBOARD TAB + ENTER',
+      'Data berada di pusat eksplorasi saya; bidang lainnya tumbuh mengelilingi fondasi tersebut. Pilih salah satu simpul di bawah untuk membaca catatan fokus saya saat ini.',
+    hint: 'PILIH SIMPUL: KLIK, KETUK, ATAU GUNAKAN TAB + ENTER',
     panelTitle: 'FIELD NOTES',
     nodes: [
       {
         id: 'data',
         name: 'DATA',
-        status: 'Primary focus',
+        status: 'Primary focus · Fokus Utama',
         detail:
-          'Inti dari peta ini. Sedang dipraktikkan dalam penelitian kualitas udara Cirebon: mengumpulkan, membersihkan, dan mencari pola dari data terbuka. Saya suka bagian di mana data mulai bercerita.',
+          'Inti dari peta ini. Sedang dipraktikkan dalam penelitian kualitas udara Kota Cirebon (2021–2025): mengumpulkan, membersihkan, dan mencari pola dari data terbuka resmi DLH. Saya menyukai tahap ketika angka mentah mulai bercerita secara jujur.',
         x: 50, y: 46
       },
       {
         id: 'software',
         name: 'SOFTWARE',
-        status: 'Exploring',
+        status: 'Exploring · Sedang Dipelajari',
         detail:
-          'HTML, CSS, dan JavaScript yang ditulis tangan: portofolio ini adalah tempat latihannya. Tapi jujur, kode saya masih sering berantakan, dan saya sedang belajar merapikannya.',
+          'HTML, CSS, JavaScript, dan Astro yang ditulis tangan: situs portofolio ini adalah ruang latihannya. Saya terus belajar merapikan arsitektur modul, performa, dan keterbacaan kode.',
         x: 22, y: 20
       },
       {
         id: 'ai',
         name: 'AI',
-        status: 'Future interest',
+        status: 'Future interest · Rencana Mendatang',
         detail:
-          'Sebuah arah, bukan klaim. Machine learning akan jadi area yang serius setelah fondasi data saya lebih kuat.',
+          'Sebuah arah belajar berikutnya, bukan klaim keahlian. Machine learning akan saya dalami secara bertahap setelah fondasi statistika dan pemrosesan data saya lebih matang.',
         x: 78, y: 20
       },
       {
         id: 'databases',
         name: 'DATABASE SYSTEMS',
-        status: 'Exploring',
+        status: 'Exploring · Sedang Dipelajari',
         detail:
-          'Dasar-dasar SQL dan bagaimana data dimodelkan, ditanyakan, dan disimpan. Masih dipelajari berdampingan dengan analisis data.',
+          'Dasar-dasar SQL serta bagaimana data dimodelkan, dinormalisasi, dan dikueri secara terstruktur. Dipelajari berdampingan dengan pengolahan dataset CSV dan JSON.',
         x: 22, y: 74
       },
       {
         id: 'iot',
         name: 'IoT',
-        status: 'Future interest',
+        status: 'Future interest · Rencana Mendatang',
         detail:
-          'Rasa penasaran tentang sistem terhubung dan sensor, di mana perangkat fisik menghasilkan data yang suka saya analisis.',
+          'Rasa ingin tahu tentang sistem terhubung dan jaringan sensor lingkungan, tempat perangkat fisik menghasilkan data deret waktu seperti kualitas udara yang sedang saya analisis.',
         x: 78, y: 74
       }
     ]
@@ -152,17 +155,17 @@ export const DATA = {
   /* Project gallery                                                     */
   /* ------------------------------------------------------------------ */
   gallery: {
-    kicker: '01 / SELECTED WORKS',
-    heading: ['The project', 'archive.'],
-    headingAccentWord: 'archive.',
+    kicker: '02 / STUDI KASUS UNGGULAN',
+    heading: ['Karya & riset', 'terpilih.'],
+    headingAccentWord: 'terpilih.',
     aside:
-      'Satu proyek penelitian yang masih berjalan, satu ide yang tertunda, dan satu rencana kecil untuk ke depan. Semua ditulis apa adanya.',
+      'Satu studi kasus utama kualitas udara Kota Cirebon (2021–2025) yang dilengkapi penjelajah data interaktif, serta dua cetak biru riset berikutnya yang dicatat secara transparan.',
     countLabel: 'PROJECTS',
     // Hero search is a section navigator (V5.3); the gallery empty state
     // can now only be reached through the category filters.
-    emptyMessage: 'No projects match this filter. Reserved slots return with the All work view.',
-    footerLeft: 'KEEP EXPLORING',
-    footerRight: 'SCROLL ↓'
+    emptyMessage: 'Tidak ada proyek yang cocok dengan filter ini. Slot rencana riset tampil pada tampilan All work.',
+    footerLeft: 'LANJUTKAN EKSPLORASI',
+    footerRight: 'GULIR ↓'
   },
 
   filters: ['All', 'Data & Research'],
@@ -170,85 +173,83 @@ export const DATA = {
   /* ------------------------------------------------------------------ */
   /* V5.3: Global Archive Navigator (hero search)                        */
   /* ------------------------------------------------------------------ */
-  /* The hero search is a keyword navigator, not a free text search
-     engine. Every accepted keyword is authored here in the allowlist
-     below; visitor input can only ever select a target from this list.
-     It can never build a selector, a URL, or executable code.
-     Matching order (deterministic, no fuzzy matching):
-       1. exact   : alias equals the query
-       2. phrase  : the alias appears inside the query on word boundaries
-       3. prefix  : the alias starts with the query (3+ characters)
-     Ambiguous keywords (listed in multiRoutes) resolve to several
-     sections, shown as up to three selectable results. */
   archiveSearch: {
     maxQueryLength: 80,
-    inputLabel: 'Search the archive: jump to a section by keyword',
-    submitLabel: 'Search the archive',
-    emptyMessage: 'Type a topic, hobby, or profile to navigate the archive.',
-    notFoundMessage: 'No matching archive entry found. Try hobbies, Instagram, AQI, GitHub, or certificates.',
-    listLabel: 'Archive destinations',
-    goAnnouncement: 'Navigating to',
+    inputLabel: 'Mau menjelajahi bagian apa? Cari topik atau lompat ke halaman',
+    submitLabel: 'Jelajahi',
+    emptyMessage: 'Ketik topik (misal: AQI Cirebon, CSV, Python, Game, Kontak) atau klik pintasan topik di bawah.',
+    notFoundMessage: 'Topik belum ditemukan. Coba kata kunci: AQI Cirebon, CSV, Data Lab, Python, Game, atau Kontak.',
+    listLabel: 'Tujuan navigasi',
+    goAnnouncement: 'Menuju ke',
     routes: [
-      { targetId: 'top', label: 'Home / start', aliases: ['home', 'top', 'start', 'intro', 'hero'] },
-      { targetId: 'work', label: 'Project archive', aliases: ['project', 'projects', 'work', 'aqi', 'cirebon', 'air quality', 'air quality index', 'research', 'riset', 'dataset'] },
-      { targetId: 'games', label: 'Game deck', aliases: ['game', 'games', 'arcade', 'game deck'] },
-      { targetId: 'about', label: 'About & skills', aliases: ['about', 'about me', 'skills', 'skill', 'software', 'python', 'cpp', 'c++', 'javascript', 'php', 'database', 'databases', 'ai', 'iot', 'robotics', 'curiosity map'] },
-      { targetId: 'journey', label: 'Learning journey', aliases: ['journey', 'learning', 'learn', 'education', 'study', 'belajar', 'perjalanan belajar'] },
-      { targetId: 'offscreen', label: 'Off-screen hobbies', aliases: ['hobby', 'hobbies', 'hobi', 'badminton', 'music', 'musik', 'gaming', 'gameplay', 'off-screen', 'offscreen'] },
-      { targetId: 'github', label: 'GitHub activity', aliases: ['github', 'repositories', 'repository', 'commits', 'open source', 'open-source'] },
-      { targetId: 'credentials', label: 'Credentials archive', aliases: ['certificate', 'certificates', 'credential', 'credentials', 'award', 'awards', 'achievement', 'achievements', 'sertifikat', 'prestasi'] },
-      { targetId: 'companion', label: 'Companion habitat', aliases: ['pet', 'companion', 'summon', 'kok'] },
-      { targetId: 'profiles', label: 'Social profiles', aliases: ['instagram', 'linkedin', 'social', 'social media', 'profiles', 'google drive', 'documentation', 'dokumentasi'] },
-      { targetId: 'contact', label: 'Contact email', aliases: ['email', 'gmail', 'contact', 'contacts', 'kontak', 'reach me', 'say hello'] },
-      { targetId: 'closing', label: 'Closing & motto', aliases: ['footer', 'motto', 'back to top', 'closing'] },
-      { targetId: 'adr', label: 'Engineering records vault', aliases: ['adr', 'audit', 'architecture', 'report', 'reports', 'benchmark', 'lcp', 'webgl', 'diagnostic', 'verification', 'records'] },
-      { targetId: 'codex', label: 'The Grand Codex (100-600)', aliases: ['codex', 'grand codex', 'knowledge', 'knowledge graph', 'graph', 'mathml', 'ispu', 'fresnel', 'decimal', 'taxonomy', 'backlinks'] },
-      { targetId: 'atlas', label: 'Progressive World Atlas', aliases: ['atlas', 'world atlas', 'topology', 'system topology', 'sectors', 'map', 'etl'] }
+      { targetId: 'top', label: 'Beranda / Perkenalan', aliases: ['home', 'beranda', 'top', 'start', 'intro', 'hero'] },
+      { targetId: 'work', label: 'Studi Kasus AQI Cirebon (2021–2025)', aliases: ['project', 'projects', 'proyek', 'work', 'aqi', 'cirebon', 'aqi cirebon', 'air quality', 'air quality index', 'research', 'riset', 'dataset', 'kualitas udara'] },
+      { targetId: 'lab', label: 'The Data Lab · Penjelajah AQI Interaktif', aliases: ['lab', 'data lab', 'explorer', 'aqi explorer', 'ispu', 'so2', 'no2', 'grafik', 'stasiun'] },
+      { targetId: 'csv', label: 'CSV Explorer · Analisis File CSV Lokal', aliases: ['csv', 'csv explorer', 'unggah csv', 'upload csv', 'statistik', 'mean', 'median'] },
+      { targetId: 'games', label: 'Game Deck Interaktif', aliases: ['game', 'games', 'arcade', 'game deck', 'valorant', 'hades'] },
+      { targetId: 'about', label: 'Tentang Saya & Peta Minat', aliases: ['about', 'about me', 'tentang', 'profil', 'skills', 'skill', 'software', 'python', 'cpp', 'c++', 'javascript', 'php', 'database', 'databases', 'ai', 'iot', 'robotics', 'curiosity map'] },
+      { targetId: 'journey', label: 'Perjalanan Belajar & Pendidikan', aliases: ['journey', 'learning', 'learn', 'education', 'study', 'belajar', 'perjalanan belajar', 'unikom', 'kuliah'] },
+      { targetId: 'offscreen', label: 'Kegiatan di Luar Layar & Musik', aliases: ['hobby', 'hobbies', 'hobi', 'badminton', 'music', 'musik', 'gaming', 'gameplay', 'off-screen', 'offscreen', 'spotify'] },
+      { targetId: 'github', label: 'Telemetri GitHub (@Fryel23 & @Fryel32)', aliases: ['github', 'fryel23', 'fryel32', 'repositories', 'repository', 'commits', 'open source', 'open-source'] },
+      { targetId: 'credentials', label: 'Arsip Kredensial & Sertifikat', aliases: ['certificate', 'certificates', 'credential', 'credentials', 'award', 'awards', 'achievement', 'achievements', 'sertifikat', 'prestasi'] },
+      { targetId: 'companion', label: 'Companion Pixel (Kok)', aliases: ['pet', 'companion', 'summon', 'kok'] },
+      { targetId: 'profiles', label: 'Profil Sosial & Dokumentasi', aliases: ['instagram', 'linkedin', 'social', 'social media', 'profiles', 'google drive', 'documentation', 'dokumentasi'] },
+      { targetId: 'contact', label: 'Kontak & Email Resmi', aliases: ['email', 'gmail', 'contact', 'contacts', 'kontak', 'reach me', 'say hello', 'hubungi'] },
+      { targetId: 'closing', label: 'Penutup & Moto Pribadi', aliases: ['footer', 'motto', 'back to top', 'closing'] },
+      { targetId: 'adr', label: 'Arsip Rekam Rekayasa (ADR Vault)', aliases: ['adr', 'audit', 'architecture', 'report', 'reports', 'benchmark', 'lcp', 'webgl', 'diagnostic', 'verification', 'records'] },
+      { targetId: 'codex', label: 'Catatan Teknis · The Grand Codex', aliases: ['codex', 'grand codex', 'knowledge', 'knowledge graph', 'graph', 'mathml', 'fresnel', 'decimal', 'taxonomy', 'backlinks', 'catatan teknis'] },
+      { targetId: 'atlas', label: 'Peta Topologi Sistem (World Atlas)', aliases: ['atlas', 'world atlas', 'topology', 'system topology', 'sectors', 'map', 'etl'] }
     ],
     /* One keyword, several honest destinations. Keep each entry short. */
     multiRoutes: [
-      { targetId: 'work', label: 'Project archive', aliases: ['data'] },
-      { targetId: 'about', label: 'About & skills', aliases: ['data'] }
+      { targetId: 'work', label: 'Studi Kasus AQI Cirebon', aliases: ['data'] },
+      { targetId: 'lab', label: 'The Data Lab · Penjelajah AQI', aliases: ['data'] },
+      { targetId: 'about', label: 'Tentang Saya & Peta Minat', aliases: ['data'] }
     ]
   },
 
-  /* Real projects only. A card shows a working link ONLY when it points
-     to an actual destination. V7.4: `slug` mengikat entri ini ke halaman
-     case study (Content Collection src/content/work/<slug>.md) supaya
-     kartu menaut ke detail secara internal dan morph view transition
-     (Fase 2) memakai nama yang identik di markup statis maupun hasil
-     render JavaScript. Tautan dataset eksternal tetap tersedia sebagai
-     CTA di halaman detailnya. */
+  /* Real projects only. */
   projects: [
     {
       slug: 'aqi-cirebon',
-      title: 'Air Quality Index Trends · Cirebon (2021–2024)',
+      title: 'Air Quality Index Trends · Cirebon (2021–2025)',
+      period: '2021–2025',
       category: 'Data & Research',
       tag: 'Research / Data Analysis',
       status: 'IN PROGRESS',
       description:
-        'Proyek yang sedang berjalan. Saya sedang membersihkan data kualitas udara Cirebon dan mencoba melihat polanya. Ada satu hal yang saya sadari saat mengolahnya: data tahun 2023 punya banyak nilai kosong, dan itu sedikit mengubah cara saya melihat tren. Temuan dan kesimpulan belum ada, karena penelitiannya masih berlangsung.',
+        'Studi deret waktu dan perbandingan spasial konsentrasi SO₂ serta NO₂ pada 23 titik pantau resmi Dinas Lingkungan Hidup Kota Cirebon periode 2021–2025 (data tahun 2025 bersifat parsial / 4 titik stasiun pengukuran pada Tahap I), dikonversi menjadi sub-indeks dan ISPU terderivasi PermenLHK P.14/2020.',
+      caseSummary: {
+        problem: 'Data pemantauan SO₂ & NO₂ DLH Kota Cirebon tersebar per tahap/tahun dengan nilai kosong pada 2023 dan cakupan parsial 4 stasiun pada 2025.',
+        method: 'Normalisasi skema lokasi-tahap-tahun (200 baris CSV resmi, 23 titik pantau) dan interpolasi linier sub-indeks ISPU PermenLHK P.14/2020 tanpa imputasi palsu.',
+        finding: 'Koridor jalan utama dan kawasan niaga mencatat konsentrasi polutan lebih tinggi dibanding pemukiman, dengan SO₂ dan NO₂ bergantian dominan.',
+        impact: 'Tersedia sebagai studi kasus naratif (/work/aqi-cirebon) dan penjelajah interaktif (/lab) dengan pita kategori ISPU serta peta spasial Cirebon.'
+      },
       // Only tools actually in use for the project right now.
-      stack: ['Python', 'pandas (learning)'],
+      stack: ['Python', 'pandas (learning)', 'Chart.js', 'Astro'],
       image: '/assets/project-aqi.svg',
       link: 'https://opendata.cirebonkota.go.id/dataset/data-kualitas-udara',
-      linkLabel: 'Open dataset source'
+      linkLabel: 'Buka Studi Kasus'
     }
   ],
 
-  /* Reserved slots: visually designed placeholders, NOT projects.
-     They render only in the unfiltered, empty-search view, are
-     non-clickable, and never count toward totals, filters or search. */
+  /* Reserved slots: visually designed blueprint rows, NOT finished projects. */
   comingSoon: [
     {
-      kicker: 'NEXT IN THE ARCHIVE',
-      title: 'Reserved slot / 02',
-      text: 'Ide yang saya tunda: sistem untuk menyaring berita internet dan memperkirakan dampaknya pada ekonomi, seperti harga barang atau saham. Saya berhenti di tengah jalan karena sadar belum punya cukup ilmu untuk mendapatkan dan mengolah informasinya. Suatu hari nanti akan dilanjutkan.'
+      code: 'RES-02',
+      kicker: 'BLUEPRINT / RESERVED SLOT 02',
+      category: 'Data & Software',
+      status: 'RESERVED',
+      title: 'Ideas in Progress · Penyaring Berita & Dampak Ekonomi',
+      text: 'Rencana sistem untuk menyaring berita internet dan mengamati korelasinya dengan indikator ekonomi. Saat ini ditunda secara sadar sambil memperkuat fondasi pengolahan data dan pemodelan teks.'
     },
     {
-      kicker: 'COMING SOON',
-      title: 'Reserved slot / 03',
-      text: 'Rencana terdekat: membuat sistem rekomendasi saham Indonesia berskala kecil. Datanya akan diambil dari yfinance, dengan beberapa indikator sederhana. Belum dimulai, tapi sudah dipikirkan.'
+      code: 'RES-03',
+      kicker: 'BLUEPRINT / RESERVED SLOT 03',
+      category: 'Quantitative & Markets',
+      status: 'RESERVED',
+      title: 'Eksplorasi Data Saham Indonesia Berskala Kecil',
+      text: 'Rencana studi kuantitatif menggunakan data historis pasar modal Indonesia (yfinance) dengan indikator teknikal dasar yang transparan. Dicatat sebagai agenda riset berikutnya.'
     }
   ],
 
@@ -256,37 +257,37 @@ export const DATA = {
   /* About                                                               */
   /* ------------------------------------------------------------------ */
   about: {
-    kicker: '02 / THE PERSON BEHIND THE CODE',
-    heading: ['Curious by', 'default.'],
-    headingAccentWord: 'default.',
+    kicker: '01 / SIAPA SAYA · THE PERSON BEHIND THE CODE',
+    heading: ['Rasa ingin tahu', 'sebagai awal.'],
+    headingAccentWord: 'awal.',
     stamp: { top: 'RIGOROUS WITH', bold: 'DETAILS' },
     lead:
-      'Saya memilih Informatika karena ingin tahu cara kerja teknologi, terutama yang bisa dipakai untuk menyelesaikan masalah sehari-hari. Di UNIKOM saya merasa punya ruang untuk mengeksplorasi hal-hal baru, dan itu yang membuat saya terus termotivasi untuk belajar. Saya suka belajar dari hal-hal dasar, bukan cuma praktiknya saja.',
+      'Saya memilih Informatika karena ingin memahami cara kerja teknologi dari akarnya, terutama bagaimana data dan perangkat lunak dapat membantu menjawab persoalan sehari-hari. Di UNIKOM saya menemukan ruang untuk bereksperimen, bertanya, dan membangun pemahaman dari konsep dasar.',
     body:
-      'Ketertarikan saya pada data datang dari kebiasaan sederhana: saya suka melihat pola. Bagi saya, data itu bukan cuma kumpulan informasi. Di baliknya ada cerita, dan dari cerita itu saya bisa membuat teori atau sekadar berandai-andai tentang apa yang mungkin terjadi. Itu bagian yang paling saya nikmati. Biasanya saya belajar di perpustakaan, kafe, atau di kamar sambil dengerin musik. Kalau ada konteks yang tidak saya pahami, saya akan searching, dan sering keterusan sampai ke konteks lain yang sebenarnya tidak sedang saya cari.',
+      'Ketertarikan saya pada data berangkat dari kebiasaan sederhana: mengamati pola. Bagi saya, tabel angka bukan sekadar kumpulan baris statis, melainkan jejak peristiwa yang memiliki konteks dan cerita. Saat belajar di perpustakaan, kafe, atau kamar sambil mendengarkan musik, satu konsep baru yang belum saya mengerti sering membawa saya menelusuri dokumentasi teknis hingga ke topik-topik lain yang memperluas cara pandang saya.',
     /* Field notes (5.3.1): short, honest snippets rendered as sticky notes
        next to the about copy. Keep each entry one line. */
     notes: [
-      'Sedang mendalami Python untuk analisis data',
-      'Editor andalan: Zed',
-      'Belajar di tempat yang berbeda-beda',
-      'Musik sepanjang hari'
+      'Mendalami Python dan struktur data untuk analisis deret waktu',
+      'Menulis kode harian dengan Zed, VS Code, dan lingkungan Linux',
+      'Memegang prinsip: nilai kosong di data harus tampak jujur, bukan ditutup-tutupi',
+      'Belajar paling fokus ditemani daftar putar instrumental sepanjang hari'
     ],
     artwork: {
       image: '/assets/profile-card.svg',
-      alt: 'Illustrated personal file card of Farrel Islami Putra',
+      alt: 'Kartu profil ilustrasi Farrel Islami Putra',
       label: { small: 'PERSONAL FILE', strong: 'NO. 0032 / FIP', foot: 'COLLECTED & IN PROGRESS' }
     }
   },
 
   languagesTools: {
-    heading: 'Languages & Tools',
+    heading: 'Bahasa & Perangkat Harian',
     miniLabel: 'DAILY DRIVERS',
     items: ['Py', 'C++', 'JS', 'PHP', 'HTML', 'CSS', 'Git', 'VS Code', 'Zed', 'Linux']
   },
 
   skills: {
-    heading: 'Skills',
+    heading: 'Status Kemampuan Saat Ini',
     miniLabel: 'HONEST STATUS',
     // status values: Currently practicing / Exploring / Area of interest
     items: [
@@ -308,86 +309,71 @@ export const DATA = {
   /* Learning journey + education                                        */
   /* ------------------------------------------------------------------ */
   journey: {
-    heading: ['Learning by', 'building.'],
+    heading: ['Belajar lewat', 'membangun.'],
     /* V6.6 Fase 7.2: `detail` powers the accordion body. One honest extra
        paragraph per phase, shown only when the visitor opens the item. */
     items: [
       {
-        phase: 'PHASE 01',
-        title: 'Foundations',
+        phase: 'FASE 01',
+        title: 'Fondasi Pemrograman',
         description:
-          'Belajar Python dan C++ dari nol. Sempat bingung kenapa pointer di C++ harus ada.',
+          'Mempelajari Python dan C++ dari dasar, termasuk memahami manajemen memori dan pointer.',
         detail:
-          'Jawabannya baru mengerti setelah baca dokumentasi berulang kali, bukan setelah nonton tutorial. Belajar logika komputasional dan pola pikir komputasional di kampus juga banyak membantu cara saya berpikir.',
+          'Pemahaman baru benar-benar terbentuk setelah membaca dokumentasi dan mencoba menulis ulang contoh kode sendiri, didukung mata kuliah Logika Komputasional dan Pola Pikir Komputasional di UNIKOM.',
         status: 'ONGOING'
       },
       {
-        phase: 'PHASE 02',
-        title: 'Web & software',
+        phase: 'FASE 02',
+        title: 'Web & Arsitektur Perangkat Lunak',
         description:
-          'Portofolio ini buktinya: HTML, CSS, dan JavaScript yang ditulis tangan.',
+          'Membangun situs portofolio ini dengan HTML, CSS, JavaScript, dan Astro secara bertahap.',
         detail:
-          'Tapi dari sini juga saya sadar bahwa menulis program yang efisien itu susah. Kode saya masih berantakan, dan saya sedang berusaha memahami kenapa sebuah algoritma lebih baik dari yang lain.',
+          'Dari proses ini saya belajar bahwa menyusun modul yang rapi, menjaga aksesibilitas, dan menguji regresi sama pentingnya dengan tampilan visual.',
         status: 'PRACTICING'
       },
       {
-        phase: 'PHASE 03',
-        title: 'Data',
+        phase: 'FASE 03',
+        title: 'Eksplorasi & Pembersihan Data',
         description:
-          'Mengolah data kualitas udara Cirebon. Sedang di tahap pembersihan data.',
+          'Mengolah dataset kualitas udara Kota Cirebon (2021–2025) dan membangun The Data Lab (/lab).',
         detail:
-          'Ada data yang kosong, ada format yang aneh. Di sinilah saya belajar bahwa sebagian besar waktu di data science itu bukan membangun model, tapi merapikan data.',
+          'Menghadapi data yang kosong di tahun 2023, duplikasi baris di tahun 2024, serta cakupan parsial 2025 mengajarkan bahwa kejujuran metodologi jauh lebih penting daripada grafik yang tampak mulus.',
         status: 'ACTIVE · AQI STUDY'
       },
       {
-        phase: 'PHASE 04',
-        title: 'Ahead',
+        phase: 'FASE 04',
+        title: 'Langkah Berikutnya',
         description:
-          'Rencana ke depan: merapikan cara menulis program, memahami algoritma dan struktur data lebih dalam.',
+          'Memperdalam algoritma, struktur data, sistem basis data, dan fondasi pemodelan kuantitatif.',
         detail:
-          'Serta mulai melirik machine learning dan sistem terhubung setelah fondasi data saya cukup kuat.',
+          'Bersiap melangkah ke pembelajaran mesin (machine learning) dan sistem sensor terhubung (IoT) setelah fondasi pemrosesan data semakin kokoh.',
         status: 'PLANNED'
       }
     ]
   },
 
   education: {
-    kicker: '04 / EDUCATION',
-    heading: ['Informatics', 'Engineering.'],
+    kicker: '04B / PENDIDIKAN FORMAL',
+    heading: ['Teknik', 'Informatika.'],
     body:
-      'Mahasiswa Informatika di Universitas Komputer Indonesia (UNIKOM), mulai tahun 2026. Mata kuliah yang sedang dijalani antara lain Logika Komputasional, Pemrograman Web, Kalkulus, Algoritma dan Struktur Data, Sistem Cerdas Kolaboratif, dan Pola Pikir Komputasional. Sejauh ini tidak ada yang benar-benar mustahil, tapi Algoritma dan Struktur Data masih butuh perhatian lebih.',
+      'Mahasiswa S1 Teknik Informatika di Universitas Komputer Indonesia (UNIKOM), mulai tahun 2026. Mata kuliah yang sedang dijalani meliputi Logika Komputasional, Pemrograman Web, Kalkulus, Algoritma dan Struktur Data, Sistem Cerdas Kolaboratif, serta Pola Pikir Komputasional. Fokus utama saat ini adalah memperkuat pemahaman Algoritma dan Struktur Data.',
     /* V6.6 Fase 7.1: joined with · by script.js into the coursework line. */
-    coursework: ['Data Structures', 'Databases', 'Discrete Math'],
-    foot: 'STARTED IN 2026'
+    coursework: ['Algoritma & Struktur Data', 'Basis Data', 'Matematika Diskrit'],
+    foot: 'MULAI TAHUN 2026 · UNIKOM'
   },
 
   /* ------------------------------------------------------------------ */
   /* Milestones & credentials                                            */
   /* ------------------------------------------------------------------ */
   credentials: {
-    kicker: '05 / MILESTONES & CREDENTIALS',
-    heading: ['Proof of work,', 'in progress.'],
-    headingAccentWord: 'progress.',
+    kicker: 'ARC-04 · CREDENTIALS',
+    heading: ['Bukti karya,', 'sedang bertumbuh.'],
+    headingAccentWord: 'bertumbuh.',
     intro:
-      'Sertifikat, penghargaan, dan publikasi akan diarsipkan di sini saat benar-benar didapatkan. Tidak ada yang ditampilkan sebelum ada buktinya.',
+      'Sertifikat, penghargaan, dan publikasi hanya akan diarsipkan di halaman ini setelah benar-benar diperoleh dan dapat diverifikasi. Tidak ada klaim yang ditampilkan sebelum ada buktinya.',
     emptySlots: ['CERTIFICATE', 'AWARD', 'PUBLICATION'],
     emptyLabel: 'COMING SOON',
     emptyNote: 'RESERVED FOR FUTURE ENTRIES',
-
-    /* HOW TO ADD A CREDENTIAL (see README for the full walkthrough):
-       {
-         title: 'Exact certificate title',
-         issuer: 'Issuing organization',
-         date: '2026',              // optional, '' when unknown
-         type: 'Certificate',       // Certificate / Award / Competition / Publication / …
-         description: 'One honest line about relevance.',   // optional
-         image: '/assets/credentials/my-certificate.jpg',    // optional
-         proofUrl: 'https://official-verification-url',     // required for a Verify button
-         credentialId: 'PUBLIC-ID-IF-ANY'                    // optional
-       }
-       Only render a verification button when proofUrl is a real URL.
-       Cards with an `image` also open a large accessible preview dialog
-       (native <dialog>, Escape to close, focus returned to the card). */
     items: []
   },
 
@@ -395,56 +381,50 @@ export const DATA = {
   /* Social + contact                                                    */
   /* ------------------------------------------------------------------ */
   social: {
-    kicker: '06 / FIND ME ELSEWHERE',
-    heading: ["Let's stay", 'connected.'],
-    headingAccentWord: 'connected.',
+    kicker: '01 / KANAL TERVERIFIKASI · FIND ME ELSEWHERE',
+    heading: ['Mari tetap', 'terhubung.'],
+    headingAccentWord: 'terhubung.',
     intro:
-      'Profil dan arsip yang memang milik saya. Folder dokumentasi di Google Drive menyimpan bukti pekerjaan, penelitian, dan proses belajar.',
-    footnote: 'OPEN A PROFILE ↗',
-    footnoteSub: 'VERIFIED LINKS ONLY.',
+      'Daftar profil resmi dan arsip dokumentasi yang saya kelola. Repositori utama portofolio ini berada di GitHub @Fryel23 (Farrel_Portofolio), sedangkan @Fryel32 menyimpan arsip eksperimen awal.',
+    footnote: 'BUKA PROFIL RESMI ↗',
+    footnoteSub: 'HANYA TAUTAN TERVERIFIKASI.',
     items: [
       {
-        name: 'GitHub',
-        // iconKey picks a proper inline SVG brand mark in script.js.
+        name: 'GitHub (@Fryel23)',
         iconKey: 'github',
-        handle: 'Code, experiments & learning repositories',
-        url: 'https://github.com/Fryel32'
+        handle: 'Repositori utama Farrel_Portofolio (@Fryel23) & arsip eksperimen (@Fryel32)',
+        url: 'https://github.com/Fryel23/Farrel_Portofolio'
       },
       {
         name: 'Instagram',
         iconKey: 'instagram',
-        // NOTE: the username spelling is intentionally not displayed:
-        // the supplied URL path (reinnhv) differs from the described
-        // handle (rennhv). The exact supplied URL is preserved as-is.
-        handle: 'Photos & everyday notes',
+        handle: 'Catatan keseharian & dokumentasi visual',
         url: 'https://www.instagram.com/reinnhv/'
       },
       {
         name: 'LinkedIn',
         iconKey: 'linkedin',
-        handle: 'Professional profile & connections',
+        handle: 'Profil akademik & jejaring profesional',
         url: 'https://www.linkedin.com/in/farrel-islami-putra-a17287387/'
       },
       {
-        name: 'Documentation Archive',
+        name: 'Arsip Dokumentasi (Drive)',
         iconKey: 'drive',
-        handle: 'Research & learning log on Google Drive',
+        handle: 'Folder terbuka lembar kerja riset & catatan belajar',
         url: 'https://drive.google.com/drive/folders/1YaoRkFvdlk29vdRAFQxj5ypVD-7WDtTl?usp=drive_link'
       }
-      // Add more profiles here only once each URL is real and verified.
-      // Entries with an empty url are hidden automatically.
     ]
   },
 
   contact: {
-    kicker: 'SAY HELLO',
-    heading: 'Prefer email? Both inboxes are open.',
-    note: 'Ada pertanyaan, masukan, atau ide kolaborasi? Silakan kirim email.',
-    copyLabel: 'Copy',
-    copyOk: 'Email address copied to clipboard.',
-    copyFail: 'Copy is not available here. Please copy the address manually.',
-    personal: { label: 'Personal email', address: 'kktwinf2008@gmail.com' },
-    university: { label: 'University email', address: 'farrel.10126092@mahasiswa.unikom.ac.id' }
+    kicker: '02 / SURAT ELEKTRONIK · SAY HELLO',
+    heading: 'Ingin berdiskusi melalui email? Kedua kotak masuk ini aktif.',
+    note: 'Ada pertanyaan tentang riset AQI Cirebon, masukan teknis, atau ide kolaborasi? Silakan hubungi melalui salah satu alamat email di atas.',
+    copyLabel: 'Salin',
+    copyOk: 'Alamat email berhasil disalin ke papan klip.',
+    copyFail: 'Penyalinan otomatis tidak tersedia. Silakan salin alamat secara manual.',
+    personal: { label: 'Email Pribadi', address: 'kktwinf2008@gmail.com' },
+    university: { label: 'Email Kampus (UNIKOM)', address: 'farrel.10126092@mahasiswa.unikom.ac.id' }
   },
 
   /* ------------------------------------------------------------------ */
@@ -481,13 +461,13 @@ export const DATA = {
      drives the card glow; themeColor is that game's accent and is only
      used for borders, bars and glow, never for body text. */
   gameDeck: {
-    kicker: '03 / INSERT COIN',
-    heading: ['Press start.', 'See what I play.'],
+    kicker: 'ARC-03 · GAME DECK',
+    heading: ['Tekan start.', 'Lihat yang saya mainkan.'],
     headingAccentWord: 'start.',
-    intro: 'A self-reported deck of games I actually play. Stats are casual, not competitive.',
-    hint: 'CLICK INSERT COIN TO LOAD THE DECK',
+    intro: 'Dek kartu permainan yang benar-benar saya mainkan di waktu luang. Seluruh statistik di bawah bersifat santai dan subjektif, bukan data kompetitif.',
+    hint: 'KLIK INSERT COIN UNTUK MEMUAT DEK PERMAINAN',
     insertLabel: 'INSERT COIN',
-    loadingLabel: 'LOADING...',
+    loadingLabel: 'MEMUAT...',
     ejectLabel: 'EJECT COIN',
     screenOffLabel: 'NO SIGNAL',
     screenOffSub: 'INSERT COIN TO CONTINUE',
@@ -676,19 +656,19 @@ export const DATA = {
   },
 
   /* ------------------------------------------------------------------ */
-  /* V4: Off-screen (section 05 / #offscreen)                            */
+  /* V4: Off-screen (section ARC-05 / #offscreen)                        */
   /* ------------------------------------------------------------------ */
   offscreen: {
-    kicker: '05 / OFF-SCREEN',
-    heading: ['After hours.', 'Still curious.'],
-    headingAccentWord: 'curious.',
-    intro: 'Yang saya lakukan saat tidak sedang menatap terminal.',
+    kicker: 'ARC-05 · OFF-SCREEN & COMPANION',
+    heading: ['Di luar jam ngoding.', 'Tetap penasaran.'],
+    headingAccentWord: 'penasaran.',
+    intro: 'Kegiatan yang saya nikmati saat tidak sedang menatap terminal: olahraga, musik, dan eksperimen santai.',
     pixelLabel: 'UNIT 01 · DESK LOOP',
     hobbies: [
-      { label: 'Badminton', detail: '2x a month', icon: 'shuttlecock' },
-      { label: 'Coding', detail: 'Python experiments', icon: 'terminal' },
-      { label: 'Gaming', detail: '2 hours a day', icon: 'gamepad' },
-      { label: 'Music', detail: 'All day', icon: 'headphones' }
+      { label: 'Badminton', detail: '2x sebulan', icon: 'shuttlecock' },
+      { label: 'Coding', detail: 'Eksperimen Python', icon: 'terminal' },
+      { label: 'Gaming', detail: 'Sekitar 2 jam sehari', icon: 'gamepad' },
+      { label: 'Music', detail: 'Sepanjang hari', icon: 'headphones' }
     ],
     spotify: {
       playlistName: 'while(True): listen()',
@@ -703,24 +683,27 @@ export const DATA = {
   },
 
   /* ------------------------------------------------------------------ */
-  /* V4: GitHub Activity (section 06 / #github)                          */
+  /* V4: GitHub Activity (section ARC-02 / #github)                      */
   /* ------------------------------------------------------------------ */
   /* Live public REST data with a one hour cache. No contribution
      streaks, no total commit claims: the REST API cannot count those
      honestly, so they are never shown. If fetch fails, the section
      falls back to the last cache or an honest message. */
   githubActivity: {
-    kicker: '06 / OPEN SOURCE PULSE',
-    heading: ['Commits,', 'not claims.'],
-    headingAccentWord: 'claims.',
-    intro: 'Aktivitas publik dari GitHub, diambil langsung dan di-cache selama satu jam.',
-    username: 'Fryel32',
-    profileUrl: 'https://github.com/Fryel32',
-    cacheKey: 'fryel32-github-stats-v1',
+    kicker: 'ARC-02 · GITHUB TELEMETRY',
+    heading: ['Jejak komit,', 'bukan sekadar klaim.'],
+    headingAccentWord: 'klaim.',
+    intro: 'Aktivitas publik dari GitHub (@Fryel23 untuk repositori utama Farrel_Portofolio & @Fryel32 untuk arsip eksperimen awal), diambil langsung dan di-cache selama satu jam.',
+    username: 'Fryel23',
+    secondaryUsername: 'Fryel32',
+    profileUrl: 'https://github.com/Fryel23',
+    repoUrl: 'https://github.com/Fryel23/Farrel_Portofolio',
+    secondaryProfileUrl: 'https://github.com/Fryel32',
+    cacheKey: 'fryel23-github-stats-v14',
     cacheTTL: 3600000,
-    jsRequiredMessage: 'GITHUB STATS REQUIRE JAVASCRIPT.',
-    fallbackMessage: 'GITHUB STATS ARE UNAVAILABLE RIGHT NOW.',
-    fallbackLinkLabel: 'VISIT THE PROFILE DIRECTLY',
+    jsRequiredMessage: 'STATISTIK GITHUB MEMERLUKAN JAVASCRIPT.',
+    fallbackMessage: 'STATISTIK GITHUB SEDANG TIDAK DAPAT DIMUAT SAAT INI.',
+    fallbackLinkLabel: 'BUKA REPOSITORI UTAMA (@FRYEL23)',
     cards: {
       repositories: 'REPOSITORIES',
       stars: 'STARS EARNED',
@@ -730,59 +713,52 @@ export const DATA = {
   },
 
   /* ------------------------------------------------------------------ */
-  /* V4: Companion page pet (section 08 / #companion)                    */
+  /* V4: Companion page pet (section ARC-05B / #companion)               */
   /* ------------------------------------------------------------------ */
   /* The pet itself is the pixel-art SVG from the Off-screen section,
      cloned into a fixed corner button. Summon preference is a UI
      preference stored in localStorage (allowed; it is not content). */
   companion: {
-    kicker: '08 / A SMALL COMPANION',
-    heading: ['Someone is', 'hanging around.'],
-    headingAccentWord: 'around.',
-    intro: 'Teman piksel kecil yang mengikuti arsip ini. Panggil kalau ingin ditemani.',
-    summonLabel: 'Summon companion',
-    dismissLabel: 'Dismiss companion',
+    kicker: 'ARC-05B · PIXEL COMPANION',
+    heading: ['Ada teman kecil', 'yang ikut menemani.'],
+    headingAccentWord: 'menemani.',
+    intro: 'Teman piksel kecil bernama Kok yang menjaga sudut halaman arsip ini. Panggil kapan saja kalau ingin ditemani saat membaca.',
+    summonLabel: 'Panggil Kok (Companion)',
+    dismissLabel: 'Istirahatkan Kok',
     petName: 'Kok',
-    petAriaLabel: 'Companion: Kok. Click to say hi.',
+    petAriaLabel: 'Companion: Kok. Klik untuk menyapa.',
     stampBold: 'KOK',
     stampTop: 'PAGE PET',
     note: 'THE PET LIVES IN THE CORNER OF EVERY SECTION',
     noteSub: 'CLICK IT TO SAY HI',
     tooltipLines: [
-      'Hi, Farrel is probably coding.',
-      'Kok is watching the archive with you.',
-      'One more commit before bed.'
+      'Halo! Farrel mungkin sedang merapikan dataset.',
+      'Kok ikut menemani kamu menjelajahi arsip ini.',
+      'Satu komit lagi sebelum istirahat.'
     ]
   },
 
   /* ------------------------------------------------------------------ */
   /* V5.2: decoration switchboard (§3.2, §6.1)                           */
   /* ------------------------------------------------------------------ */
-  /* One honest, editable switch per decoration. Turning a flag off
-     leaves the section fully usable: decorations enrich negative space,
-     they never carry information on their own. Labels below are archive
-     style codes, not counts and not claims. Spine labels follow the real
-     DOM order of sections (hero, work, games, about, offscreen, github,
-     credentials, companion, profiles), which is why they differ from the
-     older content kickers. */
   decorations: {
     hero: {
-      edgeLabel: '00 / START',
-      edgeLabelBottom: '01 / WORK'
+      edgeLabel: '01 / PERKENALAN',
+      edgeLabelBottom: '02 / STUDI KASUS'
     },
     spine: {
-      work: '01 / WORK',
-      games: '02 / PLAY',
-      about: '03 / ABOUT',
-      offscreen: '04 / AFTER HOURS',
-      github: '05 / PULSE',
-      credentials: '06 / VAULT',
-      companion: '07 / PET',
-      profiles: '08 / CONNECT'
+      work: '02 / STUDI KASUS',
+      games: 'ARC-03 / PLAY',
+      about: '01 / PROFIL',
+      offscreen: 'ARC-05 / OFF-SCREEN',
+      github: 'ARC-02 / TELEMETRY',
+      credentials: 'ARC-04 / CREDENTIALS',
+      companion: 'ARC-05B / PET',
+      profiles: '04 / KONTAK'
     },
     gallery: {
-      gridLabel: '01 / ARCHIVE',
-      rulerLabels: ['01 / ARCHIVE', '02 / STUDY', '03 / NEXT'],
+      gridLabel: '02 / ARCHIVE',
+      rulerLabels: ['01 / FLAGSHIP', '02 / BLUEPRINT', '03 / NEXT'],
       blueprintGrid: true,
       cornerBrackets: true,
       measurementTicks: true,
@@ -809,16 +785,16 @@ export const DATA = {
     github: {
       contributionSkeleton: true,
       brackets: true,
-      bracketLabel: 'GIT LOG / FRYEL32'
+      bracketLabel: 'GIT LOG / FRYEL23 · FARREL_PORTOFOLIO'
     },
     credentials: {
       rulerLines: true,
       stamp: 'ARCHIVE / CREDENTIALS',
-      plateLabel: 'ARCHIVE / MILESTONES / 05'
+      plateLabel: 'ARCHIVE / MILESTONES / ARC-04'
     },
     companion: {
       habitat: true,
-      habitatLabel: 'PET HABITAT / 08',
+      habitatLabel: 'PET HABITAT / ARC-05B',
       habitatStatusIdle: 'WAITING IN HABITAT',
       habitatStatusSummoned: 'SUMMONED · CORNER POST'
     },

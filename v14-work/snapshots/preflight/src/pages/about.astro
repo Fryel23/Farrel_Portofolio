@@ -1,0 +1,157 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/about.css';
+---
+
+<BaseLayout
+  title="About · Farrel Islami Putra"
+  pageKey="about"
+  description="Profil Farrel Islami Putra: alasan memilih Informatika, software yang dipakai harian, status skill yang jujur, curiosity map, dan perjalanan belajar semester demi semester."
+>
+  <!-- ============ ABOUT ============ -->
+  <section class="about-section section-shell" id="about" aria-labelledby="about-heading">
+    <div class="geo geo-four" aria-hidden="true"></div>
+    <div class="geo geo-five" aria-hidden="true"></div>
+
+    <div class="section-heading">
+      <div>
+        <p class="section-kicker">02 / THE PERSON BEHIND THE CODE</p>
+        <h1 class="display-heading" id="about-heading">
+          <span class="line-mask"><span class="line">Curious by</span></span>
+          <span class="line-mask"><span class="line"><em>default.</em></span></span>
+        </h1>
+      </div>
+      <div class="heading-stamp">RIGOROUS WITH<br /><b>DETAILS</b><span aria-hidden="true">✳</span></div>
+    </div>
+
+    <div class="about-layout">
+      <div class="ornament ornament-about-leader" aria-hidden="true">
+        <svg viewBox="0 0 60 60" focusable="false">
+          <line x1="0" y1="30" x2="52" y2="30" stroke="currentColor" stroke-width="1" />
+          <circle cx="56" cy="30" r="2" fill="currentColor" />
+        </svg>
+      </div>
+      <div class="about-copy">
+        <p class="about-lead" id="about-lead">Saya memilih Informatika karena ingin tahu cara kerja teknologi, terutama yang bisa dipakai untuk menyelesaikan masalah sehari-hari. Di UNIKOM saya merasa punya ruang untuk mengeksplorasi hal-hal baru, dan itu yang membuat saya terus termotivasi untuk belajar. Saya suka belajar dari hal-hal dasar, bukan cuma praktiknya saja.</p>
+        <p class="about-body" id="about-body">Ketertarikan saya pada data datang dari kebiasaan sederhana: saya suka melihat pola. Bagi saya, data itu bukan cuma kumpulan informasi. Di baliknya ada cerita, dan dari cerita itu saya bisa membuat teori atau sekadar berandai-andai tentang apa yang mungkin terjadi. Itu bagian yang paling saya nikmati. Biasanya saya belajar di perpustakaan, kafe, atau di kamar sambil dengerin musik. Kalau ada konteks yang tidak saya pahami, saya akan searching, dan sering keterusan sampai ke konteks lain yang sebenarnya tidak sedang saya cari.</p>
+
+        <div class="software-block">
+          <div class="inline-heading"><h3>Languages &amp; Tools</h3><span class="mini-label">DAILY DRIVERS</span></div>
+          <div class="software-list" id="software-list"></div>
+        </div>
+
+        <div class="skills-block">
+          <div class="inline-heading"><h3>Skills</h3><span class="mini-label">HONEST STATUS</span></div>
+          <div class="skill-list" id="skill-list"></div>
+        </div>
+      </div>
+
+      <!-- Field notes (5.3): sticky notes dirender dari data oleh script.
+           Kosong dan tak terlihat tanpa JS. -->
+      <div class="about-notes" id="about-notes"></div>
+
+      <!-- V5 §4.5 Skill Constellation: DATA di tengah, area minat
+           mengelilinginya. Diagram dekoratif. -->
+      <div class="skill-constellation-wrap">
+        <svg class="skill-constellation" viewBox="0 0 560 300" aria-hidden="true" focusable="false">
+          <path class="skill-constellation__edge" d="M280 150 L120 78" pathLength="1" />
+          <path class="skill-constellation__edge" d="M280 150 L452 66" pathLength="1" />
+          <path class="skill-constellation__edge" d="M280 150 L96 224" pathLength="1" />
+          <path class="skill-constellation__edge" d="M280 150 L470 216" pathLength="1" />
+          <g class="skill-constellation__nodes">
+            <circle class="skill-constellation__node skill-constellation__node--center" cx="280" cy="150" r="7" />
+            <circle class="skill-constellation__node" cx="120" cy="78" r="5" />
+            <circle class="skill-constellation__node" cx="452" cy="66" r="5" />
+            <circle class="skill-constellation__node" cx="96" cy="224" r="5" />
+            <circle class="skill-constellation__node" cx="470" cy="216" r="5" />
+          </g>
+        </svg>
+      </div>
+
+      <div class="about-artwork">
+        <div class="ornament ornament-about-dots" aria-hidden="true">
+          <svg width="100%" height="100%" focusable="false">
+            <defs>
+              <pattern id="ornament-about-dots-pattern" width="16" height="16" patternUnits="userSpaceOnUse">
+                <circle cx="2" cy="2" r="1" fill="currentColor" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#ornament-about-dots-pattern)"></rect>
+          </svg>
+        </div>
+        <div class="artwork-backdrop" aria-hidden="true"></div>
+        <!-- V9.0 Batasan 8: penanda aset kritis eksplisit untuk Archive
+             Boot Sequence (img eager di atas lipatan; dilacak
+             img[data-opening-critical] di global.js). -->
+        <img id="profile-image" src="/assets/profile-card.svg" alt="Illustrated personal file card of Farrel Islami Putra" class="id-art" width="420" height="440" data-opening-critical />
+        <div class="artwork-label"><span>PERSONAL FILE</span><strong>NO. 0032 / FIP</strong><span>COLLECTED &amp; IN PROGRESS</span></div>
+        <div class="artwork-index" aria-hidden="true">02<br />/<br />05</div>
+      </div>
+    </div>
+
+    <!-- ============ CURIOSITY MAP (12.2) ============ -->
+    <div class="curiosity-map" id="curiosity">
+      <div class="curiosity-head">
+        <div>
+          <p class="section-kicker" id="curiosity-kicker">THE CURIOSITY MAP</p>
+          <h3 class="curiosity-heading" id="curiosity-heading">
+            <span class="line-mask"><span class="line">How my interests</span></span>
+            <span class="line-mask"><span class="line"><em>connect.</em></span></span>
+          </h3>
+        </div>
+        <p class="curiosity-intro" id="curiosity-intro">Data ada di tengah; sisanya tumbuh di sekitar itu. Pilih satu titik untuk membaca di mana posisi saya saat ini.</p>
+      </div>
+
+      <div class="curiosity-layout">
+        <div class="curiosity-stage">
+          <svg class="curiosity-svg" viewBox="0 0 640 460" aria-hidden="true" focusable="false">
+            <g class="curiosity-links">
+              <line id="curiosity-link-software" x1="320" y1="212" x2="141" y2="92" />
+              <line id="curiosity-link-ai" x1="320" y1="212" x2="499" y2="92" />
+              <line id="curiosity-link-databases" x1="320" y1="212" x2="141" y2="340" />
+              <line id="curiosity-link-iot" x1="320" y1="212" x2="499" y2="340" />
+            </g>
+            <g class="curiosity-grid-dots" aria-hidden="true">
+              <circle cx="60" cy="60" r="1.6" /><circle cx="580" cy="60" r="1.6" />
+              <circle cx="60" cy="400" r="1.6" /><circle cx="580" cy="400" r="1.6" />
+              <circle cx="320" cy="30" r="1.6" /><circle cx="320" cy="430" r="1.6" />
+            </g>
+          </svg>
+          <div class="curiosity-nodes" id="curiosity-nodes" role="group" aria-label="Areas of interest: select one for field notes"></div>
+        </div>
+        <aside class="curiosity-panel" id="curiosity-panel" aria-live="polite">
+          <span class="curiosity-panel-label" id="curiosity-panel-label">FIELD NOTES</span>
+          <h4 class="curiosity-panel-name" id="curiosity-panel-name">DATA</h4>
+          <p class="curiosity-panel-status" id="curiosity-panel-status">Primary focus</p>
+          <p class="curiosity-panel-detail" id="curiosity-panel-detail">Inti dari peta ini. Sedang dipraktikkan dalam penelitian kualitas udara Cirebon: mengumpulkan, membersihkan, dan mencari pola dari data terbuka. Saya suka bagian di mana data mulai bercerita.</p>
+        </aside>
+      </div>
+      <p class="curiosity-hint" id="curiosity-hint">SELECT A NODE: CLICK, TAP, OR USE KEYBOARD TAB + ENTER</p>
+    </div>
+
+    <div class="journey-grid" id="journey">
+      <article class="resume-card">
+        <div class="resume-card-top"><span>03 / LEARNING JOURNEY</span><span class="resume-icon" aria-hidden="true">↗</span></div>
+        <h3>Learning by<br />building.</h3>
+        <div class="journey-body">
+          <div class="journey-rail" aria-hidden="true"><span id="journey-rail-fill"></span></div>
+          <ol class="journey-list" id="journey-list"></ol>
+        </div>
+        <div class="resume-line"></div>
+        <span class="resume-foot">ALWAYS IN PROGRESS</span>
+      </article>
+      <article class="resume-card resume-card-blue">
+        <div class="resume-card-top"><span>04 / EDUCATION</span><span class="resume-icon" aria-hidden="true">↗</span></div>
+        <h3>Informatics<br />Engineering.</h3>
+        <p id="education-body">Mahasiswa Informatika di Universitas Komputer Indonesia (UNIKOM), mulai tahun 2026. Mata kuliah yang sedang dijalani antara lain Logika Komputasional, Pemrograman Web, Kalkulus, Algoritma dan Struktur Data, Sistem Cerdas Kolaboratif, dan Pola Pikir Komputasional. Sejauh ini tidak ada yang benar-benar mustahil, tapi Algoritma dan Struktur Data masih butuh perhatian lebih.</p>
+        <div class="resume-line"></div>
+        <span class="resume-foot">STARTED IN 2026</span>
+      </article>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import '../scripts/global.js';
+  import '../scripts/about.js';
+</script>

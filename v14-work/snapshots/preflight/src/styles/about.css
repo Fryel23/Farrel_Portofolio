@@ -1,0 +1,717 @@
+/* ==========================================================================
+   ABOUT.CSS · Farrel Islami Putra · Editorial Portfolio (Astro V7.0)
+   Blue / White / Slate · Contemporary Editorial · Motion-led
+   About, Curiosity Map, Journey, Education (halaman /about).
+   Diekstrak otomatis dari styles.css V6.7. Isi aturan tidak diubah.
+   ========================================================================== */
+
+/* 07. ABOUT, SOFTWARE & SKILLS ------------------------------------------- */
+.about-section { padding-top: 116px; padding-bottom: 100px; overflow: hidden; }
+
+
+.about-section > .section-heading { align-items: flex-start; margin-bottom: 36px; }
+
+
+.heading-stamp {
+  border: 1px solid var(--border-strong); background: var(--surface);
+  padding: 14px 17px; transform: rotate(5deg);
+  font-family: var(--mono); font-size: 9px; line-height: 1.5;
+  color: var(--text-2); position: relative;
+}
+
+
+.heading-stamp b { font-size: 12px; color: var(--blue-deep); }
+
+
+.heading-stamp span { position: absolute; right: -12px; top: -15px; font-size: 23px; color: var(--blue); }
+
+
+.about-layout {
+  display: grid; grid-template-columns: 1.1fr 0.9fr;
+  gap: clamp(30px, 7vw, 100px); align-items: center;
+  position: relative; z-index: 1;
+}
+
+
+.about-copy { max-width: 560px; }
+
+
+.about-copy p { font-size: 14px; line-height: 1.75; color: var(--text-2); margin: 0 0 18px; }
+
+
+.about-copy .about-lead {
+  font-size: clamp(17px, 2vw, 24px); line-height: 1.4;
+  color: var(--ink); font-weight: 500; letter-spacing: -0.03em;
+}
+
+
+.inline-heading { display: flex; align-items: center; gap: 11px; margin-bottom: 13px; }
+
+
+.inline-heading h3 { font-size: 24px; letter-spacing: -0.05em; font-weight: 600; }
+
+
+.software-block { margin-top: 36px; }
+
+
+.software-list { display: flex; align-items: center; flex-wrap: wrap; gap: 9px; }
+
+
+.software-chip {
+  min-width: 40px; height: 40px; padding: 0 10px;
+  display: grid; place-items: center;
+  background: var(--ink); color: var(--bg);
+  font-size: 10px; font-weight: 700; letter-spacing: -0.04em;
+  border-radius: 9px; box-shadow: 3px 3px 0 var(--border-strong);
+  transition: transform var(--micro) var(--ease), background var(--micro) var(--ease);
+}
+
+
+.software-chip:hover { transform: translate(-1px, -1px); background: var(--blue-deep); }
+
+
+.software-chip:nth-child(2n) { background: var(--blue-deep); color: #fff; box-shadow: 3px 3px 0 var(--blue-pale); }
+
+
+.software-chip:nth-child(3n) { background: var(--blue); color: #fff; box-shadow: 3px 3px 0 var(--blue-soft); }
+
+
+.skills-block { margin-top: 30px; }
+
+
+.skill-list { display: flex; gap: 8px; flex-wrap: wrap; }
+
+
+.skill-chip {
+  display: flex; flex-direction: column; gap: 1px;
+  border: 1px solid var(--border-strong); background: var(--surface);
+  border-radius: 999px; padding: 8px 14px;
+  transition: border-color var(--micro) var(--ease), background var(--micro) var(--ease),
+              transform var(--micro) var(--ease);
+}
+
+
+.skill-chip b { font-size: 11.5px; font-weight: 600; color: var(--ink); line-height: 1.2; }
+
+
+.skill-chip small { font-family: var(--mono); font-size: 7.5px; letter-spacing: 0.07em; color: var(--text-3); text-transform: uppercase; }
+
+
+.skill-chip:hover { border-color: var(--blue); background: var(--blue-pale); transform: translateY(-2px); }
+
+
+.about-artwork { min-height: 460px; position: relative; display: grid; place-items: center; }
+
+
+.artwork-backdrop {
+  position: absolute; inset: 9% 0 7% 10%;
+  background: var(--border-soft); border-radius: 5px;
+  transform: rotate(3deg);
+  box-shadow: 12px 12px 0 var(--surface-2);
+}
+
+
+.artwork-backdrop::before, .artwork-backdrop::after {
+  content: ""; position: absolute; background: var(--blue-soft);
+  height: 22px; transform: rotate(-35deg);
+}
+
+
+.artwork-backdrop::before { width: 140px; top: -10px; left: -20px; }
+
+
+.artwork-backdrop::after { width: 180px; bottom: 5px; right: -30px; }
+
+
+.id-art {
+  position: relative; z-index: 1;
+  width: min(88%, 400px); max-height: 420px; object-fit: contain;
+  filter: drop-shadow(10px 16px 8px rgba(15, 23, 42, 0.16));
+  transform: rotate(-4deg);
+}
+
+
+.artwork-label {
+  position: absolute; left: 3%; bottom: 5%; z-index: 2;
+  display: flex; flex-direction: column; gap: 5px;
+  color: var(--text-3); font-size: 8px;
+}
+
+
+.artwork-label strong { font-size: 11px; color: var(--ink); }
+
+
+.artwork-index { position: absolute; right: 1%; top: 3%; font-family: var(--mono); font-size: 11px; line-height: 1.7; color: var(--text-3); }
+
+/* 08. LEARNING JOURNEY & EDUCATION ---------------------------------------- */
+.journey-grid {
+  display: grid; grid-template-columns: 1.15fr 0.85fr;
+  gap: 18px; margin-top: 66px; position: relative; z-index: 1;
+}
+
+
+.resume-card {
+  padding: 26px 28px 22px;
+  border: 1px solid var(--border-strong); border-radius: var(--radius);
+  background: var(--surface); min-height: 230px;
+  display: flex; flex-direction: column;
+}
+
+
+.resume-card-blue { background: var(--blue-pale); border-color: var(--blue-soft); }
+
+
+.resume-card-top {
+  display: flex; justify-content: space-between; align-items: center;
+  color: var(--text-3); font-size: 8px;
+}
+
+
+.resume-icon { font-size: 17px; color: var(--blue); }
+
+
+.resume-card h3 {
+  font-size: clamp(26px, 3.2vw, 40px); line-height: 0.99;
+  letter-spacing: -0.06em; margin: 24px 0 14px; font-weight: 600;
+}
+
+
+.resume-card-blue p { font-size: 12.5px; line-height: 1.65; color: var(--blue-deep); max-width: 430px; margin: 0 0 15px; }
+
+
+.resume-line { height: 1px; background: var(--border-strong); margin-top: auto; margin-bottom: 12px; }
+
+
+.resume-card-blue .resume-line { background: var(--blue-soft); }
+
+
+.resume-foot { font-size: 8px; color: var(--text-3); }
+
+
+.resume-card-blue .resume-foot { color: var(--blue-deep); }
+
+
+.journey-list { margin: 0 0 8px; }
+
+
+.journey-item {
+  display: grid; grid-template-columns: 86px 1fr auto; gap: 12px; align-items: baseline;
+  padding: 11px 0;
+  border-top: 1px dashed var(--border-soft);
+}
+
+
+.journey-item:first-child { border-top: 0; padding-top: 2px; }
+
+
+.journey-phase { font-size: 8px; color: var(--blue); display: inline-flex; align-items: center; gap: 6px; }
+
+
+.journey-phase::before { content: ""; width: 7px; height: 7px; background: var(--blue); border-radius: 2px; flex-shrink: 0; }
+
+
+.journey-item h4 { font-size: 14px; font-weight: 600; letter-spacing: -0.02em; transition: opacity var(--hover) var(--ease); }
+
+
+.journey-item p { font-size: 11.5px; line-height: 1.55; color: var(--text-2); margin: 2px 0 0; }
+
+
+.journey-status { font-size: 8px; color: var(--text-3); white-space: nowrap; }
+
+/* --- V6.6 Fase 7: journey accordion + education coursework ---------------- */
+/* 7.2 The phase header is a real button spanning the phase + title
+   columns; the status keeps its own column on the same baseline row.
+   Only one item is open at a time (accordion, script.js). */
+.journey-toggle {
+  grid-column: 1 / 3;
+  display: grid; grid-template-columns: 86px 1fr 24px;
+  gap: 12px; align-items: baseline;
+  padding: 0; background: transparent; border: 0;
+  text-align: left; width: 100%; cursor: pointer;
+  font: inherit; color: inherit;
+}
+
+
+.journey-toggle:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; border-radius: 3px; }
+
+
+.journey-toggle-icon {
+  font-family: var(--mono); font-size: 14px; line-height: 1;
+  color: var(--text-3);
+  justify-self: end;
+  transition: transform 0.2s var(--ease), color var(--micro) var(--ease);
+}
+
+
+.journey-toggle[aria-expanded="true"] .journey-toggle-icon {
+  color: var(--blue);
+  transform: rotate(180deg);
+}
+
+
+.journey-desc { grid-column: 1 / -1; }
+
+
+.journey-detail {
+  grid-column: 1 / -1;
+  padding: 8px 0 12px 98px;
+  margin-top: 6px;
+  border-top: 1px dashed var(--border-soft);
+  font-family: var(--mono); font-size: 11px; line-height: 1.7;
+  color: var(--text-2);
+}
+
+
+.journey-detail p { margin: 0; font-family: var(--mono); font-size: 11px; color: var(--text-2); }
+
+
+.journey-detail[hidden] { display: none; }
+
+/* 7.1 Coursework mono line inside the blue education card. */
+.education-coursework {
+  font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.08em;
+  color: var(--blue-deep);
+  margin: 12px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--blue-soft);
+}
+
+
+@media (max-width: 700px) {
+
+.journey-toggle { grid-template-columns: 78px 1fr 24px; }
+
+.journey-detail { padding-left: 0; }
+}
+
+/* 11c. CURIOSITY MAP (12.2) ------------------------------------------------ */
+.curiosity-map {
+  margin-top: 78px; position: relative; z-index: 1;
+  border: 1px solid var(--border-strong); background: var(--surface);
+  border-radius: var(--radius);
+  padding: clamp(20px, 3vw, 34px);
+}
+
+
+.curiosity-head {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  gap: 24px; margin-bottom: 18px;
+}
+
+
+.curiosity-heading {
+  font-size: clamp(30px, 4.2vw, 54px); line-height: 0.95;
+  letter-spacing: -0.06em; font-weight: 600; margin: 0;
+}
+
+
+.curiosity-heading em { font-style: normal; color: var(--blue); }
+
+
+.curiosity-intro {
+  max-width: 350px; font-size: 13px; line-height: 1.7;
+  color: var(--text-2); margin: 0 0 4px;
+}
+
+
+.curiosity-layout {
+  display: grid; grid-template-columns: 1.25fr 0.75fr;
+  gap: 16px; align-items: stretch;
+}
+
+
+.curiosity-stage { position: relative; min-height: 400px; }
+
+
+.curiosity-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+
+.curiosity-links line {
+  stroke: var(--border-strong); stroke-width: 1.5;
+  stroke-dasharray: 4 7; fill: none;
+  transition: stroke var(--hover) var(--ease), opacity var(--hover) var(--ease);
+}
+
+
+.curiosity-stage.has-selection .curiosity-links line { opacity: 0.35; }
+
+
+.curiosity-stage.has-selection .curiosity-links line.is-active {
+  stroke: var(--blue); opacity: 1; stroke-dasharray: none;
+}
+
+
+.curiosity-grid-dots circle { fill: var(--border-strong); }
+
+/* Node controls: real buttons, keyboard accessible, positioned over the
+   SVG coordinates on desktop; a stacked list on small screens. */
+.curiosity-nodes { position: absolute; inset: 0; }
+
+
+.curiosity-node {
+  position: absolute; transform: translate(-50%, -50%);
+  display: inline-flex; flex-direction: column; align-items: center; gap: 3px;
+  border: 1.5px solid var(--border-strong); background: var(--surface);
+  border-radius: 14px; padding: 10px 13px; min-width: 96px;
+  box-shadow: 3px 3px 0 var(--surface-2);
+  transition: border-color var(--micro) var(--ease), background var(--micro) var(--ease),
+              transform var(--micro) var(--ease), opacity var(--hover) var(--ease),
+              box-shadow var(--micro) var(--ease);
+}
+
+
+.curiosity-node b { font-size: 11px; letter-spacing: 0.02em; color: var(--ink); }
+
+
+.curiosity-node small {
+  font-family: var(--mono); font-size: 7px; letter-spacing: 0.08em;
+  color: var(--text-3); text-transform: uppercase;
+}
+
+
+.curiosity-node:hover { border-color: var(--blue); transform: translate(-50%, -50%) translateY(-2px); }
+
+
+.curiosity-node[aria-pressed="true"] {
+  border-color: var(--blue); background: var(--blue-pale);
+  box-shadow: 3px 3px 0 var(--blue-soft);
+}
+
+
+.curiosity-node[aria-pressed="true"] small { color: var(--blue-deep); }
+
+/* The primary node keeps white subtext even while selected */
+.curiosity-node--primary[aria-pressed="true"] small { color: #fff; opacity: 0.92; }
+
+/* The centre node (DATA) reads as the anchor of the map. */
+.curiosity-node--primary {
+  background: var(--blue); border-color: var(--blue);
+  color: #fff; border-radius: 999px; padding: 16px 20px;
+}
+
+
+.curiosity-node--primary b { color: #fff; font-size: 13px; letter-spacing: 0.08em; }
+
+
+.curiosity-node--primary small { color: #fff; opacity: 0.92; }
+
+
+.curiosity-node--primary:hover { transform: translate(-50%, -50%) translateY(-2px); }
+
+
+.curiosity-node--primary[aria-pressed="true"] { background: var(--blue-hover); border-color: var(--blue-hover); }
+
+/* Unrelated nodes recede modestly while one is selected */
+.curiosity-stage.has-selection .curiosity-node:not([aria-pressed="true"]) { opacity: 0.62; }
+
+
+.curiosity-node:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+
+
+.curiosity-panel {
+  border: 1px solid var(--border-soft); border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  padding: clamp(18px, 2.4vw, 26px);
+  display: flex; flex-direction: column; gap: 9px; min-height: 300px;
+  position: relative; overflow: hidden;
+}
+
+
+.curiosity-panel::before {
+  content: ""; position: absolute; right: -26px; top: -26px;
+  width: 84px; height: 84px; background: var(--blue); opacity: 0.1;
+  transform: rotate(45deg);
+}
+
+
+.curiosity-panel-label {
+  font-family: var(--mono); font-size: 8px; letter-spacing: 0.14em;
+  color: var(--blue);
+}
+
+
+.curiosity-panel-name {
+  font-size: clamp(22px, 2.6vw, 34px); letter-spacing: -0.05em;
+  line-height: 1; font-weight: 600;
+}
+
+
+.curiosity-panel-status {
+  align-self: flex-start;
+  font-family: var(--mono); font-size: 8px; letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 999px; padding: 5px 11px;
+  background: var(--border-soft); color: var(--text-2);
+}
+
+
+.curiosity-panel-status[data-level="primary"] { background: var(--blue); color: #fff; }
+
+
+.curiosity-panel-status[data-level="exploring"] { background: var(--blue-pale); color: var(--blue-deep); }
+
+
+.curiosity-panel-status[data-level="future"] { background: transparent; border: 1px dashed var(--border-strong); color: var(--text-3); }
+
+
+.curiosity-panel-detail { font-size: 13px; line-height: 1.7; color: var(--text-2); margin: 4px 0 0; }
+
+/* --- V6.6 Fase 3: panel status row, SEE ALSO, meta line ------------------- */
+/* 3.1 Three-tier instrument strip; the active tier follows the honest
+   status level of the selected node. */
+.curiosity-status-row {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+/* 3.2 SEE ALSO: quiet cross-references into the archive. */
+.curiosity-see-also {
+  margin-top: auto; padding-top: 12px;
+  border-top: 1px solid var(--border-soft);
+}
+
+/* 3.3 Archive meta counter at the foot of the panel. */
+.curiosity-meta {
+  margin-top: 8px;
+  font-family: var(--mono); font-size: 8px; letter-spacing: 0.16em;
+  color: var(--text-3);
+  text-align: right;
+}
+
+
+.curiosity-hint {
+  margin: 14px 0 0; font-family: var(--mono); font-size: 8px;
+  letter-spacing: 0.1em; color: var(--text-3);
+}
+
+/* 11d. LEARNING JOURNEY RAIL (12.5) ---------------------------------------- */
+.journey-body { position: relative; padding-left: 20px; }
+
+
+.journey-rail {
+  position: absolute; left: 3px; top: 8px; bottom: 8px; width: 2px;
+  background: var(--border-soft); border-radius: 2px; overflow: hidden;
+}
+
+
+.journey-rail span {
+  display: block; width: 100%; height: 100%;
+  background: linear-gradient(180deg, var(--blue), var(--blue-deep));
+  transform: scaleY(0); transform-origin: top;
+}
+
+
+.journey-item.is-active .journey-phase::before {
+  background: var(--blue-deep);
+  box-shadow: 0 0 0 3px var(--blue-pale);
+}
+
+
+.journey-item.is-active h4 { color: var(--blue-deep); }
+
+/* 5.3 Field notes: sticky notes under the about copy */
+.about-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-self: start;
+  margin-top: 26px;
+  max-width: 420px;
+  grid-column: 1;
+}
+
+
+.about-artwork { grid-column: 2; grid-row: 1; }
+
+/* 5.3.5 Chip press 3D: tactile push-down on click */
+.software-chip:active,
+.skill-chip:active {
+  transform: translateY(2px) scale(0.98);
+  box-shadow: 0 0 0 var(--border-strong);
+}
+
+/* 5.4.2 Rail nodes: one dot per journey phase, GSAP owns scale only */
+.rail-node {
+  position: absolute;
+  left: 50%;
+  top: var(--node-top, 0%);
+  margin-left: -4px;
+  margin-top: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border-strong);
+  transition: background var(--hover) var(--ease),
+              box-shadow var(--hover) var(--ease);
+  z-index: 2;
+}
+
+
+.rail-node.is-active {
+  background: var(--blue);
+  box-shadow: 0 0 0 4px var(--blue-pale);
+}
+
+/* 5.4.4 Ghost state: upcoming stages dim while motion drives the rail.
+   0.6 keeps the dimmed titles at roughly 4.6:1 contrast on the white
+   card (accessibility first per guide section 10). */
+.journey-body.js-motion .journey-item:not(.is-active) h4 { opacity: 0.6; }
+
+/* 5.4.5 Stabilo highlight: the active stage is marked like a highlighter */
+.journey-item {
+  background-image: linear-gradient(90deg, var(--blue-pale), transparent);
+  background-size: 0% 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.4s var(--ease);
+  padding-left: 6px;
+  margin-left: -6px;
+}
+
+
+.journey-item.is-active { background-size: 100% 100%; }
+
+/* 12. RESPONSIVENESS --------------------------------------------------------- */
+@media (max-width: 1050px) {
+/* Field notes (5.3): back to normal flow once the about layout stacks */
+.about-artwork { grid-column: auto; grid-row: auto; }
+
+.about-notes { grid-column: auto; max-width: none; }
+/* Curiosity map: stack the graph above the panel */
+.curiosity-layout { grid-template-columns: 1fr; }
+
+.curiosity-stage { min-height: 360px; }
+
+.curiosity-panel { min-height: 0; }
+}
+
+
+@media (max-width: 700px) {
+
+.about-section { padding-top: 84px; padding-bottom: 64px; }
+
+.about-layout { grid-template-columns: 1fr; gap: 30px; }
+
+.about-artwork { min-height: 380px; }
+
+.id-art { max-height: 350px; width: min(84%, 370px); }
+/* Curiosity map: nodes become a readable stacked list; the SVG
+     coordinates no longer apply, so decorative connectors hide. */
+.curiosity-map { margin-top: 52px; padding: 18px 16px; }
+
+.curiosity-head { flex-direction: column; align-items: flex-start; gap: 12px; }
+
+.curiosity-intro { max-width: 440px; }
+
+.curiosity-svg { display: none; }
+
+.curiosity-stage { min-height: 0; }
+
+.curiosity-nodes { position: static; display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+
+.curiosity-node { position: static; transform: none; min-width: 0; align-items: flex-start; }
+
+.curiosity-node:hover { transform: translateY(-2px); }
+
+.curiosity-node--primary { grid-column: 1 / -1; }
+
+.curiosity-node--primary:hover { transform: translateY(-2px); }
+
+.curiosity-panel { min-height: 0; }
+
+.journey-grid { margin-top: 42px; grid-template-columns: 1fr; }
+
+.journey-item { grid-template-columns: 78px 1fr; }
+
+.journey-status { display: none; }
+}
+
+
+@media (max-width: 420px) {
+
+.software-chip { height: 36px; min-width: 36px; font-size: 9px; }
+
+.curiosity-nodes { grid-template-columns: 1fr; }
+
+.curiosity-heading { font-size: clamp(26px, 8vw, 34px); }
+}
+
+/* 13. REDUCED MOTION --------------------------------------------------------- */
+/* Motion initial states are applied by JavaScript, so content is fully
+   visible even when every animation is disabled or fails to load.
+   Components that animate to a "finished" state render that state here. */
+@media (prefers-reduced-motion: reduce) {
+/* Learning journey rail: show the completed line immediately */
+.journey-rail span { transform: scaleY(1); }
+/* 5.4 Journey: nodes full size, titles full contrast, no stabilo sweep */
+.rail-node { transform: none !important; }
+
+.journey-body.js-motion .journey-item:not(.is-active) h4 { opacity: 1; }
+
+.journey-item { background: none; padding-left: 0; margin-left: 0; }
+
+.journey-item.is-active { background: none; }
+}
+
+
+.heading-stamp-pet { text-align: right; }
+
+/* 15.4 ABOUT FIELD NOTES (4.4): margin annotations + leader lines */
+.about-layout { position: relative; }
+
+
+.skill-constellation-wrap { position: relative; margin-top: 26px; }
+
+
+.skill-constellation { display: block; width: 100%; height: auto; }
+
+
+.skill-constellation__edge {
+  fill: none; stroke: rgba(37, 99, 235, 0.3); stroke-width: 1;
+  stroke-dasharray: 4 7; stroke-linecap: round;
+}
+
+
+.skill-constellation__node { fill: var(--blue); }
+
+
+.skill-constellation__node--center { fill: var(--blue-deep); }
+
+
+.about-layout { position: relative; }
+
+
+.about-artwork { position: relative; }
+
+/* 5.3 About: leader line + dot matrix. */
+.ornament-about-leader {
+  top: 10%; left: 0; width: 60px; height: 60px;
+  opacity: 0.2; color: var(--blue-deep);
+}
+
+
+.ornament-about-dots {
+  inset: 0;
+  opacity: 0.06; color: var(--blue);
+  -webkit-mask-image: radial-gradient(ellipse 70% 80% at center, #000 25%, transparent 80%);
+  mask-image: radial-gradient(ellipse 70% 80% at center, #000 25%, transparent 80%);
+}
+
+/* Reduced motion: every ornament stays visible; only reveal animations
+   are skipped (script.js never runs them under the preference). */
+@media (prefers-reduced-motion: reduce) {
+
+.ornament-about-leader { opacity: 0.2; }
+
+.ornament-about-dots { opacity: 0.06; }
+}
+
+
+@media (max-width: 1100px) {
+
+.ornament-about-leader { display: none; }
+}
+
+/* Stacking contexts so the z-index: -1 ornaments below stay pinned above
+   their section background but below every piece of content, and can
+   never escape behind an ancestor surface. */
+.curiosity-panel { isolation: isolate; }

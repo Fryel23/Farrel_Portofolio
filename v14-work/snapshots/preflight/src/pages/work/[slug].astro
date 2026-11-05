@@ -1,0 +1,237 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/global.css';
+import '../../styles/work.css';
+/* V10.0 FASE 3: panggung naratif 3 scene + stylesheet-nya. */
+import CaseNarrative from '../../components/work/CaseNarrative.astro';
+import ProjectCard from '../../components/work/ProjectCard.astro';
+import '../../styles/case-narrative.css';
+import { getCollection, render } from 'astro:content';
+/* V12.2: integrity gate lintas-entri + taxonomy kanonis. */
+import { assertWorkIntegrity } from '../../data/content-integrity.js';
+import { DISCIPLINES, TECHNOLOGIES, taxonomyLabel } from '../../data/taxonomy.js';
+
+/* V8.1 Fase 4.1: entri berstatus RESERVED tidak pernah menghasilkan
+   rute publik. Filter dilakukan di getStaticPaths (bukan di komponen
+   halaman) sesuai rekomendasi Astro untuk mengecualikan rute.
+   V10.2 B.2: nomor case study di-derive dari indeks getStaticPaths
+   (sort deterministik by id) sehingga proyek kedua otomatis "02".
+   V12.2: SEBELUM filtering, seluruh entri (termasuk RESERVED) melewati
+   integrity gate lintas-entri (duplikat contentId, target relasi,
+   kebijakan visibilitas). Koleksi invalid menggagalkan build dengan
+   pesan "[CONTENT INTEGRITY]" yang actionable — konten invalid tidak
+   pernah sampai ke rute. */
+export async function getStaticPaths() {
+  const allEntries = await getCollection('work');
+  assertWorkIntegrity(allEntries, 'work/[slug].astro getStaticPaths');
+
+  const entries = allEntries
+    .filter(({ data }) => data.status !== 'RESERVED')
+    .sort((a, b) => a.id.localeCompare(b.id));
+  return entries.map((entry, index) => ({
+    params: { slug: entry.id },
+    props: { entry, number: String(index + 1).padStart(2, '0') },
+  }));
+}
+
+const { entry, number } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+
+/* V12.2: resolve relasi → entri tervalidasi. Satu getCollection(), satu
+   Map (tanpa O(n²) per kartu). Target dijamin ada, tidak self, tidak
+   duplikat, dan routeable oleh integrity gate; urutan kartu = urutan
+   relatedIds (order metadata dipertahankan). .filter(Boolean) hanya
+   menyempitkan tipe (null dari Map.get), bukan fallback konten invalid. */
+const allWork = await getCollection('work');
+const entryByContentId = new Map(allWork.map((candidate) => [candidate.data.contentId, candidate]));
+const relatedEntries = d.relatedIds
+  .map((contentId) => entryByContentId.get(contentId))
+  .filter((candidate) => Boolean(candidate));
+
+/* V12.2: label chips dari definisi kanonis. Unknown id TIDAK dirender
+   diam-diam (schema Zod sudah menolak id di luar taxonomy; filter ini
+   lapis pertahanan kedua sesuai kontrak render). */
+const disciplineChips = d.disciplines.map((id) => taxonomyLabel(DISCIPLINES, id)).filter(Boolean);
+const technologyChips = d.technologies.map((id) => taxonomyLabel(TECHNOLOGIES, id)).filter(Boolean);
+const hasTaxonomyChips = disciplineChips.length > 0 || technologyChips.length > 0;
+---
+
+<BaseLayout title={`${d.title} · Farrel Islami Putra`} description={d.description} pageKey="work-detail">
+  <article class="case-study" aria-labelledby="case-title">
+    <div class="case-study-inner">
+      <p class="section-kicker">{d.kicker || `${number} / CASE STUDY`}</p>
+      <h1 class="case-study-title" id="case-title">
+        <span class="line-mask"><span class="line">{d.title}</span></span>
+      </h1>
+      <div class="case-study-meta">
+        <span class="case-meta-item"><span class="mini-label">CATEGORY</span>{d.category}</span>
+        <span class="case-meta-item"><span class="mini-label">TAG</span>{d.tag}</span>
+        <span class="case-meta-item"><span class="mini-label">STATUS</span><span class="project-status">{d.status}</span></span>
+        {
+          d.stack && d.stack.length > 0 && (
+            <span class="case-meta-item">
+              <span class="mini-label">STACK</span>
+              <span class="project-stack">
+                {d.stack.map((tech) => (
+                  <span class="stack-chip">{tech}</span>
+                ))}
+              </span>
+            </span>
+          )
+        }
+      </div>
+
+      {
+        d.image && (
+          <div class="case-study-cover" transition:name={`project-image-${entry.id}`}>
+            <!-- V9.0 Batasan 8: cover eager di atas lipatan = aset kritis
+                 boot sequence (halaman detail bisa menjadi landing pertama). -->
+            <img src={d.image} alt={`${d.title}: project cover illustration`} loading="eager" decoding="async" data-opening-critical />
+          </div>
+        )
+      }
+
+      {/* V12.2: Konteks — hanya dirender bila frontmatter menyediakannya
+          (field editorial opsional). Teks ini bukan duplikat description:
+          description = ringkasan kartu; context = latar proyek. */}
+      {
+        d.context && (
+          <section class="case-context" aria-labelledby="case-context-title">
+            <h2 class="case-section-title" id="case-context-title">Konteks</h2>
+            <p class="case-context-text">{d.context}</p>
+          </section>
+        )
+      }
+
+      {/* V10.0 FASE 3: scrollytelling 3 scene (Masalah -> Proses ->
+          Temuan) sebagai section full-bleed SAUDARA dari case-study-body
+          (bukan di dalamnya): spesifikasi merender panggung sticky
+          setinggi 100vh dengan padding clamp(22px, 7vw, 110px) - bila
+          diletakkan di dalam .case-study-body, lebar panggung ikut
+          terkurung kolom prosa (~720px) dan panggung tidak pernah
+          full-bleed. Hanya muncul bila frontmatter punya `narrative`. */}
+      <CaseNarrative narrative={d.narrative} />
+
+      <div class="case-study-body prose-archive">
+        <Content />
+      </div>
+
+      {/* V12.2: bagian editorial terstruktur — masing-masing hanya
+          dirender bila datanya ada (editorial sections tampil ketika
+          sesuai). Methodology = urutan proses (ol); findings/limitations
+          = enumerasi (ul). */}
+      {
+        d.methodology && d.methodology.length > 0 && (
+          <section class="case-structured" aria-labelledby="case-methodology-title">
+            <h2 class="case-section-title" id="case-methodology-title">Metodologi</h2>
+            <ol class="case-steps" role="list">
+              {d.methodology.map((step) => (
+                <li>{step}</li>
+              ))}
+            </ol>
+          </section>
+        )
+      }
+      {
+        d.findings && d.findings.length > 0 && (
+          <section class="case-structured" aria-labelledby="case-findings-title">
+            <h2 class="case-section-title" id="case-findings-title">Temuan</h2>
+            <ul class="case-notes" role="list">
+              {d.findings.map((finding) => (
+                <li>{finding}</li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+      {
+        d.limitations && d.limitations.length > 0 && (
+          <section class="case-structured" aria-labelledby="case-limitations-title">
+            <h2 class="case-section-title" id="case-limitations-title">Keterbatasan</h2>
+            <ul class="case-notes" role="list">
+              {d.limitations.map((limitation) => (
+                <li>{limitation}</li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+
+      {/* V12.2: taxonomy chips — label dari definisi kanonis; bukan
+          tombol/link (tanpa aksi = tidak terlihat interaktif). */}
+      {
+        hasTaxonomyChips && (
+          <section class="case-taxonomy" aria-labelledby="case-taxonomy-title">
+            <h2 class="case-section-title" id="case-taxonomy-title">Klasifikasi</h2>
+            {disciplineChips.length > 0 && (
+              <div class="case-taxonomy-row">
+                <span class="mini-label">DISCIPLINES</span>
+                <ul class="case-chip-list" role="list">
+                  {disciplineChips.map((label) => (
+                    <li class="stack-chip">{label}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {technologyChips.length > 0 && (
+              <div class="case-taxonomy-row">
+                <span class="mini-label">TECHNOLOGIES</span>
+                <ul class="case-chip-list" role="list">
+                  {technologyChips.map((label) => (
+                    <li class="stack-chip">{label}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </section>
+        )
+      }
+
+      {/* V12.2: Proyek Terkait — data-driven dari relatedIds (tervalidasi),
+          memakai ulang ProjectCard tanpa implementasi kartu kedua. Section
+          tidak dirender bila relasi kosong. Kartu memakai title/description
+          asli dan href ke rute aktual /work/<entry.id>. */}
+      {
+        relatedEntries.length > 0 && (
+          <section class="case-related" aria-labelledby="case-related-title">
+            <h2 class="case-section-title" id="case-related-title">Proyek Terkait</h2>
+            <div class="case-related-grid">
+              {relatedEntries.map((relatedEntry, index) => (
+                <ProjectCard
+                  project={{ ...relatedEntry.data, id: relatedEntry.id, href: `/work/${relatedEntry.id}` }}
+                  index={index}
+                />
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      <div class="case-study-actions">
+        {
+          d.link && /^https?:\/\//i.test(d.link) && (
+            <a class="button button-primary magnetic-button" href={d.link} target="_blank" rel="noopener noreferrer">
+              {d.linkLabel || 'View project'} <span aria-hidden="true">↗</span>
+            </a>
+          )
+        }
+        <a class="button button-outline magnetic-button" href="/work">Back to the archive <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<script>
+  import '../../scripts/global.js';
+  /* V10.0 FASE 3: narrative dipanggil lewat bootPage halaman (bukan
+     top-level) karena modul halaman hanya dieksekusi sekali per sesi;
+     bootPage memastikan initCaseNarrative berjalan pada SETIAP
+     astro:page-load (navigasi masuk/keluar case study) dan ikut siklus
+     cleanup after-swap. Guard elemen di dalam initCaseNarrative
+     membuatnya no-op di halaman lain yang memuat modul ini. */
+  import { initCaseNarrative } from '../../scripts/case-narrative.js';
+  import { bootPage } from '../../scripts/core.js';
+
+  bootPage({ motion: [initCaseNarrative] });
+</script>

@@ -7,14 +7,24 @@ interface Props {
     title: string;
     kicker?: string;
     description?: string;
+    category?: string;
   };
+  index?: number;
 }
 
-const { slot } = Astro.props;
+const { slot, index = 0 } = Astro.props;
+const code = `RES-0${index + 2}`;
 ---
 
-<article class="project-card project-card--reserved" aria-label="Reserved placeholder: no project announced yet">
-  <span class="reserved-kicker">{slot.kicker || 'COMING SOON'}</span>
-  <h3 class="reserved-title">{slot.title || 'Reserved slot'}</h3>
-  <p class="reserved-text">{slot.description || 'A future entry will live here.'}</p>
+<article class="project-card project-card--reserved reserved-card--ledger" aria-label="Slot arsip terjadwal: proyek belum dipublikasikan">
+  <div class="reserved-ledger-code" aria-hidden="true">{code}</div>
+  <div class="reserved-ledger-main">
+    <span class="reserved-kicker">{slot.kicker || `${code} · SLOT MENDATANG`}</span>
+    <h3 class="reserved-title">{slot.title || 'Slot riset mendatang'}</h3>
+    <p class="reserved-text">{slot.description || 'Eksperimen ini sedang disiapkan dan akan dipublikasikan setelah dokumentasinya lengkap.'}</p>
+  </div>
+  <div class="reserved-ledger-meta">
+    <span class="reserved-ledger-cat">{slot.category || 'ARSIP RISET'}</span>
+    <span class="reserved-ledger-badge">RESERVED</span>
+  </div>
 </article>

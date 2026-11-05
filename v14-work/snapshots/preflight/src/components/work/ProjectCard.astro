@@ -1,0 +1,71 @@
+---
+/* ProjectCard: mirror persis projectCardMarkup() di work.js V6.7
+   (struktur class sama), dirender saat build dari Content Collection.
+   Hanya proyek nyata; slot reserved memakai ReservedCard.astro.
+   V7.4 Fase 2: `id` (id entri collection, mis. "aqi-cirebon") wajib
+   diteruskan pemanggil; dipakai sebagai nama transisi view transition
+   yang identik dengan .case-study-cover di halaman detail, sehingga
+   gambar kartu "terbang" membesar menjadi cover case study. */
+interface Props {
+  project: {
+    id: string;
+    title: string;
+    tag: string;
+    category: string;
+    image: string;
+    description: string;
+    stack: string[];
+    status: string;
+    link?: string;
+    linkLabel?: string;
+    href?: string;
+  };
+  index: number;
+}
+
+const { project, index } = Astro.props;
+const imageUrl = project.image && project.image.trim() !== '' ? project.image : '/assets/project-aqi.svg';
+const number = String(index + 1).padStart(2, '0');
+---
+
+<article class="project-card" data-category={project.category} data-slug={project.href ? project.href.split('/').pop() : undefined}>
+  <div class="project-cover" transition:name={`project-image-${project.id}`}>
+    <div class="project-cover-inner">
+      <img src={imageUrl} alt={`${project.title}: project cover illustration`} loading="lazy" decoding="async" />
+    </div>
+    <span class="project-tag">{project.tag || project.category || 'Project'}</span>
+    <span class="project-number">{number} / ARCHIVE</span>
+  </div>
+  <div class="project-info">
+    <h3>{project.title}</h3>
+    <p class="project-desc">{project.description}</p>
+    {
+      Array.isArray(project.stack) && project.stack.length > 0 && (
+        <div class="project-stack">
+          {project.stack.map((tech) => (
+            <span class="stack-chip">{tech}</span>
+          ))}
+        </div>
+      )
+    }
+    <div class="project-foot">
+      {project.status && <span class="project-status">{project.status}</span>}
+      {
+        project.href && (
+          <a class="project-link" href={project.href}>
+            Read case study
+            <span class="project-link-arrow" aria-hidden="true">↗</span>
+          </a>
+        )
+      }
+      {
+        !project.href && project.link && /^https?:\/\//i.test(project.link) && (
+          <a class="project-link" href={project.link} target="_blank" rel="noopener noreferrer">
+            {project.linkLabel || 'View project'}
+            <span class="project-link-arrow" aria-hidden="true">↗</span>
+          </a>
+        )
+      }
+    </div>
+  </div>
+</article>

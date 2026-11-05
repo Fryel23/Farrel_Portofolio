@@ -12,44 +12,57 @@ import HeroCanvas from './HeroCanvas.astro';
   <div class="geo geo-two" aria-hidden="true"></div>
   <div class="geo geo-three geo-blue" aria-hidden="true"></div>
 
+  <!-- V14.0 Swiss Technical Grid & Registration Marks (+) -->
+  <div class="hero-swiss-grid" aria-hidden="true">
+    <span class="hero-reg-mark hero-reg-mark--tl">+</span>
+    <span class="hero-reg-mark hero-reg-mark--tr">+</span>
+    <span class="hero-reg-mark hero-reg-mark--bl">+</span>
+    <span class="hero-reg-mark hero-reg-mark--br">+</span>
+  </div>
+
   <!-- V5 §4.2 Observatory: garis pengukur tepi tipis dengan label arsip.
        Dekorasi murni; disembunyikan CSS pada viewport kecil. -->
   <div class="hero-ruler" aria-hidden="true">
-    <span class="hero-ruler-label">00 / START</span>
+    <span class="hero-ruler-label">01 / PERKENALAN</span>
     <span class="hero-ruler-line"></span>
-    <span class="hero-ruler-label hero-ruler-label--bottom">01 / WORK</span>
+    <span class="hero-ruler-label hero-ruler-label--bottom">02 / STUDI KASUS</span>
   </div>
 
   <div class="hero-copy">
-    <div class="eyebrow"><span class="eyebrow-dot"></span><span id="hero-eyebrow">INFORMATICS ENGINEERING · UNIKOM · EST. 2026</span></div>
+    <div class="eyebrow"><span class="eyebrow-dot"></span><span id="hero-eyebrow">FARREL ISLAMI PUTRA · S1 TEKNIK INFORMATIKA UNIKOM · ANGKATAN 2026</span></div>
     <h1 class="hero-title" id="hero-title">
-      <span class="line-mask"><span class="line">Curiosity,</span></span>
-      <span class="line-mask"><span class="line">grounded in <em>data.</em><sup class="sparkle" aria-hidden="true">✳</sup></span></span>
+      <span class="line-mask"><span class="line">Belajar memahami dunia</span></span>
+      <span class="line-mask"><span class="line">lewat <em>data &amp; kode.</em><sup class="sparkle" aria-hidden="true">✳</sup></span></span>
     </h1>
-    <p class="hero-tail" id="hero-tail">Kadang bingung, kadang berhasil. Ini catatan prosesnya.</p>
-    <p class="hero-description" id="hero-subtitle">Saya Farrel Islami Putra, mahasiswa S1 Teknik Informatika 2026 di Universitas Komputer Indonesia. Saya tertarik pada teknologi karena ingin tahu cara kerjanya, terutama yang bisa dipakai untuk menyelesaikan masalah sehari-hari. Fokus utama saya adalah tentang data, tapi saya juga penasaran dengan software dan sistem yang lebih luas. Portofolio ini bukan tempat memamerkan yang sudah selesai, melainkan tempat dari apa yang sedang saya pelajari.</p>
+    <p class="hero-tail" id="hero-tail">Kadang bingung, kadang berhasil. Ini catatan terbuka dari proses belajarnya.</p>
+    <p class="hero-description" id="hero-subtitle">Saya Farrel Islami Putra, mahasiswa S1 Teknik Informatika 2026 di Universitas Komputer Indonesia (UNIKOM). Saya tertarik pada teknologi karena ingin tahu cara kerjanya, terutama saat data, rekayasa perangkat lunak, dan AI dipakai untuk memahami persoalan nyata di sekitar kita, seperti analisis Indeks Standar Pencemar Udara (ISPU) Cirebon periode 2021–2025.</p>
     <div class="hero-actions">
-      <!-- V5.3 Global Archive Navigator: pencarian hero kini menavigasi
-           antar halaman arsip (allowlist). Input tidak pernah dirender
-           sebagai HTML: script memakai createElement/textContent saja. -->
+      <a class="button button-primary magnetic-button" id="hero-cta" href="/work">Lihat Proyek Utama <span aria-hidden="true">↗</span></a>
+      <a class="button button-outline magnetic-button" id="hero-docs" href="/about">Tentang Saya <span aria-hidden="true">→</span></a>
+
+      <!-- V14.0 Quick Topic Navigator & Quick Jump Pills -->
       <div class="archive-search-wrap">
-        <form class="search-box" id="project-search" role="search" aria-label="Search the archive sections">
-          <label class="sr-only" for="search-input">Search the archive: jump to a section by keyword</label>
-          <input id="search-input" type="search" placeholder="Search the archive…" autocomplete="off" maxlength="80"
+        <label class="archive-search-label" for="search-input">LOMPAT CEPAT KE TOPIK ATAU HALAMAN</label>
+        <form class="search-box" id="project-search" role="search" aria-label="Pencarian cepat bagian arsip">
+          <input id="search-input" type="search" placeholder="Mau menjelajahi bagian apa? (Misal: AQI Cirebon, CSV, Python, Game, Kontak)" autocomplete="off" maxlength="80"
                  role="combobox" aria-expanded="false" aria-controls="archive-suggestions"
                  aria-autocomplete="list" aria-haspopup="listbox" />
-          <button type="submit" aria-label="Search the archive">
+          <button type="submit" aria-label="Cari di arsip">
             <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.4"></circle><path d="m16 16 4.2 4.2"></path></svg>
           </button>
         </form>
-        <div class="archive-suggestions" id="archive-suggestions" role="listbox" aria-label="Archive destinations" hidden></div>
-        <p class="archive-search-hint" id="archive-search-hint" aria-hidden="true" hidden>ARROW KEYS TO CHOOSE · ENTER TO GO · ESC TO CLOSE</p>
+        <div class="archive-suggestions" id="archive-suggestions" role="listbox" aria-label="Tujuan arsip" hidden></div>
+        <p class="archive-search-hint" id="archive-search-hint" aria-hidden="true" hidden>PANAH ATAS/BAWAH UNTUK MEMILIH · ENTER UNTUK BUKA · ESC UNTUK TUTUP</p>
         <p class="archive-search-note" id="archive-search-note" role="status" aria-live="polite" hidden></p>
+        <div class="hero-quick-pills" aria-label="Pintasan topik populer">
+          <a class="hero-quick-pill" href="/work/aqi-cirebon"><span>01</span> Studi Kasus AQI Cirebon (2021–2025)</a>
+          <a class="hero-quick-pill" href="/lab"><span>02</span> Penjelajah Data AQI (/lab)</a>
+          <a class="hero-quick-pill" href="/lab/csv"><span>03</span> CSV Profiler (/lab/csv)</a>
+          <a class="hero-quick-pill" href="/codex"><span>04</span> Engineering Codex (/codex)</a>
+        </div>
       </div>
-      <a class="button button-primary magnetic-button" id="hero-cta" href="/work">Explore the work <span aria-hidden="true">↗</span></a>
-      <a class="button button-outline magnetic-button" id="hero-docs" href="https://drive.google.com/drive/folders/1YaoRkFvdlk29vdRAFQxj5ypVD-7WDtTl?usp=drive_link" target="_blank" rel="noopener noreferrer">View documentation <span aria-hidden="true">↗</span></a>
     </div>
-    <div class="hero-note"><span class="note-square" aria-hidden="true">✦</span><span id="hero-note">DATA · SOFTWARE · AI · DATABASES · IOT</span></div>
+    <div class="hero-note"><span class="note-square" aria-hidden="true">✦</span><span id="hero-note">DATA · REKAYASA PERANGKAT LUNAK · AI &amp; MACHINE LEARNING · BASIS DATA · IOT</span></div>
   </div>
 
   <div class="hero-visual">
@@ -88,7 +101,7 @@ import HeroCanvas from './HeroCanvas.astro';
           <rect class="atlas-tick" x="456" y="126" width="88" height="1" />
           <rect class="atlas-tick" x="543" y="86" width="1" height="88" />
         </g>
-        <text class="atlas-label atlas-corner" x="14" y="26">FIELD / 01</text>
+        <text class="atlas-label atlas-corner" x="14" y="26">FIELD / 01 · CIREBON 2021–2025</text>
         <text class="atlas-label atlas-label-a" x="214" y="236">OBSERVATION</text>
         <text class="atlas-label atlas-label-b" x="440" y="108">DATA POINT</text>
         <text class="atlas-label atlas-label-c" x="30" y="516">PATTERN</text>
@@ -107,21 +120,21 @@ import HeroCanvas from './HeroCanvas.astro';
     <div class="floating-tool tool-three" aria-hidden="true">SQL</div>
     <div class="pixel-frame" id="pixel-frame">
       <div class="pixel-card">
-        <div class="profile-topline"><span>STUDENT PROFILE</span><span class="status-dot">● OPEN TO LEARN</span></div>
+        <div class="profile-topline"><span>PROFIL MAHASISWA</span><span class="status-dot">● AKTIF BELAJAR</span></div>
         <div class="profile-brand-row">
           <div class="profile-emblem">FIP</div>
           <div class="profile-meta">
             <strong>Farrel Islami Putra</strong>
-            <span>Informatics Eng. @ UNIKOM</span>
+            <span>S1 Teknik Informatika · UNIKOM</span>
             <small>DATA · SOFTWARE · AI · IOT</small>
           </div>
         </div>
-        <div class="profile-bottom"><span>PERSONAL ARCHIVE / 01</span><span class="tiny-arrow" aria-hidden="true">↗</span></div>
+        <div class="profile-bottom"><span>ARSIP PERSONAL / V14.0</span><span class="tiny-arrow" aria-hidden="true">↗</span></div>
       </div>
     </div>
     <div class="hero-sticker">Stay curious.<br />Stay <b>rigorous.</b></div>
-    <span class="visual-caption">FIG. 01 · LEARNER PROFILE</span>
+    <span class="visual-caption">FIG. 01 · PROFIL PEMBELAJAR</span>
   </div>
 
-  <a class="scroll-cue" href="/work"><span class="scroll-line" aria-hidden="true"></span> SCROLL TO EXPLORE</a>
+  <a class="scroll-cue" href="#work"><span class="scroll-line" aria-hidden="true"></span> GULIR KE STUDI KASUS</a>
 </section>

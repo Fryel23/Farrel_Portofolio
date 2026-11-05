@@ -38,8 +38,28 @@ import '../../styles/lab.css';
     </div>
   </section>
 
-  <!-- ============ EXPLORER (spec §9.2-B … §9.2-G) ============ -->
+  <!-- ============ EXPLORER (spec §9.2-B … §9.2-G + V14.0 Air Aware Workbench) ============ -->
   <section class="lab-section section-shell" data-lab-root aria-label="Explorer kualitas udara Kota Cirebon">
+    <!-- V14.0 Human-First Onboarding Strip -->
+    <aside class="lab-onboarding-strip" aria-labelledby="lab-onboarding-title">
+      <div class="lab-onboarding-header">
+        <div>
+          <p class="lab-panel-title">PANDUAN CEPAT · HUMAN-FIRST ONBOARDING</p>
+          <h2 class="lab-onboarding-title" id="lab-onboarding-title">Cara Membaca Penjelajah Kualitas Udara Ini</h2>
+        </div>
+        <a class="lab-onboarding-link" href="/lab/methodology">Baca Metodologi Lengkap ↗</a>
+      </div>
+      <p class="lab-onboarding-desc">
+        <strong>ISPU (Indeks Standar Pencemar Udara)</strong> mengubah konsentrasi gas <strong>SO₂</strong> (sulfur dioksida dari pembakaran bahan bakar/industri) dan <strong>NO₂</strong> (nitrogen dioksida dari emisi kendaraan bermotor) menjadi skala indeks tunggal sesuai <strong>PermenLHK P.14/2020</strong>. Jika suatu lokasi tidak diukur pada tahap tertentu, grafik menampilkan <strong>celah jujur (gap, bukan angka 0)</strong>.
+      </p>
+      <div class="lab-onboarding-bands" aria-label="Rentang kategori ISPU PermenLHK P.14/2020">
+        <span class="lab-category-chip is-baik">0–50 · Baik</span>
+        <span class="lab-category-chip is-sedang">51–100 · Sedang</span>
+        <span class="lab-category-chip is-tidak-sehat">101–200 · Tidak Sehat</span>
+        <span class="lab-category-chip is-sangat-tidak-sehat">&gt;200 · Sangat Tidak Sehat</span>
+      </div>
+    </aside>
+
     <!-- Status tunggal untuk seluruh explorer; diumumkan secara aksesibel. -->
     <div class="lab-status-row">
       <p class="lab-status" data-lab-status role="status" aria-live="polite">Menyiapkan Data Lab…</p>
@@ -52,9 +72,41 @@ import '../../styles/lab.css';
       <div class="lab-context" data-lab-context></div>
     </div>
 
-    <!-- C. Controls panel (native select, berlabel semantik) -->
+    <!-- C. Controls panel (Segmented Toggle Pills + native select berlabel semantik) -->
     <div class="lab-panel" data-lab-controls data-busy="false">
-      <h2 class="lab-panel-title">KONTROL</h2>
+      <h2 class="lab-panel-title">KONTROL &amp; FILTER CEPAT</h2>
+
+      <!-- V14.0 Segmented Toggle Pills synced with native <select> -->
+      <div class="lab-quick-toggles">
+        <div class="lab-pill-block">
+          <span class="lab-pill-label">PILIH TAHUN CEPAT</span>
+          <div class="lab-pill-group" data-lab-year-pills role="group" aria-label="Pilih tahun pengukuran">
+            <button type="button" class="lab-pill" data-year-pill="2021" aria-pressed="false">2021</button>
+            <button type="button" class="lab-pill" data-year-pill="2022" aria-pressed="false">2022</button>
+            <button type="button" class="lab-pill" data-year-pill="2023" aria-pressed="false">2023</button>
+            <button type="button" class="lab-pill" data-year-pill="2024" aria-pressed="false">2024</button>
+            <button type="button" class="lab-pill" data-year-pill="2025" aria-pressed="true">2025 · parsial</button>
+          </div>
+        </div>
+
+        <div class="lab-pill-block">
+          <span class="lab-pill-label">PARAMETER UDARA</span>
+          <div class="lab-pill-group" data-lab-metric-pills role="group" aria-label="Pilih parameter udara">
+            <button type="button" class="lab-pill" data-metric-pill="ispu" aria-pressed="true">ISPU (Indeks)</button>
+            <button type="button" class="lab-pill" data-metric-pill="so2" aria-pressed="false">SO₂ (µg/Nm³)</button>
+            <button type="button" class="lab-pill" data-metric-pill="no2" aria-pressed="false">NO₂ (µg/Nm³)</button>
+          </div>
+        </div>
+
+        <div class="lab-pill-block">
+          <span class="lab-pill-label">MODE GRAFIK</span>
+          <div class="lab-pill-group" data-lab-view-pills role="group" aria-label="Pilih mode tampilan grafik">
+            <button type="button" class="lab-pill" data-view-pill="trend" aria-pressed="true">Tren 2021–2025</button>
+            <button type="button" class="lab-pill" data-view-pill="year" aria-pressed="false">Per Lokasi (1 Tahun)</button>
+          </div>
+        </div>
+      </div>
+
       <div class="lab-controls-grid">
         <div class="lab-control">
           <label for="lab-region">Region</label>
@@ -82,27 +134,137 @@ import '../../styles/lab.css';
     <!-- D. Metrics grid (maksimal 4, hanya yang didukung data) -->
     <div class="lab-metrics-grid" data-lab-metrics aria-label="Ringkasan metrik tahun terpilih"></div>
 
-    <!-- E. Chart section -->
-    <div class="lab-panel lab-chart-panel">
-      <h2 class="lab-panel-title">GRAFIK</h2>
-      <figure class="lab-chart-figure" data-lab-chart-figure>
-        <div class="lab-chart-canvas-wrap">
-          <canvas
-            data-lab-canvas
-            role="img"
-            aria-label="Grafik garis kualitas udara: ISPU terderivasi atau konsentrasi SO₂/NO₂ sesuai pilihan metric, tahun, lokasi, dan tampilan."
-          ></canvas>
-          <div class="lab-chart-overlay" data-lab-chart-overlay hidden>
-            <p class="lab-overlay-title" data-overlay-title></p>
-            <p class="lab-overlay-description" data-overlay-description></p>
+    <!-- E. V14.0 Split Workbench: Chart Section (Left) + Spatial Station Map (Right) -->
+    <div class="lab-workbench-grid">
+      <div class="lab-panel lab-chart-panel">
+        <h2 class="lab-panel-title">GRAFIK &amp; PITA AMBANG ISPU</h2>
+        <figure class="lab-chart-figure" data-lab-chart-figure>
+          <div class="lab-chart-canvas-wrap">
+            <canvas
+              data-lab-canvas
+              role="img"
+              aria-label="Grafik garis kualitas udara: ISPU terderivasi atau konsentrasi SO₂/NO₂ sesuai pilihan metric, tahun, lokasi, dan tampilan."
+            ></canvas>
+            <div class="lab-chart-overlay" data-lab-chart-overlay hidden>
+              <p class="lab-overlay-title" data-overlay-title></p>
+              <p class="lab-overlay-description" data-overlay-description></p>
+            </div>
+          </div>
+          <figcaption class="lab-chart-caption">
+            Grafik garis dengan gap jujur (<code>spanGaps: false</code>): titik tanpa pengukuran tidak pernah disambung. Saat metric ISPU aktif, latar grafik menampilkan pita ambang PermenLHK P.14/2020 (0–50 Baik, 51–100 Sedang, 101–200 Tidak Sehat).
+          </figcaption>
+        </figure>
+      </div>
+
+      <!-- Spatial Station Map SVG -->
+      <aside class="lab-panel lab-map-panel" aria-labelledby="lab-map-title">
+        <h2 class="lab-panel-title" id="lab-map-title">PETA SPASIAL KORIDOR PANTAU CIREBON</h2>
+        <p class="lab-map-intro">
+          Klik titik stasiun pada peta skematik Kota Cirebon di bawah untuk langsung memfilter grafik tren lokasi tersebut:
+        </p>
+        <div class="lab-station-map-wrap">
+          <svg
+            id="lab-station-map"
+            data-lab-station-map
+            viewBox="0 0 420 320"
+            role="group"
+            aria-label="Peta skematik titik pantau kualitas udara Kota Cirebon"
+          >
+            <!-- Grid latar & Garis Pantai Laut Jawa (Timur) -->
+            <rect x="0" y="0" width="420" height="320" rx="10" class="lab-map-bg" />
+            <path d="M 325,0 C 315,75 332,140 342,215 C 348,260 360,295 372,320 L 420,320 L 420,0 Z" class="lab-map-sea" />
+            <path d="M 325,0 C 315,75 332,140 342,215 C 348,260 360,295 372,320" class="lab-map-coastline" />
+            <text x="352" y="42" class="lab-map-sea-label">LAUT JAWA</text>
+
+            <!-- Koridor Jalan Arteri / By Pass & Rel Kereta -->
+            <path d="M 56,28 C 118,95 162,158 212,226 C 245,268 278,294 312,312" class="lab-map-arterial" />
+            <path d="M 190,18 L 218,118 L 235,190 L 212,265" class="lab-map-rail" />
+            <text x="24" y="24" class="lab-map-zone-label">KORIDOR BARAT · BY PASS</text>
+            <text x="195" y="18" class="lab-map-zone-label">KEJAKSAN · PUSAT</text>
+            <text x="28" y="302" class="lab-map-zone-label">HARJAMUKTI · SELATAN</text>
+
+            <!-- 8 Titik Stasiun Pantau Utama (klik memilih locationId asli di regions.json) -->
+            <g class="lab-map-node is-active" tabindex="0" role="button"
+               data-station-id="balai-kota-cirebon"
+               data-station-name="BALAI KOTA CIREBON"
+               data-station-corridor="Koridor Pusat Pemerintahan · Kejaksan"
+               aria-label="Pilih lokasi Balai Kota Cirebon">
+              <circle cx="222" cy="86" r="12" class="lab-map-pulse" />
+              <circle cx="222" cy="86" r="6" class="lab-map-dot" />
+              <text x="236" y="89" class="lab-map-node-label">Balai Kota</text>
+            </g>
+
+            <g class="lab-map-node" tabindex="0" role="button"
+               data-station-id="stasiun-kejaksaan-cirebon"
+               data-station-name="STASIUN KEJAKSAAN CIREBON"
+               data-station-corridor="Koridor Simpul Kereta · Kejaksan"
+               aria-label="Pilih lokasi Stasiun Kejaksaan Cirebon">
+              <circle cx="204" cy="62" r="6" class="lab-map-dot" />
+              <text x="108" y="65" class="lab-map-node-label">St. Kejaksaan</text>
+            </g>
+
+            <g class="lab-map-node" tabindex="0" role="button"
+               data-station-id="area-pelabuhan-pt-dok-kodja-bahari"
+               data-station-name="AREA PELABUHAN (PT. DOK KODJA BAHARI)"
+               data-station-corridor="Koridor Pesisir &amp; Pelabuhan · Lemahwungkuk"
+               aria-label="Pilih lokasi Area Pelabuhan PT Dok Kodja Bahari">
+              <circle cx="318" cy="116" r="6" class="lab-map-dot" />
+              <text x="232" y="119" class="lab-map-node-label">Pelabuhan</text>
+            </g>
+
+            <g class="lab-map-node" tabindex="0" role="button"
+               data-station-id="kantor-dlh-jl-wahidin"
+               data-station-name="KANTOR DLH JL. WAHIDIN"
+               data-station-corridor="Koridor Layanan Publik · Jl. Wahidin"
+               aria-label="Pilih lokasi Kantor DLH Jl. Wahidin">
+              <circle cx="176" cy="112" r="6" class="lab-map-dot" />
+              <text x="86" y="115" class="lab-map-node-label">Kantor DLH</text>
+            </g>
+
+            <g class="lab-map-node" tabindex="0" role="button"
+               data-station-id="depan-kantor-disukcapil-bima-jl-brigjen-darsono"
+               data-station-name="DEPAN KANTOR DISUKCAPIL BIMA, JL. BRIGJEN DARSONO"
+               data-station-corridor="Koridor Arteri By Pass · Brigjen Darsono"
+               aria-label="Pilih lokasi Disdukcapil Bima Jl. Brigjen Darsono">
+              <circle cx="114" cy="144" r="6" class="lab-map-dot" />
+              <text x="24" y="147" class="lab-map-node-label">Bima / By Pass</text>
+            </g>
+
+            <g class="lab-map-node" tabindex="0" role="button"
+               data-station-id="jl-teratai-kesambi"
+               data-station-name="JL. TERATAI KESAMBI"
+               data-station-corridor="Koridor Tengah · Kesambi"
+               aria-label="Pilih lokasi Jl. Teratai Kesambi">
+              <circle cx="192" cy="166" r="6" class="lab-map-dot" />
+              <text x="204" y="169" class="lab-map-node-label">Kesambi</text>
+            </g>
+
+            <g class="lab-map-node" tabindex="0" role="button"
+               data-station-id="jl-ahmad-yani-terminal-kel-larangan-harjamukti"
+               data-station-name="JL. AHMAD YANI (TERMINAL) KEL. LARANGAN, HARJAMUKTI"
+               data-station-corridor="Koridor Terminal &amp; Arteri · Harjamukti"
+               aria-label="Pilih lokasi Terminal Harjamukti Jl. Ahmad Yani">
+              <circle cx="218" cy="222" r="6" class="lab-map-dot" />
+              <text x="230" y="225" class="lab-map-node-label">Terminal Harjamukti</text>
+            </g>
+
+            <g class="lab-map-node" tabindex="0" role="button"
+               data-station-id="perempatan-kedung-mendeng-arah-tpa-kopi-luhur-mendeng"
+               data-station-name="PEREMPATAN KEDUNG MENDENG (ARAH TPA KOPI LUHUR) MENDENG"
+               data-station-corridor="Koridor Selatan · Argasunya / Kopi Luhur"
+               aria-label="Pilih lokasi Perempatan Kedung Mendeng arah TPA Kopi Luhur">
+              <circle cx="236" cy="276" r="6" class="lab-map-dot" />
+              <text x="112" y="279" class="lab-map-node-label">Kedung Mendeng</text>
+            </g>
+          </svg>
+
+          <div class="lab-map-readout" data-lab-map-readout>
+            <span class="lab-map-readout-kicker">TITIK PANTAU TERPILIH</span>
+            <strong class="lab-map-readout-name" data-lab-map-name>BALAI KOTA CIREBON</strong>
+            <span class="lab-map-readout-corridor" data-lab-map-corridor>Koridor Pusat Pemerintahan · Kejaksan (1 dari 23 titik DLH)</span>
           </div>
         </div>
-        <figcaption class="lab-chart-caption">
-          Grafik garis dengan gap jujur: titik tanpa pengukuran tidak pernah
-          disambung. Nilai setara secara tekstual tersedia pada tabel data di
-          bawah; grafik bukan satu-satunya cara membaca angka.
-        </figcaption>
-      </figure>
+      </aside>
     </div>
 
     <!-- F. Data table (tersedia juga saat Chart.js gagal dimuat) -->
@@ -127,7 +289,7 @@ import '../../styles/lab.css';
     <div class="lab-panel">
       <h2 class="lab-panel-title">TOOL LAB LAINNYA</h2>
       <p class="lab-hero-note">
-        <a href="/lab/csv">CSV Explorer ↗</a> — unggah file CSV dan periksa
+        <a href="/lab/csv">CSV Explorer ↗</a>: unggah file CSV dan periksa
         pratinjau baris, tipe kolom, statistik deskriptif (Mean, Median, Min,
         Max), dan grafik garis. Seluruh pemrosesan berjalan lokal di browser
         melalui Web Worker; isi file tidak pernah dikirim ke server.

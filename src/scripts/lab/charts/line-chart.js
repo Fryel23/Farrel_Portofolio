@@ -40,6 +40,9 @@ export function createLineChartController({ canvas, overlay }) {
     if (chartInstance) {
       chartInstance.data = config.data;
       chartInstance.options = config.options;
+      if (Array.isArray(config.plugins)) {
+        chartInstance.config.plugins = config.plugins;
+      }
       chartInstance.update('none');
       hideOverlay();
       return chartInstance;

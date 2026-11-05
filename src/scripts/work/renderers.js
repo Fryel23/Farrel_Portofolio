@@ -20,20 +20,24 @@ import { syncWebGLPlanes } from './webgl-hover.js';
 let emptyWasShown = false;
 
 function projectCardMarkup(project, index) {
-  const card = el('article', 'project-card');
+  const num = String(index + 1).padStart(2, '0');
+  const card = el('article', 'project-card project-card--flagship');
+  if (project.category) card.setAttribute('data-category', project.category);
+  if (project.slug) card.setAttribute('data-slug', project.slug);
+
+  const cTl = el('span', 'flagship-corner flagship-corner--tl', num);
+  const cTr = el('span', 'flagship-corner flagship-corner--tr', 'CRB');
+  const cBl = el('span', 'flagship-corner flagship-corner--bl', 'ISPU');
+  const cBr = el('span', 'flagship-corner flagship-corner--br', '21–25');
+  [cTl, cTr, cBl, cBr].forEach((corner) => {
+    corner.setAttribute('aria-hidden', 'true');
+    card.appendChild(corner);
+  });
 
   const cover = el('div', 'project-cover');
-  /* V7.4 Fase 2: nama view transition identik dengan kartu statis
-     (ProjectCard.astro) supaya morph kartu -> cover case study tetap
-     bekerja setelah renderProjects() membangun ulang grid saat boot
-     maupun saat filter. Tanpa slug = tanpa nama (fallback fade). */
   if (project.slug) {
     cover.style.viewTransitionName = 'project-image-' + project.slug;
   }
-  /* V6.3 §3.1.1: the img sits inside a .project-cover-inner clip layer.
-     The inner div is the only element the hover reveal ever animates,
-     so the entrance batch (scale on the img) and the directional
-     reveal (clip-path on the inner) can never fight each other. */
   const coverInner = el('div', 'project-cover-inner');
   const img = doc.createElement('img');
   img.src = safeImage(project.image);
@@ -44,12 +48,34 @@ function projectCardMarkup(project, index) {
   coverInner.appendChild(img);
   cover.appendChild(coverInner);
   cover.appendChild(el('span', 'project-tag', project.tag || project.category || 'Project'));
-  cover.appendChild(el('span', 'project-number', String(index + 1).padStart(2, '0') + ' / ARCHIVE'));
+  cover.appendChild(el('span', 'project-number', num + ' / ARCHIVE'));
   card.appendChild(cover);
 
   const info = el('div', 'project-info');
+  info.appendChild(el('span', 'flagship-kicker', num + ' / STUDI KASUS UTAMA · FLAGSHIP RESEARCH'));
   info.appendChild(el('h3', null, project.title));
   info.appendChild(el('p', 'project-desc', project.description));
+
+  const summary = project.caseSummary || {
+    problem: 'Masyarakat sulit membaca angka mentah SO₂ & NO₂ dari 23 titik pantau DLH.',
+    method: 'Normalisasi time-series 2021–2025 sesuai ambang PermenLHK P.14/2020.',
+    finding: 'Koridor padat lalu lintas konsisten mencatat konsentrasi NO₂ tertinggi.',
+    impact: 'Dasbor interaktif (/lab) & dokumentasi terbuka untuk eksplorasi warga.',
+  };
+  const dl = el('dl', 'flagship-summary-grid');
+  dl.setAttribute('aria-label', 'Ringkasan eksekutif studi kasus');
+  [
+    ['MASALAH', summary.problem],
+    ['METODE', summary.method],
+    ['TEMUAN UTAMA', summary.finding],
+    ['DAMPAK', summary.impact],
+  ].forEach(([term, desc]) => {
+    const item = el('div', 'flagship-summary-item');
+    item.appendChild(el('dt', null, term));
+    item.appendChild(el('dd', null, desc));
+    dl.appendChild(item);
+  });
+  info.appendChild(dl);
 
   if (Array.isArray(project.stack) && project.stack.length) {
     const stack = el('div', 'project-stack');
@@ -59,25 +85,28 @@ function projectCardMarkup(project, index) {
 
   const foot = el('div', 'project-foot');
   const url = String(project.link || '').trim();
-  // Honest footer: the status label is always shown; a link is only
-  // rendered when it points to a real destination. Never a dead button.
-  // V7.4 Fase 2: proyek ber-slug menaut ke halaman case study secara
-  // internal agar transisi morph terjadi saat kartu diklik; tautan
-  // dataset eksternal tetap tersedia sebagai CTA di halaman detail.
   if (project.status) foot.appendChild(el('span', 'project-status', project.status));
+
+  const ctaGroup = el('div', 'flagship-cta-group');
   if (project.slug) {
-    const link = el('a', 'project-link', 'Read case study');
+    const link = el('a', 'project-link project-link--primary', 'Buka Studi Kasus Lengkap');
     link.href = '/work/' + project.slug;
     link.appendChild(el('span', 'project-link-arrow', '↗'));
-    foot.appendChild(link);
+    ctaGroup.appendChild(link);
+
+    const labLink = el('a', 'project-link project-link--lab', 'Coba AQI Explorer (/lab)');
+    labLink.href = '/lab';
+    labLink.appendChild(el('span', 'project-link-arrow', '→'));
+    ctaGroup.appendChild(labLink);
   } else if (/^https?:\/\//i.test(url)) {
-    const link = el('a', 'project-link', project.linkLabel || 'View project');
+    const link = el('a', 'project-link', project.linkLabel || 'Lihat Proyek');
     link.href = url;
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
     link.appendChild(el('span', 'project-link-arrow', '↗'));
-    foot.appendChild(link);
+    ctaGroup.appendChild(link);
   }
+  if (ctaGroup.childNodes.length) foot.appendChild(ctaGroup);
   if (foot.childNodes.length) info.appendChild(foot);
 
   card.appendChild(info);
@@ -86,12 +115,26 @@ function projectCardMarkup(project, index) {
 
 /** Reserved "coming soon" slot: non-clickable, clearly labelled, and
  *  never counted as real work. Rendered only in the unfiltered view. */
-function reservedCardMarkup(slot) {
-  const card = el('article', 'project-card project-card--reserved');
-  card.setAttribute('aria-label', 'Reserved placeholder: no project announced yet');
-  card.appendChild(el('span', 'reserved-kicker', slot.kicker || 'COMING SOON'));
-  card.appendChild(el('h3', 'reserved-title', slot.title || 'Reserved slot'));
-  card.appendChild(el('p', 'reserved-text', slot.text || 'A future entry will live here.'));
+function reservedCardMarkup(slot, index = 0) {
+  const code = 'RES-0' + String(index + 2);
+  const card = el('article', 'project-card project-card--reserved reserved-card--ledger');
+  card.setAttribute('aria-label', 'Slot arsip terjadwal: proyek belum dipublikasikan');
+
+  const codeEl = el('div', 'reserved-ledger-code', code);
+  codeEl.setAttribute('aria-hidden', 'true');
+  card.appendChild(codeEl);
+
+  const main = el('div', 'reserved-ledger-main');
+  main.appendChild(el('span', 'reserved-kicker', slot.kicker || (code + ' · SLOT MENDATANG')));
+  main.appendChild(el('h3', 'reserved-title', slot.title || 'Slot riset mendatang'));
+  main.appendChild(el('p', 'reserved-text', slot.text || slot.description || 'Eksperimen ini sedang disiapkan dan akan dipublikasikan setelah dokumentasinya lengkap.'));
+  card.appendChild(main);
+
+  const meta = el('div', 'reserved-ledger-meta');
+  meta.appendChild(el('span', 'reserved-ledger-cat', slot.category || 'ARSIP RISET'));
+  meta.appendChild(el('span', 'reserved-ledger-badge', 'RESERVED'));
+  card.appendChild(meta);
+
   return card;
 }
 
@@ -115,7 +158,7 @@ function renderProjects() {
   // placeholders, so they never surface through filters and never
   // inflate the project count.
   if (activeFilter === 'All' && Array.isArray(DATA.comingSoon)) {
-    DATA.comingSoon.forEach((slot) => grid.appendChild(reservedCardMarkup(slot)));
+    DATA.comingSoon.forEach((slot, index) => grid.appendChild(reservedCardMarkup(slot, index)));
   }
 
   // Motion-aware visibility: before the gallery has scrolled into view the

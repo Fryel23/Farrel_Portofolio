@@ -28,7 +28,12 @@ const imageUrl = project.image && project.image.trim() !== '' ? project.image : 
 const number = String(index + 1).padStart(2, '0');
 ---
 
-<article class="project-card" data-category={project.category} data-slug={project.href ? project.href.split('/').pop() : undefined}>
+<article class="project-card project-card--flagship" data-category={project.category} data-slug={project.href ? project.href.split('/').pop() : undefined}>
+  <span class="flagship-corner flagship-corner--tl" aria-hidden="true">{number}</span>
+  <span class="flagship-corner flagship-corner--tr" aria-hidden="true">CRB</span>
+  <span class="flagship-corner flagship-corner--bl" aria-hidden="true">ISPU</span>
+  <span class="flagship-corner flagship-corner--br" aria-hidden="true">21–25</span>
+
   <div class="project-cover" transition:name={`project-image-${project.id}`}>
     <div class="project-cover-inner">
       <img src={imageUrl} alt={`${project.title}: project cover illustration`} loading="lazy" decoding="async" />
@@ -37,8 +42,29 @@ const number = String(index + 1).padStart(2, '0');
     <span class="project-number">{number} / ARCHIVE</span>
   </div>
   <div class="project-info">
+    <span class="flagship-kicker">{number} / STUDI KASUS UTAMA · FLAGSHIP RESEARCH</span>
     <h3>{project.title}</h3>
     <p class="project-desc">{project.description}</p>
+
+    <dl class="flagship-summary-grid" aria-label="Ringkasan eksekutif studi kasus">
+      <div class="flagship-summary-item">
+        <dt>MASALAH</dt>
+        <dd>Masyarakat sulit membaca angka mentah SO₂ &amp; NO₂ dari 23 titik pantau DLH.</dd>
+      </div>
+      <div class="flagship-summary-item">
+        <dt>METODE</dt>
+        <dd>Normalisasi time-series 2021–2025 sesuai ambang PermenLHK P.14/2020.</dd>
+      </div>
+      <div class="flagship-summary-item">
+        <dt>TEMUAN UTAMA</dt>
+        <dd>Koridor padat lalu lintas konsisten mencatat konsentrasi NO₂ tertinggi.</dd>
+      </div>
+      <div class="flagship-summary-item">
+        <dt>DAMPAK</dt>
+        <dd>Dasbor interaktif (/lab) &amp; dokumentasi terbuka untuk eksplorasi warga.</dd>
+      </div>
+    </dl>
+
     {
       Array.isArray(project.stack) && project.stack.length > 0 && (
         <div class="project-stack">
@@ -50,22 +76,28 @@ const number = String(index + 1).padStart(2, '0');
     }
     <div class="project-foot">
       {project.status && <span class="project-status">{project.status}</span>}
-      {
-        project.href && (
-          <a class="project-link" href={project.href}>
-            Read case study
-            <span class="project-link-arrow" aria-hidden="true">↗</span>
-          </a>
-        )
-      }
-      {
-        !project.href && project.link && /^https?:\/\//i.test(project.link) && (
-          <a class="project-link" href={project.link} target="_blank" rel="noopener noreferrer">
-            {project.linkLabel || 'View project'}
-            <span class="project-link-arrow" aria-hidden="true">↗</span>
-          </a>
-        )
-      }
+      <div class="flagship-cta-group">
+        {
+          project.href && (
+            <a class="project-link project-link--primary" href={project.href}>
+              Buka Studi Kasus Lengkap
+              <span class="project-link-arrow" aria-hidden="true">↗</span>
+            </a>
+          )
+        }
+        <a class="project-link project-link--lab" href="/lab">
+          Coba AQI Explorer (/lab)
+          <span class="project-link-arrow" aria-hidden="true">→</span>
+        </a>
+        {
+          !project.href && project.link && /^https?:\/\//i.test(project.link) && (
+            <a class="project-link" href={project.link} target="_blank" rel="noopener noreferrer">
+              {project.linkLabel || 'Lihat Proyek'}
+              <span class="project-link-arrow" aria-hidden="true">↗</span>
+            </a>
+          )
+        }
+      </div>
     </div>
   </div>
 </article>

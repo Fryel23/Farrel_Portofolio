@@ -454,7 +454,7 @@
 }
 
 /* ======================================================================
-   V12.2: STRUCTURED EDITORIAL — Konteks, Metodologi/Temuan/Keterbatasan,
+   V12.2: STRUCTURED EDITORIAL - Konteks, Metodologi/Temuan/Keterbatasan,
    taxonomy chips (Klasifikasi), dan Proyek Terkait (data-driven, reuse
    ProjectCard). Mengikuti token & ritme .case-study-body (.prose-archive);
    tanpa animasi baru; semua section hanya dirender bila datanya ada.
@@ -573,4 +573,413 @@
 @media (max-width: 700px) {
   .case-related-grid { grid-template-columns: 1fr; gap: 11px; }
   .case-section-title { font-size: 18px; }
+}
+
+/* ======================================================================
+   V14.0-UNIFIED: ARCHITECTURAL EXHIBITION FRAME (.project-card--flagship),
+   COMPACT BLUEPRINT LEDGER (.reserved-card--ledger),
+   QUICK CASE STUDY DIGEST BAR (.case-digest-bar), AND
+   STICKY 2-COLUMN CASE STUDY ARCHITECTURE (.case-study-columns)
+   ====================================================================== */
+.project-card--flagship {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(300px, 5fr) minmax(0, 7fr);
+  border: 1px solid rgba(142, 197, 255, 0.35);
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.96), rgba(11, 18, 32, 0.98));
+  padding: 18px;
+  gap: 24px;
+  position: relative;
+}
+
+.project-card--flagship::before {
+  display: none;
+}
+
+.flagship-corner {
+  position: absolute;
+  z-index: 4;
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: rgba(147, 197, 253, 0.65);
+  pointer-events: none;
+}
+
+.flagship-corner--tl { top: 8px; left: 12px; }
+.flagship-corner--tr { top: 8px; right: 12px; }
+.flagship-corner--bl { bottom: 8px; left: 12px; }
+.flagship-corner--br { bottom: 8px; right: 12px; }
+
+.project-card--flagship .project-cover {
+  height: 100%;
+  min-height: 320px;
+  border-radius: 12px;
+  border: 1px solid var(--line-on-dark);
+}
+
+.project-card--flagship .project-info {
+  padding: 12px 10px;
+  justify-content: space-between;
+}
+
+.flagship-kicker {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: #8EC5FF;
+  margin-bottom: 8px;
+}
+
+.project-card--flagship .project-info h3 {
+  font-size: clamp(22px, 2.5vw, 30px);
+  line-height: 1.15;
+  margin-bottom: 12px;
+  color: #F8FAFC;
+}
+
+.project-card--flagship .project-info .project-desc {
+  font-size: 14px;
+  line-height: 1.65;
+  color: #CBD5E1;
+  margin-bottom: 16px;
+  flex: 0 0 auto;
+}
+
+.flagship-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 14px;
+  margin: 0 0 18px;
+  padding: 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.flagship-summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.flagship-summary-item dt {
+  font-family: var(--mono);
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #8EC5FF;
+}
+
+.flagship-summary-item dd {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.48;
+  color: #E2E8F0;
+}
+
+.flagship-cta-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.project-link--primary {
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.28);
+  border: 1px solid rgba(142, 197, 255, 0.5);
+  color: #F8FAFC;
+}
+
+.project-link--lab {
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  color: #CBD5E1;
+}
+
+.project-link--lab:hover,
+.project-link--lab:focus-visible {
+  border-color: #8EC5FF;
+  color: #F8FAFC;
+}
+
+/* Zone 2: Compact Blueprint Ledger Row (.reserved-card--ledger) */
+.reserved-card--ledger {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 22px;
+  border: 1px dashed rgba(148, 163, 184, 0.38);
+  background: rgba(15, 23, 42, 0.45);
+  border-radius: 12px;
+}
+
+.reserved-ledger-code {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #8EC5FF;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(142, 197, 255, 0.08);
+  border: 1px solid rgba(142, 197, 255, 0.24);
+}
+
+.reserved-ledger-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.reserved-ledger-main .reserved-kicker {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: rgba(148, 163, 184, 0.85);
+}
+
+.reserved-ledger-main .reserved-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  color: #F1F5F9;
+}
+
+.reserved-ledger-main .reserved-text {
+  font-size: 12.5px;
+  line-height: 1.55;
+  margin: 0;
+  color: var(--text-on-dark-2);
+}
+
+.reserved-ledger-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.reserved-ledger-cat {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--text-on-dark-2);
+}
+
+.reserved-ledger-badge {
+  font-family: var(--mono);
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px dashed rgba(148, 163, 184, 0.5);
+  color: #94A3B8;
+}
+
+/* Case Study Quick Digest Bar & Sticky 2-Column Layout */
+.case-study-inner {
+  max-width: 1120px;
+}
+
+.case-digest-bar {
+  margin-top: 22px;
+  padding: 18px 22px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  box-shadow: 0 12px 32px -18px rgba(15, 23, 42, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.case-digest-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.case-digest-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-right: 10px;
+  border-right: 1px solid var(--border-soft);
+}
+
+.case-digest-item:last-child {
+  border-right: 0;
+}
+
+.case-digest-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--blue);
+}
+
+.case-digest-value {
+  font-size: 13.5px;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+.case-digest-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border-soft);
+}
+
+.case-study-columns {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  margin-top: 36px;
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .case-study-columns {
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 48px;
+  }
+
+  .case-sticky-aside {
+    position: sticky;
+    top: 104px;
+  }
+}
+
+.case-sticky-nav {
+  padding: 18px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.case-sticky-kicker {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--blue-deep);
+  margin: 0;
+}
+
+.case-sticky-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.case-sticky-list a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-2);
+  text-decoration: none;
+  transition: background var(--micro) var(--ease), color var(--micro) var(--ease);
+}
+
+.case-sticky-list a span {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--blue);
+}
+
+.case-sticky-list a:hover,
+.case-sticky-list a:focus-visible {
+  background: var(--blue-pale);
+  color: var(--ink);
+}
+
+.case-sticky-lab-card {
+  padding-top: 12px;
+  border-top: 1px dashed var(--border-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.case-sticky-lab-card p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-2);
+}
+
+.case-sticky-lab-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--blue);
+  text-decoration: none;
+}
+
+@media (max-width: 960px) {
+  .project-card--flagship {
+    grid-template-columns: 1fr;
+  }
+
+  .project-card--flagship .project-cover {
+    min-height: 230px;
+  }
+
+  .flagship-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .reserved-card--ledger {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .reserved-ledger-meta {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .case-digest-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .case-digest-item {
+    border-right: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .case-digest-grid {
+    grid-template-columns: 1fr;
+  }
 }

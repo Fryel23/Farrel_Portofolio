@@ -222,7 +222,7 @@ const workEntries = [
     id: 'aqi-cirebon',
     data: {
       contentId: 'aqi-cirebon',
-      title: 'Air Quality Index Trends · Cirebon (2021–2024)',
+      title: 'Air Quality Index Trends · Cirebon (2021–2025)',
       category: 'Data & Research',
       tag: 'Research / Data Analysis',
       status: 'IN PROGRESS',

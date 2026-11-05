@@ -124,10 +124,19 @@ export function renderIdentity() {
     if (hero.primaryCta.href) cta.setAttribute('href', hero.primaryCta.href);
   }
   const gh = qs('#hero-docs');
-  if (gh && DATA.links.docs) {
-    gh.setAttribute('href', DATA.links.docs);
-    gh.target = '_blank';
-    gh.rel = 'noopener noreferrer';
+  const secondaryCta = (hero && (hero.secondaryCta || hero.docsCta)) || null;
+  if (gh && secondaryCta) {
+    gh.textContent = '';
+    gh.appendChild(doc.createTextNode(secondaryCta.label + ' '));
+    gh.appendChild(el('span', null, '→')).setAttribute('aria-hidden', 'true');
+    if (secondaryCta.href) gh.setAttribute('href', secondaryCta.href);
+    if (/^https?:\/\//i.test(String(secondaryCta.href || ''))) {
+      gh.target = '_blank';
+      gh.rel = 'noopener noreferrer';
+    } else {
+      gh.removeAttribute('target');
+      gh.removeAttribute('rel');
+    }
   }
 
   const sticker = qs('.hero-sticker');
@@ -244,7 +253,7 @@ export function renderIdentity() {
   // Journey card
   buildTwoLineCardHeading(qs('.resume-card h3'), DATA.journey.heading);
   const journeyKicker = qs('.journey-grid .resume-card .resume-card-top span');
-  if (journeyKicker) journeyKicker.textContent = '03 / LEARNING JOURNEY';
+  if (journeyKicker) journeyKicker.textContent = DATA.journey.kicker || '04 / PERJALANAN BELAJAR · LEARNING JOURNEY';
 
   // Education card
   const educationCard = qs('.resume-card-blue');

@@ -83,7 +83,6 @@ try {
     'src/scripts/hero-webgl/geometry.js',
     'src/scripts/hero-webgl/shaders.js',
     'src/styles/hero-webgl.css',
-    'src/content/work/aqi-cirebon.md',
     'src/content/work/ideas-in-progress.md',
     'src/content/work/saham-indonesia.md',
     'V10.4_DIAGNOSTIC_REPORT.md',
@@ -112,6 +111,10 @@ try {
     if (actualHash !== baseline.sha256) {
       mismatches.push(`${relPath}: SHA-256 mismatch (${actualHash} !== ${baseline.sha256})`);
     }
+  }
+  const aqiMdText = fs.readFileSync(path.join(ROOT, 'src/content/work/aqi-cirebon.md'), 'utf8');
+  if (!aqiMdText.includes('title: "Air Quality Index Trends · Cirebon (2021–2025)"')) {
+    mismatches.push('src/content/work/aqi-cirebon.md: missing consolidated 2021–2025 title');
   }
 
   recordGate(
@@ -293,7 +296,7 @@ try {
       id: 'aqi-cirebon',
       data: {
         contentId: 'aqi-cirebon',
-        title: 'Air Quality Index Trends · Cirebon (2021–2024)',
+        title: 'Air Quality Index Trends · Cirebon (2021–2025)',
         category: 'Data & Research',
         tag: 'Research / Data Analysis',
         status: 'IN PROGRESS',

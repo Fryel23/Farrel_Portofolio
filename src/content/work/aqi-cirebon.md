@@ -1,10 +1,10 @@
 ---
-title: "Air Quality Index Trends · Cirebon (2021–2024)"
+title: "Air Quality Index Trends · Cirebon (2021–2025)"
 category: "Data & Research"
 tag: "Research / Data Analysis"
 status: "IN PROGRESS"
 # V12.2: identifier semantik stabil untuk relasi antarkonten. Sengaja
-# sama dengan nama file (entry id) — keduanya tetap konsep berbeda:
+# sama dengan nama file (entry id) - keduanya tetap konsep berbeda:
 # entry.id = dasar URL /work/<slug>, contentId = target relasi.
 contentId: "aqi-cirebon"
 # V12.2: taxonomy kanonis (id dari src/data/taxonomy.js; label dirender
@@ -12,15 +12,15 @@ contentId: "aqi-cirebon"
 # pipeline aktual berupa JavaScript/Astro/Chart.js + ingestion Node.js.
 disciplines: ["data-analysis"]
 technologies: ["javascript", "astro", "chart-js", "node-js"]
-description: "Proyek yang sedang berjalan. Saya sedang membersihkan data kualitas udara Cirebon dan mencoba melihat polanya. Ada satu hal yang saya sadari saat mengolahnya: data tahun 2023 punya banyak nilai kosong, dan itu sedikit mengubah cara saya melihat tren. Temuan dan kesimpulan belum ada, karena penelitiannya masih berlangsung."
+description: "Proyek riset yang sedang berjalan di atas dataset kualitas udara Kota Cirebon periode 2021–2025 (data tahun 2025 bersifat parsial / 4 titik stasiun pengukuran yang tersedia dari sumber resmi DLH Kota Cirebon). Fokus pada pembersihan nilai kosong tahun 2023, normalisasi skema lokasi-tahap-tahun, dan perhitungan sub-indeks ISPU terderivasi PermenLHK P.14/2020."
 stack: ["Python", "pandas (learning)"]
 image: "/assets/project-aqi.svg"
 link: "https://opendata.cirebonkota.go.id/dataset/data-kualitas-udara"
-linkLabel: "Open dataset source"
+linkLabel: "Buka Sumber Dataset"
 kicker: "01 / RESEARCH IN PROGRESS"
-# V12.2: field editorial — hanya fakta yang terverifikasi dari
+# V12.2: field editorial - hanya fakta yang terverifikasi dari
 # implementasi V12.0 (build script, dataset JSON, halaman methodology).
-context: "Riset ini berjalan di atas data resmi DLH Kota Cirebon 2021–2025 (SO₂ dan NO₂ dalam µg/Nm³, 23 lokasi, dua tahap pengukuran per tahun). Eksplorasinya kini hidup sebagai The Data Lab di /lab: explorer statis yang menampilkan pengukuran apa adanya, menghitung ISPU terderivasi dengan rumus Permen LHK P.14/2020, dan menampilkan keterbatasan data sebagai bagian dari halaman — bukan menyembunyikannya."
+context: "Riset ini berjalan di atas data resmi DLH Kota Cirebon 2021–2025 (SO₂ dan NO₂ dalam µg/Nm³, 23 lokasi, dua tahap pengukuran per tahun; data tahun 2025 bersifat parsial pada 4 titik stasiun pengukuran). Eksplorasinya kini hidup sebagai The Data Lab di /lab: explorer statis yang menampilkan pengukuran apa adanya, menghitung ISPU terderivasi dengan rumus Permen LHK P.14/2020, dan menampilkan keterbatasan data sebagai bagian dari halaman - bukan menyembunyikannya."
 methodology:
   - "Dataset sumber: CSV resmi DLH Kota Cirebon 2021–2025 (200 baris, 23 lokasi, TAHAP I & TAHAP II); tersimpan di data/sources/ dengan sha256 tercatat pada audit ingest."
   - "Script ingestion Node.js mem-parsing CSV, memvalidasi header, dan menormalisasi whitespace nama lokasi tanpa mengubah nilai."
@@ -48,17 +48,17 @@ narrative:
     text: "Nilai kosong ditandai, bukan dihapus diam-diam. Format antar tahun disamakan, lalu perbandingan hanya dihitung pada rentang yang benar-benar lengkap. Lambat, tapi bisa dipertanggungjawabkan."
   - label: "TEMUAN"
     title: "Pola, belum kesimpulan"
-    text: "Ada indikasi pergeseran tren antar tahun, tapi angka final sengaja belum dipasang. Penelitian masih berjalan; temuan di sini disimpan sebagai catatan proses, bukan hasil akhir."
+    text: "Ada indikasi pergeseran tren antar tahun sepanjang 2021–2025, tapi angka final sengaja belum dipasang sebagai klaim mutlak. Penelitian masih berjalan; temuan di sini disimpan sebagai catatan proses dan dapat dijelajahi langsung di /lab."
 ---
 
-Proyek yang sedang berjalan. Saya sedang membersihkan data kualitas udara Cirebon dan mencoba melihat polanya. Ada satu hal yang saya sadari saat mengolahnya: data tahun 2023 punya banyak nilai kosong, dan itu sedikit mengubah cara saya melihat tren. Temuan dan kesimpulan belum ada, karena penelitiannya masih berlangsung.
+Proyek yang sedang berjalan untuk periode pengukuran **2021–2025**. Saya sedang membersihkan data kualitas udara Kota Cirebon dan mencoba membaca polanya secara jujur. Dataset mencakup periode 2021–2025 (data tahun 2025 bersifat parsial / 4 titik stasiun pengukuran yang tersedia dari sumber resmi DLH Kota Cirebon). Ada satu hal penting yang saya sadari saat mengolahnya: data tahun 2023 punya banyak nilai kosong, dan itu mengubah cara saya mengevaluasi tren multi-tahun.
 
 ## Yang sedang dikerjakan
 
-- Mengumpulkan data kualitas udara terbuka dari sumber resmi Kota Cirebon.
-- Membersihkan data: menangani nilai kosong (terutama tahun 2023) dan menyamakan format.
-- Melihat pola tren per tahun tanpa memaksakan kesimpulan.
+- Mengumpulkan data kualitas udara terbuka dari sumber resmi Dinas Lingkungan Hidup (DLH) Kota Cirebon untuk rentang tahun 2021–2025.
+- Membersihkan data: menangani nilai kosong (terutama tahun 2023), mencatat duplikasi baris tahun 2024, serta menandai cakupan parsial tahun 2025 (4 lokasi pada Tahap I).
+- Membangun pipeline verifikasi dan penjelajah interaktif di [The Data Lab (/lab)](/lab) untuk melihat pola tren SO₂, NO₂, dan sub-indeks ISPU terderivasi tanpa memaksakan kesimpulan prematur.
 
 ## Batasan yang diakui
 
-Data tahun 2023 punya banyak nilai kosong, jadi perbandingan antar tahun harus dibaca hati-hati. Tidak ada angka yang ditampilkan sebelum benar-benar bisa dipertanggungjawabkan. Satu-satunya tautan yang dipasang di sini adalah sumber dataset terbukanya, karena itu satu-satunya hal yang sudah nyata.
+Data tahun 2023 punya banyak nilai kosong dan data tahun 2025 masih bersifat parsial (4 stasiun pada Tahap I), sehingga perbandingan antar tahun harus dibaca hati-hati. Tidak ada angka yang ditampilkan sebelum benar-benar bisa dipertanggungjawabkan ke tabel sumber aslinya.

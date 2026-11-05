@@ -502,3 +502,239 @@
     transition: none;
   }
 }
+
+/* ==========================================================================
+   V14.0-UNIFIED: AIR AWARE SPLIT WORKBENCH, ONBOARDING STRIP,
+   SEGMENTED TOGGLE PILLS, AND INTERACTIVE SPATIAL STATION MAP
+   ========================================================================== */
+.lab-onboarding-strip {
+  background: linear-gradient(135deg, var(--surface), var(--blue-pale));
+  border: 1px solid var(--border-strong);
+  border-left: 4px solid var(--blue);
+  border-radius: var(--radius-sm);
+  padding: clamp(18px, 2.5vw, 24px);
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lab-onboarding-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.lab-onboarding-title {
+  margin: 0;
+  font-size: clamp(17px, 2vw, 21px);
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.lab-onboarding-link {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--blue-deep);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+}
+
+.lab-onboarding-desc {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--text-2);
+}
+
+.lab-onboarding-bands {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+/* Segmented Toggle Pills */
+.lab-quick-toggles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px dashed var(--border-soft);
+}
+
+.lab-pill-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.lab-pill-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--text-3);
+}
+
+.lab-pill-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.lab-pill {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 7px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: background var(--micro) var(--ease), color var(--micro) var(--ease), border-color var(--micro) var(--ease);
+}
+
+.lab-pill:hover {
+  border-color: var(--blue);
+  color: var(--ink);
+}
+
+.lab-pill[aria-pressed='true'],
+.lab-pill.is-active {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: #FFFFFF;
+}
+
+/* Split Workbench Grid */
+.lab-workbench-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  margin-top: 18px;
+  align-items: stretch;
+}
+
+.lab-workbench-grid > .lab-panel {
+  margin-top: 0;
+}
+
+@media (min-width: 1100px) {
+  .lab-workbench-grid {
+    grid-template-columns: minmax(0, 7fr) minmax(320px, 5fr);
+  }
+}
+
+.lab-map-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.lab-map-intro {
+  margin: 0 0 12px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-2);
+}
+
+.lab-station-map-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#lab-station-map {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 10px;
+  border: 1px solid var(--border-soft);
+  background: var(--surface-2);
+}
+
+.lab-map-bg { fill: #F8FAFC; }
+.lab-map-sea { fill: #DBEAFE; opacity: 0.65; }
+.lab-map-coastline { fill: none; stroke: #60A5FA; stroke-width: 1.5; stroke-dasharray: 4 3; }
+.lab-map-sea-label { font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.14em; fill: #2563EB; opacity: 0.75; }
+.lab-map-arterial { fill: none; stroke: #CBD5E1; stroke-width: 2.5; }
+.lab-map-rail { fill: none; stroke: #94A3B8; stroke-width: 1.2; stroke-dasharray: 3 3; }
+.lab-map-zone-label { font-family: var(--mono); font-size: 7.5px; letter-spacing: 0.12em; fill: #64748B; }
+
+.lab-map-node {
+  cursor: pointer;
+}
+
+.lab-map-dot {
+  fill: #FFFFFF;
+  stroke: #2563EB;
+  stroke-width: 2;
+  transition: fill 150ms ease, r 150ms ease;
+}
+
+.lab-map-pulse {
+  fill: rgba(37, 99, 235, 0.18);
+  opacity: 0;
+}
+
+.lab-map-node.is-active .lab-map-dot,
+.lab-map-node:hover .lab-map-dot,
+.lab-map-node:focus-visible .lab-map-dot {
+  fill: #2563EB;
+}
+
+.lab-map-node.is-active .lab-map-pulse {
+  opacity: 1;
+}
+
+.lab-map-node-label {
+  font-family: var(--mono);
+  font-size: 8.5px;
+  font-weight: 600;
+  fill: #1E293B;
+}
+
+.lab-map-readout {
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.lab-map-readout-kicker {
+  font-family: var(--mono);
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--blue);
+}
+
+.lab-map-readout-name {
+  font-size: 13px;
+  color: var(--ink);
+}
+
+.lab-map-readout-corridor {
+  font-size: 11.5px;
+  color: var(--text-3);
+}
+
+@media (max-width: 960px) {
+  .lab-quick-toggles {
+    grid-template-columns: 1fr;
+  }
+}

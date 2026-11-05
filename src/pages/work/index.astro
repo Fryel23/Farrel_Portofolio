@@ -47,18 +47,18 @@ const reserved = entries.filter((e) => e.data.status === 'RESERVED');
       <div class="ornament ornament-gallery-stamp" aria-hidden="true">ARCHIVE / 01</div>
       <div class="section-heading section-heading-light">
         <div>
-          <p class="section-kicker">01 / SELECTED WORKS</p>
+          <p class="section-kicker">01 / ARSIP PROYEK &amp; STUDI KASUS · SELECTED WORKS</p>
           <h1 class="display-heading" id="gallery-heading">
-            <span class="line-mask"><span class="line">The project</span></span>
-            <span class="line-mask"><span class="line"><em>archive.</em></span></span>
+            <span class="line-mask"><span class="line">Karya &amp;</span></span>
+            <span class="line-mask"><span class="line"><em>riset terpilih.</em></span></span>
           </h1>
         </div>
-        <p class="heading-aside" id="gallery-aside">Satu proyek penelitian yang masih berjalan, satu ide yang tertunda, dan satu rencana kecil untuk ke depan. Semua ditulis apa adanya.</p>
+        <p class="heading-aside" id="gallery-aside">Satu studi kasus kualitas udara Cirebon (2021–2025) yang sedang berjalan disertai penjelajah data interaktif, serta buku besar rencana riset berikutnya. Semua ditulis apa adanya.</p>
       </div>
 
       <div class="filter-row">
-        <span id="project-count">01 PROJECT</span>
-        <div class="filter-controls" id="filter-controls" role="group" aria-label="Filter projects by category"></div>
+        <span id="project-count">01 PROYEK AKTIF</span>
+        <div class="filter-controls" id="filter-controls" role="group" aria-label="Filter proyek berdasarkan kategori"></div>
       </div>
 
       <div class="gallery-ruler" aria-hidden="true">
@@ -66,24 +66,27 @@ const reserved = entries.filter((e) => e.data.status === 'RESERVED');
       </div>
 
       <div class="project-grid" id="project-grid" aria-live="polite">
-        {/* V7.2: kartu dirender statis saat build (tanpa menunggu JS).
-            V7.4: kartu menaut ke halaman case study secara internal
-            (href), identik dengan hasil renderProjects() di work.js yang
-            kini juga merender "Read case study" untuk proyek ber-slug;
-            tautan dataset eksternal tetap ada di halaman detail. */}
         {projects.map((entry, index) => (
           <ProjectCard
             project={{ ...entry.data, id: entry.id, href: `/work/${entry.id}` }}
             index={index}
           />
         ))}
-        {reserved.map((entry) => (
-          <ReservedCard slot={{ title: entry.data.title, kicker: entry.data.kicker, description: entry.data.description }} />
+        {reserved.map((entry, index) => (
+          <ReservedCard
+            slot={{
+              title: entry.data.title,
+              kicker: entry.data.kicker,
+              description: entry.data.description,
+              category: entry.data.category,
+            }}
+            index={index}
+          />
         ))}
       </div>
-      <div class="empty-state" id="empty-state" hidden>No projects match this filter. Reserved slots return with the All work view.</div>
+      <div class="empty-state" id="empty-state" hidden>Tidak ada proyek pada kategori ini. Pilih filter All untuk menampilkan seluruh studi kasus dan slot arsip terjadwal.</div>
 
-      <div class="gallery-bottom-line"><span>KEEP EXPLORING</span><a href="/archive">ARCHIVE HUB →</a></div>
+      <div class="gallery-bottom-line"><span>TERUS MENJELAJAH</span><a href="/archive">BUKA INDEKS ARSIP →</a></div>
     </div>
   </section>
 </BaseLayout>

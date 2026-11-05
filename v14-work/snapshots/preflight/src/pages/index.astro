@@ -1,0 +1,147 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/home/Hero.astro';
+/* V11.0 FASE 4+7: Curtain Pattern menggantikan Opening V9.1 sebagai
+   dekorasi sinematik homepage. Markup + stylesheet hanya dimuat di
+   halaman ini (bukan BaseLayout) sesuai spek §7.5. */
+import Curtain from '../components/home/Curtain.astro';
+import ProjectCard from '../components/work/ProjectCard.astro';
+import ReservedCard from '../components/work/ReservedCard.astro';
+import { getCollection } from 'astro:content';
+import '../styles/home.css';
+import '../styles/work.css';
+import '../styles/about.css';
+import '../styles/connect.css';
+import '../styles/curtain.css';
+/* V11.1: styling khusus Glass Vessel (fallback SVG + canvas WebGL).
+   Hanya di homepage - tidak lewat BaseLayout (spek §8.1). */
+import '../styles/hero-webgl.css';
+
+/* Fase 4.1: homepage memuat 3 entri terbaru dari Content Collections.
+   Entri berstatus RESERVED dirender sebagai kartu reserved (non-click,
+   jujur) supaya tampilan identik dengan galeri V6.7. */
+const entries = (await getCollection('work')).sort((a, b) =>
+  (a.data.status === 'RESERVED' ? 1 : 0) - (b.data.status === 'RESERVED' ? 1 : 0)
+);
+const projects = entries.filter((e) => e.data.status !== 'RESERVED');
+const reserved = entries.filter((e) => e.data.status === 'RESERVED');
+---
+
+<BaseLayout
+  pageKey="home"
+  description="Portofolio Farrel Islami Putra, mahasiswa Informatika UNIKOM: proyek data yang sedang berjalan, ringkasan profil, dan kanal kontak. Semua ditulis apa adanya sebagai catatan proses belajar."
+>
+  <!-- V11.0: kedua inline harness eksperimen (?opening-variant dan
+       ?v105) DIHAPUS bersama arsitektur Opening lama. Tidak ada
+       temporary experiment harness tersisa (spek §25). -->
+  <Curtain />
+
+  <Hero />
+
+  <div class="transition-ribbon" aria-hidden="true"><span></span></div>
+
+  <!-- ============ SELECTED WORK ============ -->
+  <section class="gallery-section" id="work" aria-labelledby="gallery-heading">
+    <div class="desktop-frame desktop-frame--tl" aria-hidden="true"></div>
+    <div class="desktop-frame desktop-frame--br" aria-hidden="true"></div>
+    <div class="gallery-curve" aria-hidden="true"></div>
+    <div class="section-inner gallery-inner">
+      <div class="ornament ornament-gallery-truchet" aria-hidden="true">
+        <svg width="100%" height="100%" focusable="false">
+          <defs>
+            <pattern id="ornament-gallery-truchet-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M 0,20 A 20,20 0 0,1 20,0" fill="none" stroke="currentColor" stroke-width="1" />
+              <path d="M 40,20 A 20,20 0 0,1 20,40" fill="none" stroke="currentColor" stroke-width="1" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#ornament-gallery-truchet-pattern)"></rect>
+        </svg>
+      </div>
+      <div class="ornament ornament-gallery-stamp" aria-hidden="true">ARCHIVE / 01</div>
+      <div class="section-heading section-heading-light">
+        <div>
+          <p class="section-kicker">01 / SELECTED WORKS</p>
+          <h2 class="display-heading" id="gallery-heading">
+            <span class="line-mask"><span class="line">The project</span></span>
+            <span class="line-mask"><span class="line"><em>archive.</em></span></span>
+          </h2>
+        </div>
+        <p class="heading-aside" id="gallery-aside">Satu proyek penelitian yang masih berjalan, satu ide yang tertunda, dan satu rencana kecil untuk ke depan. Semua ditulis apa adanya.</p>
+      </div>
+
+      <div class="gallery-ruler" aria-hidden="true">
+        <span>01</span><span>02</span><span>03</span>
+      </div>
+
+      <div class="project-grid" id="project-grid" aria-live="polite">
+        {projects.map((entry, index) => (
+          <ProjectCard
+            project={{
+              ...entry.data,
+              id: entry.id,
+              href: `/work/${entry.id}`,
+            }}
+            index={index}
+          />
+        ))}
+        {reserved.map((entry) => (
+          <ReservedCard slot={{ title: entry.data.title, kicker: entry.data.kicker, description: entry.data.description }} />
+        ))}
+      </div>
+
+      <div class="gallery-bottom-line"><span>KEEP EXPLORING</span><a href="/work">FULL ARCHIVE →</a></div>
+    </div>
+  </section>
+
+  <div class="transition-ribbon" aria-hidden="true"><span></span></div>
+
+  <!-- ============ ABOUT (ringkasan) ============ -->
+  <section class="about-section section-shell" id="about" aria-labelledby="about-heading">
+    <div class="geo geo-four" aria-hidden="true"></div>
+    <div class="geo geo-five" aria-hidden="true"></div>
+    <div class="section-heading">
+      <div>
+        <p class="section-kicker">02 / THE PERSON BEHIND THE CODE</p>
+        <h2 class="display-heading" id="about-heading">
+          <span class="line-mask"><span class="line">Curious by</span></span>
+          <span class="line-mask"><span class="line"><em>default.</em></span></span>
+        </h2>
+      </div>
+      <div class="heading-stamp">RIGOROUS WITH<br /><b>DETAILS</b><span aria-hidden="true">✳</span></div>
+    </div>
+    <div class="about-summary">
+      <p class="about-summary-lead" id="about-lead">Saya memilih Informatika karena ingin tahu cara kerja teknologi, terutama yang bisa dipakai untuk menyelesaikan masalah sehari-hari. Di UNIKOM saya merasa punya ruang untuk mengeksplorasi hal-hal baru, dan itu yang membuat saya terus termotivasi untuk belajar.</p>
+      <div class="about-summary-actions">
+        <a class="button button-primary" href="/about">Read the full profile <span aria-hidden="true">↗</span></a>
+        <a class="button button-outline" href="/about#journey">Learning journey <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </section>
+
+  <div class="transition-ribbon" aria-hidden="true"><span></span></div>
+
+  <!-- ============ CONTACT (ringkasan) ============ -->
+  <section class="social-section" id="profiles" aria-labelledby="social-heading">
+    <div class="social-pattern" aria-hidden="true"></div>
+    <div class="section-inner social-inner">
+      <p class="section-kicker">06 / FIND ME ELSEWHERE</p>
+      <div class="social-heading-row">
+        <h2 class="display-heading" id="social-heading">
+          <span class="line-mask"><span class="line">Let's stay</span></span>
+          <span class="line-mask"><span class="line"><em>connected.</em></span></span>
+        </h2>
+        <p class="social-intro" id="social-intro">Profil dan arsip yang memang milik saya. Folder dokumentasi di Google Drive menyimpan bukti pekerjaan, penelitian, dan proses belajar.</p>
+      </div>
+      <div class="about-summary-actions">
+        <a class="button button-primary" href="/connect">Say hello <span aria-hidden="true">↗</span></a>
+        <a class="button button-outline" href="/archive">Browse the archive <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import '../scripts/global.js';
+  import '../scripts/work.js';
+  import '../scripts/home.js';
+</script>

@@ -62,6 +62,57 @@ const STAGE_LABELS = { 'TAHAP I': 'TAHAP I', 'TAHAP II': 'TAHAP II' };
 const STAGE_COLORS = { 'TAHAP I': COLOR_BLUE, 'TAHAP II': COLOR_SLATE };
 
 /**
+ * V14.0-UNIFIED: Plugin pita ambang ISPU PermenLHK P.14/2020
+ * (0–50 Baik, 51–100 Sedang, 101–200 Tidak Sehat, >200 Sangat Tidak Sehat).
+ * Aktif hanya ketika metric === 'ispu'. Tetap menjaga spanGaps: false.
+ */
+export const ispuThresholdBandsPlugin = {
+  id: 'ispuThresholdBands',
+  beforeDraw(chart) {
+    const bandOptions = chart && chart.config && chart.config.options && chart.config.options.plugins && chart.config.options.plugins.ispuThresholdBands;
+    if (!bandOptions || !bandOptions.enabled) return;
+    const { ctx, chartArea, scales } = chart;
+    const yScale = scales && scales.y;
+    if (!ctx || !chartArea || !yScale) return;
+
+    const bands = [
+      { min: 0, max: 50, fill: 'rgba(16, 185, 129, 0.08)', border: 'rgba(16, 185, 129, 0.34)', label: '0–50 BAIK' },
+      { min: 50, max: 100, fill: 'rgba(245, 158, 11, 0.08)', border: 'rgba(245, 158, 11, 0.34)', label: '51–100 SEDANG' },
+      { min: 100, max: 200, fill: 'rgba(239, 68, 68, 0.07)', border: 'rgba(239, 68, 68, 0.32)', label: '101–200 TIDAK SEHAT' },
+      { min: 200, max: 350, fill: 'rgba(126, 34, 206, 0.06)', border: 'rgba(126, 34, 206, 0.28)', label: '>200 SANGAT TIDAK SEHAT' },
+    ];
+
+    ctx.save();
+    const minVal = typeof yScale.min === 'number' ? yScale.min : 0;
+    const maxVal = typeof yScale.max === 'number' ? yScale.max : 100;
+
+    for (const band of bands) {
+      if (maxVal <= band.min || minVal >= band.max) continue;
+      const clampedTop = Math.min(band.max, maxVal);
+      const clampedBottom = Math.max(band.min, minVal);
+      const yTop = yScale.getPixelForValue(clampedTop);
+      const yBottom = yScale.getPixelForValue(clampedBottom);
+      const height = yBottom - yTop;
+      if (height <= 0) continue;
+
+      ctx.fillStyle = band.fill;
+      ctx.fillRect(chartArea.left, yTop, chartArea.right - chartArea.left, height);
+
+      if (band.max <= maxVal) {
+        ctx.strokeStyle = band.border;
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(chartArea.left, yTop);
+        ctx.lineTo(chartArea.right, yTop);
+        ctx.stroke();
+      }
+    }
+    ctx.restore();
+  },
+};
+
+/**
  * Kumpulkan nilai per (labelX, stage) untuk view trend & per-tahun.
  * @returns {{labels: string[], datasets: object[], recordsByLabel: Map}}
  */
@@ -153,6 +204,7 @@ export function buildChartConfig({ regionYears, records, state, reducedMotion, c
   return {
     type: 'line',
     data: { labels, datasets },
+    plugins: [ispuThresholdBandsPlugin],
     options: {
       responsive: true,
       maintainAspectRatio: false,
@@ -160,6 +212,9 @@ export function buildChartConfig({ regionYears, records, state, reducedMotion, c
       /* Tooltip bukan satu-satunya cara memperoleh angka; data table
          menyediakan nilai yang setara (spec §14.4). */
       plugins: {
+        ispuThresholdBands: {
+          enabled: metric.id === 'ispu',
+        },
         legend: {
           display: datasets.length > 1,
           labels: { color: COLOR_TEXT_2, font: { family: FONT_MONO, size: 11 }, boxWidth: 22, boxHeight: 2 },

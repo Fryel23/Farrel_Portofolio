@@ -34,6 +34,59 @@ export function createControls({ root, handlers }) {
   const metricSelect = root.querySelector('[data-lab-metric]');
   const viewSelect = root.querySelector('[data-lab-view]');
 
+  const yearPills = Array.from(root.querySelectorAll('[data-year-pill]'));
+  const metricPills = Array.from(root.querySelectorAll('[data-metric-pill]'));
+  const viewPills = Array.from(root.querySelectorAll('[data-view-pill]'));
+  const mapNodes = Array.from(root.querySelectorAll('[data-station-id]'));
+  const mapReadoutName = root.querySelector('[data-lab-map-name]');
+  const mapReadoutCorridor = root.querySelector('[data-lab-map-corridor]');
+
+  function syncPills({ year, metric, view, locationId } = {}) {
+    if (year !== undefined) {
+      const yrStr = String(year);
+      yearPills.forEach((btn) => {
+        const active = btn.getAttribute('data-year-pill') === yrStr;
+        btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+        btn.classList.toggle('is-active', active);
+      });
+    }
+    if (metric !== undefined) {
+      metricPills.forEach((btn) => {
+        const active = btn.getAttribute('data-metric-pill') === metric;
+        btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+        btn.classList.toggle('is-active', active);
+      });
+    }
+    if (view !== undefined) {
+      viewPills.forEach((btn) => {
+        const active = btn.getAttribute('data-view-pill') === view;
+        btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+        btn.classList.toggle('is-active', active);
+      });
+    }
+    if (locationId !== undefined) {
+      let matchedNode = null;
+      mapNodes.forEach((node) => {
+        const active = node.getAttribute('data-station-id') === locationId;
+        node.classList.toggle('is-active', active);
+        if (active) matchedNode = node;
+      });
+      if (mapReadoutName) {
+        if (matchedNode) {
+          mapReadoutName.textContent = matchedNode.getAttribute('data-station-name') || locationId;
+          if (mapReadoutCorridor) {
+            mapReadoutCorridor.textContent = matchedNode.getAttribute('data-station-corridor') || 'Titik pantau aktif';
+          }
+        } else if (locationSelect && locationSelect.selectedIndex >= 0) {
+          mapReadoutName.textContent = locationSelect.options[locationSelect.selectedIndex].textContent || locationId;
+          if (mapReadoutCorridor) {
+            mapReadoutCorridor.textContent = 'Titik pantau DLH Kota Cirebon (dipilih via dropdown)';
+          }
+        }
+      }
+    }
+  }
+
   /* Statik: metric & view */
   fillSelect(metricSelect, [
     { value: 'ispu', label: 'ISPU · sub-indeks maksimum (terderivasi)' },
@@ -44,12 +97,76 @@ export function createControls({ root, handlers }) {
     { value: 'trend', label: 'Tren 2021–2025 (satu lokasi)' },
     { value: 'year', label: 'Per lokasi (tahun terpilih)' },
   ], { selectedValue: 'trend' });
+  syncPills({ metric: 'ispu', view: 'trend' });
 
   regionSelect.addEventListener('change', () => handlers.onRegionChange(regionSelect.value));
-  yearSelect.addEventListener('change', () => handlers.onYearChange(Number(yearSelect.value)));
-  locationSelect.addEventListener('change', () => handlers.onLocationChange(locationSelect.value));
-  metricSelect.addEventListener('change', () => handlers.onMetricChange(metricSelect.value));
-  viewSelect.addEventListener('change', () => handlers.onViewChange(viewSelect.value));
+  yearSelect.addEventListener('change', () => {
+    const yr = Number(yearSelect.value);
+    syncPills({ year: yr });
+    handlers.onYearChange(yr);
+  });
+  locationSelect.addEventListener('change', () => {
+    syncPills({ locationId: locationSelect.value });
+    handlers.onLocationChange(locationSelect.value);
+  });
+  metricSelect.addEventListener('change', () => {
+    syncPills({ metric: metricSelect.value });
+    handlers.onMetricChange(metricSelect.value);
+  });
+  viewSelect.addEventListener('change', () => {
+    syncPills({ view: viewSelect.value });
+    handlers.onViewChange(viewSelect.value);
+  });
+
+  /* Segmented Toggle Pills bindings */
+  yearPills.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (btn.disabled) return;
+      const yr = Number(btn.getAttribute('data-year-pill'));
+      if (!Number.isFinite(yr)) return;
+      yearSelect.value = String(yr);
+      syncPills({ year: yr });
+      handlers.onYearChange(yr);
+    });
+  });
+
+  metricPills.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const m = btn.getAttribute('data-metric-pill');
+      if (!m) return;
+      metricSelect.value = m;
+      syncPills({ metric: m });
+      handlers.onMetricChange(m);
+    });
+  });
+
+  viewPills.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const v = btn.getAttribute('data-view-pill');
+      if (!v) return;
+      viewSelect.value = v;
+      syncPills({ view: v });
+      handlers.onViewChange(v);
+    });
+  });
+
+  /* Interactive Spatial Station Map bindings */
+  mapNodes.forEach((node) => {
+    const activateStation = () => {
+      const stationId = node.getAttribute('data-station-id');
+      if (!stationId) return;
+      locationSelect.value = stationId;
+      syncPills({ locationId: stationId });
+      handlers.onLocationChange(stationId);
+    };
+    node.addEventListener('click', activateStation);
+    node.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        activateStation();
+      }
+    });
+  });
 
   function renderRegions(manifest, selectedRegionId) {
     fillSelect(regionSelect, manifest.regions.map((region) => ({
@@ -67,6 +184,7 @@ export function createControls({ root, handlers }) {
       label: `${yearEntry.year}${yearEntry.status === 'partial' ? ' · parsial' : ''}${yearEntry.status === 'no-data' ? ' · tanpa data' : ''}`,
       disabled: yearEntry.status === 'no-data' || !yearEntry.dataPath,
     })), { selectedValue: selectedYear });
+    syncPills({ year: selectedYear });
   }
 
   function renderLocations(locations, selectedLocationId) {
@@ -74,6 +192,7 @@ export function createControls({ root, handlers }) {
       value: location.id,
       label: location.name,
     })), { selectedValue: selectedLocationId });
+    syncPills({ locationId: selectedLocationId });
   }
 
   function setValues({ regionId, year, locationId, metric, view }) {
@@ -82,6 +201,7 @@ export function createControls({ root, handlers }) {
     if (locationId !== undefined) locationSelect.value = locationId;
     if (metric !== undefined) metricSelect.value = metric;
     if (view !== undefined) viewSelect.value = view;
+    syncPills({ year, locationId, metric, view });
   }
 
   function setBusy(isBusy) {

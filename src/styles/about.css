@@ -715,3 +715,222 @@
    their section background but below every piece of content, and can
    never escape behind an ancestor surface. */
 .curiosity-panel { isolation: isolate; }
+
+/* ======================================================================
+   V14.0-UNIFIED: 5-ACT HUMAN-FIRST NARRATIVE, ASYMMETRIC BENTO GRID,
+   TOOLKIT ACT, AND WORKING PRINCIPLES ACT
+   ====================================================================== */
+.about-act {
+  position: relative;
+  z-index: 1;
+}
+
+.about-act + .about-act {
+  margin-top: clamp(64px, 8vw, 96px);
+}
+
+.about-act-header {
+  max-width: 720px;
+  margin-bottom: 24px;
+}
+
+.about-act-title {
+  font-size: clamp(26px, 3.6vw, 42px);
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  margin: 8px 0 10px;
+  color: var(--ink);
+}
+
+.about-act-desc {
+  font-size: 14.5px;
+  line-height: 1.68;
+  color: var(--text-2);
+  margin: 0;
+}
+
+/* Act 02: 5-Domain Asymmetric Bento Grid */
+.interest-bento-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 14px;
+  margin: 22px 0 28px;
+}
+
+.interest-bento-card {
+  grid-column: span 4;
+  padding: 20px;
+  border-radius: 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.interest-bento-card--primary {
+  grid-column: span 6;
+  background: linear-gradient(135deg, var(--blue-pale), var(--surface));
+  border-color: var(--blue-soft);
+}
+
+.interest-bento-card--wide {
+  grid-column: span 6;
+  background: var(--surface);
+  border-color: var(--border-strong);
+}
+
+.interest-bento-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.interest-bento-code {
+  font-family: var(--mono);
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--text-3);
+}
+
+.interest-bento-status {
+  font-family: var(--mono);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 999px;
+}
+
+.interest-bento-status.is-primary {
+  background: var(--blue);
+  color: #FFFFFF;
+}
+
+.interest-bento-status.is-exploring {
+  background: var(--blue-pale);
+  color: var(--blue-deep);
+}
+
+.interest-bento-status.is-future {
+  border: 1px dashed var(--border-strong);
+  color: var(--text-3);
+}
+
+.interest-bento-card h3 {
+  font-size: 18px;
+  letter-spacing: -0.02em;
+  margin: 2px 0 0;
+  color: var(--ink);
+}
+
+.interest-bento-card p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+/* Act 03: Bahasa & Tools Grid */
+.about-toolkit-act {
+  padding: clamp(24px, 3vw, 36px);
+  border-radius: var(--radius);
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+}
+
+.about-toolkit-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+}
+
+.about-toolkit-grid .software-block,
+.about-toolkit-grid .skills-block {
+  margin-top: 0;
+  padding: 20px;
+  border-radius: 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+}
+
+/* Act 05: Cara Saya Berpikir & Field Notes */
+.about-thinking-act {
+  padding: clamp(24px, 3vw, 36px);
+  border-radius: var(--radius);
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+}
+
+.thinking-principles-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.thinking-principle-card {
+  padding: 20px;
+  border-radius: 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.thinking-principle-num {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--blue);
+}
+
+.thinking-principle-card h3 {
+  margin: 0;
+  font-size: 16.5px;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.thinking-principle-card p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.62;
+  color: var(--text-2);
+}
+
+.about-thinking-act .about-notes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  max-width: none;
+  margin-top: 18px;
+}
+
+@media (max-width: 960px) {
+  .interest-bento-card,
+  .interest-bento-card--primary,
+  .interest-bento-card--wide {
+    grid-column: span 6;
+  }
+
+  .about-toolkit-grid,
+  .thinking-principles-grid,
+  .about-thinking-act .about-notes {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .interest-bento-card,
+  .interest-bento-card--primary,
+  .interest-bento-card--wide {
+    grid-column: 1 / -1;
+  }
+}

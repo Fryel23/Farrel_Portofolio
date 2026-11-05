@@ -19,7 +19,7 @@ import { DISCIPLINES, TECHNOLOGIES, taxonomyLabel } from '../../data/taxonomy.js
    V12.2: SEBELUM filtering, seluruh entri (termasuk RESERVED) melewati
    integrity gate lintas-entri (duplikat contentId, target relasi,
    kebijakan visibilitas). Koleksi invalid menggagalkan build dengan
-   pesan "[CONTENT INTEGRITY]" yang actionable — konten invalid tidak
+   pesan "[CONTENT INTEGRITY]" yang actionable - konten invalid tidak
    pernah sampai ke rute. */
 export async function getStaticPaths() {
   const allEntries = await getCollection('work');
@@ -82,6 +82,32 @@ const hasTaxonomyChips = disciplineChips.length > 0 || technologyChips.length > 
         }
       </div>
 
+      <!-- V14.0 Quick Case Study Digest Bar -->
+      <aside class="case-digest-bar" aria-label="Intisari cepat studi kasus">
+        <div class="case-digest-grid">
+          <div class="case-digest-item">
+            <span class="case-digest-label">PERIODE DATA</span>
+            <strong class="case-digest-value">2021–2025 (2025 parsial Jan–Jun)</strong>
+          </div>
+          <div class="case-digest-item">
+            <span class="case-digest-label">PARAMETER</span>
+            <strong class="case-digest-value">ISPU, SO₂, &amp; NO₂ (µg/Nm³)</strong>
+          </div>
+          <div class="case-digest-item">
+            <span class="case-digest-label">CAKUPAN SPASIAL</span>
+            <strong class="case-digest-value">23 Titik Pantau DLH Kab. Cirebon</strong>
+          </div>
+          <div class="case-digest-item">
+            <span class="case-digest-label">STANDAR ACUAN</span>
+            <strong class="case-digest-value">PermenLHK No. P.14/2020</strong>
+          </div>
+        </div>
+        <div class="case-digest-actions">
+          <a class="button button-primary" href="/lab">Coba Penjelajah Interaktif (/lab) <span aria-hidden="true">↗</span></a>
+          <a class="button button-outline" href="/codex#aqi-pipeline">Spesifikasi Pipeline (/codex) <span aria-hidden="true">→</span></a>
+        </div>
+      </aside>
+
       {
         d.image && (
           <div class="case-study-cover" transition:name={`project-image-${entry.id}`}>
@@ -92,131 +118,139 @@ const hasTaxonomyChips = disciplineChips.length > 0 || technologyChips.length > 
         )
       }
 
-      {/* V12.2: Konteks — hanya dirender bila frontmatter menyediakannya
-          (field editorial opsional). Teks ini bukan duplikat description:
-          description = ringkasan kartu; context = latar proyek. */}
-      {
-        d.context && (
-          <section class="case-context" aria-labelledby="case-context-title">
-            <h2 class="case-section-title" id="case-context-title">Konteks</h2>
-            <p class="case-context-text">{d.context}</p>
-          </section>
-        )
-      }
-
       {/* V10.0 FASE 3: scrollytelling 3 scene (Masalah -> Proses ->
-          Temuan) sebagai section full-bleed SAUDARA dari case-study-body
-          (bukan di dalamnya): spesifikasi merender panggung sticky
-          setinggi 100vh dengan padding clamp(22px, 7vw, 110px) - bila
-          diletakkan di dalam .case-study-body, lebar panggung ikut
-          terkurung kolom prosa (~720px) dan panggung tidak pernah
-          full-bleed. Hanya muncul bila frontmatter punya `narrative`. */}
+          Temuan) sebagai section full-bleed SAUDARA dari case-study-body */}
       <CaseNarrative narrative={d.narrative} />
 
-      <div class="case-study-body prose-archive">
-        <Content />
-      </div>
-
-      {/* V12.2: bagian editorial terstruktur — masing-masing hanya
-          dirender bila datanya ada (editorial sections tampil ketika
-          sesuai). Methodology = urutan proses (ol); findings/limitations
-          = enumerasi (ul). */}
-      {
-        d.methodology && d.methodology.length > 0 && (
-          <section class="case-structured" aria-labelledby="case-methodology-title">
-            <h2 class="case-section-title" id="case-methodology-title">Metodologi</h2>
-            <ol class="case-steps" role="list">
-              {d.methodology.map((step) => (
-                <li>{step}</li>
-              ))}
+      <!-- V14.0 Sticky 2-Column Case Study Reading Architecture -->
+      <div class="case-study-columns">
+        <aside class="case-sticky-aside" aria-label="Navigasi bab studi kasus">
+          <nav class="case-sticky-nav">
+            <p class="case-sticky-kicker">DAFTAR BAB · CHAPTER INDEX</p>
+            <ol class="case-sticky-list">
+              {d.context && <li><a href="#case-context-title"><span>01</span> Konteks Masalah</a></li>}
+              <li><a href="#case-prose-section"><span>02</span> Narasi &amp; Analisis</a></li>
+              {d.methodology && d.methodology.length > 0 && <li><a href="#case-methodology-title"><span>03</span> Metodologi</a></li>}
+              {d.findings && d.findings.length > 0 && <li><a href="#case-findings-title"><span>04</span> Temuan Utama</a></li>}
+              {d.limitations && d.limitations.length > 0 && <li><a href="#case-limitations-title"><span>05</span> Keterbatasan Jujur</a></li>}
+              {hasTaxonomyChips && <li><a href="#case-taxonomy-title"><span>06</span> Klasifikasi Teknis</a></li>}
             </ol>
-          </section>
-        )
-      }
-      {
-        d.findings && d.findings.length > 0 && (
-          <section class="case-structured" aria-labelledby="case-findings-title">
-            <h2 class="case-section-title" id="case-findings-title">Temuan</h2>
-            <ul class="case-notes" role="list">
-              {d.findings.map((finding) => (
-                <li>{finding}</li>
-              ))}
-            </ul>
-          </section>
-        )
-      }
-      {
-        d.limitations && d.limitations.length > 0 && (
-          <section class="case-structured" aria-labelledby="case-limitations-title">
-            <h2 class="case-section-title" id="case-limitations-title">Keterbatasan</h2>
-            <ul class="case-notes" role="list">
-              {d.limitations.map((limitation) => (
-                <li>{limitation}</li>
-              ))}
-            </ul>
-          </section>
-        )
-      }
-
-      {/* V12.2: taxonomy chips — label dari definisi kanonis; bukan
-          tombol/link (tanpa aksi = tidak terlihat interaktif). */}
-      {
-        hasTaxonomyChips && (
-          <section class="case-taxonomy" aria-labelledby="case-taxonomy-title">
-            <h2 class="case-section-title" id="case-taxonomy-title">Klasifikasi</h2>
-            {disciplineChips.length > 0 && (
-              <div class="case-taxonomy-row">
-                <span class="mini-label">DISCIPLINES</span>
-                <ul class="case-chip-list" role="list">
-                  {disciplineChips.map((label) => (
-                    <li class="stack-chip">{label}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {technologyChips.length > 0 && (
-              <div class="case-taxonomy-row">
-                <span class="mini-label">TECHNOLOGIES</span>
-                <ul class="case-chip-list" role="list">
-                  {technologyChips.map((label) => (
-                    <li class="stack-chip">{label}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </section>
-        )
-      }
-
-      {/* V12.2: Proyek Terkait — data-driven dari relatedIds (tervalidasi),
-          memakai ulang ProjectCard tanpa implementasi kartu kedua. Section
-          tidak dirender bila relasi kosong. Kartu memakai title/description
-          asli dan href ke rute aktual /work/<entry.id>. */}
-      {
-        relatedEntries.length > 0 && (
-          <section class="case-related" aria-labelledby="case-related-title">
-            <h2 class="case-section-title" id="case-related-title">Proyek Terkait</h2>
-            <div class="case-related-grid">
-              {relatedEntries.map((relatedEntry, index) => (
-                <ProjectCard
-                  project={{ ...relatedEntry.data, id: relatedEntry.id, href: `/work/${relatedEntry.id}` }}
-                  index={index}
-                />
-              ))}
+            <div class="case-sticky-lab-card">
+              <span class="case-sticky-kicker">SANDBOX INTERAKTIF</span>
+              <p>Uji langsung filter tahun 2021–2025, parameter ISPU/SO₂/NO₂, dan peta 23 stasiun di The Data Lab.</p>
+              <a class="case-sticky-lab-link" href="/lab">Buka /lab <span aria-hidden="true">↗</span></a>
             </div>
-          </section>
-        )
-      }
+          </nav>
+        </aside>
 
-      <div class="case-study-actions">
-        {
-          d.link && /^https?:\/\//i.test(d.link) && (
-            <a class="button button-primary magnetic-button" href={d.link} target="_blank" rel="noopener noreferrer">
-              {d.linkLabel || 'View project'} <span aria-hidden="true">↗</span>
+        <div class="case-reading-column">
+          {
+            d.context && (
+              <section class="case-context" aria-labelledby="case-context-title">
+                <h2 class="case-section-title" id="case-context-title">Konteks</h2>
+                <p class="case-context-text">{d.context}</p>
+              </section>
+            )
+          }
+
+          <div class="case-study-body prose-archive" id="case-prose-section">
+            <Content />
+          </div>
+
+          {
+            d.methodology && d.methodology.length > 0 && (
+              <section class="case-structured" aria-labelledby="case-methodology-title">
+                <h2 class="case-section-title" id="case-methodology-title">Metodologi</h2>
+                <ol class="case-steps" role="list">
+                  {d.methodology.map((step) => (
+                    <li>{step}</li>
+                  ))}
+                </ol>
+              </section>
+            )
+          }
+          {
+            d.findings && d.findings.length > 0 && (
+              <section class="case-structured" aria-labelledby="case-findings-title">
+                <h2 class="case-section-title" id="case-findings-title">Temuan</h2>
+                <ul class="case-notes" role="list">
+                  {d.findings.map((finding) => (
+                    <li>{finding}</li>
+                  ))}
+                </ul>
+              </section>
+            )
+          }
+          {
+            d.limitations && d.limitations.length > 0 && (
+              <section class="case-structured" aria-labelledby="case-limitations-title">
+                <h2 class="case-section-title" id="case-limitations-title">Keterbatasan</h2>
+                <ul class="case-notes" role="list">
+                  {d.limitations.map((limitation) => (
+                    <li>{limitation}</li>
+                  ))}
+                </ul>
+              </section>
+            )
+          }
+
+          {
+            hasTaxonomyChips && (
+              <section class="case-taxonomy" aria-labelledby="case-taxonomy-title">
+                <h2 class="case-section-title" id="case-taxonomy-title">Klasifikasi</h2>
+                {disciplineChips.length > 0 && (
+                  <div class="case-taxonomy-row">
+                    <span class="mini-label">DISCIPLINES</span>
+                    <ul class="case-chip-list" role="list">
+                      {disciplineChips.map((label) => (
+                        <li class="stack-chip">{label}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {technologyChips.length > 0 && (
+                  <div class="case-taxonomy-row">
+                    <span class="mini-label">TECHNOLOGIES</span>
+                    <ul class="case-chip-list" role="list">
+                      {technologyChips.map((label) => (
+                        <li class="stack-chip">{label}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </section>
+            )
+          }
+
+          {
+            relatedEntries.length > 0 && (
+              <section class="case-related" aria-labelledby="case-related-title">
+                <h2 class="case-section-title" id="case-related-title">Proyek Terkait</h2>
+                <div class="case-related-grid">
+                  {relatedEntries.map((relatedEntry, index) => (
+                    <ProjectCard
+                      project={{ ...relatedEntry.data, id: relatedEntry.id, href: `/work/${relatedEntry.id}` }}
+                      index={index}
+                    />
+                  ))}
+                </div>
+              </section>
+            )}
+
+          <div class="case-study-actions">
+            <a class="button button-primary magnetic-button" href="/lab">
+              Buka Penjelajah Data AQI (/lab) <span aria-hidden="true">↗</span>
             </a>
-          )
-        }
-        <a class="button button-outline magnetic-button" href="/work">Back to the archive <span aria-hidden="true">↗</span></a>
+            {
+              d.link && /^https?:\/\//i.test(d.link) && (
+                <a class="button button-outline magnetic-button" href={d.link} target="_blank" rel="noopener noreferrer">
+                  {d.linkLabel || 'Buka Dokumentasi Riset'} <span aria-hidden="true">↗</span>
+                </a>
+              )
+            }
+            <a class="button button-outline magnetic-button" href="/work">Kembali ke Halaman Proyek <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
       </div>
     </div>
   </article>

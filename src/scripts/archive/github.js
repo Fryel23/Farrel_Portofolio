@@ -174,7 +174,7 @@ function initGitHubActivity() {
   const cached = readCache(false);
   if (cached) { renderCards(cached); return; }
 
-  const base = 'https://api.github.com/users/' + encodeURIComponent(cfg.username || 'Fryel32');
+  const base = 'https://api.github.com/users/' + encodeURIComponent(cfg.username || 'Fryel23');
   // V5 §3.6: both requests carry an 8s timeout + AbortController and
   // resolve to the honest fallback on any failure.
   Promise.all([
@@ -190,7 +190,7 @@ function initGitHubActivity() {
     if (fallback) {
       fallback.hidden = false;
       const message = qs('span', fallback);
-      if (message) message.textContent = cfg.fallbackMessage || 'GITHUB STATS ARE UNAVAILABLE RIGHT NOW.';
+      if (message) message.textContent = cfg.fallbackMessage || 'STATISTIK GITHUB SEDANG TIDAK DAPAT DIMUAT SAAT INI.';
     }
   });
 }
@@ -408,10 +408,10 @@ function renderGithubCopy() {
     const fallback = qs('#github-fallback');
     if (fallback) {
       fallback.textContent = '';
-      const message = el('span', null, gh.jsRequiredMessage || 'GITHUB STATS REQUIRE JAVASCRIPT.');
+      const message = el('span', null, gh.jsRequiredMessage || 'STATISTIK GITHUB MEMERLUKAN JAVASCRIPT.');
       fallback.appendChild(message);
-      const link = el('a', null, (gh.fallbackLinkLabel || 'VISIT THE PROFILE DIRECTLY') + ' ');
-      link.href = gh.profileUrl || ('https://github.com/' + encodeURIComponent(gh.username || ''));
+      const link = el('a', null, (gh.fallbackLinkLabel || 'BUKA REPOSITORI UTAMA (@FRYEL23)') + ' ');
+      link.href = gh.repoUrl || gh.profileUrl || 'https://github.com/Fryel23/Farrel_Portofolio';
       link.target = '_blank';
       link.rel = 'noopener noreferrer';
       const arrow = el('span', null, '↗');

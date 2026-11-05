@@ -1,0 +1,213 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/archive.css';
+---
+
+<BaseLayout
+  title="Off-screen · Farrel Islami Putra"
+  pageKey="archive-off-screen"
+  description="Off-screen: kegiatan Farrel Islami Putra di luar kode, dari eksperimen visual dan catatan proses sampai companion pixel-art yang hidup di sudut layar."
+>
+  <!-- ============ OFF-SCREEN (V4 §6) ============ -->
+  <section class="offscreen-section section-shell" id="offscreen" aria-labelledby="offscreen-heading">
+    <div class="geo geo-six" aria-hidden="true"></div>
+
+    <!-- V6.5 §4.2: grid data isometrik generatif + scanline, digambar
+         generative-ambient.js. Dekorasi saja. -->
+    <canvas class="ambient-canvas ambient-canvas--offscreen" data-effect="isometric-grid" aria-hidden="true"></canvas>
+
+    <div class="section-heading">
+      <div>
+        <p class="section-kicker" id="offscreen-kicker">05 / OFF-SCREEN</p>
+        <h1 class="display-heading" id="offscreen-heading">
+          <span class="line-mask"><span class="line">After hours.</span></span>
+          <span class="line-mask"><span class="line">Still <em>curious.</em></span></span>
+        </h1>
+      </div>
+      <p class="heading-aside" id="offscreen-intro">Yang saya lakukan saat tidak sedang menatap terminal.</p>
+    </div>
+
+    <div class="offscreen-layout">
+      <!-- Kiri: karakter pixel-art (rect-only SVG) + chip hobi. -->
+      <div class="offscreen-character">
+        <figure class="pixel-stage">
+          <div class="ornament ornament-habitat-plant" aria-hidden="true">
+            <svg viewBox="0 0 16 16" shape-rendering="crispEdges" focusable="false">
+              <rect x="6" y="11" width="4" height="4" fill="var(--px-wood-dark)" />
+              <rect x="7" y="10" width="2" height="1" fill="var(--px-wood)" />
+              <rect x="7" y="6" width="1" height="4" fill="var(--px-lime)" />
+              <rect x="5" y="5" width="2" height="2" fill="var(--px-lime)" />
+              <rect x="8" y="4" width="2" height="2" fill="var(--px-lime)" />
+            </svg>
+          </div>
+          <div class="ornament ornament-habitat-poster2" aria-hidden="true">
+            <svg viewBox="0 0 16 20" shape-rendering="crispEdges" focusable="false">
+              <rect x="0" y="0" width="16" height="20" fill="var(--px-blue)" />
+              <rect x="2" y="2" width="12" height="3" fill="var(--px-python-blue)" />
+              <rect x="2" y="7" width="6" height="6" fill="var(--px-navy)" />
+              <rect x="10" y="7" width="4" height="6" fill="var(--px-ivory)" />
+            </svg>
+          </div>
+          <svg id="pixel-pet-art" class="pixel-pet" viewBox="0 0 64 64" shape-rendering="crispEdges" aria-hidden="true" focusable="false">
+            <g class="pet-body">
+              <g class="pet-head">
+                <rect x="20" y="9" width="18" height="2" fill="var(--px-black)" />
+                <rect x="21" y="11" width="16" height="3" fill="var(--px-navy)" />
+                <rect x="22" y="14" width="14" height="10" fill="var(--px-ivory)" />
+                <g class="pet-eyes">
+                  <rect x="25" y="18" width="2" height="3" fill="var(--px-black)" />
+                  <rect x="31" y="18" width="2" height="3" fill="var(--px-black)" />
+                </g>
+                <rect x="27" y="22" width="4" height="1" fill="var(--px-gray)" />
+                <rect x="19" y="14" width="3" height="5" fill="var(--px-black)" />
+                <rect x="20" y="15" width="1" height="3" fill="var(--px-blue)" />
+                <rect x="36" y="14" width="3" height="5" fill="var(--px-black)" />
+                <rect x="37" y="15" width="1" height="3" fill="var(--px-blue)" />
+              </g>
+              <rect x="20" y="24" width="18" height="18" fill="var(--px-blue)" />
+              <rect x="28" y="24" width="1" height="18" fill="var(--px-navy)" />
+              <rect x="17" y="27" width="3" height="10" fill="var(--px-blue)" />
+              <rect x="38" y="27" width="3" height="10" fill="var(--px-blue)" />
+            </g>
+            <g class="pet-desk">
+              <rect x="4" y="42" width="56" height="3" fill="var(--px-wood)" />
+              <rect x="4" y="45" width="56" height="1" fill="var(--px-wood-dark)" />
+              <rect x="7" y="46" width="3" height="12" fill="var(--px-wood-dark)" />
+              <rect x="54" y="46" width="3" height="12" fill="var(--px-wood-dark)" />
+              <rect x="35" y="26" width="12" height="13" fill="var(--px-slate)" />
+              <rect x="36" y="27" width="10" height="11" fill="var(--px-black)" />
+              <g class="pet-code">
+                <rect class="pet-code-line" x="37" y="29" width="6" height="1" fill="var(--px-neon)" />
+                <rect class="pet-code-line" x="37" y="31" width="8" height="1" fill="var(--px-python-blue)" />
+                <rect class="pet-code-line" x="37" y="33" width="4" height="1" fill="var(--px-neon)" />
+                <rect class="pet-code-line" x="37" y="35" width="7" height="1" fill="var(--px-python-yellow)" />
+              </g>
+              <g class="pet-hud">
+                <rect x="42" y="29" width="3" height="1" fill="var(--px-pink)" />
+                <rect x="44" y="33" width="2" height="1" fill="var(--px-blue)" />
+              </g>
+              <rect class="pet-screen-glow" x="36" y="27" width="10" height="11" fill="var(--px-blue)" opacity="0.14" />
+              <rect x="34" y="39" width="14" height="3" fill="var(--px-steel)" />
+              <rect x="36" y="40" width="10" height="1" fill="var(--px-slate)" />
+            </g>
+            <g class="pet-hands">
+              <rect class="pet-hand-l" x="16" y="38" width="3" height="3" fill="var(--px-ivory)" />
+              <rect class="pet-hand-r" x="36" y="38" width="3" height="3" fill="var(--px-ivory)" />
+            </g>
+            <g class="pet-fx">
+              <g class="pet-note pet-note-1" opacity="0">
+                <rect x="44" y="22" width="2" height="2" fill="var(--px-neon)" />
+                <rect x="46" y="18" width="1" height="4" fill="var(--px-neon)" />
+                <rect x="47" y="18" width="1" height="2" fill="var(--px-neon)" />
+              </g>
+              <g class="pet-note pet-note-2" opacity="0">
+                <rect x="48" y="15" width="2" height="2" fill="var(--px-python-yellow)" />
+                <rect x="50" y="11" width="1" height="4" fill="var(--px-python-yellow)" />
+                <rect x="51" y="11" width="1" height="2" fill="var(--px-python-yellow)" />
+              </g>
+              <g class="pet-note pet-note-3" opacity="0">
+                <rect x="41" y="12" width="2" height="2" fill="var(--px-pink)" />
+                <rect x="43" y="8" width="1" height="4" fill="var(--px-pink)" />
+                <rect x="44" y="8" width="1" height="2" fill="var(--px-pink)" />
+              </g>
+              <g class="pet-racket" opacity="0">
+                <rect x="11" y="24" width="6" height="8" fill="var(--px-steel)" />
+                <rect x="12" y="25" width="4" height="6" fill="var(--px-ivory)" />
+                <rect x="12" y="27" width="4" height="1" fill="var(--px-gray)" />
+                <rect x="13" y="25" width="1" height="6" fill="var(--px-gray)" />
+                <rect x="13" y="32" width="2" height="14" fill="var(--px-wood-dark)" />
+              </g>
+              <g class="pet-shuttle" opacity="0" transform="translate(50 4)">
+                <rect x="0" y="0" width="4" height="2" fill="var(--px-ivory)" />
+                <rect x="1" y="2" width="2" height="2" fill="var(--px-ivory)" />
+                <rect x="1" y="4" width="2" height="2" fill="var(--px-gold)" />
+              </g>
+              <rect class="pet-react-glow" x="36" y="27" width="10" height="11" fill="var(--px-blue)" opacity="0" />
+              <rect class="pet-react-codeline" x="37" y="30" width="9" height="1" fill="var(--px-ivory)" opacity="0" />
+              <g class="pet-react-note pet-react-note-1" opacity="0">
+                <rect x="42" y="20" width="2" height="2" fill="var(--px-neon)" />
+                <rect x="43" y="16" width="1" height="4" fill="var(--px-neon)" />
+              </g>
+              <g class="pet-react-note pet-react-note-2" opacity="0">
+                <rect x="46" y="17" width="2" height="2" fill="var(--px-python-yellow)" />
+                <rect x="47" y="13" width="1" height="4" fill="var(--px-python-yellow)" />
+              </g>
+              <g class="pet-react-note pet-react-note-3" opacity="0">
+                <rect x="39" y="14" width="2" height="2" fill="var(--px-pink)" />
+                <rect x="40" y="10" width="1" height="4" fill="var(--px-pink)" />
+              </g>
+              <g class="pet-react-shuttle" opacity="0" transform="translate(24 2)">
+                <rect x="0" y="0" width="4" height="2" fill="var(--px-ivory)" />
+                <rect x="1" y="2" width="2" height="2" fill="var(--px-ivory)" />
+                <rect x="1" y="4" width="2" height="2" fill="var(--px-gold)" />
+              </g>
+              <g class="pet-gamepad" opacity="0">
+                <rect x="5" y="9" width="10" height="5" fill="var(--px-slate)" />
+                <rect x="6" y="8" width="8" height="1" fill="var(--px-steel)" />
+                <rect x="7" y="11" width="1" height="1" fill="var(--px-ivory)" />
+                <rect x="9" y="11" width="1" height="1" fill="var(--px-ivory)" />
+                <rect x="12" y="10" width="1" height="1" fill="var(--px-neon)" />
+                <rect x="13" y="11" width="1" height="1" fill="var(--px-neon)" />
+              </g>
+            </g>
+          </svg>
+          <figcaption class="pixel-stage-label" id="pixel-stage-label">UNIT 01 · DESK LOOP</figcaption>
+        </figure>
+        <p class="hobby-current" id="hobby-current" aria-live="polite">
+          <span class="hobby-current-label">CURRENTLY</span>
+          <span class="hobby-current-value">NOTHING SELECTED</span>
+        </p>
+        <div class="hobby-chips" id="hobby-chips"></div>
+        <div class="hobby-log" id="hobby-log" aria-label="Recent hobby log">
+          <p class="hobby-log-label">LAST LOGGED</p>
+          <ul class="hobby-log-list" id="hobby-log-list"></ul>
+        </div>
+      </div>
+
+      <!-- Kanan: embed Spotify resmi di dalam bingkai arsip -->
+      <div class="spotify-frame">
+        <div class="spotify-frame-top">
+          <span id="spotify-frame-label">ARCHIVE SOUNDTRACK / ON REPEAT</span>
+          <span class="spotify-live" aria-hidden="true">● ON LOOP</span>
+        </div>
+        <iframe id="spotify-embed" src="https://open.spotify.com/embed/playlist/0fmL6az8JL4tHrwmZwRx2c?utm_source=generator&amp;theme=0" width="100%" height="352" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="Spotify playlist: while(True): listen()"></iframe>
+        <a class="spotify-frame-link" id="spotify-frame-link" href="https://open.spotify.com/playlist/0fmL6az8JL4tHrwmZwRx2c?si=5304e74573ec46c9&amp;pt=044b66f8ec8b8ac888b4c027e7da55c7" target="_blank" rel="noopener noreferrer">OPEN PLAYLIST <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </section>
+
+  <div class="transition-ribbon" aria-hidden="true"><span></span></div>
+
+  <!-- ============ COMPANION (V4 §8) ============ -->
+  <section class="companion-section section-shell" id="companion" aria-labelledby="companion-heading">
+    <div class="geo geo-seven" aria-hidden="true"></div>
+
+    <canvas class="ambient-canvas ambient-canvas--companion" data-effect="orbital" aria-hidden="true"></canvas>
+    <div class="companion-inner">
+      <div class="section-heading">
+        <div>
+          <p class="section-kicker" id="companion-kicker">08 / A SMALL COMPANION</p>
+          <h2 class="display-heading" id="companion-heading">
+            <span class="line-mask"><span class="line">Someone is</span></span>
+            <span class="line-mask"><span class="line">hanging <em>around.</em></span></span>
+          </h2>
+        </div>
+        <div class="heading-stamp heading-stamp-pet"><b>KOK</b><br />PAGE PET<span aria-hidden="true">✳</span></div>
+      </div>
+      <p class="companion-intro" id="companion-intro">Teman piksel kecil yang mengikuti arsip ini. Panggil kalau ingin ditemani.</p>
+
+      <div class="pet-habitat" id="pet-habitat">
+        <span class="pet-habitat-label" aria-hidden="true">PET HABITAT / 08</span>
+        <div class="pet-habitat-scene" id="pet-habitat-scene" aria-hidden="true"></div>
+      </div>
+
+      <button class="button button-outline companion-toggle" id="companion-toggle" type="button" aria-pressed="false">Summon companion</button>
+      <p class="companion-note"><span>THE PET LIVES IN THE CORNER OF EVERY SECTION</span><span>CLICK IT TO SAY HI</span></p>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import '../../scripts/global.js';
+  import '../../scripts/archive.js';
+</script>

@@ -171,6 +171,8 @@ function setActiveSuggestion(index) {
 const SEARCH_PAGE_ROUTES = {
   top: '/',
   work: '/work',
+  lab: '/lab',
+  csv: '/lab/csv',
   games: '/archive/play',
   about: '/about',
   journey: '/about',
