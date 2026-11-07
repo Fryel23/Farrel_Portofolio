@@ -1,0 +1,611 @@
+/* Territory III: Code-Spell Sanctum & Territory IV: Spire Colosseum Battle Styles */
+
+/* Column 3: Code-Spell Terminal Box */
+.sanctum-terminal-box {
+  padding: 0.75rem;
+  border-radius: 9px;
+  background: rgba(6, 11, 24, 0.92);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sanctum-terminal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: #38bdf8;
+}
+
+.sanctum-code-pre {
+  margin: 0;
+  padding: 0.6rem;
+  border-radius: 6px;
+  background: rgba(2, 6, 16, 0.95);
+  border: 1px solid rgba(30, 58, 138, 0.6);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.69rem;
+  color: #e2e8f0;
+  overflow-x: auto;
+  line-height: 1.45;
+}
+
+.sanctum-prompt-text {
+  margin: 0;
+  font-size: 0.73rem;
+  color: #cbd5e1;
+  line-height: 1.4;
+}
+
+.deck-spell-input-row {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.deck-spell-input {
+  flex: 1;
+  padding: 0.45rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid rgba(59, 130, 246, 0.45);
+  background: rgba(15, 23, 42, 0.92);
+  color: #ffffff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+}
+
+.deck-spell-hint-btn {
+  padding: 0.45rem 0.55rem;
+  border-radius: 6px;
+  border: 1px solid rgba(251, 191, 36, 0.55);
+  background: rgba(180, 83, 9, 0.28);
+  color: #fde68a;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.66rem;
+  cursor: pointer;
+}
+
+.tc-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.64rem;
+  color: #94a3b8;
+  padding: 0.2rem 0;
+}
+
+.tc-row.is-pass strong {
+  color: #34d399;
+}
+
+.sanctum-buff-reward-card {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: 8px;
+  background: rgba(120, 53, 15, 0.24);
+  border: 1px solid rgba(251, 191, 36, 0.45);
+  font-size: 0.72rem;
+}
+
+.sanctum-buff-reward-card strong {
+  display: block;
+  color: #fbbf24;
+}
+
+.sanctum-buff-reward-card span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.66rem;
+  color: #34d399;
+}
+
+.sanctum-mini-questlog {
+  margin: 0;
+  padding: 0.55rem 0.75rem 0.55rem 1.4rem;
+  border-radius: 7px;
+  background: rgba(8, 14, 28, 0.85);
+  border: 1px solid rgba(59, 130, 246, 0.24);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.64rem;
+  color: #94a3b8;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.deck-spell-feedback {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  min-height: 1rem;
+}
+
+.deck-spell-feedback.is-success { color: #34d399; }
+.deck-spell-feedback.is-error { color: #fca5a5; }
+
+/* Sanctum Full Modal */
+.sanctum-modal-layout {
+  display: grid;
+  grid-template-columns: 290px 1fr;
+  gap: 1.15rem;
+}
+
+.sanctum-tier-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.sanctum-tier-tab {
+  padding: 0.35rem 0.68rem;
+  border-radius: 6px;
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  background: rgba(15, 23, 42, 0.85);
+  color: #cbd5e1;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  cursor: pointer;
+}
+
+.sanctum-tier-tab.is-active {
+  border-color: #38bdf8;
+  background: rgba(37, 99, 235, 0.38);
+  color: #ffffff;
+}
+
+.sanctum-spell-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  max-height: 520px;
+  overflow-y: auto;
+}
+
+.sanctum-spell-item {
+  padding: 0.55rem 0.7rem;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(71, 85, 105, 0.45);
+  color: #f8fafc;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sanctum-spell-item.is-selected {
+  border-color: #38bdf8;
+  background: rgba(30, 58, 138, 0.45);
+}
+
+.sanctum-spell-item.is-solved {
+  border-left: 3px solid #10b981;
+}
+
+.ssi-top {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  color: #94a3b8;
+}
+
+.sd-code-block {
+  padding: 0.85rem;
+  border-radius: 8px;
+  background: #040814;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  color: #e2e8f0;
+  overflow-x: auto;
+}
+
+.sd-testcases-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.55rem;
+  margin: 0.75rem 0;
+}
+
+.sd-tc-card {
+  padding: 0.55rem;
+  border-radius: 7px;
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(71, 85, 105, 0.45);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.sd-tc-card.pass {
+  border-color: #10b981;
+}
+
+.sd-answer-bar {
+  display: flex;
+  gap: 0.55rem;
+  margin-top: 0.75rem;
+}
+
+.sd-answer-input {
+  flex: 1;
+  padding: 0.62rem 0.85rem;
+  border-radius: 7px;
+  border: 1px solid #38bdf8;
+  background: #050a18;
+  color: #ffffff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+}
+
+.sd-hint-btn {
+  padding: 0.62rem 0.9rem;
+  border-radius: 7px;
+  border: 1px solid #fbbf24;
+  background: rgba(180, 83, 9, 0.32);
+  color: #fde68a;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.sd-submit-btn {
+  padding: 0.62rem 1.1rem;
+  border-radius: 7px;
+  border: 1px solid #60a5fa;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.74rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.sd-feedback-msg {
+  margin-top: 0.65rem;
+  padding: 0.55rem 0.8rem;
+  border-radius: 7px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.76rem;
+}
+
+.sd-feedback-msg.is-success {
+  background: rgba(6, 78, 59, 0.35);
+  border: 1px solid #10b981;
+  color: #6ee7b7;
+}
+
+.sd-feedback-msg.is-error {
+  background: rgba(127, 29, 29, 0.35);
+  border: 1px solid #ef4444;
+  color: #fca5a5;
+}
+
+/* Column 4: Spire Colosseum VS Preview & Live Leaderboard */
+.colosseum-deck-vs-stage {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem;
+  border-radius: 9px;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.25), rgba(8, 14, 28, 0.95));
+  border: 1px solid rgba(96, 165, 250, 0.38);
+}
+
+.deck-vs-combatant {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.dvc-sprite.mirrored {
+  transform: scaleX(-1);
+}
+
+.dvc-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: #e2e8f0;
+}
+
+.deck-vs-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.vs-emblem {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.95rem;
+  font-weight: 900;
+  color: #fbbf24;
+  text-shadow: 0 0 12px rgba(251, 191, 36, 0.65);
+}
+
+.deck-duel-now-btn {
+  padding: 0.35rem 0.65rem;
+  border-radius: 5px;
+  border: 1px solid #fbbf24;
+  background: linear-gradient(180deg, #d97706, #b45309);
+  color: #ffffff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.66rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.colosseum-deck-leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.38rem;
+}
+
+.deck-lb-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.55rem;
+  border-radius: 7px;
+  background: rgba(13, 22, 44, 0.88);
+  border: 1px solid rgba(59, 130, 246, 0.24);
+}
+
+.deck-lb-row.is-self {
+  border-color: #fbbf24;
+  background: rgba(120, 53, 15, 0.28);
+}
+
+.dlb-rank {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #fbbf24;
+  min-width: 24px;
+}
+
+.dlb-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.dlb-info strong {
+  font-size: 0.72rem;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dlb-info small {
+  font-size: 0.6rem;
+  color: #94a3b8;
+}
+
+.dlb-cp {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.18rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: #38bdf8;
+}
+
+.dlb-duel-btn {
+  padding: 0.16rem 0.45rem;
+  border-radius: 4px;
+  border: 1px solid rgba(251, 191, 36, 0.65);
+  background: rgba(180, 83, 9, 0.35);
+  color: #fde68a;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  cursor: pointer;
+}
+
+/* Full Leaderboard Table Modal */
+.colosseum-leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.colosseum-leaderboard-table th {
+  text-align: left;
+  padding: 0.65rem;
+  border-bottom: 1px solid rgba(96, 165, 250, 0.38);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.colosseum-leaderboard-table td {
+  padding: 0.55rem 0.65rem;
+  border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+}
+
+.colosseum-lb-tr.is-self {
+  background: rgba(120, 53, 15, 0.25);
+}
+
+.lb-hunter-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.lb-title-badge {
+  display: block;
+  font-size: 0.66rem;
+  color: #38bdf8;
+}
+
+.lb-stars {
+  display: block;
+  color: #fbbf24;
+  font-size: 0.7rem;
+}
+
+.lb-code-pill {
+  padding: 0.22rem 0.5rem;
+  border-radius: 5px;
+  background: rgba(30, 58, 138, 0.4);
+  border: 1px solid rgba(96, 165, 250, 0.35);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.66rem;
+  color: #93c5fd;
+}
+
+.challenge-duel-cta {
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #fbbf24;
+  background: linear-gradient(180deg, #d97706, #b45309);
+  color: #ffffff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* 1v1 Colosseum Battle Arena Stage */
+.arena-stage-container {
+  display: grid;
+  grid-template-columns: 1fr 120px 1fr;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(56, 189, 248, 0.28), rgba(7, 12, 26, 0.96));
+  border: 1px solid rgba(96, 165, 250, 0.5);
+}
+
+.arena-fighter-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.arena-fighter-sprite.mirrored {
+  transform: scaleX(-1);
+}
+
+.fighter-dash-attack {
+  animation: fighterDashForward 0.36s ease-in-out;
+}
+
+@keyframes fighterDashForward {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(36px) scale(1.08); }
+  100% { transform: translateX(0); }
+}
+
+.fighter-hit-shake {
+  animation: fighterHitShake 0.34s ease-in-out;
+}
+
+@keyframes fighterHitShake {
+  0%, 100% { transform: translateX(0); filter: brightness(1); }
+  25% { transform: translateX(-10px); filter: brightness(2) drop-shadow(0 0 18px #ef4444); }
+  75% { transform: translateX(10px); filter: brightness(1.6); }
+}
+
+.arena-hp-bar-track,
+.arena-mana-bar-track {
+  width: 100%;
+  max-width: 260px;
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  overflow: hidden;
+}
+
+.arena-mana-bar-track {
+  height: 7px;
+}
+
+.arena-hp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ef4444, #22c55e);
+  transition: width 0.25s ease;
+}
+
+.arena-mana-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #a855f7);
+  transition: width 0.25s ease;
+}
+
+.dmg-popup {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.92rem;
+  font-weight: 900;
+  color: #f87171;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+}
+
+.dmg-popup.crit { color: #fbbf24; font-size: 1.05rem; }
+.dmg-popup.ult { color: #c084fc; font-size: 1.12rem; }
+
+.arena-victory-banner {
+  margin: 0.9rem 0;
+  padding: 0.85rem 1.1rem;
+  border-radius: 10px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.arena-victory-banner.is-victory {
+  background: rgba(6, 78, 59, 0.45);
+  border: 1px solid #34d399;
+  color: #ecfdf5;
+}
+
+.arena-victory-banner.is-defeat {
+  background: rgba(127, 29, 29, 0.4);
+  border: 1px solid #f87171;
+  color: #fef2f2;
+}
+
+.arena-turn-combat-log {
+  max-height: 180px;
+  overflow-y: auto;
+  margin: 0.75rem 0 0;
+  padding: 0.75rem 1.2rem;
+  border-radius: 8px;
+  background: rgba(5, 10, 22, 0.92);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: #cbd5e1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.turn-log-item.is-ult { color: #c084fc; font-weight: 700; }
+.turn-log-item.is-crit { color: #fbbf24; }
+
+@media (max-width: 900px) {
+  .sanctum-modal-layout {
+    grid-template-columns: 1fr;
+  }
+  .arena-stage-container {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,128 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/home.css';
+import '../../styles/archive.css';
+import '../../styles/work.css';
+---
+
+<BaseLayout
+  title="Archive · Farrel Islami Putra"
+  pageKey="archive-index"
+  description="Hub arsip Farrel Islami Putra: game deck interaktif, milestones dan credentials, kegiatan off-screen, dan arsip GitHub. Semua bagian pendukung portofolio dalam satu pintu."
+>
+  <!-- ============ ARCHIVE HUB (Fase 4.5 / V14.0) ============ -->
+  <section class="archive-hub section-shell" id="archive-hub" aria-labelledby="archive-hub-heading">
+    <div class="geo geo-four" aria-hidden="true"></div>
+    <div class="section-heading">
+      <div>
+        <p class="section-kicker">ARC-00 · THE SIDE ARCHIVE</p>
+        <h1 class="display-heading" id="archive-hub-heading">
+          <span class="line-mask"><span class="line">Ruang arsip</span></span>
+          <span class="line-mask"><span class="line">di balik <em>karya.</em></span></span>
+        </h1>
+      </div>
+      <p class="heading-aside" id="archive-hub-aside">Pintu masuk ke seluruh ruang arsip: catatan rekayasa teknis, telemetri GitHub (@Fryel23 &amp; @Fryel32), dek permainan, kredensial, dan kegiatan di luar layar.</p>
+    </div>
+
+    <div class="archive-hub-grid">
+      <a class="archive-hub-card" href="/archive/adr">
+        <span class="archive-hub-card-kicker">ARC-01 · ENGINEERING RECORDS</span>
+        <h3 class="archive-hub-card-title">Arsip Rekam Rekayasa</h3>
+        <p class="archive-hub-card-text">Katalog 13 laporan diagnostik, eksperimen, keputusan teknis, implementasi, dan audit V10.3 sampai V12.3 dengan checksum SHA-256.</p>
+        <span class="archive-hub-card-cta">BUKA ARSIP REKAYASA <span aria-hidden="true">↗</span></span>
+      </a>
+      <a class="archive-hub-card" href="/archive/play">
+        <span class="archive-hub-card-kicker">ARC-03 · GAME DECK</span>
+        <h3 class="archive-hub-card-title">Dek Permainan</h3>
+        <p class="archive-hub-card-text">Daftar permainan yang saya mainkan di waktu luang. Seluruh metrik bersifat santai dan subjektif, bukan statistik kompetitif.</p>
+        <span class="archive-hub-card-cta">BUKA DEK PERMAINAN <span aria-hidden="true">↗</span></span>
+      </a>
+      <a class="archive-hub-card" href="/archive/credentials">
+        <span class="archive-hub-card-kicker">ARC-04 · CREDENTIALS</span>
+        <h3 class="archive-hub-card-title">Kredensial &amp; Sertifikat</h3>
+        <p class="archive-hub-card-text">Sertifikat, penghargaan, dan publikasi diarsipkan di sini saat benar-benar didapatkan. Tidak ada yang ditampilkan sebelum ada buktinya.</p>
+        <span class="archive-hub-card-cta">BUKA KREDENSIAL <span aria-hidden="true">↗</span></span>
+      </a>
+      <a class="archive-hub-card" href="/archive/off-screen">
+        <span class="archive-hub-card-kicker">ARC-05 · OFF-SCREEN &amp; COMPANION</span>
+        <h3 class="archive-hub-card-title">Di Luar Layar</h3>
+        <p class="archive-hub-card-text">Kegiatan saat tidak sedang menatap terminal: olahraga, musik sepanjang hari, dan companion piksel kecil bernama Kok.</p>
+        <span class="archive-hub-card-cta">BUKA HALAMAN <span aria-hidden="true">↗</span></span>
+      </a>
+      <a class="archive-hub-card" href="/codex">
+        <span class="archive-hub-card-kicker">CODEX · 100-600 TAXONOMY</span>
+        <h3 class="archive-hub-card-title">Catatan Teknis (The Grand Codex)</h3>
+        <p class="archive-hub-card-text">Basis pengetahuan teknis berbasis bukti repositori dengan taksonomi desimal 100-600, persamaan MathML statis, dan graf tautan balik.</p>
+        <span class="archive-hub-card-cta">BUKA CATATAN TEKNIS <span aria-hidden="true">↗</span></span>
+      </a>
+      <a class="archive-hub-card" href="/atlas">
+        <span class="archive-hub-card-kicker">ATLAS · SYSTEM TOPOLOGY</span>
+        <h3 class="archive-hub-card-title">Peta Sistem &amp; Topologi</h3>
+        <p class="archive-hub-card-text">Peta arsitektur build-time lintas 7 sektor wilayah, metrik koleksi terverifikasi, dan diagram topologi aliran data lima lapis.</p>
+        <span class="archive-hub-card-cta">BUKA PETA SISTEM <span aria-hidden="true">↗</span></span>
+      </a>
+    </div>
+
+    <div class="archive-hub-footnote">
+      <span>PERSONAL ARCHIVE / SIDE ROOMS</span>
+      <span>EVERYTHING HERE IS SELF-REPORTED &amp; VERIFIED</span>
+    </div>
+  </section>
+
+  <div class="transition-ribbon" aria-hidden="true"><span></span></div>
+
+  <!-- ============ GITHUB ACTIVITY (V4 §7 / ARC-02) ============ -->
+  <section class="github-section" id="github" aria-labelledby="github-heading">
+    <div class="desktop-frame desktop-frame--tl" aria-hidden="true"></div>
+    <div class="desktop-frame desktop-frame--br" aria-hidden="true"></div>
+    <div class="section-inner github-inner">
+      <div class="ornament ornament-github-pulse" aria-hidden="true">
+        <svg viewBox="0 0 200 40" focusable="false">
+          <path class="ornament-github-pulse-path" d="M0 20 L30 20 L40 10 L50 30 L60 20 L90 20 L100 8 L110 32 L120 20 L150 20 L160 15 L170 25 L180 20 L200 20" fill="none" stroke="currentColor" stroke-width="1.5" />
+          <circle cx="30" cy="20" r="2" fill="currentColor" />
+          <circle cx="90" cy="20" r="2" fill="currentColor" />
+          <circle cx="150" cy="20" r="2" fill="currentColor" />
+        </svg>
+      </div>
+      <div class="ornament ornament-github-terminal" aria-hidden="true">&gt; git log --oneline</div>
+      <div class="section-heading section-heading-light">
+        <div>
+          <p class="section-kicker" id="github-kicker">ARC-02 · GITHUB TELEMETRY</p>
+          <h2 class="display-heading" id="github-heading">
+            <span class="line-mask"><span class="line">Jejak komit,</span></span>
+            <span class="line-mask"><span class="line">bukan sekadar <em>klaim.</em></span></span>
+          </h2>
+        </div>
+        <p class="heading-aside" id="github-intro">Aktivitas publik dari GitHub (@Fryel23 untuk repositori utama Farrel_Portofolio &amp; @Fryel32 untuk arsip eksperimen awal), diambil langsung dan di-cache selama satu jam.</p>
+      </div>
+
+      <div class="github-grid" id="github-grid"></div>
+      <p class="github-fallback" id="github-fallback">
+        <span>STATISTIK GITHUB MEMERLUKAN JAVASCRIPT.</span>
+        <a href="https://github.com/Fryel23/Farrel_Portofolio" target="_blank" rel="noopener noreferrer">BUKA REPOSITORI UTAMA (@FRYEL23) <span aria-hidden="true">↗</span></a>
+      </p>
+      <svg class="github-skeleton" viewBox="0 0 160 56" preserveAspectRatio="xMinYMin meet" aria-hidden="true" focusable="false">
+        <defs>
+          <pattern id="gh-skel-pattern" width="8" height="8" patternUnits="userSpaceOnUse">
+            <rect x="0" y="0" width="6" height="6" rx="1" fill="rgba(147, 197, 253, 0.07)" />
+          </pattern>
+        </defs>
+        <rect width="160" height="56" fill="url(#gh-skel-pattern)"></rect>
+        <rect x="24" y="8" width="6" height="6" rx="1" fill="rgba(147, 197, 253, 0.20)" />
+        <rect x="72" y="16" width="6" height="6" rx="1" fill="rgba(147, 197, 253, 0.16)" />
+        <rect x="112" y="40" width="6" height="6" rx="1" fill="rgba(147, 197, 253, 0.20)" />
+        <rect x="40" y="32" width="6" height="6" rx="1" fill="rgba(147, 197, 253, 0.13)" />
+        <rect x="136" y="8" width="6" height="6" rx="1" fill="rgba(147, 197, 253, 0.16)" />
+      </svg>
+      <div class="github-brackets" aria-hidden="true"><span>GIT LOG / FRYEL23 · FARREL_PORTOFOLIO</span></div>
+
+      <div class="github-pulse" aria-hidden="true"></div>
+      <p class="github-note"><span>LIVE FROM THE GITHUB REST API (@FRYEL23 &amp; @FRYEL32)</span><span>CACHED FOR ONE HOUR · NOTHING INFLATED</span></p>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import '../../scripts/global.js';
+  import '../../scripts/archive.js';
+</script>

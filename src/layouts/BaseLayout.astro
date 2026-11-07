@@ -7,6 +7,7 @@ import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 import CommandPalette from '../components/layout/CommandPalette.astro';
 import ReferenceDock from '../components/layout/ReferenceDock.astro';
+import PortalDiveModal from '../components/layout/PortalDiveModal.astro';
 /* V10.0 FASE 2: overlay Archive Wipe untuk transisi halaman. CSS-nya
    dimuat di layout agar tersedia di semua halaman sejak first paint. */
 import PageTransitionOverlay from '../components/layout/PageTransitionOverlay.astro';
@@ -82,6 +83,7 @@ const ogImageURL = new URL('/og-default.png', Astro.site);
          dan Global Command Palette (native <dialog>, lazy-loaded index). -->
     <ReferenceDock />
     <CommandPalette />
+    <PortalDiveModal />
 
     <Footer />
 

@@ -6,13 +6,11 @@ export const prerender = true;
 
 export const GET: APIRoute = async () => {
   const workEntries = await getCollection('work');
-  const adrEntries = await getCollection('adr');
-  const codexEntries = await getCollection('codex');
 
   const payload = buildWorldIndexPayload({
     workEntries,
-    adrEntries,
-    codexEntries,
+    adrEntries: [],
+    codexEntries: [],
   });
 
   return new Response(JSON.stringify(payload, null, 2) + '\n', {

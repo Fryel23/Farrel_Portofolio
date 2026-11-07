@@ -354,8 +354,6 @@ test('4a. Tidak ada U+2014 baru pada seluruh file yang dibuat pada Fase A', () =
     'src/lib/adr-taxonomy.ts',
     'scripts/data/sync-adr-collection.mjs',
     'scripts/test-v13-adr.mjs',
-    'src/pages/archive/adr/index.astro',
-    'src/pages/archive/adr/[slug].astro',
     'src/scripts/archive/adr.js',
     'src/styles/archive/adr.css',
     ...ADR_MANIFEST.map((m) => `src/content/adr/${m.slug}.md`),
@@ -369,31 +367,22 @@ test('4a. Tidak ada U+2014 baru pada seluruh file yang dibuat pada Fase A', () =
   }
 });
 
-test('4b. Jika dist/ tersedia, seluruh 14 rute HTML statis ADR terbangun dan memuat konten server-rendered tanpa JS', () => {
-  const distAdrIndex = path.join(DEFAULT_PROJECT_ROOT, 'dist/archive/adr/index.html');
-  if (!fs.existsSync(distAdrIndex)) {
-    /* Bila dijalankan sebelum build, lewati verifikasi dist namun pastikan source page tersedia */
-    assert.ok(
-      fs.existsSync(path.join(DEFAULT_PROJECT_ROOT, 'src/pages/archive/adr/index.astro'))
-    );
-    return;
-  }
-
-  const indexHtml = fs.readFileSync(distAdrIndex, 'utf8');
-  assert.ok(indexHtml.includes('Architecture, Diagnostics'));
-  assert.ok(indexHtml.includes('SHA-256 VERIFIED'));
-
-  for (const item of ADR_MANIFEST) {
-    const detailHtmlPath = path.join(DEFAULT_PROJECT_ROOT, `dist/archive/adr/${item.slug}/index.html`);
-    assert.ok(fs.existsSync(detailHtmlPath), `Missing built HTML: dist/archive/adr/${item.slug}/index.html`);
-    const detailHtml = fs.readFileSync(detailHtmlPath, 'utf8');
-    const escapedTitle = item.title.replace(/&/g, '&amp;');
-    assert.ok(
-      detailHtml.includes(item.title) || detailHtml.includes(escapedTitle),
-      `Built HTML for ${item.slug} missing title`
-    );
-    assert.ok(detailHtml.includes(item.sourceFilename), `Built HTML for ${item.slug} missing sourceFilename`);
-  }
+test('4b. Sesuai kontrak V15.0, dokumen ADR tidak lagi diekspos sebagai halaman publik di src/pages/archive/adr atau dist/archive/adr', () => {
+  assert.equal(
+    fs.existsSync(path.join(DEFAULT_PROJECT_ROOT, 'src/pages/archive/adr/index.astro')),
+    false,
+    'src/pages/archive/adr/index.astro harus dihapus dari halaman publik'
+  );
+  assert.equal(
+    fs.existsSync(path.join(DEFAULT_PROJECT_ROOT, 'src/pages/archive/adr/[slug].astro')),
+    false,
+    'src/pages/archive/adr/[slug].astro harus dihapus dari halaman publik'
+  );
+  assert.equal(
+    fs.existsSync(path.join(DEFAULT_PROJECT_ROOT, 'dist/archive/adr/index.html')),
+    false,
+    'dist/archive/adr/index.html tidak boleh diekspos sebagai rute publik'
+  );
 });
 
 console.log(`\nHASIL: ${passed} PASS, ${failed} FAIL`);

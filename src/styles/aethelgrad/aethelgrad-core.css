@@ -1,0 +1,647 @@
+:root {
+  --aethel-bg-abyss: #070b16;
+  --aethel-bg-panel: rgba(13, 21, 41, 0.88);
+  --aethel-bg-card: rgba(18, 29, 56, 0.82);
+  --aethel-border-blue: rgba(59, 130, 246, 0.36);
+  --aethel-border-bright: rgba(96, 165, 250, 0.72);
+  --aethel-border-gold: rgba(245, 158, 11, 0.65);
+  --aethel-text-main: #f1f5f9;
+  --aethel-text-muted: #94a3b8;
+  --aethel-accent-cyan: #38bdf8;
+  --aethel-accent-blue: #2563eb;
+  --aethel-accent-gold: #fbbf24;
+  --aethel-accent-emerald: #10b981;
+  --aethel-accent-purple: #a855f7;
+  --aethel-accent-crimson: #ef4444;
+}
+
+.aethelgrad-body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(37, 99, 235, 0.28), transparent 52%),
+    radial-gradient(circle at 85% 12%, rgba(139, 92, 246, 0.2), transparent 40%),
+    linear-gradient(180deg, #060a14 0%, #0b1326 48%, #070c18 100%);
+  color: var(--aethel-text-main);
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Top HUD Navigation Bar */
+.aethelgrad-top-hud {
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 1.5rem;
+  background: linear-gradient(180deg, rgba(8, 14, 29, 0.96), rgba(11, 19, 38, 0.9));
+  border-bottom: 1px solid var(--aethel-border-blue);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(14px);
+}
+
+.hud-brand-cluster {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.hud-spire-crest {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.28), rgba(15, 23, 42, 0.9));
+  border: 1px solid var(--aethel-border-bright);
+  color: var(--aethel-accent-cyan);
+  font-size: 1.25rem;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.35);
+}
+
+.hud-brand-titles {
+  display: flex;
+  flex-direction: column;
+}
+
+.hud-brand-main {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #ffffff;
+  text-shadow: 0 0 14px rgba(56, 189, 248, 0.45);
+}
+
+.hud-brand-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  color: var(--aethel-accent-cyan);
+  text-transform: uppercase;
+}
+
+.hud-nav-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.hud-nav-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0.95rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--aethel-text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.hud-nav-tab:hover {
+  color: #ffffff;
+  background: rgba(37, 99, 235, 0.16);
+  border-color: rgba(59, 130, 246, 0.32);
+}
+
+.hud-nav-tab.is-active {
+  color: #ffffff;
+  background: linear-gradient(180deg, rgba(37, 99, 235, 0.34), rgba(29, 78, 216, 0.14));
+  border-color: var(--aethel-border-bright);
+  box-shadow: 0 2px 14px rgba(56, 189, 248, 0.25);
+}
+
+.hud-right-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hud-hunter-mini-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.28rem 0.75rem 0.28rem 0.35rem;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid var(--aethel-border-blue);
+}
+
+.hud-mini-avatar-box {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  background: rgba(30, 58, 138, 0.45);
+  border: 1px solid rgba(96, 165, 250, 0.4);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+.hud-mini-meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.hud-mini-meta strong {
+  font-size: 0.74rem;
+  color: #ffffff;
+}
+
+.hud-mini-meta span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--aethel-accent-cyan);
+}
+
+.hud-return-portfolio-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.52rem 0.95rem;
+  border-radius: 6px;
+  background: rgba(30, 41, 59, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  color: #f8fafc;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.73rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.hud-return-portfolio-btn:hover {
+  border-color: var(--aethel-accent-cyan);
+  background: rgba(37, 99, 235, 0.28);
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.3);
+}
+
+/* Panoramic Spire Citadel Hero Banner */
+.aethelgrad-panorama-hero {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.35rem 1.5rem;
+  margin: 0.85rem 1.5rem 0.65rem;
+  border-radius: 12px;
+  border: 1px solid var(--aethel-border-blue);
+  background:
+    radial-gradient(circle at 55% 35%, rgba(56, 189, 248, 0.25), transparent 48%),
+    linear-gradient(135deg, rgba(11, 22, 48, 0.92) 0%, rgba(19, 36, 74, 0.78) 50%, rgba(12, 20, 42, 0.94) 100%);
+  box-shadow: inset 0 0 60px rgba(37, 99, 235, 0.16), 0 12px 32px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.panorama-citadel-svg-backdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.42;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+/* Hunter Passport Card (Top-Left of Panorama like Image 1) */
+.hunter-passport-card {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.95rem 1.2rem;
+  border-radius: 10px;
+  background: rgba(9, 16, 34, 0.9);
+  border: 1px solid var(--aethel-border-bright);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+  min-width: 360px;
+}
+
+.passport-avatar-frame {
+  width: 78px;
+  height: 78px;
+  border-radius: 10px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.25), rgba(15, 23, 42, 0.95));
+  border: 1px solid var(--aethel-accent-cyan);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.passport-info-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  flex: 1;
+}
+
+.passport-callsign-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.passport-callsign-row strong {
+  font-size: 0.98rem;
+  color: #ffffff;
+  letter-spacing: 0.03em;
+}
+
+.passport-rank-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.74rem;
+  color: var(--aethel-accent-gold);
+  font-weight: 700;
+}
+
+.passport-currencies-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.currency-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.22rem 0.55rem;
+  border-radius: 6px;
+  background: rgba(30, 58, 138, 0.45);
+  border: 1px solid rgba(96, 165, 250, 0.35);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.73rem;
+  color: #f8fafc;
+}
+
+/* Right Lore & Action Plaque */
+.panorama-lore-plaque {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  text-align: right;
+  max-width: 390px;
+  padding: 0.85rem 1.15rem;
+  border-radius: 10px;
+  background: rgba(9, 16, 34, 0.82);
+  border: 1px solid rgba(96, 165, 250, 0.32);
+}
+
+.panorama-lore-plaque h2 {
+  margin: 0;
+  font-size: 0.95rem;
+  letter-spacing: 0.14em;
+  color: var(--aethel-accent-cyan);
+}
+
+.panorama-lore-plaque p {
+  margin: 0.35rem 0 0.65rem;
+  font-size: 0.78rem;
+  color: var(--aethel-text-muted);
+  line-height: 1.45;
+}
+
+.panorama-quick-btns {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.hud-mini-action-btn {
+  padding: 0.38rem 0.72rem;
+  border-radius: 6px;
+  border: 1px solid rgba(96, 165, 250, 0.4);
+  background: rgba(30, 58, 138, 0.35);
+  color: #e2e8f0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.hud-mini-action-btn:hover {
+  border-color: var(--aethel-accent-cyan);
+  background: rgba(37, 99, 235, 0.45);
+}
+
+/* 4-Column Unified Command Deck (Matches Both Reference Screenshots) */
+.aethelgrad-command-deck-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  padding: 0.5rem 1.5rem 1.25rem;
+}
+
+.deck-territory-column {
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  background: var(--aethel-bg-panel);
+  border: 1px solid var(--aethel-border-blue);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.deck-territory-column:hover {
+  border-color: var(--aethel-border-bright);
+  box-shadow: 0 14px 34px rgba(37, 99, 235, 0.22);
+}
+
+.deck-col-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1rem;
+  background: linear-gradient(90deg, rgba(30, 58, 138, 0.48), rgba(15, 23, 42, 0.85));
+  border-bottom: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.deck-col-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.deck-col-icon {
+  font-size: 1.15rem;
+  color: var(--aethel-accent-cyan);
+}
+
+.deck-col-title-wrap h3 {
+  margin: 0;
+  font-size: 0.84rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+.deck-col-title-wrap small {
+  display: block;
+  font-size: 0.68rem;
+  color: var(--aethel-text-muted);
+}
+
+.deck-col-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.9rem;
+  flex: 1;
+}
+
+/* Security Pass & Hub City Box (Column 1) */
+.explorer-pass-box {
+  padding: 0.8rem;
+  border-radius: 8px;
+  background: rgba(10, 18, 36, 0.85);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.pass-security-shield {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.65rem;
+  border-radius: 6px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34d399;
+  font-size: 0.73rem;
+  font-weight: 700;
+}
+
+.hub-collection-counters {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.4rem;
+}
+
+.hub-counter-tile {
+  padding: 0.45rem;
+  border-radius: 6px;
+  background: rgba(18, 29, 56, 0.75);
+  border: 1px solid rgba(59, 130, 246, 0.24);
+  text-align: center;
+}
+
+.hub-counter-tile span {
+  display: block;
+  font-size: 0.63rem;
+  color: var(--aethel-text-muted);
+  text-transform: uppercase;
+}
+
+.hub-counter-tile strong {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.73rem;
+  color: var(--aethel-accent-cyan);
+}
+
+.hub-citadel-illustration {
+  border-radius: 8px;
+  border: 1px solid rgba(59, 130, 246, 0.28);
+  background: radial-gradient(circle at 50% 35%, rgba(56, 189, 248, 0.22), rgba(10, 16, 32, 0.95));
+  padding: 0.65rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.deck-primary-cta,
+.deck-secondary-cta {
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  border-radius: 7px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.deck-primary-cta {
+  background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+  border: 1px solid #60a5fa;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+}
+
+.deck-primary-cta:hover {
+  background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+  box-shadow: 0 0 18px rgba(56, 189, 248, 0.55);
+}
+
+.deck-secondary-cta {
+  background: rgba(30, 41, 59, 0.85);
+  border: 1px solid rgba(96, 165, 250, 0.38);
+  color: #e2e8f0;
+}
+
+.deck-secondary-cta:hover {
+  border-color: var(--aethel-accent-gold);
+  color: var(--aethel-accent-gold);
+}
+
+/* Bottom Announcement Ticker Bar */
+.aethelgrad-bottom-ticker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 1.5rem;
+  margin: 0 1.5rem 1.25rem;
+  border-radius: 8px;
+  background: rgba(9, 15, 30, 0.92);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.74rem;
+  color: var(--aethel-text-muted);
+}
+
+.ticker-left {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ticker-badge {
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  background: rgba(37, 99, 235, 0.3);
+  border: 1px solid var(--aethel-accent-cyan);
+  color: var(--aethel-accent-cyan);
+  font-size: 0.66rem;
+  font-weight: 700;
+}
+
+/* Universal World Modal Overlays */
+.aethelgrad-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 140;
+  background: rgba(4, 8, 18, 0.86);
+  backdrop-filter: blur(10px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.aethelgrad-modal-overlay.is-open {
+  display: flex;
+}
+
+.aethelgrad-modal-window {
+  width: min(1140px, 96vw);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #0c162d 0%, #081022 100%);
+  border: 1px solid var(--aethel-border-bright);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.85);
+  overflow: hidden;
+}
+
+.modal-window-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.95rem 1.35rem;
+  background: rgba(18, 32, 64, 0.85);
+  border-bottom: 1px solid var(--aethel-border-blue);
+}
+
+.modal-window-header h2 {
+  margin: 0;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.modal-close-btn {
+  padding: 0.38rem 0.78rem;
+  border-radius: 6px;
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  background: rgba(127, 29, 29, 0.35);
+  color: #fca5a5;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.modal-window-body {
+  padding: 1.25rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.hidden {
+  display: none !important;
+}
+
+@media (max-width: 1280px) {
+  .aethelgrad-command-deck-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 780px) {
+  .aethelgrad-top-hud {
+    flex-wrap: wrap;
+    padding: 0.65rem 1rem;
+  }
+  .hud-nav-tabs {
+    order: 3;
+    width: 100%;
+    overflow-x: auto;
+  }
+  .aethelgrad-panorama-hero {
+    flex-direction: column;
+    margin: 0.65rem 1rem;
+  }
+  .hunter-passport-card {
+    min-width: 0;
+  }
+  .panorama-lore-plaque {
+    max-width: 100%;
+    align-items: flex-start;
+    text-align: left;
+  }
+  .aethelgrad-command-deck-grid {
+    grid-template-columns: 1fr;
+    padding: 0.5rem 1rem;
+  }
+}

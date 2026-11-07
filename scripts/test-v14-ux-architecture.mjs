@@ -53,12 +53,15 @@ check('Stage 2: Header 4-item primary nav + Two-Column Eksplorasi Mega-Drawer + 
   assert.ok(header.includes('id="quick-menu"'), 'Must preserve #quick-menu');
   assert.ok(header.includes('id="quick-menu-panel"'), 'Must preserve #quick-menu-panel');
   assert.ok(header.includes('quick-menu-columns'), 'Mega-drawer must use 2-column progressive disclosure layout');
-  for (const href of ['/lab', '/lab/csv', '/archive/play', '/archive/off-screen', '/codex', '/archive/adr', '/atlas', '/archive/credentials', '/archive']) {
+  for (const href of ['/lab', '/lab/csv', '/archive/play', '/archive/off-screen', '/atlas', '/lab/methodology', '/archive/credentials', '/archive']) {
     assert.ok(
       header.includes(`href="${href}"`) || header.includes(`href: '${href}'`),
       `Mega-drawer must include link to ${href}`
     );
   }
+  assert.ok(header.includes('data-portal-dive="/aethelgrad"'), 'Mega-drawer must include Portal Dive CTA to /aethelgrad');
+  assert.equal(header.includes('/archive/adr'), false, 'Mega-drawer must not expose /archive/adr');
+  assert.equal(header.includes('/codex'), false, 'Mega-drawer must not expose /codex');
 
   // Friendly Command Palette button
   assert.ok(header.includes('id="world-workspace-status-btn"'), 'Must preserve #world-workspace-status-btn');
@@ -82,10 +85,11 @@ check('Stage 3: Homepage Swiss Technical Grid, Quick Topic Navigator, and Overla
   assert.ok(hero.includes('id="hero-cta" href="/work"'), 'Primary CTA #hero-cta must link to /work');
   assert.ok(hero.includes('id="hero-docs" href="/about"'), 'Secondary CTA #hero-docs must link to /about');
   assert.ok(hero.includes('class="archive-search-label"'), 'Quick Topic Navigator must have visible label');
-  assert.ok(hero.includes('class="hero-quick-pills"'), 'Hero must include 4 quick jump pills');
-  for (const pillHref of ['/work/aqi-cirebon', '/lab', '/lab/csv', '/codex']) {
+  assert.ok(hero.includes('class="hero-quick-pills"'), 'Hero must include quick jump pills');
+  for (const pillHref of ['/work/aqi-cirebon', '/lab', '/lab/csv', '/atlas']) {
     assert.ok(hero.includes(`href="${pillHref}"`), `Quick pill must link to ${pillHref}`);
   }
+  assert.ok(hero.includes('data-portal-dive="/aethelgrad"'), 'Hero must include Portal Dive CTA to /aethelgrad');
 
   // Overlapping Split-Tone Bridge (#explore-bridge)
   assert.ok(home.includes('id="explore-bridge"'), 'Homepage must include #explore-bridge section');
@@ -174,7 +178,7 @@ check('Stage 6: /about 5-Act Narrative, 5-Domain Asymmetric Bento Grid, & Preser
   assert.ok(aboutCss.includes('.interest-bento-grid'), 'about.css must style .interest-bento-grid');
 });
 
-// 6. Data & Identity Reconciliation (2021-2025, Fryel23/Farrel_Portofolio & Fryel32, ARC-01..ARC-05)
+// 6. Data & Identity Reconciliation (2021-2025, Fryel23 & Fryel32, ARC-02..ARC-05, V15.0 Trunk & Branch)
 check('Stage 1: Data & Identity Reconciliation across content, archive, connect, and README', () => {
   const aqiMd = read('src/content/work/aqi-cirebon.md');
   const contentJs = read('src/data/content.js');
@@ -185,13 +189,15 @@ check('Stage 1: Data & Identity Reconciliation across content, archive, connect,
 
   assert.ok(aqiMd.includes('title: "Air Quality Index Trends · Cirebon (2021–2025)"'), 'aqi-cirebon.md title must state 2021–2025');
   assert.ok(contentJs.includes('Air Quality Index Trends · Cirebon (2021–2025)'), 'content.js must state 2021–2025');
-  assert.ok(contentJs.includes('Fryel23/Farrel_Portofolio') && contentJs.includes('Fryel32'), 'content.js must reconcile Fryel23 and Fryel32');
-  assert.ok(githubJs.includes('Fryel23/Farrel_Portofolio'), 'github.js must reference Fryel23/Farrel_Portofolio');
-  for (const arcCode of ['ARC-01', 'ARC-02', 'ARC-03', 'ARC-04', 'ARC-05']) {
+  assert.ok(contentJs.includes('Fryel23') && contentJs.includes('Fryel32'), 'content.js must reconcile Fryel23 and Fryel32');
+  assert.equal(contentJs.includes('Farrel_Portofolio'), false, 'content.js must not leak Farrel_Portofolio repo link');
+  assert.ok(githubJs.includes('Fryel23'), 'github.js must reference Fryel23');
+  assert.equal(githubJs.includes('Farrel_Portofolio'), false, 'github.js must not leak Farrel_Portofolio');
+  for (const arcCode of ['ARC-02', 'ARC-03', 'ARC-04', 'ARC-05']) {
     assert.ok(archiveIndex.includes(arcCode), `archive/index.astro must include ${arcCode}`);
   }
-  assert.ok(connectPage.includes('Fryel23/Farrel_Portofolio') && connectPage.includes('Fryel32'), 'connect.astro must explain @Fryel23 and @Fryel32');
-  assert.ok(readme.includes('V14.0-UNIFIED') && readme.includes('Fryel23/Farrel_Portofolio'), 'README.md must be updated to V14.0-UNIFIED');
+  assert.ok(connectPage.includes('Fryel23') && connectPage.includes('Fryel32'), 'connect.astro must explain @Fryel23 and @Fryel32');
+  assert.ok(readme.includes('V15.0-AETHELGRAD-OMEGA'), 'README.md must be updated to V15.0-AETHELGRAD-OMEGA');
 });
 
 // 7. Protected Systems Integrity & Zero Em-Dash Guard

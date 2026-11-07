@@ -183,8 +183,7 @@ const SEARCH_PAGE_ROUTES = {
   profiles: '/connect',
   contact: '/connect',
   closing: '/connect',
-  adr: '/archive/adr',
-  codex: '/codex',
+  aethelgrad: '/aethelgrad',
   atlas: '/atlas'
 };
 const SEARCH_ANCHORS = {
@@ -200,8 +199,7 @@ const SEARCH_ANCHORS = {
   profiles: '#profiles',
   contact: '#contact',
   closing: '#closing',
-  adr: '#adr-vault',
-  codex: '#codex-page-heading',
+  aethelgrad: '#aethelgrad-root',
   atlas: '#atlas-page-heading'
 };
 

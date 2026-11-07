@@ -410,8 +410,8 @@ function renderGithubCopy() {
       fallback.textContent = '';
       const message = el('span', null, gh.jsRequiredMessage || 'STATISTIK GITHUB MEMERLUKAN JAVASCRIPT.');
       fallback.appendChild(message);
-      const link = el('a', null, (gh.fallbackLinkLabel || 'BUKA REPOSITORI UTAMA (@FRYEL23)') + ' ');
-      link.href = gh.repoUrl || gh.profileUrl || 'https://github.com/Fryel23/Farrel_Portofolio';
+      const link = el('a', null, (gh.fallbackLinkLabel || 'BUKA PROFIL GITHUB (@FRYEL23)') + ' ');
+      link.href = gh.profileUrl || 'https://github.com/Fryel23';
       link.target = '_blank';
       link.rel = 'noopener noreferrer';
       const arrow = el('span', null, '↗');

@@ -1,13 +1,64 @@
 ---
-/* Footer tipis sitewide. Teks diisi renderIdentity() dari data;
-   markup statis ini adalah fallback yang identik. */
+import { DATA } from '../../data/content.js';
 ---
 
-<footer class="site-footer">
-  <span>DESIGNED &amp; CODED BY HAND</span>
-  <span>HTML <b>+</b> CSS <b>+</b> JS</span>
-  <span>NO PAGE BUILDERS, NO TEMPLATES</span>
-  <!-- V12.0: pintasan The Data Lab (spec §12.4). Markup statis selaras
-       dengan tiga span lain; identik dengan fallback renderIdentity(). -->
-  <span><a class="footer-lab-link" href="/lab">THE DATA LAB <b>↗</b></a></span>
+<footer class="site-footer" aria-label="Navigasi dan informasi kaki halaman">
+  <div class="site-footer-grid">
+    <!-- Kolom 1: Identitas & Navigasi Utama -->
+    <div class="site-footer-col">
+      <div class="site-footer-brand">
+        <span class="site-footer-monogram">{DATA.meta.monogram}</span>
+        <div>
+          <strong class="site-footer-name">{DATA.meta.name}</strong>
+          <p class="site-footer-role">S1 Teknik Informatika · UNIKOM (2026)</p>
+        </div>
+      </div>
+      <p class="site-footer-summary">
+        Arsip hidup rekayasa perangkat lunak, analisis data terbuka (ISPU Cirebon 2021–2025), dan catatan proses belajar.
+      </p>
+      <nav class="site-footer-links site-footer-links--inline" aria-label="Navigasi utama footer">
+        <a href="/">Beranda</a>
+        <a href="/work">Proyek</a>
+        <a href="/about">Tentang</a>
+        <a href="/connect">Kontak</a>
+      </nav>
+    </div>
+
+    <!-- Kolom 2: Eksplorasi Interaktif & Arsip Personal -->
+    <div class="site-footer-col">
+      <p class="site-footer-heading">EKSPLORASI &amp; ARSIP PERSONAL</p>
+      <ul class="site-footer-list">
+        <li><a href="/lab">Data Lab · AQI Explorer</a></li>
+        <li><a href="/lab/methodology">Metodologi ISPU P.14/2020</a></li>
+        <li><a href="/lab/csv">CSV Explorer (Browser Sandbox)</a></li>
+        <li><a href="/archive/play">Game Deck Interaktif</a></li>
+        <li><a href="/archive/off-screen">Off-screen &amp; Hobi</a></li>
+        <li><a href="/archive/credentials">Credentials &amp; Sertifikat</a></li>
+      </ul>
+    </div>
+
+    <!-- Kolom 3: Peta Pengetahuan, Dunia Virtual, & Kanal Resmi -->
+    <div class="site-footer-col">
+      <p class="site-footer-heading">CABANG DUNIA &amp; KANAL RESMI</p>
+      <ul class="site-footer-list">
+        <li><a href="/atlas">The Data Atlas Crypt (/atlas)</a></li>
+        <li>
+          <a href="/aethelgrad" class="portal-dive-trigger" data-portal-dive="/aethelgrad">
+            Masuk Dunia: Aethelgrad ✦ (/aethelgrad)
+          </a>
+        </li>
+        <li><a href="https://drive.google.com/drive/folders/1c333-r98_cch1e_t_y2s_p3j-2l_k2q1" target="_blank" rel="noopener noreferrer">Google Drive Docs ↗</a></li>
+        <li><a href="https://www.linkedin.com/in/farrel-islami-putra-a17287387/" target="_blank" rel="noopener noreferrer">LinkedIn Resmi ↗</a></li>
+        <li><a href="https://www.instagram.com/reinnhv/" target="_blank" rel="noopener noreferrer">Instagram (@reinnhv) ↗</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="site-footer-bottom">
+    <span class="footer-left" id="footer-left">{DATA.siteFooter.left}</span>
+    <span class="footer-dot" aria-hidden="true">·</span>
+    <span class="footer-center" id="footer-center">{DATA.siteFooter.center}</span>
+    <span class="footer-dot" aria-hidden="true">·</span>
+    <span class="footer-right" id="footer-right">{DATA.siteFooter.right}</span>
+  </div>
 </footer>

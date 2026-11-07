@@ -136,23 +136,29 @@ const reserved = entries.filter((e) => e.data.status === 'RESERVED');
         </div>
       </article>
 
-      <article class="explore-bridge-card explore-bridge-card--dark" aria-labelledby="bridge-archive-title">
+      <article class="explore-bridge-card explore-bridge-card--dark" id="home-portal-branch-card" aria-labelledby="bridge-archive-title">
         <div class="explore-bridge-meta">
-          <span class="explore-bridge-kicker">03B / ENGINEERING ARCHIVE · DOKUMENTASI REKAYASA</span>
-          <span class="explore-bridge-badge">SYSTEM BLUEPRINT</span>
+          <span class="explore-bridge-kicker">03B / THE BRANCH PORTAL · GERBANG DUNIA MANDIRI</span>
+          <span class="explore-bridge-badge">VR RPG + KNOWLEDGE CRYPT</span>
         </div>
-        <h3 class="explore-bridge-title" id="bridge-archive-title">Telusuri Arsitektur &amp; Catatan Rekayasa</h3>
+        <h3 class="explore-bridge-title" id="bridge-archive-title">Masuk Dunia Mandiri · Aethelgrad // The Infinite Spire</h3>
         <p class="explore-bridge-desc">
-          Baca rincian metodologi teknis di Engineering Codex, pelajari 13 catatan keputusan arsitektur (ADR-001 s.d. ADR-013), atau lihat peta konstelasi dependensi komponen secara utuh di System Atlas.
+          Di luar batang utama portofolio ini terdapat dua cabang khusus: The Data Atlas Crypt (/atlas) untuk menjelajahi konstelasi pengetahuan interaktif &amp; telemetri performa situs real-time, serta dunia virtual RPG terisolasi Aethelgrad (/aethelgrad).
         </p>
         <ul class="explore-bridge-points">
-          <li><strong>Engineering Codex (/codex):</strong> Spesifikasi pipeline data ISPU, integritas visual, dan arsitektur Astro 5 islands.</li>
-          <li><strong>13 ADR &amp; System Atlas:</strong> Rekam jejak keputusan teknis serta peta topologi rute dan modul skrip.</li>
+          <li><strong>Aethelgrad // The Infinite Spire (/aethelgrad):</strong> Dunia virtual RPG mandiri dengan 24 Hero Pixel SVG 7-Layer, 50 Equipment, Code-Spell Sanctum, dan Spire Colosseum.</li>
+          <li><strong>The Data Atlas Crypt (/atlas):</strong> Peta konstelasi 36 simpul pengetahuan, 52 sinapsis, dan Live Performance Telemetry HUD.</li>
         </ul>
         <div class="explore-bridge-actions">
-          <a class="explore-bridge-dark-btn explore-bridge-dark-btn--primary" href="/codex">Buka Engineering Codex (/codex) <span aria-hidden="true">↗</span></a>
-          <a class="explore-bridge-dark-btn explore-bridge-dark-btn--ghost" href="/archive/adr">Baca 13 ADR (/archive/adr) <span aria-hidden="true">→</span></a>
-          <a class="explore-bridge-dark-btn explore-bridge-dark-btn--ghost" href="/atlas">Lihat System Atlas (/atlas) <span aria-hidden="true">→</span></a>
+          <button
+            type="button"
+            class="explore-bridge-dark-btn explore-bridge-dark-btn--primary portal-dive-trigger"
+            data-portal-dive="/aethelgrad"
+          >
+            Dive Into Aethelgrad ✦ (/aethelgrad) <span aria-hidden="true">↗</span>
+          </button>
+          <a class="explore-bridge-dark-btn explore-bridge-dark-btn--ghost" href="/atlas">Buka The Data Atlas Crypt (/atlas) <span aria-hidden="true">→</span></a>
+          <a class="explore-bridge-dark-btn explore-bridge-dark-btn--ghost" href="/aethelgrad">Buka Langsung (/aethelgrad) <span aria-hidden="true">→</span></a>
         </div>
       </article>
     </div>
@@ -196,7 +202,7 @@ const reserved = entries.filter((e) => e.data.status === 'RESERVED');
             <span class="line-mask"><span class="line">Mari tetap</span></span>
             <span class="line-mask"><span class="line"><em>terhubung.</em></span></span>
           </h2>
-          <p class="social-intro" id="social-intro">Semua profil dan repositori terverifikasi milik saya, termasuk kode sumber di GitHub @Fryel23/Farrel_Portofolio serta folder dokumentasi riset di Google Drive.</p>
+          <p class="social-intro" id="social-intro">Semua profil dan repositori proyek terverifikasi milik saya di GitHub (@Fryel23 &amp; @Fryel32) serta folder dokumentasi riset di Google Drive.</p>
         </div>
         <div class="about-summary-actions">
           <a class="button button-primary" href="/connect">Hubungi Saya <span aria-hidden="true">↗</span></a>

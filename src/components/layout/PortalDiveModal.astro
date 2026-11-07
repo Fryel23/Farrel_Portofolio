@@ -1,0 +1,203 @@
+---
+/**
+ * PortalDiveModal.astro: VR Neural Dive Sequence Overlay (V15.0-AETHELGRAD-OMEGA).
+ *
+ * Menghubungkan Batang Utama Portofolio (The Trunk) dengan Cabang Dunia Virtual
+ * Mandiri (/aethelgrad - AETHELGRAD // THE INFINITE SPIRE):
+ *  - Fase 1 (Reality Fracture, ~750ms): Efek retakan kaca kristal & aberasi kromatik.
+ *  - Fase 2 (Quantum Warp Tunnel, ~1100ms): Terowongan partikel bintang radial
+ *    dengan pembacaan telemetri neural link sebelum mendarat di /aethelgrad.
+ *  - Menghormati prefers-reduced-motion: reduce (navigasi langsung tanpa efek).
+ */
+---
+
+<div
+  id="portal-dive-overlay"
+  class="portal-dive-overlay"
+  role="dialog"
+  aria-modal="true"
+  aria-label="VR Neural Dive Sequence to Aethelgrad"
+  hidden
+  aria-hidden="true"
+  transition:persist="portal-dive-overlay"
+>
+  <!-- Fase 1: Reality Fracture (Retakan Realitas) -->
+  <div id="portal-fracture-stage" class="portal-fracture-stage" aria-hidden="true">
+    <svg class="portal-fracture-svg" viewBox="0 0 1200 800" preserveAspectRatio="none" focusable="false">
+      <defs>
+        <linearGradient id="portal-crack-glow" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.95" />
+          <stop offset="50%" stop-color="#818CF8" stop-opacity="1" />
+          <stop offset="100%" stop-color="#F59E0B" stop-opacity="0.9" />
+        </linearGradient>
+      </defs>
+      <g class="portal-crack-lines" stroke="url(#portal-crack-glow)" fill="none" stroke-linecap="round">
+        <path d="M600 400 L420 260 L210 190 L40 80" stroke-width="2.5" />
+        <path d="M600 400 L790 250 L980 160 L1160 50" stroke-width="2.5" />
+        <path d="M600 400 L470 550 L290 670 L90 760" stroke-width="2.2" />
+        <path d="M600 400 L750 560 L960 660 L1150 740" stroke-width="2.2" />
+        <path d="M600 400 L600 140 L540 20" stroke-width="1.8" />
+        <path d="M600 400 L615 650 L660 785" stroke-width="1.8" />
+        <path d="M420 260 L340 360 L180 390" stroke-width="1.4" />
+        <path d="M790 250 L870 370 L1080 410" stroke-width="1.4" />
+        <polygon points="600,360 645,400 600,440 555,400" stroke-width="2" fill="rgba(56, 189, 248, 0.16)" />
+      </g>
+    </svg>
+    <div class="portal-fracture-flash"></div>
+  </div>
+
+  <!-- Fase 2: Quantum Warp Tunnel -->
+  <canvas id="portal-warp-canvas" class="portal-warp-canvas" width="1280" height="720" aria-hidden="true"></canvas>
+
+  <!-- HUD Telemetri Dive -->
+  <div class="portal-dive-hud">
+    <p class="portal-dive-kicker" id="portal-dive-phase-label">PHASE 01 // REALITY FRACTURE DETECTED</p>
+    <h2 class="portal-dive-title">AETHELGRAD // THE INFINITE SPIRE</h2>
+    <p class="portal-dive-sub" id="portal-dive-sub">
+      MEMUTUSKAN TAUTAN DARI PERMUKAAN PORTOFOLIO · MENYINKRONKAN NEURAL GATEWAY...
+    </p>
+    <div class="portal-dive-progress" aria-hidden="true">
+      <span id="portal-dive-progress-bar" class="portal-dive-progress-bar"></span>
+    </div>
+    <div class="portal-dive-telemetry">
+      <span>PROTOCOL: ISOLATED_VR_BRANCH</span>
+      <span>GUARD: 1_DEVICE_1_HUNTER</span>
+      <span id="portal-dive-pct">0%</span>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  .portal-dive-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: radial-gradient(circle at 50% 50%, rgba(10, 16, 38, 0.96), rgba(3, 6, 17, 0.99));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    color: #f8fafc;
+    font-family: var(--font, 'Space Grotesk', sans-serif);
+  }
+  .portal-dive-overlay[hidden] {
+    display: none !important;
+  }
+  .portal-fracture-stage {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .portal-fracture-svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 14px rgba(56, 189, 248, 0.85));
+    animation: portalCrackPulse 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .portal-fracture-flash {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(56, 189, 248, 0.45), transparent 68%);
+    opacity: 0;
+    animation: portalFlashBurst 0.85s ease-out forwards;
+  }
+  .portal-warp-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+  .portal-dive-hud {
+    position: relative;
+    z-index: 3;
+    max-width: 580px;
+    width: calc(100% - 2.5rem);
+    padding: 2rem 2.25rem;
+    border-radius: 16px;
+    border: 1px solid rgba(56, 189, 248, 0.45);
+    background: rgba(7, 12, 28, 0.82);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 24px 64px rgba(2, 6, 23, 0.85), 0 0 40px rgba(56, 189, 248, 0.22);
+    text-align: center;
+  }
+  .portal-dive-kicker {
+    margin: 0 0 0.5rem;
+    font-family: var(--mono, 'DM Mono', monospace);
+    font-size: 0.74rem;
+    letter-spacing: 0.16em;
+    color: #38bdf8;
+    text-transform: uppercase;
+  }
+  .portal-dive-title {
+    margin: 0 0 0.55rem;
+    font-size: clamp(1.35rem, 2.8vw, 1.95rem);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #f8fafc;
+    text-shadow: 0 0 18px rgba(56, 189, 248, 0.65);
+  }
+  .portal-dive-sub {
+    margin: 0 0 1.25rem;
+    font-family: var(--mono, 'DM Mono', monospace);
+    font-size: 0.76rem;
+    line-height: 1.55;
+    color: #94a3b8;
+  }
+  .portal-dive-progress {
+    width: 100%;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(30, 41, 59, 0.9);
+    overflow: hidden;
+    margin-bottom: 0.9rem;
+    border: 1px solid rgba(56, 189, 248, 0.28);
+  }
+  .portal-dive-progress-bar {
+    display: block;
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #38bdf8, #818cf8, #f59e0b);
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.8);
+    transition: width 0.12s linear;
+  }
+  .portal-dive-telemetry {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    font-family: var(--mono, 'DM Mono', monospace);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    color: #cbd5e1;
+  }
+  @keyframes portalCrackPulse {
+    0% {
+      opacity: 0;
+      transform: scale(0.86);
+    }
+    35% {
+      opacity: 1;
+      transform: scale(1.02);
+    }
+    100% {
+      opacity: 0.35;
+      transform: scale(1.12);
+    }
+  }
+  @keyframes portalFlashBurst {
+    0% { opacity: 0; }
+    25% { opacity: 0.95; }
+    100% { opacity: 0.15; }
+  }
+</style>
+
+<script>
+  import { initNeuralDiveTriggers } from '../../world-aethelgrad/client/dive-sequence/neural-dive-controller.ts';
+
+  initNeuralDiveTriggers();
+  document.addEventListener('astro:page-load', () => {
+    initNeuralDiveTriggers();
+  });
+</script>

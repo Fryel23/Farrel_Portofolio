@@ -478,39 +478,32 @@ test('10 & 11. Large graph mode tidak menjalankan iterasi O(n^2) dan reduced-mot
   assert.equal(largeLayout.modeUsed, 'clustered-deterministic');
 });
 
-console.log('\n[4] Built HTML Verification, MathML Fallback, Accessible List, & Zero Em-Dash');
+console.log('\n[4] V15.0 Non-Public Codex Exposure, Formula Metadata, & Zero Em-Dash');
 
-test('12, 13, & 15. Semua route statis /codex terbangun, memiliki daftar keyboard aksesibel, MathML statis + source notation, dan tanpa dead link RESERVED', () => {
-  const indexHtmlPath = path.join(PROJECT_ROOT, 'dist/codex/index.html');
-  assert.ok(fs.existsSync(indexHtmlPath), 'Missing dist/codex/index.html');
-  const indexHtml = fs.readFileSync(indexHtmlPath, 'utf8');
-
-  assert.ok(indexHtml.includes('THE LIVING ARCHIVE / THE GRAND CODEX'));
-  assert.ok(indexHtml.includes('id="codex-graph-accessible-list"'));
-  assert.ok(indexHtml.includes('REFERENCE-ONLY (RESERVED · NON-ROUTEABLE)'));
+test('12, 13, & 15. Sesuai kontrak V15.0, catatan pembuatan website /codex tidak diekspos sebagai halaman publik sementara metadata formula tetap valid', () => {
   assert.equal(
-    indexHtml.includes('href="/work/saham-indonesia"'),
+    fs.existsSync(path.join(PROJECT_ROOT, 'src/pages/codex/index.astro')),
     false,
-    'RESERVED work must never render an active anchor link'
+    'src/pages/codex/index.astro harus dihapus dari halaman publik'
+  );
+  assert.equal(
+    fs.existsSync(path.join(PROJECT_ROOT, 'src/pages/codex/[...slug].astro')),
+    false,
+    'src/pages/codex/[...slug].astro harus dihapus dari halaman publik'
+  );
+  assert.equal(
+    fs.existsSync(path.join(PROJECT_ROOT, 'dist/codex/index.html')),
+    false,
+    'dist/codex/index.html tidak boleh diekspos di build publik'
   );
 
   for (const entry of codexEntries) {
     const slug = getCodexRouteSlug(entry.id);
-    const detailHtmlPath = path.join(PROJECT_ROOT, 'dist/codex', slug, 'index.html');
-    assert.ok(fs.existsSync(detailHtmlPath), `Missing built detail page: ${detailHtmlPath}`);
-    const detailHtml = fs.readFileSync(detailHtmlPath, 'utf8');
-
-    assert.ok(detailHtml.includes(entry.data.decimalCode));
-    assert.ok(detailHtml.includes('VERIFIED REPOSITORY SOURCES'));
-    assert.ok(detailHtml.includes('REPOSITORY EVIDENCE MATRIX'));
-    assert.equal(detailHtml.includes('href="/work/saham-indonesia"'), false);
-
+    assert.ok(slug.length > 5);
     if (entry.data.formulas && entry.data.formulas.length > 0) {
-      assert.ok(
-        detailHtml.includes('<math xmlns="http://www.w3.org/1998/Math/MathML"'),
-        `Missing static MathML in ${slug}`
-      );
-      assert.ok(detailHtml.includes('SOURCE NOTATION:'), `Missing source notation fallback in ${slug}`);
+      for (const f of entry.data.formulas) {
+        assert.ok(f.label && f.sourceNotation && f.plainExplanation);
+      }
     }
   }
 });
@@ -521,8 +514,6 @@ test('14. Tidak ada karakter U+2014 (em-dash) baru pada seluruh file yang dibuat
     'src/lib/codex-graph-builder.ts',
     'src/scripts/codex.js',
     'src/styles/codex.css',
-    'src/pages/codex/index.astro',
-    'src/pages/codex/[...slug].astro',
     ...codexEntries.map((e) => path.relative(PROJECT_ROOT, e.filePath)),
   ];
 

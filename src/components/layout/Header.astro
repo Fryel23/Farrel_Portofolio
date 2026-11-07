@@ -1,17 +1,16 @@
 ---
 /**
- * Header.astro: Header sitewide (V14.0-UNIFIED).
+ * Header.astro: Header sitewide (V15.0-AETHELGRAD-OMEGA "Trunk & Branch Architecture").
  *
- * Arsitektur Navigasi V14.0:
+ * Arsitektur Navigasi V15.0:
  *  - 4 item navigasi primer manusiawi di .main-nav:
  *      Beranda (/), Proyek (/work), Tentang (/about), Kontak (/connect)
  *  - Tombol "Eksplorasi ▾" (#menu-dots) membuka Two-Column Progressive
  *    Disclosure Mega-Drawer (#quick-menu / #quick-menu-panel):
- *      Kolom 1 (Explore More): EKSPLORASI INTERAKTIF & ARSIP PERSONAL
- *      Kolom 2 (Technical Archive): ARSIP REKAYASA & DOKUMENTASI SISTEM
- *  - Tombol "Cari / Pintasan · Ctrl+K" (#world-workspace-status-btn)
- *    ramah bagi pengunjung awam dan tetap mempertahankan status wilayah
- *    bagi pengguna mahir.
+ *      Kolom 1: EKSPLORASI INTERAKTIF & ARSIP PERSONAL
+ *      Kolom 2: PETA PENGETAHUAN & GERBANG DUNIA VIRTUAL (The Data Atlas Crypt + Portal Aethelgrad)
+ *  - Zero Source-Code / Meta-Documentation Leak: Tidak ada tautan ke dokumentasi
+ *    arsitektur internal atau kode sumber repositori portofolio.
  */
 import { DATA } from '../../data/content.js';
 
@@ -35,77 +34,66 @@ const EXPLORE_INTERACTIVE_ITEMS = [
     href: '/lab',
     desc: 'Visualisasi interaktif kualitas udara Cirebon 2021–2025.',
     badge: 'LAB',
+    external: false,
   },
   {
     label: 'CSV Explorer',
     href: '/lab/csv',
     desc: 'Unggah & analisis statistik file CSV langsung di browser.',
     badge: 'TOOL',
+    external: false,
   },
   {
     label: 'Game Deck',
     href: '/archive/play',
     desc: 'Kartu arcade interaktif dari game yang saya mainkan.',
     badge: 'ARC-03',
+    external: false,
   },
   {
     label: 'Off-screen & Hobi',
     href: '/archive/off-screen',
     desc: 'Musik, badminton, dan pixel companion.',
     badge: 'ARC-05',
+    external: false,
   },
   {
     label: 'Credentials',
     href: '/archive/credentials',
     desc: 'Ruang arsip sertifikat & pencapaian.',
     badge: 'ARC-04',
-  },
-  {
-    label: 'Indeks Arsip Lengkap',
-    href: '/archive',
-    desc: 'Direktori seluruh studi kasus, tool, dan dokumentasi.',
-    badge: 'ARC-HUB',
-  },
-];
-
-const TECHNICAL_ARCHIVE_ITEMS = [
-  {
-    label: 'Catatan Teknis (Codex)',
-    href: '/codex',
-    desc: 'Catatan rekayasa, rumus ISPU, dan graf konsep.',
-    badge: '100-600',
-  },
-  {
-    label: 'Arsip Keputusan (ADR)',
-    href: '/archive/adr',
-    desc: '13 dokumen riwayat eksperimen & keputusan teknis.',
-    badge: 'ARC-01',
-  },
-  {
-    label: 'Peta Sistem (Atlas)',
-    href: '/atlas',
-    desc: 'Diagram topologi arsitektur situs.',
-    badge: 'ATLAS',
-  },
-  {
-    label: 'Metodologi AQI',
-    href: '/lab/methodology',
-    desc: 'Penjelasan rumus PermenLHK P.14/2020.',
-    badge: 'METHOD',
-  },
-  {
-    label: 'GitHub Repository',
-    href: DATA.links.githubRepo || 'https://github.com/Fryel23/Farrel_Portofolio',
-    desc: 'Kode sumber portofolio (@Fryel23 & @Fryel32).',
-    badge: 'EXT ↗',
-    external: true,
+    external: false,
   },
   {
     label: 'Google Drive Docs',
-    href: DATA.links.docs,
+    href: 'https://drive.google.com/drive/folders/1c333-r98_cch1e_t_y2s_p3j-2l_k2q1',
     desc: 'Folder terbuka lembar kerja & log belajar.',
     badge: 'DRIVE ↗',
     external: true,
+  },
+];
+
+const KNOWLEDGE_PORTAL_ITEMS = [
+  {
+    label: 'The Data Atlas Crypt',
+    href: '/atlas',
+    desc: 'Graf konstelasi pengetahuan interaktif 36 simpul, 52 sinapsis, & telemetri performa situs real-time.',
+    badge: 'CRYPT-01',
+    external: false,
+  },
+  {
+    label: 'Metodologi ISPU P.14/2020',
+    href: '/lab/methodology',
+    desc: 'Rumus interpolasi linier sub-indeks ISPU PermenLHK P.14/2020 & basis waktu pengukuran.',
+    badge: 'METHOD',
+    external: false,
+  },
+  {
+    label: 'Indeks Arsip Personal',
+    href: '/archive',
+    desc: 'Direktori ruang arsip personal, hobi, kredensial, dan dek permainan.',
+    badge: 'ARC-HUB',
+    external: false,
   },
 ];
 
@@ -118,8 +106,8 @@ function isNavActive(href: string): boolean {
 const isExploreRouteActive =
   here.startsWith('/lab') ||
   here.startsWith('/archive') ||
-  here.startsWith('/codex') ||
-  here.startsWith('/atlas');
+  here.startsWith('/atlas') ||
+  here.startsWith('/aethelgrad');
 ---
 
 <header class="site-header" id="top">
@@ -148,7 +136,7 @@ const isExploreRouteActive =
       class:list={['menu-dots', { 'is-active': isExploreRouteActive }]}
       id="menu-dots"
       type="button"
-      aria-label="Eksplorasi fitur interaktif dan arsip teknis"
+      aria-label="Eksplorasi fitur interaktif, peta pengetahuan, dan dunia virtual Aethelgrad"
       aria-expanded="false"
       aria-controls="quick-menu"
       data-active={isExploreRouteActive ? 'true' : 'false'}
@@ -161,14 +149,12 @@ const isExploreRouteActive =
   </nav>
 
   <div class="header-actions">
-    <!-- V4 §6.5: indikator Now Playing, diisi script dari endpoint Spotify. -->
     <a class="now-playing" id="now-playing" hidden>
       <span class="now-playing-art"><img id="now-playing-img" alt="" width="24" height="24" hidden /></span>
       <span class="now-playing-dot" aria-hidden="true"></span>
       <span class="now-playing-text" id="now-playing-text" aria-live="polite"></span>
     </a>
 
-    <!-- V13.0-D + V14.0 Stage 2.3: Tombol Cari / Pintasan Command Palette -->
     <button
       class="world-status-trigger"
       id="world-workspace-status-btn"
@@ -185,7 +171,6 @@ const isExploreRouteActive =
       <kbd class="world-status-kbd" aria-hidden="true">Ctrl+K</kbd>
     </button>
 
-    <!-- V8.0 Fase 2: tombol mute/unmute efek suara antarmuka -->
     <button class="audio-toggle" id="audio-toggle" type="button" aria-label="Mute interface sounds" aria-pressed="false">
       <svg class="audio-icon-on" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M11 5 6 9H2v6h4l5 4V5z"></path>
@@ -198,44 +183,22 @@ const isExploreRouteActive =
       </svg>
     </button>
 
-    <!-- V7.3 Fase 1: tombol hamburger mobile (<= 980px) -->
     <button class="mobile-menu-toggle" id="mobile-menu-toggle" type="button" aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="mobile-menu-drawer">
       <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" aria-hidden="true"><path d="M3 12h18M3 6h18M3 18h18"></path></svg>
     </button>
   </div>
 
-  <!-- V14.0 Stage 2.2: Two-Column Progressive Disclosure Mega-Drawer -->
-  <div class="quick-menu" id="quick-menu" role="region" aria-label="Menu eksplorasi dan arsip teknis" hidden>
+  <!-- V15.0 Trunk & Branch Mega-Drawer -->
+  <div class="quick-menu" id="quick-menu" role="region" aria-label="Menu eksplorasi dan gerbang dunia virtual" hidden>
     <div class="quick-menu-panel" id="quick-menu-panel">
-      <!-- Now Playing Row (tetap ada, diisi oleh JS) -->
       <span class="quick-now-playing" id="quick-now-playing" hidden></span>
 
       <div class="quick-menu-columns">
-        <!-- Kolom 1: Explore More -->
+        <!-- Kolom 1: Eksplorasi Interaktif & Arsip Personal -->
         <div class="quick-menu-col" data-drawer-col="explore-more">
           <p class="quick-menu-col-title">EKSPLORASI INTERAKTIF &amp; ARSIP PERSONAL</p>
           <div class="quick-menu-col-links">
             {EXPLORE_INTERACTIVE_ITEMS.map((item) => (
-              <a
-                href={item.href}
-                class:list={['quick-menu-item', { 'is-active': here === item.href }]}
-                aria-current={here === item.href ? 'page' : undefined}
-              >
-                <span class="quick-menu-item-head">
-                  <strong class="quick-menu-item-title">{item.label}</strong>
-                  <span class="quick-menu-item-badge">{item.badge}</span>
-                </span>
-                <span class="quick-menu-item-desc">{item.desc}</span>
-              </a>
-            ))}
-          </div>
-        </div>
-
-        <!-- Kolom 2: Technical Archive -->
-        <div class="quick-menu-col" data-drawer-col="technical-archive">
-          <p class="quick-menu-col-title">ARSIP REKAYASA &amp; DOKUMENTASI SISTEM</p>
-          <div class="quick-menu-col-links">
-            {TECHNICAL_ARCHIVE_ITEMS.map((item) => (
               <a
                 href={item.href}
                 class:list={['quick-menu-item', { 'is-active': !item.external && here === item.href }]}
@@ -252,11 +215,55 @@ const isExploreRouteActive =
             ))}
           </div>
         </div>
+
+        <!-- Kolom 2: Peta Pengetahuan & Gerbang Dunia Virtual -->
+        <div class="quick-menu-col" data-drawer-col="technical-archive">
+          <p class="quick-menu-col-title">PETA PENGETAHUAN &amp; GERBANG DUNIA VIRTUAL</p>
+          <div class="quick-menu-col-links">
+            {KNOWLEDGE_PORTAL_ITEMS.map((item) => (
+              <a
+                href={item.href}
+                class:list={['quick-menu-item', { 'is-active': here === item.href }]}
+                aria-current={here === item.href ? 'page' : undefined}
+              >
+                <span class="quick-menu-item-head">
+                  <strong class="quick-menu-item-title">{item.label}</strong>
+                  <span class="quick-menu-item-badge">{item.badge}</span>
+                </span>
+                <span class="quick-menu-item-desc">{item.desc}</span>
+              </a>
+            ))}
+
+            <!-- Kartu Portal Khusus: Masuk Dunia Aethelgrad -->
+            <div class="header-portal-dive-card" id="header-portal-dive-card">
+              <div class="header-portal-dive-head">
+                <span class="header-portal-dive-kicker">VR RPG BRANCH · ISOLATED UNIVERSE</span>
+                <span class="header-portal-dive-badge">AETHELGRAD ✦</span>
+              </div>
+              <strong class="header-portal-dive-title">Masuk Dunia: Aethelgrad ✦</strong>
+              <p class="header-portal-dive-desc">
+                Dunia virtual RPG mandiri: 24 Hero Pixel SVG 7-Layer, 50 Equipment, Grimoire Koleksi, Code Sanctum, &amp; Spire Colosseum.
+              </p>
+              <div class="header-portal-dive-actions">
+                <button
+                  type="button"
+                  class="portal-dive-trigger header-portal-dive-btn"
+                  data-portal-dive="/aethelgrad"
+                >
+                  DIVE INTO AETHELGRAD ✦
+                </button>
+                <a href="/aethelgrad" class="header-portal-fallback-link">
+                  Buka Langsung (/aethelgrad) →
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Laci navigasi mobile (<= 980px): 4 item utama + 2 kelompok eksplorasi -->
+  <!-- Laci navigasi mobile (<= 980px) -->
   <div class="mobile-menu-drawer" id="mobile-menu-drawer" hidden>
     <div class="mobile-menu-inner">
       <div class="mobile-menu-header">
@@ -286,25 +293,10 @@ const isExploreRouteActive =
         {EXPLORE_INTERACTIVE_ITEMS.map((item) => (
           <a
             href={item.href}
-            class:list={['mobile-nav-link mobile-nav-link--deep', { 'is-active': here === item.href }]}
-            aria-current={here === item.href ? 'page' : undefined}
-          >
-            <span class="mobile-nav-deep-copy">
-              <strong>{item.label}</strong>
-              <small>{item.desc}</small>
-            </span>
-          </a>
-        ))}
-
-        <hr class="mobile-menu-divider" />
-
-        <p class="mobile-menu-label">ARSIP REKAYASA &amp; DOKUMENTASI SISTEM</p>
-        {TECHNICAL_ARCHIVE_ITEMS.map((item) => (
-          <a
-            href={item.href}
             target={item.external ? '_blank' : undefined}
             rel={item.external ? 'noopener noreferrer' : undefined}
-            class="mobile-nav-link mobile-nav-link--deep"
+            class:list={['mobile-nav-link mobile-nav-link--deep', { 'is-active': !item.external && here === item.href }]}
+            aria-current={!item.external && here === item.href ? 'page' : undefined}
           >
             <span class="mobile-nav-deep-copy">
               <strong>{item.label}</strong>
@@ -313,7 +305,110 @@ const isExploreRouteActive =
             {item.external ? <span class="mobile-nav-ext" aria-hidden="true">↗</span> : null}
           </a>
         ))}
+
+        <hr class="mobile-menu-divider" />
+
+        <p class="mobile-menu-label">PETA PENGETAHUAN &amp; GERBANG DUNIA VIRTUAL</p>
+        {KNOWLEDGE_PORTAL_ITEMS.map((item) => (
+          <a
+            href={item.href}
+            class="mobile-nav-link mobile-nav-link--deep"
+          >
+            <span class="mobile-nav-deep-copy">
+              <strong>{item.label}</strong>
+              <small>{item.desc}</small>
+            </span>
+          </a>
+        ))}
+        <button
+          type="button"
+          class="portal-dive-trigger header-portal-dive-btn"
+          data-portal-dive="/aethelgrad"
+        >
+          Masuk Dunia: Aethelgrad ✦ (DIVE)
+        </button>
       </nav>
     </div>
   </div>
 </header>
+
+<style>
+  .header-portal-dive-card {
+    margin-top: 0.45rem;
+    padding: 0.9rem 1rem;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #0b1120 0%, #172554 55%, #1e1b4b 100%);
+    border: 1px solid rgba(56, 189, 248, 0.45);
+    color: #f8fafc;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.25);
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .header-portal-dive-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+  .header-portal-dive-kicker {
+    font-family: var(--mono, 'DM Mono', monospace);
+    font-size: 0.64rem;
+    letter-spacing: 0.1em;
+    color: #38bdf8;
+    text-transform: uppercase;
+  }
+  .header-portal-dive-badge {
+    font-family: var(--mono, 'DM Mono', monospace);
+    font-size: 0.64rem;
+    padding: 0.15rem 0.48rem;
+    border-radius: 999px;
+    background: rgba(245, 158, 11, 0.2);
+    border: 1px solid rgba(245, 158, 11, 0.55);
+    color: #fcd34d;
+  }
+  .header-portal-dive-title {
+    font-size: 0.96rem;
+    font-weight: 700;
+    color: #f8fafc;
+  }
+  .header-portal-dive-desc {
+    margin: 0;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: #cbd5e1;
+  }
+  .header-portal-dive-actions {
+    margin-top: 0.35rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  .header-portal-dive-btn {
+    cursor: pointer;
+    padding: 0.48rem 0.9rem;
+    border-radius: 8px;
+    border: 1px solid rgba(56, 189, 248, 0.75);
+    background: linear-gradient(90deg, #0284c7, #4f46e5);
+    color: #ffffff;
+    font-family: var(--mono, 'DM Mono', monospace);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .header-portal-dive-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 18px rgba(56, 189, 248, 0.55);
+  }
+  .header-portal-fallback-link {
+    font-family: var(--mono, 'DM Mono', monospace);
+    font-size: 0.7rem;
+    color: #93c5fd;
+    text-decoration: none;
+  }
+  .header-portal-fallback-link:hover {
+    text-decoration: underline;
+  }
+</style>

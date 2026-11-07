@@ -1,0 +1,693 @@
+---
+import '../../styles/aethelgrad/aethelgrad-core.css';
+import '../../styles/aethelgrad/neural-dive-auth.css';
+import '../../styles/aethelgrad/paperdoll-stage.css';
+import '../../styles/aethelgrad/gacha-summon.css';
+import '../../styles/aethelgrad/colosseum-battle.css';
+---
+
+<!doctype html>
+<html lang="id" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AETHELGRAD // THE INFINITE SPIRE · Isolated VR RPG Universe</title>
+    <meta
+      name="description"
+      content="Dunia VR RPG & Gacha interaktif mandiri: 24 Karakter Orisinal, 50 Perlengkapan 7-Layer Pixel SVG Paper-Doll, 24 Tantangan Koding Code-Spell Sanctum, dan Arena Spire Colosseum."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="aethelgrad-body">
+    <!-- 1. OPENING TITLE SCREEN -->
+    <section
+      id="aethelgrad-title-screen"
+      class="aethelgrad-title-screen"
+      aria-label="Aethelgrad Opening Title Screen"
+    >
+      <div class="title-screen-card">
+        <div class="title-emblem-ring" aria-hidden="true">✦</div>
+        <span class="title-eyebrow">V15.0 · THE ISOLATED VR RPG UNIVERSE</span>
+        <h1 class="title-main-heading">AETHELGRAD // THE INFINITE SPIRE</h1>
+        <p class="title-lore-desc">
+          Selamat datang di menara kristal tempat logika algoritma, keberanian ksatria, dan
+          pusaka bintang berpadu. Bangkitkan karakter Pixel SVG 7-Layer Anda, tempa perlengkapan
+          Mythic ★5, pecahkan 24 mantra pemrograman, dan taklukkan Puncak Colosseum.
+        </p>
+        <div class="title-feature-pills">
+          <span>24 Original Heroes (★1-★5)</span>
+          <span>50 Equipment Paper-Doll Items</span>
+          <span>24 Code-Spell Sanctum Trials</span>
+          <span>1 Device = 1 Account Security</span>
+        </div>
+        <button type="button" id="title-enter-spire-btn" class="title-enter-cta">
+          ENTER WORLD // AWAKEN HUNTER SOUL -&gt;
+        </button>
+      </div>
+    </section>
+
+    <!-- 2. SMART AUTH GATE (AUTO-DETECTS RETURNING HUNTER -> LOGIN vs NEW VISITOR -> REGISTER) -->
+    <section
+      id="aethelgrad-auth-gate"
+      class="aethelgrad-auth-gate is-dismissed"
+      aria-label="Hunter Authentication Gate"
+    >
+      <div class="auth-gate-card">
+        <div class="auth-security-header">
+          <span>🛡 AETHELGRAD SECURITY SHIELD</span>
+          <span>PBKDF2-SHA512 · 1-DEVICE LOCK</span>
+        </div>
+        <div id="auth-returning-hunter-badge" class="auth-returning-badge hidden"></div>
+        <h2 id="auth-gate-title">AWAKEN NEW HUNTER SOUL (REGISTER)</h2>
+        <p id="auth-gate-subtitle">
+          Kebijakan 1 Perangkat = 1 Akun. Akun baru langsung menerima +3.000 Astral Gems &amp; 10
+          Summon Tickets!
+        </p>
+
+        <form id="aethelgrad-auth-form" class="auth-form" autocomplete="off">
+          <div class="auth-field">
+            <label for="auth-username-input">HUNTER CALLSIGN (USERNAME)</label>
+            <input
+              type="text"
+              id="auth-username-input"
+              name="username"
+              required
+              minlength="3"
+              maxlength="20"
+              placeholder="Contoh: Vanguard_702"
+            />
+          </div>
+
+          <div class="auth-field">
+            <label for="auth-password-input">SOUL CIPHER (PASSWORD MIN. 8 KARAKTER)</label>
+            <input
+              type="password"
+              id="auth-password-input"
+              name="password"
+              required
+              minlength="8"
+              maxlength="64"
+              placeholder="••••••••••••"
+            />
+          </div>
+
+          <div id="auth-confirm-password-wrap" class="auth-field">
+            <label for="auth-confirm-input">KONFIRMASI SOUL CIPHER</label>
+            <input
+              type="password"
+              id="auth-confirm-input"
+              name="confirmPassword"
+              maxlength="64"
+              placeholder="Ulangi password Anda"
+            />
+          </div>
+
+          <div id="auth-feedback-box" class="auth-feedback-box" role="status"></div>
+
+          <button type="submit" id="auth-submit-btn" class="auth-submit-cta">
+            BANGKITKAN AKUN &amp; MULAI TUR DUNIA -&gt;
+          </button>
+        </form>
+
+        <button type="button" id="auth-switch-mode-btn" class="auth-switch-mode-btn">
+          Sudah punya akun Hunter? Masuk (Login) di sini
+        </button>
+      </div>
+    </section>
+
+    <!-- 3. POST-LOGIN 4-STEP CINEMATIC WORLD TOUR MODAL -->
+    <div id="aethelgrad-tour-modal" class="aethelgrad-tour-modal" role="dialog" aria-modal="true" hidden>
+      <div class="tour-cinematic-card">
+        <span id="tour-step-kicker" class="tour-act-eyebrow">TOUR 01 / 04 · THE HUB CITY &amp; GRIMOIRE FORGE</span>
+        <h3 id="tour-step-title">I. The Hub City &amp; Explorer Pass</h3>
+        <p id="tour-step-desc"></p>
+        <div class="tour-action-row">
+          <button type="button" id="tour-skip-btn" class="deck-secondary-cta">
+            LEWATI TUR
+          </button>
+          <button type="button" id="tour-next-btn" class="deck-primary-cta">
+            LANJUTKAN TUR -&gt;
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. TOP HUD NAVIGATION BAR -->
+    <header class="aethelgrad-top-hud">
+      <div class="hud-brand-cluster">
+        <div class="hud-spire-crest" aria-hidden="true">❖</div>
+        <div class="hud-brand-titles">
+          <span class="hud-brand-main">AETHELGRAD // THE INFINITE SPIRE</span>
+          <span class="hud-brand-sub">V15.0 · THE ISOLATED WORLD</span>
+        </div>
+      </div>
+
+      <nav class="hud-nav-tabs" aria-label="Navigasi Wilayah Aethelgrad">
+        <button type="button" class="hud-nav-tab is-active" data-world-nav="HOME">
+          <span>⌂</span> Home Deck
+        </button>
+        <button type="button" class="hud-nav-tab" data-world-nav="SUMMON">
+          <span>✦</span> Summon &amp; Wardrobe
+        </button>
+        <button type="button" class="hud-nav-tab" data-world-nav="GRIMOIRE">
+          <span>📖</span> Grimoire &amp; Forge
+        </button>
+        <button type="button" class="hud-nav-tab" data-world-nav="SANCTUM">
+          <span>&lt;/&gt;</span> Code Sanctum
+        </button>
+        <button type="button" class="hud-nav-tab" data-world-nav="COLOSSEUM">
+          <span>⚔</span> Colosseum Arena
+        </button>
+      </nav>
+
+      <div class="hud-right-actions">
+        <div class="hud-hunter-mini-pill">
+          <div id="hud-top-mini-avatar" class="hud-mini-avatar-box"></div>
+          <div class="hud-mini-meta">
+            <strong id="hud-top-callsign">HUNTER: Vanguard-702</strong>
+            <span id="hud-top-gems">3,000 💎</span>
+          </div>
+        </div>
+
+        <a href="/" class="hud-return-portfolio-btn">
+          &lt;- KEMBALI KE PORTOFOLIO
+        </a>
+      </div>
+    </header>
+
+    <!-- 5. PANORAMIC CITADEL BANNER + HUNTER PASSPORT CARD -->
+    <section class="aethelgrad-panorama-hero" aria-label="Hunter Passport and Spire Citadel">
+      <div class="panorama-citadel-svg-backdrop" aria-hidden="true">
+        <svg viewBox="0 0 1200 220" width="100%" height="100%" preserveAspectRatio="xMidYMax slice">
+          <defs>
+            <linearGradient id="spireGlow" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.55" />
+              <stop offset="100%" stop-color="#1e3a8a" stop-opacity="0.05" />
+            </linearGradient>
+          </defs>
+          <polygon points="600,10 640,220 560,220" fill="url(#spireGlow)" />
+          <polygon points="520,55 555,220 485,220" fill="rgba(59,130,246,0.28)" />
+          <polygon points="680,55 715,220 645,220" fill="rgba(59,130,246,0.28)" />
+          <polygon points="440,95 475,220 405,220" fill="rgba(30,64,175,0.35)" />
+          <polygon points="760,95 795,220 725,220" fill="rgba(30,64,175,0.35)" />
+          <ellipse cx="600" cy="68" rx="185" ry="22" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-opacity="0.5" />
+        </svg>
+      </div>
+
+      <!-- Left: Hunter Passport Card -->
+      <div class="hunter-passport-card">
+        <div id="passport-main-avatar-svg" class="passport-avatar-frame"></div>
+        <div class="passport-info-col">
+          <div class="passport-callsign-row">
+            <strong id="passport-hunter-name">HUNTER: Vanguard-702</strong>
+            <span class="passport-rank-pill">❖ <span id="passport-hunter-title">Data Ranger</span></span>
+          </div>
+          <div class="passport-currencies-row">
+            <span class="currency-chip" title="Astral Gems">💎 <strong id="passport-astral-gems">3,000</strong> Shards</span>
+            <span class="currency-chip" title="Summon Tickets">🎫 <strong id="passport-summon-tickets">10</strong> Tickets</span>
+            <span class="currency-chip" title="Starlight Dust">✨ <strong id="passport-starlight-dust">150</strong> Dust</span>
+            <span class="currency-chip" title="Total Combat Power">⚔ CP <strong id="passport-combat-power">1,450</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Realm Lore & System Controls -->
+      <div class="panorama-lore-plaque">
+        <div>
+          <h2>AETHELGRAD // THE INFINITE SPIRE</h2>
+          <p>
+            Sebuah dunia mandiri tempat algoritma pemrograman, keberanian ksatria, dan pusaka
+            bintang bertaut. Seluruh progres tersimpan otomatis pada akun perangkat Anda.
+          </p>
+        </div>
+        <div class="panorama-quick-btns">
+          <button type="button" id="hud-replay-tour-btn" class="hud-mini-action-btn">
+            🎬 PUTAR TUR DUNIA
+          </button>
+          <button type="button" id="hud-mute-audio-btn" class="hud-mini-action-btn">
+            🔊 AUDIO ON
+          </button>
+          <button type="button" id="hud-logout-btn" class="hud-mini-action-btn">
+            ⏻ LOGOUT
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. 4-COLUMN UNIFIED COMMAND DECK (TERRITORIES I, II, III, IV) -->
+    <main class="aethelgrad-command-deck-grid" aria-label="Aethelgrad Four Territories Command Deck">
+      <!-- COLUMN I: THE HUB CITY, CHECKPOINT PASSPORT & FORGE -->
+      <section id="col-1-hub-city" class="deck-territory-column">
+        <header class="deck-col-header">
+          <div class="deck-col-title-wrap">
+            <span class="deck-col-icon">🏰</span>
+            <div>
+              <h3>I. THE HUB CITY &amp; FORGE</h3>
+              <small>Checkpoint, Grimoire &amp; Synthesis</small>
+            </div>
+          </div>
+        </header>
+
+        <div class="deck-col-body">
+          <div class="explorer-pass-box">
+            <div class="pass-security-shield">
+              <span>✓</span>
+              <span>System Secure · 1 Device · 1 Account (Anti-Injection Active)</span>
+            </div>
+            <div class="hub-collection-counters">
+              <div class="hub-counter-tile">
+                <span>Roster</span>
+                <strong id="hub-owned-heroes-count">2 / 24 Heroes</strong>
+              </div>
+              <div class="hub-counter-tile">
+                <span>Arsenal</span>
+                <strong id="hub-owned-items-count">7 / 50 Gear</strong>
+              </div>
+              <div class="hub-counter-tile">
+                <span>Grimoire</span>
+                <strong id="hub-active-bonds-count">0 / 12 Bonds</strong>
+              </div>
+            </div>
+            <small style="font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: #94a3b8;">
+              Last Sync: <span id="passport-login-timestamp">ACTIVE</span> · PBKDF2-SHA512 Verified
+            </small>
+          </div>
+
+          <div class="hub-citadel-illustration">
+            <svg viewBox="0 0 240 110" width="100%" height="96">
+              <rect width="240" height="110" rx="6" fill="#081226" />
+              <polygon points="120,12 145,95 95,95" fill="#1d4ed8" opacity="0.55" />
+              <polygon points="75,34 95,95 55,95" fill="#2563eb" opacity="0.4" />
+              <polygon points="165,34 185,95 145,95" fill="#2563eb" opacity="0.4" />
+              <circle cx="120" cy="40" r="14" fill="#38bdf8" opacity="0.7" />
+              <rect x="20" y="92" width="200" height="6" fill="#38bdf8" opacity="0.45" />
+            </svg>
+            <span style="font-size: 0.7rem; color: #93c5fd;">
+              Guardian Grimoire &amp; Pick Me Up! Synthesis Forge
+            </span>
+          </div>
+
+          <button
+            type="button"
+            class="deck-primary-cta"
+            data-open-world-modal="modal-grimoire-forge"
+          >
+            BUKA GRIMOIRE &amp; SYNTHESIS FORGE -&gt;
+          </button>
+          <button
+            type="button"
+            class="deck-secondary-cta"
+            data-open-world-modal="modal-barracks-wardrobe"
+          >
+            KELOLA HERO BARRACKS &amp; WARDROBE
+          </button>
+        </div>
+      </section>
+
+      <!-- COLUMN II: THE GACHA GROTTO & LIVE 7-LAYER PAPER-DOLL -->
+      <section id="col-2-gacha-grotto" class="deck-territory-column">
+        <header class="deck-col-header">
+          <div class="deck-col-title-wrap">
+            <span class="deck-col-icon">★</span>
+            <div>
+              <h3>II. THE GACHA GROTTO</h3>
+              <small>Summon Heroes &amp; 7-Layer Gear</small>
+            </div>
+          </div>
+        </header>
+
+        <div class="deck-col-body">
+          <div class="grotto-banner-strip">
+            <span id="grotto-banner-badge">BANNER: HERO SUMMON ALTAR</span>
+            <button type="button" id="grotto-toggle-banner-btn" class="grotto-banner-switch-btn">
+              GANTI BANNER ⇄
+            </button>
+          </div>
+
+          <div class="grotto-pedestal-showcase">
+            <div class="grotto-pedestal-left">
+              <div id="grotto-active-hero-stars" class="grotto-stars-display">★</div>
+              <div id="grotto-pedestal-svg-stage"></div>
+              <strong id="grotto-active-hero-name" class="grotto-hero-name">
+                Han Islat, Nameless Survivor
+              </strong>
+              <span id="grotto-active-hero-cp" class="grotto-hero-cp-pill">CP 1,450</span>
+            </div>
+
+            <div id="grotto-quick-slots" class="grotto-quick-slots" aria-label="5 Equipment Slots"></div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 0.66rem; color: #94a3b8;">
+            <span id="grotto-pity-counter">Pity: 0/50 (Hard Pity ★5)</span>
+            <span>Soft Pity: Pull 35+</span>
+          </div>
+
+          <div class="grotto-summon-actions-grid">
+            <button type="button" id="grotto-summon-1x-btn" class="gacha-pull-btn single">
+              <span>SUMMON 1x</span>
+              <small>150 💎 / 1 🎫</small>
+            </button>
+            <button type="button" id="grotto-summon-10x-btn" class="gacha-pull-btn multi">
+              <span>MULTI-SUMMON 10x</span>
+              <small>1,350 💎 (Guaranteed ★4+)</small>
+            </button>
+          </div>
+
+          <button
+            type="button"
+            class="deck-secondary-cta"
+            data-open-world-modal="modal-barracks-wardrobe"
+          >
+            🔍 PASANG / GANTI PERLENGKAPAN (WARDROBE)
+          </button>
+        </div>
+      </section>
+
+      <!-- COLUMN III: THE CODE-SPELL SANCTUM (24 PROGRAMMING TRIALS) -->
+      <section id="col-3-code-sanctum" class="deck-territory-column">
+        <header class="deck-col-header">
+          <div class="deck-col-title-wrap">
+            <span class="deck-col-icon">&lt;/&gt;</span>
+            <div>
+              <h3>III. CODE-SPELL SANCTUM</h3>
+              <small>24 Algorithmic Combat Buffs</small>
+            </div>
+          </div>
+        </header>
+
+        <div class="deck-col-body">
+          <div class="sanctum-terminal-box">
+            <div class="sanctum-terminal-head">
+              <strong id="deck-spell-title">Spell: Runic Array Sum</strong>
+              <span id="deck-spell-mastery-badge">0 / 24 Spells Solved</span>
+            </div>
+            <p id="deck-spell-prompt" class="sanctum-prompt-text"></p>
+            <pre class="sanctum-code-pre"><code id="deck-spell-code-snippet"></code></pre>
+
+            <div id="deck-spell-testcases"></div>
+
+            <div class="deck-spell-input-row">
+              <input
+                type="text"
+                id="deck-spell-answer-input"
+                class="deck-spell-input"
+                placeholder="Ketik ekspresi solusi..."
+              />
+              <button type="button" id="deck-spell-fill-btn" class="deck-spell-hint-btn" title="Isi Contoh Jawaban">
+                HINT
+              </button>
+            </div>
+
+            <button type="button" id="deck-spell-submit-btn" class="deck-primary-cta">
+              SUBMIT ANSWER // CAST CODE SPELL -&gt;
+            </button>
+            <div id="deck-spell-feedback" class="deck-spell-feedback"></div>
+          </div>
+
+          <div class="sanctum-buff-reward-card">
+            <span style="font-size: 1.25rem;">⚡</span>
+            <div id="deck-spell-reward-preview">
+              <strong>Arcane Code Buff (+250 💎)</strong>
+              <span>+2% All Hero ATK</span>
+            </div>
+          </div>
+
+          <ul id="deck-sanctum-questlog" class="sanctum-mini-questlog"></ul>
+
+          <button
+            type="button"
+            class="deck-secondary-cta"
+            data-open-world-modal="modal-code-sanctum"
+          >
+            BUKA 24 DAFTAR MANTRA ALGORITMA (4 TIER)
+          </button>
+        </div>
+      </section>
+
+      <!-- COLUMN IV: SPIRE COLOSSEUM & LIVE COMBAT LEADERBOARD -->
+      <section id="col-4-spire-colosseum" class="deck-territory-column">
+        <header class="deck-col-header">
+          <div class="deck-col-title-wrap">
+            <span class="deck-col-icon">⚔</span>
+            <div>
+              <h3>IV. SPIRE COLOSSEUM</h3>
+              <small>1v1 Auto-Battler &amp; Live Leaderboard</small>
+            </div>
+          </div>
+        </header>
+
+        <div class="deck-col-body">
+          <div id="colosseum-deck-vs-stage" class="colosseum-deck-vs-stage"></div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.74rem;">
+            <strong>🏆 Global Spire Leaderboard</strong>
+            <button
+              type="button"
+              style="background: none; border: none; color: #38bdf8; font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; cursor: pointer;"
+              data-open-world-modal="modal-colosseum-leaderboard"
+            >
+              View All -&gt;
+            </button>
+          </div>
+
+          <div id="colosseum-deck-leaderboard-list" class="colosseum-deck-leaderboard-list"></div>
+        </div>
+      </section>
+    </main>
+
+    <!-- 7. BOTTOM ANNOUNCEMENT TICKER -->
+    <footer class="aethelgrad-bottom-ticker">
+      <div class="ticker-left">
+        <span class="ticker-badge">ANNOUNCEMENT</span>
+        <span id="aethelgrad-announcement-ticker">
+          Welcome to Aethelgrad // The Infinite Spire! Awaken ★1 Han Islat to ★5 Mythic or summon Evelyn &amp; Kaelen at the Altar.
+        </span>
+      </div>
+      <span>SERVER: AETHELGRAD-OMEGA · 64x64 PIXEL SVG ENGINE</span>
+    </footer>
+
+    <!-- ===================================================================== -->
+    <!-- INTERACTIVE WORLD MODALS (WARDROBE, GACHA REVEAL, GRIMOIRE, SANCTUM, ARENA) -->
+    <!-- ===================================================================== -->
+
+    <!-- MODAL A: HERO BARRACKS & INTERACTIVE 7-LAYER PAPER-DOLL WARDROBE -->
+    <div id="modal-barracks-wardrobe" class="aethelgrad-modal-overlay" role="dialog" aria-modal="true">
+      <div class="aethelgrad-modal-window">
+        <header class="modal-window-header">
+          <h2>🛡 HERO BARRACKS &amp; 7-LAYER PIXEL SVG WARDROBE</h2>
+          <button type="button" class="modal-close-btn" data-close-modal="1">TUTUP [ESC]</button>
+        </header>
+        <div class="modal-window-body">
+          <div class="barracks-modal-grid">
+            <div class="barracks-stage-panel">
+              <div id="barracks-main-paperdoll-stage"></div>
+              <div id="barracks-floating-combat-text"></div>
+              <button type="button" id="barracks-set-primary-btn" class="deck-primary-cta">
+                JADIKAN KARAKTER UTAMA (AVATAR)
+              </button>
+              <div id="barracks-5-slots-strip" class="barracks-5-slots-strip"></div>
+            </div>
+
+            <div class="barracks-right-col">
+              <div id="barracks-hero-live-stats"></div>
+
+              <div>
+                <h4 class="grimoire-section-heading">KARAKTER YANG DIMILIKI (KLIK UNTUK GANTI)</h4>
+                <div id="barracks-owned-heroes-list" class="barracks-owned-heroes-list"></div>
+              </div>
+
+              <div>
+                <h4 class="grimoire-section-heading">
+                  INVENTARIS PERLENGKAPAN (KLIK PASANG UNTUK MENGUBAH WUJUD KARAKTER SECARA VISUAL)
+                </h4>
+                <div id="barracks-inventory-grid" class="barracks-inventory-grid"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL B: GACHA SUMMON REVEAL ANIMATION -->
+    <div id="modal-gacha-reveal" class="aethelgrad-modal-overlay" role="dialog" aria-modal="true">
+      <div class="aethelgrad-modal-window">
+        <header class="modal-window-header">
+          <h2>✦ ASTRAL SUMMONING PORTAL MANIFESTATION</h2>
+          <button type="button" class="modal-close-btn" data-close-modal="1">SELESAI</button>
+        </header>
+        <div class="modal-window-body">
+          <div id="gacha-reveal-rarity-banner" class="gacha-reveal-header"></div>
+          <div id="gacha-reveal-cards-grid" class="gacha-reveal-cards-grid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL C: GUARDIAN GRIMOIRE & PICK ME UP! SYNTHESIS FORGE -->
+    <div id="modal-grimoire-forge" class="aethelgrad-modal-overlay" role="dialog" aria-modal="true">
+      <div class="aethelgrad-modal-window">
+        <header class="modal-window-header">
+          <h2>📖 GUARDIAN COLLECTION GRIMOIRE &amp; SYNTHESIS FORGE</h2>
+          <button type="button" class="modal-close-btn" data-close-modal="1">TUTUP</button>
+        </header>
+        <div class="modal-window-body">
+          <h3 class="grimoire-section-heading">
+            1. HERO STAR PROMOTION FORGE (AWAKENING ★1 -&gt; ★5 ALA PICK ME UP!)
+          </h3>
+          <div id="forge-promote-heroes-list" class="forge-promote-list"></div>
+
+          <h3 class="grimoire-section-heading">
+            2. EQUIPMENT 3-TO-1 SYNTHESIS FORGE (GABUNGKAN 3 GEAR BINTANG SAMA -&gt; 1 GEAR ★N+1)
+          </h3>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+            <span id="forge-synthesis-selection-status" style="font-family: 'JetBrains Mono', monospace; font-size: 0.76rem; color: #93c5fd;">
+              Terpilih: 0 / 3 Perlengkapan
+            </span>
+            <button type="button" id="forge-execute-synthesis-btn" class="deck-primary-cta" style="max-width: 280px;" disabled>
+              🔥 TEMPA 3 ITEM MENJADI ★ LEBIH TINGGI
+            </button>
+          </div>
+          <div id="forge-synthesis-fodder-grid" class="forge-fodder-grid"></div>
+
+          <h3 class="grimoire-section-heading">
+            3. 12 GUARDIAN TALES COLLECTION BONDS (PERMANENT ACCOUNT STAT BUFFS)
+          </h3>
+          <div id="grimoire-bonds-grid" class="grimoire-bonds-grid"></div>
+
+          <h3 class="grimoire-section-heading">4. ENSIKLOPEDIA 24 PAHLAWAN AETHELGRAD</h3>
+          <div id="grimoire-heroes-encyclopedia" class="grimoire-heroes-encyclopedia"></div>
+
+          <h3 class="grimoire-section-heading">5. ENSIKLOPEDIA 50 PERLENGKAPAN PUSAKA</h3>
+          <div id="grimoire-items-encyclopedia" class="grimoire-items-encyclopedia"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL D: THE CODE-SPELL SANCTUM (ALL 24 PROGRAMMING CHALLENGES) -->
+    <div id="modal-code-sanctum" class="aethelgrad-modal-overlay" role="dialog" aria-modal="true">
+      <div class="aethelgrad-modal-window">
+        <header class="modal-window-header">
+          <h2>&lt;/&gt; THE CODE-SPELL SANCTUM · 24 ALGORITHMIC TRIALS</h2>
+          <button type="button" class="modal-close-btn" data-close-modal="1">TUTUP</button>
+        </header>
+        <div class="modal-window-body">
+          <div
+            id="sanctum-modal-total-buffs"
+            style="padding: 0.65rem 1rem; margin-bottom: 1rem; border-radius: 8px; background: rgba(30, 58, 138, 0.35); border: 1px solid #38bdf8; font-family: 'JetBrains Mono', monospace; font-size: 0.76rem;"
+          ></div>
+
+          <div class="sanctum-tier-tabs">
+            <button type="button" class="sanctum-tier-tab is-active" data-sanctum-tier="ALL">
+              SEMUA (24)
+            </button>
+            <button type="button" class="sanctum-tier-tab" data-sanctum-tier="TIER_1">
+              TIER I · FOUNDATIONS (6)
+            </button>
+            <button type="button" class="sanctum-tier-tab" data-sanctum-tier="TIER_2">
+              TIER II · POINTER &amp; MATRIX (6)
+            </button>
+            <button type="button" class="sanctum-tier-tab" data-sanctum-tier="TIER_3">
+              TIER III · ALGORITHMIC SORCERY (6)
+            </button>
+            <button type="button" class="sanctum-tier-tab" data-sanctum-tier="TIER_4">
+              TIER IV · ARCHMAGE TRIALS (6)
+            </button>
+          </div>
+
+          <div class="sanctum-modal-layout">
+            <div id="sanctum-modal-spell-list" class="sanctum-spell-list"></div>
+            <div id="sanctum-modal-spell-detail"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL E: SPIRE COLOSSEUM FULL LEADERBOARD -->
+    <div id="modal-colosseum-leaderboard" class="aethelgrad-modal-overlay" role="dialog" aria-modal="true">
+      <div class="aethelgrad-modal-window">
+        <header class="modal-window-header">
+          <h2>🏆 SPIRE COLOSSEUM GLOBAL LEADERBOARD (LIVE PAPER-DOLL ROSTER)</h2>
+          <button type="button" class="modal-close-btn" data-close-modal="1">TUTUP</button>
+        </header>
+        <div class="modal-window-body">
+          <table class="colosseum-leaderboard-table">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Hunter &amp; Live Avatar</th>
+                <th>Main Hero</th>
+                <th>Code Mastery</th>
+                <th>Combat Power / ELO</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="colosseum-full-leaderboard-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL F: 1v1 PIXEL SVG COLOSSEUM BATTLE ARENA -->
+    <div id="modal-colosseum-arena" class="aethelgrad-modal-overlay" role="dialog" aria-modal="true">
+      <div class="aethelgrad-modal-window">
+        <header class="modal-window-header">
+          <h2>⚔ SPIRE COLOSSEUM 1v1 AUTO-BATTLE SIMULATOR</h2>
+          <div style="display: flex; gap: 0.45rem;">
+            <button type="button" id="arena-speed-1x-btn" class="hud-mini-action-btn is-active">1x SPEED</button>
+            <button type="button" id="arena-speed-2x-btn" class="hud-mini-action-btn">2x SPEED</button>
+            <button type="button" id="arena-skip-btn" class="hud-mini-action-btn">SKIP TO RESULT</button>
+            <button type="button" class="modal-close-btn" data-close-modal="1">TUTUP</button>
+          </div>
+        </header>
+        <div class="modal-window-body">
+          <div class="arena-stage-container">
+            <div class="arena-fighter-card">
+              <strong id="arena-left-name">Challenger</strong>
+              <div class="arena-hp-bar-track">
+                <div id="arena-left-hp-fill" class="arena-hp-fill" style="width: 100%;"></div>
+              </div>
+              <small id="arena-left-hp-text" style="font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;">100%</small>
+              <div class="arena-mana-bar-track">
+                <div id="arena-left-mana-fill" class="arena-mana-fill" style="width: 0%;"></div>
+              </div>
+              <div id="arena-left-floating-dmg" style="min-height: 24px;"></div>
+              <div id="arena-left-fighter-svg" class="arena-fighter-sprite"></div>
+            </div>
+
+            <div style="text-align: center;">
+              <span class="vs-emblem" style="font-size: 1.6rem;">VS</span>
+            </div>
+
+            <div class="arena-fighter-card">
+              <strong id="arena-right-name">Defender</strong>
+              <div class="arena-hp-bar-track">
+                <div id="arena-right-hp-fill" class="arena-hp-fill" style="width: 100%;"></div>
+              </div>
+              <small id="arena-right-hp-text" style="font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;">100%</small>
+              <div class="arena-mana-bar-track">
+                <div id="arena-right-mana-fill" class="arena-mana-fill" style="width: 0%;"></div>
+              </div>
+              <div id="arena-right-floating-dmg" style="min-height: 24px;"></div>
+              <div id="arena-right-fighter-svg" class="arena-fighter-sprite mirrored"></div>
+            </div>
+          </div>
+
+          <div id="arena-victory-banner" class="arena-victory-banner hidden"></div>
+          <ul id="arena-turn-combat-log" class="arena-turn-combat-log"></ul>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      import { bootAethelgradWorld } from '../../world-aethelgrad/client/aethelgrad-app';
+      document.addEventListener('DOMContentLoaded', () => {
+        bootAethelgradWorld();
+      });
+    </script>
+  </body>
+</html>

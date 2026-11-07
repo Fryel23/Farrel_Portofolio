@@ -48,10 +48,9 @@ export const DATA = {
 
   links: {
     github: 'https://github.com/Fryel23',
-    githubRepo: 'https://github.com/Fryel23/Farrel_Portofolio',
     githubArchive: 'https://github.com/Fryel32',
     // Google Drive documentation archive (research & learning log).
-    docs: 'https://drive.google.com/drive/folders/1YaoRkFvdlk29vdRAFQxj5ypVD-7WDtTl?usp=drive_link'
+    docs: 'https://drive.google.com/drive/folders/1c333-r98_cch1e_t_y2s_p3j-2l_k2q1'
   },
 
   /* ------------------------------------------------------------------ */
@@ -196,9 +195,8 @@ export const DATA = {
       { targetId: 'profiles', label: 'Profil Sosial & Dokumentasi', aliases: ['instagram', 'linkedin', 'social', 'social media', 'profiles', 'google drive', 'documentation', 'dokumentasi'] },
       { targetId: 'contact', label: 'Kontak & Email Resmi', aliases: ['email', 'gmail', 'contact', 'contacts', 'kontak', 'reach me', 'say hello', 'hubungi'] },
       { targetId: 'closing', label: 'Penutup & Moto Pribadi', aliases: ['footer', 'motto', 'back to top', 'closing'] },
-      { targetId: 'adr', label: 'Arsip Rekam Rekayasa (ADR Vault)', aliases: ['adr', 'audit', 'architecture', 'report', 'reports', 'benchmark', 'lcp', 'webgl', 'diagnostic', 'verification', 'records'] },
-      { targetId: 'codex', label: 'Catatan Teknis · The Grand Codex', aliases: ['codex', 'grand codex', 'knowledge', 'knowledge graph', 'graph', 'mathml', 'fresnel', 'decimal', 'taxonomy', 'backlinks', 'catatan teknis'] },
-      { targetId: 'atlas', label: 'Peta Topologi Sistem (World Atlas)', aliases: ['atlas', 'world atlas', 'topology', 'system topology', 'sectors', 'map', 'etl'] }
+      { targetId: 'aethelgrad', label: 'Dunia Virtual RPG · Aethelgrad // The Infinite Spire', aliases: ['aethelgrad', 'spire', 'gacha', 'colosseum', 'sanctum', 'rpg', 'world', 'dive'] },
+      { targetId: 'atlas', label: 'The Data Atlas Crypt & Knowledge Graph', aliases: ['atlas', 'data atlas', 'crypt', 'world atlas', 'topology', 'knowledge graph', 'graph', 'telemetry', 'map'] }
     ],
     /* One keyword, several honest destinations. Keep each entry short. */
     multiRoutes: [
@@ -385,15 +383,15 @@ export const DATA = {
     heading: ['Mari tetap', 'terhubung.'],
     headingAccentWord: 'terhubung.',
     intro:
-      'Daftar profil resmi dan arsip dokumentasi yang saya kelola. Repositori utama portofolio ini berada di GitHub @Fryel23 (Farrel_Portofolio), sedangkan @Fryel32 menyimpan arsip eksperimen awal.',
+      'Daftar profil resmi dan arsip dokumentasi yang saya kelola di GitHub (@Fryel23 & @Fryel32), LinkedIn, Instagram, serta folder riset terbuka di Google Drive.',
     footnote: 'BUKA PROFIL RESMI ↗',
     footnoteSub: 'HANYA TAUTAN TERVERIFIKASI.',
     items: [
       {
         name: 'GitHub (@Fryel23)',
         iconKey: 'github',
-        handle: 'Repositori utama Farrel_Portofolio (@Fryel23) & arsip eksperimen (@Fryel32)',
-        url: 'https://github.com/Fryel23/Farrel_Portofolio'
+        handle: 'Profil utama proyek & eksperimen (@Fryel23 & @Fryel32)',
+        url: 'https://github.com/Fryel23'
       },
       {
         name: 'Instagram',
@@ -411,7 +409,7 @@ export const DATA = {
         name: 'Arsip Dokumentasi (Drive)',
         iconKey: 'drive',
         handle: 'Folder terbuka lembar kerja riset & catatan belajar',
-        url: 'https://drive.google.com/drive/folders/1YaoRkFvdlk29vdRAFQxj5ypVD-7WDtTl?usp=drive_link'
+        url: 'https://drive.google.com/drive/folders/1c333-r98_cch1e_t_y2s_p3j-2l_k2q1'
       }
     ]
   },
@@ -693,17 +691,16 @@ export const DATA = {
     kicker: 'ARC-02 · GITHUB TELEMETRY',
     heading: ['Jejak komit,', 'bukan sekadar klaim.'],
     headingAccentWord: 'klaim.',
-    intro: 'Aktivitas publik dari GitHub (@Fryel23 untuk repositori utama Farrel_Portofolio & @Fryel32 untuk arsip eksperimen awal), diambil langsung dan di-cache selama satu jam.',
+    intro: 'Aktivitas publik dari profil GitHub resmi (@Fryel23 & @Fryel32), diambil langsung dari GitHub REST API dan di-cache selama satu jam.',
     username: 'Fryel23',
     secondaryUsername: 'Fryel32',
     profileUrl: 'https://github.com/Fryel23',
-    repoUrl: 'https://github.com/Fryel23/Farrel_Portofolio',
     secondaryProfileUrl: 'https://github.com/Fryel32',
-    cacheKey: 'fryel23-github-stats-v14',
+    cacheKey: 'fryel23-github-stats-v15',
     cacheTTL: 3600000,
     jsRequiredMessage: 'STATISTIK GITHUB MEMERLUKAN JAVASCRIPT.',
     fallbackMessage: 'STATISTIK GITHUB SEDANG TIDAK DAPAT DIMUAT SAAT INI.',
-    fallbackLinkLabel: 'BUKA REPOSITORI UTAMA (@FRYEL23)',
+    fallbackLinkLabel: 'BUKA PROFIL GITHUB (@FRYEL23)',
     cards: {
       repositories: 'REPOSITORIES',
       stars: 'STARS EARNED',
@@ -785,7 +782,7 @@ export const DATA = {
     github: {
       contributionSkeleton: true,
       brackets: true,
-      bracketLabel: 'GIT LOG / FRYEL23 · FARREL_PORTOFOLIO'
+      bracketLabel: 'GIT LOG / FRYEL23 · PUBLIC TELEMETRY'
     },
     credentials: {
       rulerLines: true,

@@ -131,13 +131,13 @@ export const WORLD_TERRITORIES: readonly WorldTerritoryItem[] = [
     searchTerms: ['csv', 'csv explorer', 'worker', 'parser', 'dataset', 'upload'],
   },
   {
-    id: 'codex',
+    id: 'aethelgrad',
     sectorCode: '04',
-    label: 'The Grand Codex (100-600)',
-    path: '/codex',
-    description: 'Basis pengetahuan teknis dengan klasifikasi desimal 100-600, MathML statis, dan graf backlink.',
+    label: 'Aethelgrad // The Infinite Spire',
+    path: '/aethelgrad',
+    description: 'Dunia Virtual RPG Mandiri: 24 Hero Pixel SVG 7-Layer, 50 Item Equipment, Grimoire Koleksi, Code Sanctum, & Spire Colosseum.',
     kind: 'knowledge',
-    searchTerms: ['codex', 'grand codex', 'knowledge', 'graph', 'mathml', 'decimal', '100-600'],
+    searchTerms: ['aethelgrad', 'spire', 'gacha', 'colosseum', 'sanctum', 'rpg', 'world', 'dive'],
   },
   {
     id: 'archive',
@@ -147,15 +147,6 @@ export const WORLD_TERRITORIES: readonly WorldTerritoryItem[] = [
     description: 'Pintu masuk ke ruang samping arsip: game deck, kredensial, off-screen, dan aktivitas GitHub.',
     kind: 'archive',
     searchTerms: ['archive', 'hub', 'side archive', 'arsip', 'github'],
-  },
-  {
-    id: 'adr',
-    sectorCode: '05',
-    label: 'Engineering Records Vault (ADR)',
-    path: '/archive/adr',
-    description: 'Katalog 13 laporan rekayasa historis V10.3 hingga V12.3 dengan verifikasi SHA-256.',
-    kind: 'knowledge',
-    searchTerms: ['adr', 'records', 'vault', 'audit', 'diagnostic', 'verification', 'sha256'],
   },
   {
     id: 'play',
@@ -205,11 +196,11 @@ export const WORLD_TERRITORIES: readonly WorldTerritoryItem[] = [
   {
     id: 'atlas',
     sectorCode: '00',
-    label: 'Progressive World Atlas & System Topology',
+    label: 'The Data Atlas Crypt & Knowledge Graph',
     path: '/atlas',
-    description: 'Peta arsitektur build-time lintas 7 sektor, metrik koleksi, dan topologi data ke UI.',
+    description: 'Peta konstelasi pengetahuan interaktif 36 simpul, 52 sinapsis, dan Live Performance Telemetry HUD.',
     kind: 'atlas',
-    searchTerms: ['atlas', 'world atlas', 'map', 'topology', 'architecture', 'sectors', 'etl'],
+    searchTerms: ['atlas', 'data atlas', 'crypt', 'map', 'topology', 'knowledge graph', 'telemetry'],
   },
 ] as const;
 
@@ -218,8 +209,8 @@ export const WORLD_COMMANDS: readonly WorldCommandItem[] = [
     id: 'cmd-warp',
     syntax: ':warp <territory>',
     label: 'Warp to Territory',
-    description: 'Navigasi langsung ke wilayah terdaftar (contoh: :warp codex, :warp lab, :warp atlas).',
-    example: ':warp codex',
+    description: 'Navigasi langsung ke wilayah terdaftar (contoh: :warp aethelgrad, :warp lab, :warp atlas).',
+    example: ':warp aethelgrad',
   },
   {
     id: 'cmd-split-open',

@@ -1,0 +1,389 @@
+/* 7-Layer Pixel SVG Paper-Doll Animations & Wardrobe Stage */
+.aethelgrad-paperdoll-svg {
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.72));
+}
+
+.pd-layer-0-aura {
+  transform-origin: 32px 32px;
+  animation: auraFloatPulse 3.6s ease-in-out infinite;
+}
+
+@keyframes auraFloatPulse {
+  0%, 100% { opacity: 0.92; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.03); }
+}
+
+.paperdoll-powerup-stance {
+  animation: paperdollEquipShockwave 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes paperdollEquipShockwave {
+  0% { transform: scale(0.92); filter: brightness(1.8) drop-shadow(0 0 24px #38bdf8); }
+  55% { transform: scale(1.08); filter: brightness(1.35) drop-shadow(0 0 32px #fbbf24); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+/* Column 2: Gacha Grotto Pedestal & Quick Equipment Slots */
+.grotto-pedestal-showcase {
+  display: grid;
+  grid-template-columns: 1fr 145px;
+  gap: 0.65rem;
+  align-items: center;
+  padding: 0.75rem;
+  border-radius: 10px;
+  background:
+    radial-gradient(circle at 38% 60%, rgba(56, 189, 248, 0.28), rgba(10, 17, 36, 0.95));
+  border: 1px solid rgba(96, 165, 250, 0.38);
+}
+
+.grotto-pedestal-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.grotto-stars-display {
+  font-size: 0.95rem;
+  letter-spacing: 0.12em;
+  color: #fbbf24;
+  text-shadow: 0 0 12px rgba(251, 191, 36, 0.65);
+}
+
+.grotto-hero-name {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-top: 0.15rem;
+}
+
+.grotto-hero-cp-pill {
+  margin-top: 0.25rem;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.32);
+  border: 1px solid rgba(96, 165, 250, 0.45);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  color: #93c5fd;
+}
+
+.grotto-quick-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.grotto-slot-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.48rem;
+  border-radius: 6px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(71, 85, 105, 0.5);
+  color: #e2e8f0;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.grotto-slot-chip:hover {
+  border-color: #38bdf8;
+  transform: translateX(-2px);
+}
+
+.grotto-slot-chip.rarity-5 { border-color: rgba(251, 191, 36, 0.75); background: rgba(120, 53, 15, 0.28); }
+.grotto-slot-chip.rarity-4 { border-color: rgba(168, 85, 247, 0.7); background: rgba(88, 28, 135, 0.26); }
+.grotto-slot-chip.rarity-3 { border-color: rgba(56, 189, 248, 0.65); }
+
+.slot-chip-icon {
+  font-size: 0.88rem;
+}
+
+.slot-chip-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex: 1;
+}
+
+.slot-chip-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.54rem;
+  color: #94a3b8;
+}
+
+.slot-chip-value {
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: #f8fafc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.slot-chip-stars {
+  font-size: 0.56rem;
+  color: #fbbf24;
+}
+
+/* Barracks & Wardrobe Modal Layout */
+.barracks-modal-grid {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 1.25rem;
+}
+
+.barracks-stage-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 12px;
+  background: radial-gradient(circle at 50% 42%, rgba(37, 99, 235, 0.28), rgba(9, 15, 32, 0.95));
+  border: 1px solid rgba(96, 165, 250, 0.42);
+  gap: 0.75rem;
+}
+
+.floating-cp-toast {
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  background: rgba(16, 185, 129, 0.22);
+  border: 1px solid #34d399;
+  color: #6ee7b7;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  animation: floatUpToast 0.4s ease-out;
+}
+
+@keyframes floatUpToast {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.barracks-5-slots-strip {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.barracks-slot-box {
+  padding: 0.45rem 0.65rem;
+  border-radius: 7px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(71, 85, 105, 0.45);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.barracks-slot-box.is-selected {
+  border-color: #38bdf8;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
+}
+
+.barracks-slot-box.rarity-5 { border-color: #fbbf24; }
+.barracks-slot-box.rarity-4 { border-color: #a855f7; }
+
+.slot-box-top {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.66rem;
+  color: #94a3b8;
+}
+
+.slot-box-item strong {
+  font-size: 0.74rem;
+  color: #ffffff;
+  margin-right: 0.35rem;
+}
+
+.slot-stars {
+  color: #fbbf24;
+  font-size: 0.68rem;
+}
+
+.barracks-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.barracks-hero-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.barracks-class-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  color: #38bdf8;
+}
+
+.barracks-hero-title {
+  margin: 0.15rem 0 0;
+  font-size: 1.05rem;
+  color: #ffffff;
+}
+
+.barracks-hero-lore {
+  margin: 0.4rem 0;
+  font-size: 0.78rem;
+  color: #94a3b8;
+}
+
+.barracks-stat-bars {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.45rem;
+  margin: 0.5rem 0;
+}
+
+.b-stat-item {
+  padding: 0.45rem;
+  border-radius: 6px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(59, 130, 246, 0.28);
+  text-align: center;
+}
+
+.b-stat-item span {
+  display: block;
+  font-size: 0.62rem;
+  color: #94a3b8;
+}
+
+.b-stat-item strong {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  color: #ffffff;
+}
+
+.b-stat-item small {
+  display: block;
+  font-size: 0.62rem;
+  color: #34d399;
+}
+
+.barracks-ult-box {
+  padding: 0.55rem 0.75rem;
+  border-radius: 7px;
+  background: rgba(88, 28, 135, 0.22);
+  border: 1px solid rgba(168, 85, 247, 0.45);
+  font-size: 0.76rem;
+}
+
+.ult-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  color: #c084fc;
+  margin-right: 0.5rem;
+}
+
+.barracks-owned-heroes-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+  gap: 0.5rem;
+  max-height: 170px;
+  overflow-y: auto;
+}
+
+.barracks-hero-card {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: #f8fafc;
+  text-align: left;
+  cursor: pointer;
+}
+
+.barracks-hero-card.is-selected {
+  border-color: #fbbf24;
+  background: rgba(30, 58, 138, 0.45);
+}
+
+.bh-meta {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.72rem;
+}
+
+.bh-stars { color: #fbbf24; font-size: 0.66rem; }
+.bh-main-tag {
+  padding: 0.08rem 0.35rem;
+  border-radius: 4px;
+  background: #2563eb;
+  font-size: 0.56rem;
+  margin-left: 0.25rem;
+}
+
+.barracks-inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.55rem;
+  max-height: 230px;
+  overflow-y: auto;
+}
+
+.inv-item-card {
+  padding: 0.6rem;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(71, 85, 105, 0.48);
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.inv-item-card.rarity-5 { border-color: #fbbf24; }
+.inv-item-card.rarity-4 { border-color: #a855f7; }
+
+.inv-item-header {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.64rem;
+  color: #94a3b8;
+}
+
+.inv-rarity-stars { color: #fbbf24; }
+.inv-item-name { font-size: 0.78rem; color: #ffffff; }
+.inv-item-stats { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: #38bdf8; }
+
+.inv-equip-btn {
+  margin-top: 0.25rem;
+  padding: 0.38rem;
+  border-radius: 5px;
+  border: 1px solid #3b82f6;
+  background: rgba(37, 99, 235, 0.32);
+  color: #ffffff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.inv-equip-btn.unequip {
+  border-color: #f59e0b;
+  background: rgba(180, 83, 9, 0.32);
+}
+
+@media (max-width: 900px) {
+  .barracks-modal-grid {
+    grid-template-columns: 1fr;
+  }
+}

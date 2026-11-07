@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "updatedAtIso": "2026-11-07T11:13:20.434Z",
+  "credentialsByHunterId": {
+    "hunter-mw6b1rmc-00847a57": {
+      "hunterId": "hunter-mw6b1rmc-00847a57",
+      "username": "Vanguard_702",
+      "usernameLower": "vanguard_702",
+      "passwordHashHex": "05e9deb92c5a6c9e6bc1acd8e8936ad8453b7dda949222df98f57216706617647ffbec7001767d1b0eb83473f4619098a088aefc079421bf981f002f45880ffb",
+      "passwordSaltHex": "3214deb72127030edf785cc46c9f4729a198d178c2feefa07574adb95e318be4",
+      "pbkdf2Iterations": 100000,
+      "boundDeviceHash": "00847a5792ff0ce5a877fb410a2f3b226b334b597aa7c187c19e980a52b6a7f3",
+      "createdAtIso": "2026-11-07T11:13:20.291Z",
+      "lastLoginIso": "2026-11-07T11:13:20.434Z"
+    }
+  },
+  "profilesByHunterId": {
+    "hunter-mw6b1rmc-00847a57": {
+      "hunterId": "hunter-mw6b1rmc-00847a57",
+      "username": "Vanguard_702",
+      "titleRank": "Data Ranger · Spire Initiate",
+      "accountLevel": 12,
+      "accountExp": 720,
+      "astralGems": 1800,
+      "summonTickets": 5,
+      "starlightDust": 200,
+      "pity5StarCounter": 0,
+      "pity4StarCounter": 0,
+      "totalSummonsPerformed": 0,
+      "activeHeroId": "hero-evelyn-dawnblade",
+      "equippedLoadout": {
+        "WEAPON": "wpn-starfall-blade",
+        "ARMOR": "arm-valkyrie-aegis",
+        "HELMET": "hlm-valkyrie-crown",
+        "OFFHAND": "off-squire-buckler",
+        "RELIC_CAPE": "rel-traveler-cloak"
+      },
+      "ownedHeroes": {
+        "hero-han-islat": {
+          "heroId": "hero-han-islat",
+          "currentStars": 1,
+          "level": 10,
+          "soulShards": 25,
+          "dupesPulled": 0,
+          "unlockedAtIso": "2026-11-07T11:13:20.292Z"
+        },
+        "hero-evelyn-dawnblade": {
+          "heroId": "hero-evelyn-dawnblade",
+          "currentStars": 5,
+          "level": 15,
+          "soulShards": 20,
+          "dupesPulled": 0,
+          "unlockedAtIso": "2026-11-07T11:13:20.292Z"
+        },
+        "hero-talia-rune": {
+          "heroId": "hero-talia-rune",
+          "currentStars": 3,
+          "level": 10,
+          "soulShards": 15,
+          "dupesPulled": 0,
+          "unlockedAtIso": "2026-11-07T11:13:20.292Z"
+        }
+      },
+      "ownedEquipment": {
+        "wpn-starfall-blade": {
+          "itemId": "wpn-starfall-blade",
+          "enhanceLevel": 2,
+          "count": 1,
+          "firstObtainedIso": "2026-11-07T11:13:20.292Z"
+        },
+        "wpn-squire-dawnblade": {
+          "itemId": "wpn-squire-dawnblade",
+          "enhanceLevel": 1,
+          "count": 1,
+          "firstObtainedIso": "2026-11-07T11:13:20.292Z"
+        },
+        "arm-valkyrie-aegis": {
+          "itemId": "arm-valkyrie-aegis",
+          "enhanceLevel": 1,
+          "count": 1,
+          "firstObtainedIso": "2026-11-07T11:13:20.292Z"
+        },
+        "arm-squire-tunic": {
+          "itemId": "arm-squire-tunic",
+          "enhanceLevel": 0,
+          "count": 1,
+          "firstObtainedIso": "2026-11-07T11:13:20.292Z"
+        },
+        "hlm-valkyrie-crown": {
+          "itemId": "hlm-valkyrie-crown",
+          "enhanceLevel": 1,
+          "count": 1,
+          "firstObtainedIso": "2026-11-07T11:13:20.292Z"
+        },
+        "off-squire-buckler": {
+          "itemId": "off-squire-buckler",
+          "enhanceLevel": 0,
+          "count": 1,
+          "firstObtainedIso": "2026-11-07T11:13:20.292Z"
+        },
+        "rel-traveler-cloak": {
+          "itemId": "rel-traveler-cloak",
+          "enhanceLevel": 0,
+          "count": 1,
+          "firstObtainedIso": "2026-11-07T11:13:20.292Z"
+        }
+      },
+      "solvedSpellIds": [],
+      "claimedGrimoireIds": [
+        "grim-01-first-steps"
+      ],
+      "arenaWins": 0,
+      "arenaLosses": 0,
+      "highestSpireFloor": 1,
+      "recentActivityLog": [
+        "[SYSTEM] Hunter Vanguard_702 memasuki Aethelgrad // The Infinite Spire.",
+        "[GIFT] Menerima 1.800 Astral Gems, 5 Summon Tickets, & Starfall Blade [★5]."
+      ],
+      "updatedAtIso": "2026-11-07T11:13:20.292Z"
+    }
+  }
+}

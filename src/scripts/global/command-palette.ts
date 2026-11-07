@@ -107,8 +107,7 @@ function resolveCurrentTerritoryLabel(): string {
   const rawPath = window.location.pathname.replace(/\/+$/, '') || '/';
   const exact = WORLD_TERRITORIES.find((t) => t.path === rawPath);
   if (exact) return exact.id.toUpperCase();
-  if (rawPath.startsWith('/codex/')) return 'CODEX NOTE';
-  if (rawPath.startsWith('/archive/adr/')) return 'ADR RECORD';
+  if (rawPath.startsWith('/aethelgrad')) return 'AETHELGRAD';
   if (rawPath.startsWith('/work/')) return 'CASE STUDY';
   return 'ARCHIVE';
 }

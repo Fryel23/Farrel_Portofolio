@@ -141,14 +141,16 @@ try {
     'src/content/codex',
     'src/lib',
     'src/types',
-    'src/pages/archive/adr',
-    'src/pages/codex',
     'src/pages/atlas',
+    'src/pages/aethelgrad',
     'src/pages/api',
     'src/scripts/archive',
+    'src/scripts/atlas',
     'src/scripts/global',
     'src/styles/archive',
+    'src/styles/aethelgrad',
     'src/styles/global',
+    'src/world-aethelgrad',
   ];
   const newV13ExplicitFiles = [
     'src/components/layout/CommandPalette.astro',
@@ -255,8 +257,6 @@ try {
 
   const proseTargets = [
     ...walkFiles('src/content/codex', (f) => f.endsWith('.md')),
-    ...walkFiles('src/pages/archive/adr', (f) => f.endsWith('.astro')),
-    ...walkFiles('src/pages/codex', (f) => f.endsWith('.astro')),
     'src/pages/atlas/index.astro',
     'src/components/layout/CommandPalette.astro',
     'src/components/layout/ReferenceDock.astro',
@@ -580,10 +580,6 @@ try {
     'src/scripts/codex.js',
     'src/components/layout/CommandPalette.astro',
     'src/components/layout/ReferenceDock.astro',
-    'src/pages/archive/adr/index.astro',
-    'src/pages/archive/adr/[slug].astro',
-    'src/pages/codex/index.astro',
-    'src/pages/codex/[...slug].astro',
     'src/pages/atlas/index.astro',
   ];
 
@@ -667,28 +663,31 @@ try {
     'dist/work/index.html',
     'dist/work/aqi-cirebon/index.html',
     'dist/archive/index.html',
-    'dist/archive/adr/index.html',
-    'dist/codex/index.html',
+    'dist/archive/play/index.html',
+    'dist/archive/credentials/index.html',
+    'dist/archive/off-screen/index.html',
     'dist/atlas/index.html',
+    'dist/aethelgrad/index.html',
     'dist/lab/index.html',
     'dist/lab/methodology/index.html',
     'dist/lab/csv/index.html',
     'dist/api/world-index.json',
+    'dist/api/aethelgrad/auth-status.json',
+    'dist/api/aethelgrad/register.json',
+    'dist/api/aethelgrad/login.json',
+    'dist/api/aethelgrad/logout.json',
+    'dist/api/aethelgrad/state.json',
+    'dist/api/aethelgrad/gacha-summon.json',
+    'dist/api/aethelgrad/equip-item.json',
+    'dist/api/aethelgrad/forge-upgrade.json',
+    'dist/api/aethelgrad/code-sanctum.json',
+    'dist/api/aethelgrad/colosseum-duel.json',
   ];
 
-  const adrSlugs = walkFiles('src/content/adr', (f) => f.endsWith('.md')).map((f) => path.basename(f, '.md'));
-  for (const slug of adrSlugs) {
-    mandatoryRoutes.push(`dist/archive/adr/${slug}/index.html`);
-  }
-
-  const codexSlugs = walkFiles('src/content/codex', (f) => f.endsWith('.md')).map((f) =>
-    path.relative(path.join(ROOT, 'src/content/codex'), path.join(ROOT, f)).replace(/\\/g, '/').replace(/\.md$/, '')
-  );
-  for (const slug of codexSlugs) {
-    mandatoryRoutes.push(`dist/codex/${slug}/index.html`);
-  }
-
   const missingRoutes = mandatoryRoutes.filter((r) => !fs.existsSync(path.join(ROOT, r)));
+  const forbiddenPublicRoutes = ['dist/archive/adr/index.html', 'dist/codex/index.html'].filter((r) =>
+    fs.existsSync(path.join(ROOT, r))
+  );
   const worldIndex = JSON.parse(fs.readFileSync(path.join(ROOT, 'dist/api/world-index.json'), 'utf8'));
   const indexValid = validateWorldIndexPayload(worldIndex);
   const totalIndexedItems =
@@ -701,10 +700,10 @@ try {
   recordGate(
     'GATE-10',
     'Route & Build Output',
-    missingRoutes.length === 0 && indexValid,
-    missingRoutes.length === 0 && indexValid
-      ? `${mandatoryRoutes.length} mandatory static build outputs verified (including 13 ADR + 6 Codex routes + dist/api/world-index.json with ${totalIndexedItems} entries)`
-      : `Missing: ${missingRoutes.join(', ')}; indexValid=${indexValid}`
+    missingRoutes.length === 0 && forbiddenPublicRoutes.length === 0 && indexValid,
+    missingRoutes.length === 0 && forbiddenPublicRoutes.length === 0 && indexValid
+      ? `${mandatoryRoutes.length} mandatory V15.0 build outputs verified (including /atlas, /aethelgrad + 10 API endpoints, and 0 exposed ADR/Codex routes; world-index=${totalIndexedItems} entries)`
+      : `Missing: ${missingRoutes.join(', ')}; Forbidden present: ${forbiddenPublicRoutes.join(', ')}; indexValid=${indexValid}`
   );
 } catch (err) {
   recordGate('GATE-10', 'Route & Build Output', false, err.message);
@@ -750,19 +749,19 @@ try {
 // GATE 12: Responsive & Accessibility Contract
 // ---------------------------------------------------------------------------
 try {
-  const codexHtml = fs.readFileSync(path.join(ROOT, 'dist/codex/index.html'), 'utf8');
+  const homeHtml = fs.readFileSync(path.join(ROOT, 'dist/index.html'), 'utf8');
   const atlasHtml = fs.readFileSync(path.join(ROOT, 'dist/atlas/index.html'), 'utf8');
-  const adrHtml = fs.readFileSync(path.join(ROOT, 'dist/archive/adr/index.html'), 'utf8');
+  const aethelHtml = fs.readFileSync(path.join(ROOT, 'dist/aethelgrad/index.html'), 'utf8');
   const dockCss = fs.readFileSync(path.join(ROOT, 'src/styles/global/tiling-dock.css'), 'utf8');
   const atlasCss = fs.readFileSync(path.join(ROOT, 'src/styles/atlas.css'), 'utf8');
 
   const a11yChecks = [
-    { name: 'CommandPalette combobox & listbox', ok: codexHtml.includes('role="combobox"') && codexHtml.includes('role="listbox"') },
-    { name: 'ReferenceDock aside & iframe sandbox', ok: codexHtml.includes('id="world-reference-dock"') && codexHtml.includes('sandbox=""') },
-    { name: 'Codex accessible graph list', ok: codexHtml.includes('id="codex-graph-accessible-list"') },
-    { name: 'Atlas accessible topology SVG & table', ok: atlasHtml.includes('aria-labelledby="atlas-svg-title atlas-svg-desc"') && atlasHtml.includes('class="atlas-topology-table"') },
-    { name: 'ADR filter buttons & status live region', ok: adrHtml.includes('aria-pressed=') && adrHtml.includes('aria-live="polite"') },
-    { name: 'Responsive media queries & local table overflow', ok: dockCss.includes('@media (min-width: 1024px)') && atlasCss.includes('overflow-x: auto') },
+    { name: 'CommandPalette combobox & listbox', ok: homeHtml.includes('role="combobox"') && homeHtml.includes('role="listbox"') },
+    { name: 'ReferenceDock aside & iframe sandbox', ok: homeHtml.includes('id="world-reference-dock"') && homeHtml.includes('sandbox=""') },
+    { name: 'Data Atlas Crypt canvas & telemetry HUD', ok: atlasHtml.includes('id="atlas-network-canvas"') && atlasHtml.includes('id="atlas-telemetry-hud"') },
+    { name: 'Atlas accessible node directory & inspector', ok: atlasHtml.includes('id="atlas-inspector-panel"') && atlasHtml.includes('id="atlas-node-list"') },
+    { name: 'Aethelgrad isolated world & smart auth gate', ok: aethelHtml.includes('id="aethelgrad-auth-gate"') && aethelHtml.includes('id="col-2-gacha-grotto"') },
+    { name: 'Responsive media queries & local table overflow', ok: dockCss.includes('@media (min-width: 1024px)') && atlasCss.includes('@media (max-width:') },
   ];
 
   const failed = a11yChecks.filter((c) => !c.ok).map((c) => c.name);
@@ -783,8 +782,8 @@ try {
 // ---------------------------------------------------------------------------
 try {
   const srcAndPublicFiles = [...walkFiles('src'), ...walkFiles('public')];
-  const junkFiles = srcAndPublicFiles.filter((f) => /\.(bak|tmp|orig|log|swp)$/.test(f) || f.includes('v13-work'));
-  const distHasWorkDir = fs.existsSync(path.join(ROOT, 'dist/v13-work'));
+  const junkFiles = srcAndPublicFiles.filter((f) => /\.(bak|tmp|orig|log|swp)$/.test(f) || f.includes('v13-work') || f.includes('v15-work'));
+  const distHasWorkDir = fs.existsSync(path.join(ROOT, 'dist/v13-work')) || fs.existsSync(path.join(ROOT, 'dist/v15-work'));
 
   // Check for duplicate .js + .ts stems in src/
   const stems = new Map();

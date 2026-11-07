@@ -1,0 +1,113 @@
+---
+/* V7.4 Fase 1: ClientRouter (View Transitions bawaan Astro). Navigasi
+   antar halaman kini client-side tanpa reload penuh, tanpa flash layar
+   putih. Siklus hidup JavaScript menyesuaikan di core.js (astro:page-load). */
+import { ClientRouter } from 'astro:transitions';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import CommandPalette from '../components/layout/CommandPalette.astro';
+import ReferenceDock from '../components/layout/ReferenceDock.astro';
+/* V10.0 FASE 2: overlay Archive Wipe untuk transisi halaman. CSS-nya
+   dimuat di layout agar tersedia di semua halaman sejak first paint. */
+import PageTransitionOverlay from '../components/layout/PageTransitionOverlay.astro';
+import '../styles/global.css';
+import '../styles/page-transitions.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  pageKey?: string;
+}
+
+const {
+  title = 'Farrel Islami Putra · Data, Software & Learning Notes',
+  description =
+    'Catatan belajar Farrel Islami Putra, mahasiswa Informatika UNIKOM. Soal data, pola, software, dan hal-hal yang belum selesai dipelajari.',
+  pageKey = '',
+} = Astro.props;
+
+/* V8.1 Fase 3.4: canonical dan og:image absolut memakai Astro.site
+   (di-set di astro.config.mjs) sesuai rekomendasi SEO Astro. */
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImageURL = new URL('/og-default.png', Astro.site);
+---
+
+<!doctype html>
+<html lang="id" data-page={pageKey}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- V11.0: Zero-FOUC guard opening-armed + window.__openingSafety
+         DIHAPUS bersama arsitektur Opening modal V9.1. Curtain Pattern
+         tidak pernah menyembunyikan konten; Hero tersedia sejak initial
+         render tanpa guard apa pun (spek §3.1 + §5.1). -->
+    <meta name="theme-color" content="#F8FAFC" />
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <title>{title}</title>
+    <!-- V8.1 Fase 3.4: URL absolut untuk canonical, og:url, dan og:image. -->
+    <link rel="canonical" href={canonicalURL} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={ogImageURL} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- V7.4 Fase 1: router transisi tampilan (wajib di dalam <head>). -->
+    <ClientRouter />
+  </head>
+  <body>
+    <a class="skip-link" href="#main" lang="en">Skip to content</a>
+
+    <div class="page-progress" aria-hidden="true"><span id="progress-bar"></span></div>
+
+    <Header />
+
+    <!-- V11.0: dialog Opening V9.1 (#archive-opening) DIHAPUS. Opening
+         kini Curtain Pattern (dekorasi Hero, bukan gerbang): markup di
+         src/components/home/Curtain.astro yang hanya di-mount homepage,
+         controller di src/scripts/curtain-controller.js. -->
+
+    <!-- V7.4 Fase 1: cross-fade halus pada setiap pergantian halaman. -->
+    <main id="main" transition:animate="fade">
+      <slot />
+    </main>
+
+    <!-- V13.0-D: Reference Tiling Dock (desktop >= 1024px, sandboxed static iframe)
+         dan Global Command Palette (native <dialog>, lazy-loaded index). -->
+    <ReferenceDock />
+    <CommandPalette />
+
+    <Footer />
+
+    <!-- Area status untuk umpan balik copy email (12.7) -->
+    <div class="copy-toast" id="copy-toast" role="status" aria-live="polite"></div>
+
+    <!-- V4 §8: page pet mengapung. Tersembunyi sampai dipanggil dari
+         section Companion; script.js menyalin SVG pixel-art ke tombol. -->
+    <div class="companion-pet" id="companion-pet" hidden>
+      <span class="companion-tooltip" id="companion-tooltip" role="status" aria-live="polite" hidden></span>
+      <button class="companion-pet-button" id="companion-pet-button" type="button" aria-label="Companion: Kok. Click to say hi."></button>
+    </div>
+
+    <!-- Tekstur grain (4.4): dekorasi murni, aria-hidden, pointer-events none. -->
+    <svg class="grain-overlay" aria-hidden="true" focusable="false">
+      <filter id="grain-filter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"></feTurbulence>
+        <feColorMatrix type="saturate" values="0"></feColorMatrix>
+      </filter>
+      <rect width="100%" height="100%" filter="url(#grain-filter)"></rect>
+    </svg>
+
+    <!-- V10.0 FASE 2: overlay Archive Wipe, tepat sebelum </body>
+         sesuai spesifikasi. transition:persist membuat node ini tidak
+         diganti saat swap sehingga animasi reveal menganimasikan node
+         yang sama dan tidak ada flash. -->
+    <PageTransitionOverlay />
+  </body>
+</html>

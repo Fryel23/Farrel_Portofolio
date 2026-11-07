@@ -58,13 +58,13 @@ const indexPayload = JSON.parse(fs.readFileSync(builtIndexPath, 'utf8'));
 
 console.log('\n[1] Static World Index Endpoint (/api/world-index.json) & Route Allowlist');
 
-test('1, 2, 3, & 4. Index JSON memiliki schemaVersion 1, 14 territory terbangun di dist/, koleksi sesuai sumber, dan RESERVED work non-routeable', () => {
+test('1, 2, 3, & 4. Index JSON memiliki schemaVersion 1, 13 territory terbangun di dist/, bebas eksposur ADR/Codex publik, dan RESERVED work non-routeable', () => {
   assert.equal(validateWorldIndexPayload(indexPayload), true);
   assert.equal(indexPayload.schemaVersion, WORLD_INDEX_SCHEMA_VERSION);
-  assert.equal(indexPayload.territories.length, 14);
+  assert.equal(indexPayload.territories.length, 13);
   assert.equal(indexPayload.work.length, 3);
-  assert.equal(indexPayload.adr.length, 13);
-  assert.equal(indexPayload.codex.length, 6);
+  assert.equal(indexPayload.adr.length, 0);
+  assert.equal(indexPayload.codex.length, 0);
   assert.equal(indexPayload.commands.length, 7);
 
   /* Semua territory wajib memiliki file HTML statis di dist/ */
@@ -96,12 +96,12 @@ console.log('\n[2] Command Parser Allowlist & Deterministic Search Ranking');
 test('5. Command parser hanya menerima command yang diizinkan (:warp, :split, :audio, :top) dan menolak command asing', () => {
   assert.equal(parseWorldCommand('normal search query'), null);
 
-  const warpCodex = parseWorldCommand(':warp codex');
-  assert.deepEqual(warpCodex, {
+  const warpAethelgrad = parseWorldCommand(':warp aethelgrad');
+  assert.deepEqual(warpAethelgrad, {
     ok: true,
     action: 'warp',
-    targetPath: '/codex',
-    territoryLabel: 'The Grand Codex (100-600)',
+    targetPath: '/aethelgrad',
+    territoryLabel: 'Aethelgrad // The Infinite Spire',
   });
 
   const warpAtlas = parseWorldCommand('  :WARP   /atlas  ');
@@ -109,7 +109,7 @@ test('5. Command parser hanya menerima command yang diizinkan (:warp, :split, :a
     ok: true,
     action: 'warp',
     targetPath: '/atlas',
-    territoryLabel: 'Progressive World Atlas & System Topology',
+    territoryLabel: 'The Data Atlas Crypt & Knowledge Graph',
   });
 
   const warpUnknown = parseWorldCommand(':warp https://evil.example');
@@ -136,17 +136,17 @@ test('6. Query normalization & 5-tier search ranking deterministik (exact code >
   /* Long query cap */
   assert.equal(normalizeWorldQuery('a'.repeat(250)).length, 100);
 
-  /* Tier 1 (500): Exact decimalCode '501.1' */
-  const r1 = rankWorldSearchResults(indexPayload, '501.1');
-  const r2 = rankWorldSearchResults(indexPayload, '501.1');
+  /* Tier 1 (500): Exact territory code 'SECTOR 04' (Aethelgrad) */
+  const r1 = rankWorldSearchResults(indexPayload, 'SECTOR 04');
+  const r2 = rankWorldSearchResults(indexPayload, 'SECTOR 04');
   assert.deepEqual(r1, r2);
-  assert.equal(r1.grouped['CODEX NOTES'][0].id, 'codex:ispu-p14-2020-linear-interpolation-and-time-basis');
-  assert.equal(r1.grouped['CODEX NOTES'][0].score, 500);
+  assert.equal(r1.grouped.TERRITORIES[0].id, 'territory:aethelgrad');
+  assert.equal(r1.grouped.TERRITORIES[0].score, 500);
 
-  /* Tier 1 (500): Exact ADR versionTag 'V11.0' */
-  const rAdr = rankWorldSearchResults(indexPayload, 'V11.0');
-  assert.equal(rAdr.grouped['ENGINEERING RECORDS'][0].codeOrTag, 'V11.0');
-  assert.equal(rAdr.grouped['ENGINEERING RECORDS'][0].score, 500);
+  /* Tier 1 (500): Exact territory code 'SECTOR 00' (The Data Atlas Crypt) */
+  const rAtlas = rankWorldSearchResults(indexPayload, 'SECTOR 00');
+  assert.equal(rAtlas.grouped.TERRITORIES[0].codeOrTag, 'SECTOR 00');
+  assert.equal(rAtlas.grouped.TERRITORIES[0].score, 500);
 
   /* Command prefix ':audio' filters only COMMANDS */
   const rCmd = rankWorldSearchResults(indexPayload, ':audio');
@@ -162,23 +162,19 @@ test('11 & 12. validateDockTargetUrl menolak external URL, javascript:, data:, p
     ok: true,
     safePath: '/lab/methodology',
   });
-  assert.deepEqual(validateDockTargetUrl('/codex', indexPayload), {
+  assert.deepEqual(validateDockTargetUrl('/atlas', indexPayload), {
     ok: true,
-    safePath: '/codex',
+    safePath: '/atlas',
   });
-  assert.deepEqual(validateDockTargetUrl('/archive/adr/v11-0-implementation-report', indexPayload), {
+  assert.deepEqual(validateDockTargetUrl('/aethelgrad', indexPayload), {
     ok: true,
-    safePath: '/archive/adr/v11-0-implementation-report',
+    safePath: '/aethelgrad',
   });
   assert.deepEqual(
-    validateDockTargetUrl(
-      '/codex/500-environment-and-regulations/501-ispu-p14-2020-linear-interpolation-and-time-basis',
-      indexPayload
-    ),
+    validateDockTargetUrl('/work/aqi-cirebon', indexPayload),
     {
       ok: true,
-      safePath:
-        '/codex/500-environment-and-regulations/501-ispu-p14-2020-linear-interpolation-and-time-basis',
+      safePath: '/work/aqi-cirebon',
     }
   );
 

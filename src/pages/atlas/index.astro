@@ -1,570 +1,247 @@
 ---
-import fs from 'node:fs';
-import path from 'node:path';
-import { getCollection } from 'astro:content';
+/**
+ * src/pages/atlas/index.astro
+ * THE DATA ATLAS CRYPT (/atlas - V15.0-AETHELGRAD-OMEGA).
+ *
+ * Ruang Pengetahuan & Telemetri Performa Real-Time (Di Luar Dunia Game):
+ *  - 36 Simpul Pengetahuan (Knowledge Nodes) & 52 Sinapsis (Edges)
+ *    lintas 4 Klaster Keilmuan Farrel Islami Putra.
+ *  - Kanvas Konstelasi Interaktif (#atlas-network-canvas) + Inspector Panel (#atlas-inspector-panel).
+ *  - Live Performance Telemetry HUD (FPS, Frame Time ms, JS Heap, Active Nodes/Synapses).
+ *  - Jembatan Portal menuju Cabang Dunia Virtual Mandiri (/aethelgrad).
+ */
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { CODEX_DOMAINS } from '../../lib/codex-taxonomy.ts';
-import { buildCodexKnowledgeGraph } from '../../lib/codex-graph-builder.ts';
 import {
-  WORLD_TERRITORIES,
-  buildWorldIndexPayload,
-} from '../../lib/world-os-core.ts';
-import { validateDataset } from '../../scripts/lab/core/validate-dataset.js';
-import { LIMITS } from '../../scripts/lab/shared/csv-analysis.js';
+  ATLAS_CLUSTERS,
+  ATLAS_EDGES,
+  ATLAS_NODES,
+} from '../../scripts/atlas/knowledge-nodes-data.ts';
 import '../../styles/atlas.css';
 
-const workEntries = await getCollection('work');
-const adrEntries = await getCollection('adr');
-const codexEntries = await getCollection('codex');
-
-const routeableWorkEntries = workEntries.filter(
-  (w) => w.data.status !== 'RESERVED' && w.data.status !== 'ARCHIVED'
-);
-const reservedWorkEntries = workEntries.filter((w) => w.data.status === 'RESERVED');
-
-const graph = buildCodexKnowledgeGraph({
-  codexEntries,
-  workEntries,
-  adrEntries,
-});
-
-const worldIndex = buildWorldIndexPayload({
-  workEntries,
-  adrEntries,
-  codexEntries,
-});
-const worldIndexJsonString = JSON.stringify(worldIndex, null, 2) + '\n';
-const worldIndexBytes = Buffer.byteLength(worldIndexJsonString, 'utf8');
-
-/* Baca dan validasi dataset AQI Cirebon pada waktu build */
-const projectRoot = process.cwd();
-const regionsPath = path.join(projectRoot, 'public/data/aqi/regions.json');
-const regionsRaw = JSON.parse(fs.readFileSync(regionsPath, 'utf8'));
-
-const cirebonRegion = regionsRaw.regions[0];
-const yearEntries: Array<{ year: number; dataPath: string; recordCount: number }> = cirebonRegion.years;
-const datasetYears: number[] = yearEntries.map((y) => y.year);
-const totalLocationsCount: number = Array.isArray(cirebonRegion.locations) ? cirebonRegion.locations.length : 0;
-let totalVerifiedStageRecords = 0;
-let allDatasetsValid = regionsRaw.schemaVersion === 1 && Array.isArray(yearEntries) && yearEntries.length > 0;
-
-for (const yEntry of yearEntries) {
-  const fullYearPath = path.join(projectRoot, 'public', yEntry.dataPath.replace(/^\/+/, ''));
-  const yearData = JSON.parse(fs.readFileSync(fullYearPath, 'utf8'));
-  const yearCheck = validateDataset(yearData, { knownSourceIds: cirebonRegion.sourceIds });
-  if (!yearCheck.ok) {
-    allDatasetsValid = false;
-  }
-  if (Array.isArray(yearData.records)) {
-    totalVerifiedStageRecords += yearData.records.length;
-  }
-}
-
-const datasetStatusBadge = allDatasetsValid ? 'VERIFIED_DATASET' : 'RESERVED_BLUEPRINT';
-
-/* Hitung jumlah rute statis yang benar-benar dibangun */
-const staticPageRoutesCount =
-  WORLD_TERRITORIES.length +
-  routeableWorkEntries.length +
-  adrEntries.length +
-  codexEntries.length;
-
-const codexCountByDomain = CODEX_DOMAINS.map((dom) => ({
-  code: dom.code,
-  label: dom.label,
-  count: codexEntries.filter((e) => e.data.domain === dom.id).length,
-}));
-
-const SECTORS = [
-  {
-    sector: '01',
-    name: 'The Citadel',
-    status: 'OPERATIONAL',
-    description:
-      'Halaman beranda utama dengan Curtain pembuka non-modal, kanvas kaca Fresnel OGL dengan fallback SVG statis, Curiosity Map, dan navigator arsip.',
-    routes: ['/'],
-    metrics: '1 rute utama · Curtain non-modal · WebGL guard > 700px',
-  },
-  {
-    sector: '02',
-    name: 'Selected Work & Case Studies',
-    status: 'OPERATIONAL',
-    description:
-      'Katalog studi kasus tervalidasi oleh Astro Content Layer. Hanya entri routeable yang menghasilkan halaman publik; slot rencana dipertahankan sebagai placeholder jujur.',
-    routes: ['/work', '/work/aqi-cirebon'],
-    metrics: `${routeableWorkEntries.length} studi kasus aktif · ${reservedWorkEntries.length} slot RESERVED`,
-  },
-  {
-    sector: '03',
-    name: 'The Data Lab',
-    status: 'OPERATIONAL',
-    secondaryStatus: datasetStatusBadge,
-    description:
-      'Ruang eksplorasi data interaktif: kalkulator ISPU PermenLHK P.14/2020 untuk data Cirebon 2021-2025, halaman metodologi persamaan linier, dan CSV Explorer terisolasi di Web Worker.',
-    routes: ['/lab', '/lab/csv', '/lab/methodology'],
-    metrics: `${datasetYears.length} tahun data (${datasetYears[0]}-${datasetYears[datasetYears.length - 1]}) · ${totalVerifiedStageRecords} rekaman tahap`,
-  },
-  {
-    sector: '04',
-    name: 'The Grand Codex (100-600)',
-    status: 'OPERATIONAL',
-    description:
-      'Basis pengetahuan teknis dengan klasifikasi desimal proyek 100-600, persamaan native MathML statis, matriks bukti berkas repositori, dan graf pengetahuan deterministik.',
-    routes: ['/codex'],
-    metrics: `${codexEntries.length} catatan fondasi · ${CODEX_DOMAINS.length} domain · ${graph.edges.length} edge tervalidasi`,
-  },
-  {
-    sector: '05',
-    name: 'The Engineering Records Vault',
-    status: 'OPERATIONAL',
-    description:
-      'Arsip 13 laporan rekayasa historis (diagnostik, eksperimen, keputusan, implementasi, audit, dan baseline performa) dari V10.3 hingga V12.3 dengan checksum SHA-256 sumber asli.',
-    routes: ['/archive/adr'],
-    metrics: `${adrEntries.length} rekam historis · SHA-256 byte-verified`,
-  },
-  {
-    sector: '06',
-    name: 'The Living Archive / Arcade / Habitat',
-    status: 'OPERATIONAL',
-    description:
-      'Pintu masuk ruang samping portofolio: dek permainan kasual, arsip kredensial dan sertifikat, aktivitas di luar layar, habitat companion piksel Kok, serta statistik GitHub publik.',
-    routes: ['/archive', '/archive/play', '/archive/credentials', '/archive/off-screen'],
-    metrics: '4 rute ruang arsip · 1-hour cached GitHub REST pulse',
-  },
-  {
-    sector: '07',
-    name: 'Identity, Journey & Connect',
-    status: 'OPERATIONAL',
-    description:
-      'Dokumentasi latar belakang akademik S1 Teknik Informatika UNIKOM, daftar keterampilan dengan status jujur, empat fase perjalanan belajar, dan saluran kontak.',
-    routes: ['/about', '/connect'],
-    metrics: '2 rute identitas & koneksi · status keterampilan transparan',
-  },
-];
-
-const TOPOLOGY_LAYERS = [
-  {
-    step: 'LAYER 01',
-    name: 'Raw Sources / Offline Inputs',
-    modules: [
-      'data/sources/data_kualitas_udara_2.csv (Open Data Kota Cirebon)',
-      'V10.3 - V12.3 Historical Engineering Markdown Reports (13 files)',
-      'Author-maintained Markdown entries in src/content/work/ & src/content/codex/',
-    ],
-    outputContract: 'Raw UTF-8 bytes & SHA-256 source checksums (immutable inputs)',
-  },
-  {
-    step: 'LAYER 02',
-    name: 'Ingestion and ETL Scripts',
-    modules: [
-      'scripts/data/build-cirebon-dataset.mjs + scripts/data/csv-parser.mjs',
-      'scripts/data/sync-adr-collection.mjs (--check / --write)',
-      'data/cirebon-ingest-audit.json',
-    ],
-    outputContract: 'Normalized ADR copies (U+2014 -> -) & annual AQI JSON artifacts',
-  },
-  {
-    step: 'LAYER 03',
-    name: 'Validated JSON / Content Collections',
-    modules: [
-      'public/data/aqi/regions.json & public/data/aqi/cirebon-2021..2025.json',
-      'src/content.config.ts (Astro Content Layer glob collections: work, adr, codex)',
-      'src/pages/api/world-index.json.ts (Static build-time index endpoint)',
-    ],
-    outputContract: 'Schema-validated collections & static JSON payloads',
-  },
-  {
-    step: 'LAYER 04',
-    name: 'Pure Calculation / Worker / Validation Layer',
-    modules: [
-      'src/scripts/lab/core/aqi-calculator.js & validate-dataset.js',
-      'src/scripts/lab/shared/stats.js, csv-parser.js, csv-analysis.js & csv-worker.js',
-      'src/data/content-integrity.js, src/lib/codex-graph-builder.ts & world-os-core.ts',
-    ],
-    outputContract: 'Deterministic sub-indices, bounded graph nodes/edges, & worker messages',
-  },
-  {
-    step: 'LAYER 05',
-    name: 'Astro Routes / UI / Lifecycle Core',
-    modules: [
-      'src/scripts/core/page-lifecycle.js (bootPage) & motion-registry.js',
-      'src/components/layout/CommandPalette.astro & ReferenceDock.astro',
-      'Static HTML pages across 7 operational sectors',
-    ],
-    outputContract: 'Server-rendered HTML + single-owner client lifecycle & cleanup',
-  },
-];
+const initialNode = ATLAS_NODES[0];
 ---
 
 <BaseLayout
-  title="Progressive World Atlas · Farrel Islami Putra"
-  description="Peta arsitektur sistem berbasis data waktu-build: registri 7 sektor wilayah, metrik koleksi terverifikasi, status subsektor Data Lab, dan topologi aliran data dari sumber mentah ke antarmuka."
+  title="The Data Atlas Crypt · Knowledge Graph & Live Telemetry · Farrel Islami Putra"
+  description="The Data Atlas Crypt: Peta konstelasi 36 simpul pengetahuan interaktif, 52 sinapsis lintas 4 klaster keilmuan, dan Live Performance Telemetry HUD milik Farrel Islami Putra."
   pageKey="atlas"
 >
-  <section class="container atlas-page" aria-labelledby="atlas-page-heading">
-    <header class="atlas-hero">
-      <p class="atlas-kicker">THE LIVING ARCHIVE / PROGRESSIVE WORLD ATLAS</p>
-      <h1 class="atlas-title" id="atlas-page-heading">
-        System Topology, Territory Registry &amp; Build-Time Metrics
-      </h1>
-      <p class="atlas-lead">
-        Progressive World Atlas adalah peta dokumentasi arsitektur yang dihitung pada waktu build
-        dari koleksi konten, manifes provenance, dan berkas dataset aktual. Halaman ini bukan
-        dashboard telemetri real-time; setiap angka di bawah ini diturunkan secara deterministik
-        dari artefak yang terverifikasi di repositori pada saat kompilasi statis.
-      </p>
+  <div class="atlas-crypt-page" id="atlas-page-root">
+    <!-- ==================== 01 / HERO & LIVE PERFORMANCE TELEMETRY HUD ==================== -->
+    <header class="atlas-crypt-hero" aria-labelledby="atlas-page-heading">
+      <div class="atlas-hero-copy">
+        <p class="atlas-kicker">CRYPT-01 // THE DATA ATLAS CRYPT · KNOWLEDGE CONSTELLATION</p>
+        <h1 class="atlas-title" id="atlas-page-heading">
+          Peta Konstelasi <em>Pengetahuan</em> &amp; Telemetri Sistem.
+        </h1>
+        <p class="atlas-lead">
+          Selamat datang di <strong>The Data Atlas Crypt</strong>. Berbeda dengan dunia permainan virtual <em>Aethelgrad</em>, ruang ini adalah peta pengetahuan interaktif tempat <strong>{ATLAS_NODES.length} simpul keilmuan</strong> dan <strong>{ATLAS_EDGES.length} sinapsis teknis</strong> milik Farrel Islami Putra saling terhubung lintas Data Science, Software/AI, Sistem Kuantitatif, dan Logika Strategis.
+        </p>
+      </div>
+
+      <!-- Live Performance & System Telemetry HUD -->
+      <aside class="atlas-telemetry-hud" id="atlas-telemetry-hud" aria-label="Live Performance Telemetry HUD">
+        <div class="atlas-telemetry-header">
+          <span class="atlas-telemetry-dot" aria-hidden="true"></span>
+          <span class="atlas-telemetry-title">LIVE PERFORMANCE TELEMETRY HUD</span>
+          <span class="atlas-telemetry-badge" id="atlas-telemetry-status">OPTIMAL · 60Hz LOCK</span>
+        </div>
+        <div class="atlas-telemetry-grid">
+          <div class="atlas-telemetry-cell">
+            <span class="atlas-telemetry-label">FRAME RATE</span>
+            <strong class="atlas-telemetry-value" id="atlas-telemetry-fps">60 FPS</strong>
+          </div>
+          <div class="atlas-telemetry-cell">
+            <span class="atlas-telemetry-label">FRAME BUDGET</span>
+            <strong class="atlas-telemetry-value" id="atlas-telemetry-frametime">16.7 ms</strong>
+          </div>
+          <div class="atlas-telemetry-cell">
+            <span class="atlas-telemetry-label">JS HEAP MEMORY</span>
+            <strong class="atlas-telemetry-value" id="atlas-telemetry-heap">MEASURING...</strong>
+          </div>
+          <div class="atlas-telemetry-cell">
+            <span class="atlas-telemetry-label">ACTIVE DOM / GRAPH</span>
+            <strong class="atlas-telemetry-value" id="atlas-telemetry-graph">
+              {ATLAS_NODES.length} Nodes / {ATLAS_EDGES.length} Synapses
+            </strong>
+          </div>
+        </div>
+      </aside>
     </header>
 
-    <!-- Build-Time Computed Metrics -->
-    <div class="atlas-metrics-grid" aria-label="Metrik sistem hasil perhitungan waktu-build">
-      <div class="atlas-metric-card">
-        <span class="atlas-metric-label">STATIC HTML ROUTES</span>
-        <span class="atlas-metric-value">{staticPageRoutesCount}</span>
-        <span class="atlas-metric-sub">
-          {WORLD_TERRITORIES.length} TERRITORIES + {routeableWorkEntries.length + adrEntries.length + codexEntries.length} DETAILS
-        </span>
+    <!-- ==================== 02 / FILTER BAR & CLUSTER LEGEND ==================== -->
+    <section class="atlas-toolbar-section" aria-label="Filter klaster dan pencarian simpul pengetahuan">
+      <div class="atlas-cluster-pills" role="group" aria-label="Filter berdasarkan klaster keilmuan">
+        <button
+          type="button"
+          class="atlas-cluster-pill is-active"
+          data-atlas-cluster="ALL"
+          aria-pressed="true"
+        >
+          Semua Klaster ({ATLAS_NODES.length})
+        </button>
+        {ATLAS_CLUSTERS.map((cluster) => {
+          const count = ATLAS_NODES.filter((n) => n.cluster === cluster.id).length;
+          return (
+            <button
+              type="button"
+              class="atlas-cluster-pill"
+              data-atlas-cluster={cluster.id}
+              aria-pressed="false"
+              style={`--cluster-accent: ${cluster.color};`}
+            >
+              <span class="atlas-cluster-dot" style={`background:${cluster.color};`} aria-hidden="true"></span>
+              {cluster.code} · {cluster.label} ({count})
+            </button>
+          );
+        })}
       </div>
 
-      <div class="atlas-metric-card">
-        <span class="atlas-metric-label">WORK COLLECTION</span>
-        <span class="atlas-metric-value">
-          {routeableWorkEntries.length} ACTIVE / {reservedWorkEntries.length} RESERVED
-        </span>
-        <span class="atlas-metric-sub">NON-ROUTEABLE GUARDED</span>
-      </div>
-
-      <div class="atlas-metric-card">
-        <span class="atlas-metric-label">ENGINEERING RECORDS (ADR)</span>
-        <span class="atlas-metric-value">{adrEntries.length}</span>
-        <span class="atlas-metric-sub">V10.3 -> V12.3 · SHA-256 VERIFIED</span>
-      </div>
-
-      <div class="atlas-metric-card">
-        <span class="atlas-metric-label">GRAND CODEX (100-600)</span>
-        <span class="atlas-metric-value">{codexEntries.length} NOTES</span>
-        <span class="atlas-metric-sub">
-          {codexCountByDomain.map((d) => `${d.code}:${d.count}`).join(' · ')}
-        </span>
-      </div>
-
-      <div class="atlas-metric-card">
-        <span class="atlas-metric-label">KNOWLEDGE GRAPH</span>
-        <span class="atlas-metric-value">
-          {graph.nodes.length} NODES · {graph.edges.length} EDGES
-        </span>
-        <span class="atlas-metric-sub">
-          {graph.referenceOnlyNodes.length} REFERENCE-ONLY NODE
-        </span>
-      </div>
-
-      <div class="atlas-metric-card">
-        <span class="atlas-metric-label">AQI DATASET (CIREBON)</span>
-        <span class="atlas-metric-value">
-          {datasetYears.length} YEARS ({datasetYears[0]}-{datasetYears[datasetYears.length - 1]})
-        </span>
-        <span class="atlas-metric-sub">
-          {totalVerifiedStageRecords} STAGE RECORDS · {datasetStatusBadge}
-        </span>
-      </div>
-
-      <div class="atlas-metric-card">
-        <span class="atlas-metric-label">WORLD INDEX PAYLOAD</span>
-        <span class="atlas-metric-value">{worldIndexBytes.toLocaleString('id-ID')} B</span>
-        <span class="atlas-metric-sub">
-          {(worldIndexBytes / 1024).toFixed(2)} KiB · LAZY FETCH ON OPEN
-        </span>
-      </div>
-    </div>
-
-    <!-- 7 Sectors Territory Registry -->
-    <section class="atlas-section" aria-labelledby="atlas-sectors-heading">
-      <div class="atlas-section-header">
-        <h2 class="atlas-section-title" id="atlas-sectors-heading">
-          01 / Seven-Sector Territory Registry
-        </h2>
-        <p class="atlas-section-sub">
-          Status wilayah dibedakan secara tegas antara <code>OPERATIONAL</code> (rute dan fitur aktif),
-          <code>VERIFIED_DATASET</code> (dataset lulus validator dan provenance), serta
-          <code>RESERVED_BLUEPRINT</code> (rencana masa depan yang belum memiliki implementasi).
-        </p>
-      </div>
-
-      <div class="atlas-sector-grid">
-        {
-          SECTORS.map((sec) => (
-            <article class="atlas-sector-card">
-              <div>
-                <div class="atlas-sector-top">
-                  <span class="atlas-sector-code">SECTOR {sec.sector}</span>
-                  <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
-                    <span class={`atlas-status-badge atlas-status-badge--${sec.status}`}>
-                      {sec.status}
-                    </span>
-                    {sec.secondaryStatus && (
-                      <span class={`atlas-status-badge atlas-status-badge--${sec.secondaryStatus}`}>
-                        {sec.secondaryStatus}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                <h3 class="atlas-sector-name">{sec.name}</h3>
-                <p class="atlas-sector-desc">{sec.description}</p>
-              </div>
-
-              <div>
-                <p style="font-family: var(--mono); font-size: 0.72rem; color: var(--text-3); margin: 0 0 0.5rem;">
-                  {sec.metrics}
-                </p>
-                <div class="atlas-route-list">
-                  {sec.routes.map((r) => (
-                    <a class="atlas-route-pill" href={r}>
-                      {r}
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </article>
-          ))
-        }
+      <div class="atlas-search-controls">
+        <label class="sr-only" for="atlas-search-input">Cari simpul pengetahuan</label>
+        <input
+          id="atlas-search-input"
+          class="atlas-search-input"
+          type="search"
+          placeholder="Filter simpul (misal: ISPU, CSV, PBKDF2, SQL, Graph)..."
+          autocomplete="off"
+        />
+        <button type="button" id="atlas-reset-btn" class="atlas-reset-btn">
+          Reset Konstelasi
+        </button>
       </div>
     </section>
 
-    <!-- Data Lab Subsectors 3A, 3B, 3C -->
-    <section class="atlas-section" aria-labelledby="atlas-datalab-heading">
-      <div class="atlas-section-header">
-        <h2 class="atlas-section-title" id="atlas-datalab-heading">
-          02 / Data Lab Subsector Contract &amp; Operational Boundaries
-        </h2>
-        <p class="atlas-section-sub">
-          Rincian parameter sumber, batas kuota komputasi di browser, dan pembedaan modul aktif
-          terhadap cetak biru masa depan pada Sector 03.
+    <!-- ==================== 03 / INTERACTIVE FORCE-CONSTELLATION WORKBENCH ==================== -->
+    <section class="atlas-workbench" aria-label="Kanvas konstelasi pengetahuan dan panel inspeksi simpul">
+      <div class="atlas-canvas-stage">
+        <div class="atlas-canvas-topline">
+          <span>INTERACTIVE 2D SYNAPSE FIELD · DRAG OR CLICK ANY NODE</span>
+          <span>36 NODES · 52 SYNAPSES · 4 CLUSTERS</span>
+        </div>
+        <canvas
+          id="atlas-network-canvas"
+          class="atlas-network-canvas"
+          width="1000"
+          height="620"
+          aria-label="Graf konstelasi interaktif 36 simpul pengetahuan Farrel Islami Putra"
+        ></canvas>
+        <div class="atlas-canvas-caption">
+          <span>TIP: Klik simpul untuk melihat rumus/spesifikasi teknis dan daftar sinapsis yang terhubung.</span>
+          <span>REDUCED-MOTION SAFE</span>
+        </div>
+      </div>
+
+      <!-- Node Inspector Panel -->
+      <aside class="atlas-inspector-panel" id="atlas-inspector-panel" aria-live="polite">
+        <div class="atlas-insp-header">
+          <span class="atlas-insp-code" id="atlas-insp-code">{initialNode.code}</span>
+          <span class="atlas-insp-cluster" id="atlas-insp-cluster">{initialNode.cluster}</span>
+        </div>
+        <h2 class="atlas-insp-title" id="atlas-insp-title">{initialNode.title}</h2>
+        <p class="atlas-insp-status-row">
+          <span>STATUS EKSPLORASI:</span>
+          <strong id="atlas-insp-status">{initialNode.status}</strong>
         </p>
-      </div>
+        <p class="atlas-insp-summary" id="atlas-insp-summary">{initialNode.summary}</p>
 
-      <div class="atlas-subsector-grid">
-        <!-- Subsector 3A -->
-        <article class="atlas-subsector-card">
-          <div class="atlas-sector-top">
-            <span class="atlas-sector-code">SUBSECTOR 3A</span>
-            <span class={`atlas-status-badge atlas-status-badge--${datasetStatusBadge}`}>
-              OPERATIONAL · {datasetStatusBadge}
-            </span>
-          </div>
-          <h3 class="atlas-sector-name">Multi-Region AQI / ISPU Explorer</h3>
-          <p class="atlas-sector-desc">
-            Eksplorasi kualitas udara Kota Cirebon tahun 2021-2025 dari Open Data Kota Cirebon /
-            Dinas Lingkungan Hidup (DLH) dengan kalkulator sub-indeks PermenLHK P.14/2020.
-          </p>
-          <ul class="atlas-kv-list">
-            <li>
-              <strong>Cakupan Tahun &amp; Rekaman:</strong> <code>{datasetYears.join(', ')}</code> ({totalVerifiedStageRecords} rekaman observasi lintas {totalLocationsCount} lokasi pantau unik, 2 tahap per tahun).
-            </li>
-            <li>
-              <strong>Parameter Sumber vs Kalkulator:</strong> Sumber CSV Cirebon hanya menyediakan <code>SO2</code> dan <code>NO2</code>; kalkulator juga mendukung <code>PM2.5</code> untuk keperluan regulasi/fixture.
-            </li>
-            <li>
-              <strong>Reported vs Derived Values:</strong> Konsentrasi <code>so2_ugm3</code> dan <code>no2_ugm3</code> adalah <em>reported values</em> dari DLH, sedangkan sub-indeks P.14/2020 adalah <em>derived values</em>2-parameter (bukan ISPU resmi 7-parameter penuh).
-            </li>
-            <li>
-              <strong>Kontrak Basis Waktu:</strong> Tabel referensi P.14/2020 menggunakan basis <code>24h</code>, sementara observasi sumber adalah agregat 2 tahap per tahun (<code>allowBasisMismatch: true</code>, <code>basisMatched: false</code>).
-            </li>
-          </ul>
-        </article>
-
-        <!-- Subsector 3B -->
-        <article class="atlas-subsector-card">
-          <div class="atlas-sector-top">
-            <span class="atlas-sector-code">SUBSECTOR 3B</span>
-            <span class="atlas-status-badge atlas-status-badge--OPERATIONAL">
-              OPERATIONAL
-            </span>
-          </div>
-          <h3 class="atlas-sector-name">Browser CSV Explorer (Worker Isolated)</h3>
-          <p class="atlas-sector-desc">
-            Pemrosesan berkas CSV lokal di sisi klien menggunakan state machine RFC 4180 di dalam
-            dedicated Web Worker tanpa mengunggah data ke server eksternal.
-          </p>
-          <ul class="atlas-kv-list">
-            <li>
-              <strong>State Parser Aktual:</strong> <code>field-start</code>, <code>quoted</code>, <code>after-quote</code>, dan <code>unquoted</code>.
-            </li>
-            <li>
-              <strong>Batas Resource Keras (LIMITS):</strong> Maksimal ukuran berkas <code>{(LIMITS.MAX_FILE_BYTES / (1024 * 1024)).toFixed(0)} MiB</code>, <code>{LIMITS.MAX_COLUMNS}</code> kolom, <code>{LIMITS.MAX_RECORDS.toLocaleString('id-ID')}</code> baris data, dan <code>{LIMITS.MAX_CELLS.toLocaleString('id-ID')}</code> sel.
-            </li>
-            <li>
-              <strong>Kuota Visualisasi &amp; Pratinjau:</strong> Maksimal <code>{LIMITS.MAX_CHART_POINTS.toLocaleString('id-ID')}</code> titik chart (downsampling deterministik) dan <code>{LIMITS.PREVIEW_ROWS}</code> baris pratinjau; statistik tetap dihitung dari populasi penuh.
-            </li>
-            <li>
-              <strong>Batas Operasional:</strong> Menjaga responsivitas UI dan mencegah bocornya nilai sel mentah pada pesan error, namun tetap dibatasi oleh ketersediaan memori tab browser perangkat pengguna.
-            </li>
-          </ul>
-        </article>
-
-        <!-- Subsector 3C -->
-        <article class="atlas-subsector-card">
-          <div class="atlas-sector-top">
-            <span class="atlas-sector-code">SUBSECTOR 3C</span>
-            <span class="atlas-status-badge atlas-status-badge--RESERVED_BLUEPRINT">
-              RESERVED_BLUEPRINT
-            </span>
-          </div>
-          <h3 class="atlas-sector-name">Quantitative &amp; Market Signal Telemetry</h3>
-          <p class="atlas-sector-desc">
-            Rencana eksplorasi struktur data saham Indonesia berskala kecil (tercatat pada slot
-            <code>src/content/work/saham-indonesia.md</code> dan catatan Codex <code>301.1</code>).
-          </p>
-          <ul class="atlas-kv-list">
-            <li>
-              <strong>Status Implementasi:</strong> <code>RESERVED_BLUEPRINT</code> (belum ada pipeline <code>yfinance</code>, dataset pasar, maupun halaman rute publik).
-            </li>
-            <li>
-              <strong>Kebijakan Routeability:</strong> Ditampilkan sebagai simpul <em>reference-only</em> pada graf pengetahuan dan tidak pernah menghasilkan tautan mati.
-            </li>
-            <li>
-              <strong>Syarat Promosi ke Operational:</strong> Tersedianya skrip ETL offline ber-checksum SHA-256, dataset JSON tervalidasi, dan pemisahan tegas antara statistik deskriptif historis dan klaim prediktif.
-            </li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <!-- System Topology Diagram (SVG + Accessible Table) -->
-    <section class="atlas-section" aria-labelledby="atlas-topology-heading">
-      <div class="atlas-section-header">
-        <h2 class="atlas-section-title" id="atlas-topology-heading">
-          03 / End-to-End System Topology (Offline Sources to Client Lifecycle)
-        </h2>
-        <p class="atlas-section-sub">
-          Diagram statis lima lapis dari berkas sumber mentah hingga komponen antarmuka Astro.
-          Tabel di bawah diagram menyajikan urutan simpul dan relasi aliran data yang setara bagi
-          pembaca layar dan navigasi keyboard.
-        </p>
-      </div>
-
-      <div class="atlas-topology-box">
-        <div class="atlas-topology-svg-wrap">
-          <svg
-            class="atlas-topology-svg"
-            viewBox="0 0 860 450"
-            role="img"
-            aria-labelledby="atlas-svg-title atlas-svg-desc"
-          >
-            <title id="atlas-svg-title">
-              Topologi lima lapis arsitektur The Living Archive V13.0
-            </title>
-            <desc id="atlas-svg-desc">
-              Aliran data satu arah dimulai dari Layer 01 (Raw Sources / Offline Inputs), menuju
-              Layer 02 (Ingestion and ETL Scripts), Layer 03 (Validated JSON / Content Collections),
-              Layer 04 (Pure Calculation / Worker / Validation Layer), hingga Layer 05 (Astro Routes / UI / Lifecycle Core).
-            </desc>
-
-            <defs>
-              <marker
-                id="atlas-arrow"
-                viewBox="0 0 10 10"
-                refX="8"
-                refY="5"
-                markerWidth="6"
-                markerHeight="6"
-                orient="auto-start-reverse"
-              >
-                <path d="M 0 1 L 8 5 L 0 9 z" fill="#1e40af" />
-              </marker>
-            </defs>
-
-            <!-- Layer 1 -->
-            <rect x="40" y="18" width="780" height="62" rx="8" fill="#ffffff" stroke="#1e40af" stroke-width="1.5" />
-            <text x="60" y="42" font-family="monospace" font-size="11" font-weight="bold" fill="#1e40af">
-              LAYER 01 · RAW SOURCES / OFFLINE INPUTS
-            </text>
-            <text x="60" y="62" font-family="sans-serif" font-size="12" fill="#0f172a">
-              data/sources/data_kualitas_udara_2.csv · V10.3-V12.3 Historical Reports · Author Markdown
-            </text>
-
-            <line x1="430" y1="80" x2="430" y2="104" stroke="#1e40af" stroke-width="2" marker-end="url(#atlas-arrow)" />
-
-            <!-- Layer 2 -->
-            <rect x="40" y="106" width="780" height="62" rx="8" fill="#ffffff" stroke="#1e40af" stroke-width="1.5" />
-            <text x="60" y="130" font-family="monospace" font-size="11" font-weight="bold" fill="#1e40af">
-              LAYER 02 · INGESTION AND ETL SCRIPTS
-            </text>
-            <text x="60" y="150" font-family="sans-serif" font-size="12" fill="#0f172a">
-              scripts/data/build-cirebon-dataset.mjs · scripts/data/sync-adr-collection.mjs · data/cirebon-ingest-audit.json
-            </text>
-
-            <line x1="430" y1="168" x2="430" y2="192" stroke="#1e40af" stroke-width="2" marker-end="url(#atlas-arrow)" />
-
-            <!-- Layer 3 -->
-            <rect x="40" y="194" width="780" height="62" rx="8" fill="#ffffff" stroke="#1e40af" stroke-width="1.5" />
-            <text x="60" y="218" font-family="monospace" font-size="11" font-weight="bold" fill="#1e40af">
-              LAYER 03 · VALIDATED JSON / CONTENT COLLECTIONS
-            </text>
-            <text x="60" y="238" font-family="sans-serif" font-size="12" fill="#0f172a">
-              public/data/aqi/*.json · src/content/&#123;work,adr,codex&#125; · src/content.config.ts · /api/world-index.json
-            </text>
-
-            <line x1="430" y1="256" x2="430" y2="280" stroke="#1e40af" stroke-width="2" marker-end="url(#atlas-arrow)" />
-
-            <!-- Layer 4 -->
-            <rect x="40" y="282" width="780" height="62" rx="8" fill="#ffffff" stroke="#1e40af" stroke-width="1.5" />
-            <text x="60" y="306" font-family="monospace" font-size="11" font-weight="bold" fill="#1e40af">
-              LAYER 04 · PURE CALCULATION / WORKER / VALIDATION LAYER
-            </text>
-            <text x="60" y="326" font-family="sans-serif" font-size="12" fill="#0f172a">
-              aqi-calculator.js · validate-dataset.js · stats.js · csv-parser.js · csv-worker.js · content-integrity.js · codex-graph-builder.ts
-            </text>
-
-            <line x1="430" y1="344" x2="430" y2="368" stroke="#1e40af" stroke-width="2" marker-end="url(#atlas-arrow)" />
-
-            <!-- Layer 5 -->
-            <rect x="40" y="370" width="780" height="62" rx="8" fill="#ffffff" stroke="#1e40af" stroke-width="1.5" />
-            <text x="60" y="394" font-family="monospace" font-size="11" font-weight="bold" fill="#1e40af">
-              LAYER 05 · ASTRO ROUTES / UI / LIFECYCLE CORE
-            </text>
-            <text x="60" y="414" font-family="sans-serif" font-size="12" fill="#0f172a">
-              src/pages/** · bootPage() &amp; motionRegistry · CommandPalette (Ctrl+K) · ReferenceDock (Alt+Enter)
-            </text>
-          </svg>
+        <div class="atlas-insp-tech-box">
+          <span class="atlas-insp-box-label">SPESIFIKASI / CATATAN TEKNIS</span>
+          <code id="atlas-insp-tech">{initialNode.technicalNote}</code>
         </div>
 
-        <!-- Textual Alternative Table with identical sequence and verified edges -->
-        <table
-          class="atlas-topology-table"
-          aria-label="Tabel alternatif tekstual topologi sistem lima lapis"
+        <a
+          id="atlas-insp-route"
+          class="atlas-insp-route-btn"
+          href={initialNode.relatedRoute || '/lab'}
         >
-          <thead>
-            <tr>
-              <th>Layer</th>
-              <th>Architectural Stage</th>
-              <th>Verified Repository Modules</th>
-              <th>Downstream Contract / Edge Output</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              TOPOLOGY_LAYERS.map((layer) => (
-                <tr>
-                  <td><strong>{layer.step}</strong></td>
-                  <td>{layer.name}</td>
-                  <td>
-                    <ul style="margin: 0; padding-left: 1.1rem;">
-                      {layer.modules.map((m) => (
-                        <li><code>{m}</code></li>
-                      ))}
-                    </ul>
-                  </td>
-                  <td>{layer.outputContract}</td>
-                </tr>
-              ))
-            }
-          </tbody>
-        </table>
+          {initialNode.relatedLabel || 'Buka Halaman Terkait'} →
+        </a>
+
+        <div class="atlas-insp-synapses-wrap">
+          <p class="atlas-insp-box-label">SINAPSIS TERHUBUNG (KLIK UNTUK LOMPAT)</p>
+          <ul class="atlas-insp-synapses" id="atlas-insp-synapses"></ul>
+        </div>
+      </aside>
+    </section>
+
+    <!-- ==================== 04 / ACCESSIBLE 4-CLUSTER DIRECTORY ==================== -->
+    <section class="atlas-directory-section" aria-labelledby="atlas-directory-heading">
+      <div class="atlas-section-head">
+        <p class="atlas-kicker">02 // COMPLETE KNOWLEDGE LEDGER · ACCESSIBLE NODE INDEX</p>
+        <h2 class="atlas-section-title" id="atlas-directory-heading">
+          Direktori Lengkap 36 Simpul Pengetahuan
+        </h2>
+        <p class="atlas-section-desc">
+          Seluruh simpul konstelasi dapat dijelajahi menggunakan papan ketik atau pembaca layar melalui indeks terstruktur di bawah ini.
+        </p>
+      </div>
+
+      <div class="atlas-cluster-overview-grid">
+        {ATLAS_CLUSTERS.map((cluster) => (
+          <article class="atlas-cluster-summary-card" style={`--cluster-accent: ${cluster.color};`}>
+            <div class="atlas-cluster-card-top">
+              <span class="atlas-cluster-code">{cluster.code}</span>
+              <span class="atlas-cluster-dot" style={`background:${cluster.color};`} aria-hidden="true"></span>
+            </div>
+            <h3>{cluster.label}</h3>
+            <p>{cluster.description}</p>
+          </article>
+        ))}
+      </div>
+
+      <div class="atlas-node-directory-grid" id="atlas-node-list">
+        {ATLAS_NODES.map((node, idx) => (
+          <button
+            type="button"
+            class:list={['atlas-node-card', { 'is-selected': idx === 0 }]}
+            data-atlas-node-id={node.id}
+            aria-pressed={idx === 0 ? 'true' : 'false'}
+          >
+            <div class="atlas-node-card-top">
+              <span class="atlas-node-card-code">{node.code}</span>
+              <span class="atlas-node-card-status">{node.status}</span>
+            </div>
+            <strong class="atlas-node-card-title">{node.title}</strong>
+            <span class="atlas-node-card-note">{node.technicalNote}</span>
+          </button>
+        ))}
       </div>
     </section>
-  </section>
+
+    <!-- ==================== 05 / PORTAL BRIDGE TO AETHELGRAD ==================== -->
+    <section class="atlas-portal-banner" aria-labelledby="atlas-portal-heading">
+      <div class="atlas-portal-copy">
+        <p class="atlas-kicker">BRANCH GATEWAY // ISOLATED VR RPG UNIVERSE</p>
+        <h2 class="atlas-portal-title" id="atlas-portal-heading">
+          Ingin Menjelajahi Cabang Dunia Virtual <em>Aethelgrad // The Infinite Spire</em>?
+        </h2>
+        <p class="atlas-portal-desc">
+          Masuki dunia fantasi siber-kristal mandiri dengan 24 Hero Pixel SVG 7-Layer, 50 Equipment yang mengubah wujud karakter secara real-time, Grimoire Koleksi, Code-Spell Sanctum, dan Spire Colosseum.
+        </p>
+      </div>
+      <div class="atlas-portal-actions">
+        <button
+          type="button"
+          class="atlas-portal-dive-btn portal-dive-trigger"
+          data-portal-dive="/aethelgrad"
+        >
+          DIVE INTO AETHELGRAD ✦
+        </button>
+        <a href="/lab" class="atlas-portal-secondary-btn">
+          Kembali ke Data Lab (/lab) →
+        </a>
+      </div>
+    </section>
+  </div>
 </BaseLayout>
 
 <script>
   import '../../scripts/global.js';
+  import { initDataAtlasCrypt } from '../../scripts/atlas/data-atlas-crypt.ts';
+
+  initDataAtlasCrypt();
+  document.addEventListener('astro:page-load', () => {
+    initDataAtlasCrypt();
+  });
 </script>

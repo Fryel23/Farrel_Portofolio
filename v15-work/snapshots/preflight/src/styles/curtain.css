@@ -1,0 +1,216 @@
+/* ==========================================================================
+   CURTAIN.CSS · V11.0 Curtain Pattern
+   Lapisan dekoratif Opening di atas komposisi Hero. Kontrak mutlak:
+   1. Default HIDDEN (display:none) - aktivasi hanya via .is-active yang
+      dipasang controller setelah setup sukses. JS mati/gagal -> Curtain
+      tidak pernah tampil, Hero langsung tersedia (spek §8.1-8.2).
+   2. pointer-events:none pada seluruh lapisan - klik/fokus menembus ke
+      konten di belakang. Skip adalah elemen TERPISAH dengan
+      pointer-events:auto (spek §8.5).
+   3. position:fixed tidak mengubah flow layout; tidak ada margin/dimensi
+      yang menggeser Hero -> CLS 0 dari Curtain (spek §17.4).
+   4. Z-index 80: di atas konten halaman (<=40), DI BAWAH companion (90),
+      header (95), toast (120), PageTransitionOverlay (9998) - hasil audit
+      stacking (spek §8.4). Tidak ada 9999.
+   5. Prefix v11- untuk semua selector: tanpa kebocoran ke sistem lama
+      (spek §3.9 + §21.2).
+   ========================================================================== */
+
+.v11-curtain {
+  display: none;
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 80;
+  /* Inset frame di-set live oleh controller mengikuti header + hero;
+     fallback ini aman untuk komposisi standar. */
+  --v11-frame-top: 96px;
+  --v11-frame-bottom: 24px;
+  --v11-frame-side: 24px;
+}
+
+/* Aktivasi eksplisit oleh controller saja. */
+.v11-curtain.is-active { display: block; }
+
+/* Wrapper circular wipe: clip-path circle dianimasikan controller saat
+   exit; context.revert() menghapus inline clip-path setelah selesai
+   (spek §8.6 - tidak ada clip-path yang tertinggal). */
+.v11-clip {
+  position: absolute;
+  inset: 0;
+  clip-path: circle(150% at 50% 50%);
+}
+
+/* === ARCHIVE FRAME ===================================================== */
+.v11-frame {
+  position: absolute;
+  top: var(--v11-frame-top);
+  bottom: var(--v11-frame-bottom);
+  left: var(--v11-frame-side);
+  right: var(--v11-frame-side);
+}
+
+.v11-bracket {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--border-strong);
+  opacity: 0; /* dianimasikan controller */
+}
+.v11-bracket--tl { top: 0; left: 0; border-right: 0; border-bottom: 0; }
+.v11-bracket--tr { top: 0; right: 0; border-left: 0; border-bottom: 0; }
+.v11-bracket--bl { bottom: 0; left: 0; border-right: 0; border-top: 0; }
+.v11-bracket--br { bottom: 0; right: 0; border-left: 0; border-top: 0; }
+
+.v11-ruler {
+  position: absolute;
+  background: var(--border-strong);
+  opacity: 0;
+}
+.v11-ruler--v {
+  left: 24px;
+  top: 56px;
+  bottom: 56px;
+  width: 1px;
+  transform: scaleY(0);
+  transform-origin: top;
+}
+.v11-ruler--h {
+  top: 8px;
+  left: 56px;
+  right: 56px;
+  height: 1px;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.v11-corner-label {
+  position: absolute;
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.16em;
+  color: var(--text-3);
+  opacity: 0;
+  white-space: nowrap;
+}
+.v11-corner-label--tl { top: 6px; left: 32px; }
+.v11-corner-label--br { bottom: 6px; right: 32px; }
+
+.v11-mini-counter {
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-2);
+  margin-left: 8px;
+}
+
+/* === CENTER RITUAL (desktop) =========================================== */
+/* Diposisikan di zona kosong komposisi hero (antara kolom copy dan atlas):
+   bukan di atas headline, deskripsi, CTA, atau search (spek §11.5). */
+.v11-ritual {
+  position: absolute;
+  left: 47%;
+  top: 54%;
+  width: 116px;
+  height: 116px;
+  margin: -58px 0 0 -58px;
+  opacity: 0;
+}
+.v11-ring { width: 100%; height: 100%; }
+.v11-ring-bg { stroke: var(--border-strong); stroke-width: 2; fill: none; }
+.v11-ring-fill {
+  stroke: var(--blue);
+  stroke-width: 2;
+  fill: none;
+  stroke-dasharray: 289;
+  stroke-dashoffset: 289;
+  transform: rotate(-90deg);
+  transform-origin: center;
+}
+.v11-counter {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--mono);
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.v11-status {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 14px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+/* === TICKER (desktop) ================================================== */
+.v11-ticker {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 10px;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.16em;
+  color: var(--text-3);
+  opacity: 0;
+}
+.v11-ticker-line { display: inline-block; }
+
+/* === SKIP BUTTON (satu-satunya elemen interaktif Opening) ============== */
+.v11-skip-btn {
+  position: fixed;
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 80;
+  pointer-events: auto;
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 12px 18px;
+  min-height: 44px; /* target sentuh layak (spek §7.4 + §16.5) */
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--text-2);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.3s var(--ease), transform 0.3s var(--ease),
+              border-color 0.3s var(--ease), color 0.3s var(--ease);
+}
+.v11-skip-btn.is-visible { opacity: 1; transform: translateY(0); }
+.v11-skip-btn:hover { border-color: var(--blue); color: var(--blue); }
+.v11-skip-btn:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+/* hidden attribute SELALU menang: Skip tidak boleh tampil sebelum
+   initialization berhasil (spek §8.1). */
+.v11-skip-btn[hidden] { display: none !important; }
+
+/* === RESPONSIVE ========================================================
+   Mobile: copy hero memenuhi viewport, sehingga ritual ring & ticker
+   fixed akan menutupi teks (spek §11.5 melarang dekorasi di atas teks).
+   Komposisi mobile: bracket + ruler + corner label + counter mini
+   (di TL label); ring/ticker hanya desktop. */
+@media (max-width: 980px) {
+  .v11-curtain { --v11-frame-side: 16px; }
+  .v11-bracket { width: 18px; height: 18px; }
+  .v11-ruler--v { left: 12px; top: 44px; bottom: 44px; }
+  .v11-corner-label--tl { left: 22px; }
+  .v11-corner-label--br { display: none; }
+  .v11-ritual, .v11-ticker { display: none; }
+}
+
+/* === REDUCED MOTION ====================================================
+   CSS fallback: Curtain & Skip tidak pernah tampil. Controller juga
+   memeriksa matchMedia sebelum aktivasi - CSS ini jaring pengaman
+   kedua, bukan satu-satunya mekanisme (spek §8.7 + §15.7). */
+@media (prefers-reduced-motion: reduce) {
+  .v11-curtain { display: none !important; }
+  .v11-skip-btn { display: none !important; }
+}

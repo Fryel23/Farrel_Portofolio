@@ -1,0 +1,66 @@
+---
+/* V11.0 Curtain Pattern (FASE 4): komponen dekoratif Opening baru.
+   Curtain BUKAN gerbang halaman - ia adalah framing sinematik yang
+   menjadi bagian komposisi Hero. Kontrak arsitektur:
+   - Root #v11-curtain aria-hidden murni dekoratif: tidak ada link,
+     input, button, atau elemen fokusable di dalamnya.
+   - Default CSS display:none (curtain.css); aktivasi hanya lewat class
+     .is-active yang dipasang curtain-controller.js SETELAH setup sukses.
+     JavaScript mati / gagal -> Curtain tidak pernah tampil, Hero tetap
+     tersedia (progressive enhancement, spek §8.2).
+   - Tombol Skip sengaja DI LUAR root aria-hidden agar tetap terbaca
+     screen reader dan menerima pointer interaction (satu-satunya bagian
+     Opening yang interaktif, spek §7.3-7.4).
+   - Tidak ada grain/vignette duplikat: sitewide .grain-overlay sudah
+     ada di BaseLayout; lapisan ganda hanya menambah paint cost (spek
+     §7.2 "jangan ciptakan dekorasi tanpa fungsi visual" + §11.6). */
+---
+
+<div class="v11-curtain" id="v11-curtain" aria-hidden="true">
+  <!-- Wrapper clip: satu-satunya elemen yang menerima clip-path circle
+       saat circular wipe exit. Tidak pernah diterapkan ke body/html/hero
+       (spek §8.6). -->
+  <div class="v11-clip">
+
+    <!-- Archive frame: bracket sudut, garis ukur, label meta. Inset frame
+         di-set controller (CSS var --v11-frame-top/bottom) mengikuti
+         header + batas hero aktual agar framing tepat dan tidak
+         menutupi konten. -->
+    <div class="v11-frame">
+      <div class="v11-bracket v11-bracket--tl"></div>
+      <div class="v11-bracket v11-bracket--tr"></div>
+      <div class="v11-bracket v11-bracket--bl"></div>
+      <div class="v11-bracket v11-bracket--br"></div>
+      <div class="v11-ruler v11-ruler--v"></div>
+      <div class="v11-ruler v11-ruler--h"></div>
+      <span class="v11-corner-label v11-corner-label--tl">
+        FIP / ARCHIVE / VOL.01
+        <!-- Counter mini untuk komposisi mobile (ring penuh hanya desktop):
+             diperbarui controller bersama counter ring, teks statis di sini. -->
+        <b class="v11-mini-counter">000</b>
+      </span>
+      <span class="v11-corner-label v11-corner-label--br">-6.7322 / 108.5525</span>
+
+      <!-- Center ritual (desktop): ring + counter + status. Diposisikan di
+           zona kosong komposisi hero (bukan di atas headline/CTA/search,
+           spek §11.5). -->
+      <div class="v11-ritual">
+        <svg class="v11-ring" viewBox="0 0 100 100" focusable="false">
+          <circle class="v11-ring-bg" cx="50" cy="50" r="46"></circle>
+          <circle class="v11-ring-fill" cx="50" cy="50" r="46"></circle>
+        </svg>
+        <span class="v11-counter">000</span>
+        <span class="v11-status">INITIALIZING...</span>
+      </div>
+
+      <!-- Metadata ticker (desktop): berganti teks via timeline controller
+           (tanpa setInterval), berhenti saat Curtain selesai. -->
+      <div class="v11-ticker"><span class="v11-ticker-line">&gt; ARCHIVE INITIALIZING / 001</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Skip: native button, hidden default; controller yang menampilkannya
+     hanya ketika Curtain benar-benar aktif. Di luar root aria-hidden. -->
+<button class="v11-skip-btn" id="v11-skip" type="button" hidden
+        aria-label="Skip opening animation">SKIP &gt;&gt;</button>
