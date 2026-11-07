@@ -1,16 +1,3 @@
-{/* V10.0 FASE 2: Archive Wipe overlay untuk transisi halaman.
-  Struktur persis seperti spesifikasi PROMPT_V10.0:
-  - .pt-panel  -> panel warna --bg yang menutup layar (translateY 100% -> 0 -> -100%).
-  - .pt-accent -> garis 1px var(--blue) yang menggambar dirinya (scaleX 0 -> 1 -> 0).
-  - .pt-label  -> label mono "TRANSFERRING / 01".
-  transition:persist WAJIB dan DIBERI NAMA EKSPLISIT: Astro
-  meng-generate id persist posisional (mis. astro-xxx-2/-3) yang
-  BERBEDA antar halaman bila jumlah elemen transition:name berbeda -
-  pasangan tak cocok membuat node ikut ter-swap (state overlay hilang
-  di tengah transisi). Nama eksplisit menjamin id identik di semua
-  halaman sehingga node benar-benar persisten. aria-hidden +
-  pointer-events none: overlay murni dekoratif dan tidak pernah
-  menghalangi interaksi. */}
 <div class="page-transition" id="page-transition" transition:persist="page-transition-overlay" aria-hidden="true">
   <div class="pt-panel"></div>
   <div class="pt-accent"></div>

@@ -19,11 +19,8 @@
 'use strict';
 
 /**
- * content.js: sumber data statis global portofolio (migrasi Astro V7.0).
- * Pengganti portfolio-data.js: diimpor sebagai modul ES6 oleh skrip
- * src/scripts/*.js. Isi data identik dengan V6.7; hanya path aset
- * (menjadi /assets/...) dan tautan antar halaman (#work -> /work)
- * yang menyesuaikan arsitektur Hub-and-Spoke.
+ * content.js: sumber data statis global portofolio.
+ * Diimpor sebagai modul ES6 oleh skrip src/scripts/*.js.
  */
 export const DATA = {
   /* ------------------------------------------------------------------ */
@@ -160,7 +157,7 @@ export const DATA = {
     aside:
       'Satu studi kasus utama kualitas udara Kota Cirebon (2021–2025) yang dilengkapi penjelajah data interaktif, serta dua cetak biru riset berikutnya yang dicatat secara transparan.',
     countLabel: 'PROJECTS',
-    // Hero search is a section navigator (V5.3); the gallery empty state
+    // Hero search is a section navigator; the gallery empty state
     // can now only be reached through the category filters.
     emptyMessage: 'Tidak ada proyek yang cocok dengan filter ini. Slot rencana riset tampil pada tampilan All work.',
     footerLeft: 'LANJUTKAN EKSPLORASI',
@@ -170,7 +167,7 @@ export const DATA = {
   filters: ['All', 'Data & Research'],
 
   /* ------------------------------------------------------------------ */
-  /* V5.3: Global Archive Navigator (hero search)                        */
+  /* Global Archive Navigator (hero search)                              */
   /* ------------------------------------------------------------------ */
   archiveSearch: {
     maxQueryLength: 80,
@@ -195,7 +192,7 @@ export const DATA = {
       { targetId: 'profiles', label: 'Profil Sosial & Dokumentasi', aliases: ['instagram', 'linkedin', 'social', 'social media', 'profiles', 'google drive', 'documentation', 'dokumentasi'] },
       { targetId: 'contact', label: 'Kontak & Email Resmi', aliases: ['email', 'gmail', 'contact', 'contacts', 'kontak', 'reach me', 'say hello', 'hubungi'] },
       { targetId: 'closing', label: 'Penutup & Moto Pribadi', aliases: ['footer', 'motto', 'back to top', 'closing'] },
-      { targetId: 'aethelgrad', label: 'Dunia Virtual RPG · Aethelgrad // The Infinite Spire', aliases: ['aethelgrad', 'spire', 'gacha', 'colosseum', 'sanctum', 'rpg', 'world', 'dive'] },
+      { targetId: 'aethelgrad', label: 'Masuk Dunia: Aethelgrad', aliases: ['aethelgrad', 'outpost', 'gacha', 'barracks', 'grimoire', 'trials', 'arena', 'rpg', 'world', 'dive'] },
       { targetId: 'atlas', label: 'The Data Atlas Crypt & Knowledge Graph', aliases: ['atlas', 'data atlas', 'crypt', 'world atlas', 'topology', 'knowledge graph', 'graph', 'telemetry', 'map'] }
     ],
     /* One keyword, several honest destinations. Keep each entry short. */
@@ -231,11 +228,11 @@ export const DATA = {
     }
   ],
 
-  /* Reserved slots: visually designed blueprint rows, NOT finished projects. */
+  /* Reserved slots: visually designed research rows, NOT finished projects. */
   comingSoon: [
     {
       code: 'RES-02',
-      kicker: 'BLUEPRINT / RESERVED SLOT 02',
+      kicker: 'RESEARCH AGENDA / RESERVED SLOT 02',
       category: 'Data & Software',
       status: 'RESERVED',
       title: 'Ideas in Progress · Penyaring Berita & Dampak Ekonomi',
@@ -243,7 +240,7 @@ export const DATA = {
     },
     {
       code: 'RES-03',
-      kicker: 'BLUEPRINT / RESERVED SLOT 03',
+      kicker: 'RESEARCH AGENDA / RESERVED SLOT 03',
       category: 'Quantitative & Markets',
       status: 'RESERVED',
       title: 'Eksplorasi Data Saham Indonesia Berskala Kecil',
@@ -308,7 +305,7 @@ export const DATA = {
   /* ------------------------------------------------------------------ */
   journey: {
     heading: ['Belajar lewat', 'membangun.'],
-    /* V6.6 Fase 7.2: `detail` powers the accordion body. One honest extra
+    /* `detail` powers the accordion body. One honest extra
        paragraph per phase, shown only when the visitor opens the item. */
     items: [
       {
@@ -355,7 +352,7 @@ export const DATA = {
     heading: ['Teknik', 'Informatika.'],
     body:
       'Mahasiswa S1 Teknik Informatika di Universitas Komputer Indonesia (UNIKOM), mulai tahun 2026. Mata kuliah yang sedang dijalani meliputi Logika Komputasional, Pemrograman Web, Kalkulus, Algoritma dan Struktur Data, Sistem Cerdas Kolaboratif, serta Pola Pikir Komputasional. Fokus utama saat ini adalah memperkuat pemahaman Algoritma dan Struktur Data.',
-    /* V6.6 Fase 7.1: joined with · by script.js into the coursework line. */
+    /* Joined with · by script.js into the coursework line. */
     coursework: ['Algoritma & Struktur Data', 'Basis Data', 'Matematika Diskrit'],
     foot: 'MULAI TAHUN 2026 · UNIKOM'
   },
@@ -450,7 +447,7 @@ export const DATA = {
   },
 
   /* ------------------------------------------------------------------ */
-  /* V4: Game Deck (section 03 / #games)                                 */
+  /* Game Deck (section 03 / #games)                                     */
   /* ------------------------------------------------------------------ */
   /* SELF-REPORTED CASUAL METRICS only. Every stat is a joke-adjacent,
      honest self-description, never competitive data. Values may be a
@@ -654,7 +651,7 @@ export const DATA = {
   },
 
   /* ------------------------------------------------------------------ */
-  /* V4: Off-screen (section ARC-05 / #offscreen)                        */
+  /* Off-screen (section ARC-05 / #offscreen)                            */
   /* ------------------------------------------------------------------ */
   offscreen: {
     kicker: 'ARC-05 · OFF-SCREEN & COMPANION',
@@ -681,7 +678,7 @@ export const DATA = {
   },
 
   /* ------------------------------------------------------------------ */
-  /* V4: GitHub Activity (section ARC-02 / #github)                      */
+  /* GitHub Activity (section ARC-02 / #github)                          */
   /* ------------------------------------------------------------------ */
   /* Live public REST data with a one hour cache. No contribution
      streaks, no total commit claims: the REST API cannot count those
@@ -689,14 +686,14 @@ export const DATA = {
      falls back to the last cache or an honest message. */
   githubActivity: {
     kicker: 'ARC-02 · GITHUB TELEMETRY',
-    heading: ['Jejak komit,', 'bukan sekadar klaim.'],
+    heading: ['Jejak karya,', 'bukan sekadar klaim.'],
     headingAccentWord: 'klaim.',
     intro: 'Aktivitas publik dari profil GitHub resmi (@Fryel23 & @Fryel32), diambil langsung dari GitHub REST API dan di-cache selama satu jam.',
     username: 'Fryel23',
     secondaryUsername: 'Fryel32',
     profileUrl: 'https://github.com/Fryel23',
     secondaryProfileUrl: 'https://github.com/Fryel32',
-    cacheKey: 'fryel23-github-stats-v15',
+    cacheKey: 'fryel23-github-stats',
     cacheTTL: 3600000,
     jsRequiredMessage: 'STATISTIK GITHUB MEMERLUKAN JAVASCRIPT.',
     fallbackMessage: 'STATISTIK GITHUB SEDANG TIDAK DAPAT DIMUAT SAAT INI.',
@@ -710,7 +707,7 @@ export const DATA = {
   },
 
   /* ------------------------------------------------------------------ */
-  /* V4: Companion page pet (section ARC-05B / #companion)               */
+  /* Companion page pet (section ARC-05B / #companion)                   */
   /* ------------------------------------------------------------------ */
   /* The pet itself is the pixel-art SVG from the Off-screen section,
      cloned into a fixed corner button. Summon preference is a UI
@@ -736,7 +733,7 @@ export const DATA = {
   },
 
   /* ------------------------------------------------------------------ */
-  /* V5.2: decoration switchboard (§3.2, §6.1)                           */
+  /* Decoration switchboard (§3.2, §6.1)                                 */
   /* ------------------------------------------------------------------ */
   decorations: {
     hero: {
@@ -755,7 +752,7 @@ export const DATA = {
     },
     gallery: {
       gridLabel: '02 / ARCHIVE',
-      rulerLabels: ['01 / FLAGSHIP', '02 / BLUEPRINT', '03 / NEXT'],
+      rulerLabels: ['01 / FLAGSHIP', '02 / RESERVED', '03 / NEXT'],
       blueprintGrid: true,
       cornerBrackets: true,
       measurementTicks: true,

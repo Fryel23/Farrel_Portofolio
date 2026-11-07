@@ -1,9 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/home/Hero.astro';
-/* V11.0 FASE 4+7: Curtain Pattern menggantikan Opening V9.1 sebagai
-   dekorasi sinematik homepage. Markup + stylesheet hanya dimuat di
-   halaman ini (bukan BaseLayout) sesuai spek §7.5. */
 import Curtain from '../components/home/Curtain.astro';
 import ProjectCard from '../components/work/ProjectCard.astro';
 import ReservedCard from '../components/work/ReservedCard.astro';
@@ -13,13 +10,8 @@ import '../styles/work.css';
 import '../styles/about.css';
 import '../styles/connect.css';
 import '../styles/curtain.css';
-/* V11.1: styling khusus Glass Vessel (fallback SVG + canvas WebGL).
-   Hanya di homepage - tidak lewat BaseLayout (spek §8.1). */
 import '../styles/hero-webgl.css';
 
-/* Fase 4.1: homepage memuat 3 entri terbaru dari Content Collections.
-   Entri berstatus RESERVED dirender sebagai kartu reserved (non-click,
-   jujur) supaya tampilan identik dengan galeri V6.7. */
 const entries = (await getCollection('work')).sort((a, b) =>
   (a.data.status === 'RESERVED' ? 1 : 0) - (b.data.status === 'RESERVED' ? 1 : 0)
 );
@@ -31,9 +23,6 @@ const reserved = entries.filter((e) => e.data.status === 'RESERVED');
   pageKey="home"
   description="Portofolio Farrel Islami Putra, mahasiswa Informatika UNIKOM: proyek data yang sedang berjalan, ringkasan profil, dan kanal kontak. Semua ditulis apa adanya sebagai catatan proses belajar."
 >
-  <!-- V11.0: kedua inline harness eksperimen (?opening-variant dan
-       ?v105) DIHAPUS bersama arsitektur Opening lama. Tidak ada
-       temporary experiment harness tersisa (spek §25). -->
   <Curtain />
 
   <Hero />
@@ -138,15 +127,15 @@ const reserved = entries.filter((e) => e.data.status === 'RESERVED');
 
       <article class="explore-bridge-card explore-bridge-card--dark" id="home-portal-branch-card" aria-labelledby="bridge-archive-title">
         <div class="explore-bridge-meta">
-          <span class="explore-bridge-kicker">03B / THE BRANCH PORTAL · GERBANG DUNIA MANDIRI</span>
-          <span class="explore-bridge-badge">VR RPG + KNOWLEDGE CRYPT</span>
+          <span class="explore-bridge-kicker">03B / THE BRANCH PORTAL · GERBANG DUNIA INTERAKTIF</span>
+          <span class="explore-bridge-badge">AETHELGRAD + KNOWLEDGE CRYPT</span>
         </div>
-        <h3 class="explore-bridge-title" id="bridge-archive-title">Masuk Dunia Mandiri · Aethelgrad // The Infinite Spire</h3>
+        <h3 class="explore-bridge-title" id="bridge-archive-title">Masuk Dunia: Aethelgrad</h3>
         <p class="explore-bridge-desc">
-          Di luar batang utama portofolio ini terdapat dua cabang khusus: The Data Atlas Crypt (/atlas) untuk menjelajahi konstelasi pengetahuan interaktif &amp; telemetri performa situs real-time, serta dunia virtual RPG terisolasi Aethelgrad (/aethelgrad).
+          Eksplorasi dunia RPG interaktif dengan koleksi pahlawan piksel, tantangan logika, dan arena peringkat.
         </p>
         <ul class="explore-bridge-points">
-          <li><strong>Aethelgrad // The Infinite Spire (/aethelgrad):</strong> Dunia virtual RPG mandiri dengan 24 Hero Pixel SVG 7-Layer, 50 Equipment, Code-Spell Sanctum, dan Spire Colosseum.</li>
+          <li><strong>Aethelgrad (/aethelgrad):</strong> Eksplorasi dunia RPG interaktif dengan koleksi pahlawan piksel, tantangan logika, dan arena peringkat.</li>
           <li><strong>The Data Atlas Crypt (/atlas):</strong> Peta konstelasi 36 simpul pengetahuan, 52 sinapsis, dan Live Performance Telemetry HUD.</li>
         </ul>
         <div class="explore-bridge-actions">
@@ -155,7 +144,7 @@ const reserved = entries.filter((e) => e.data.status === 'RESERVED');
             class="explore-bridge-dark-btn explore-bridge-dark-btn--primary portal-dive-trigger"
             data-portal-dive="/aethelgrad"
           >
-            Dive Into Aethelgrad ✦ (/aethelgrad) <span aria-hidden="true">↗</span>
+            Masuk Dunia: Aethelgrad <span aria-hidden="true">↗</span>
           </button>
           <a class="explore-bridge-dark-btn explore-bridge-dark-btn--ghost" href="/atlas">Buka The Data Atlas Crypt (/atlas) <span aria-hidden="true">→</span></a>
           <a class="explore-bridge-dark-btn explore-bridge-dark-btn--ghost" href="/aethelgrad">Buka Langsung (/aethelgrad) <span aria-hidden="true">→</span></a>

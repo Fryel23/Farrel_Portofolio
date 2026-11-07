@@ -1,6 +1,6 @@
 /**
  * src/scripts/atlas/knowledge-nodes-data.ts
- * Basis Data Konstelasi Pengetahuan "The Data Atlas Crypt" (/atlas - V15.0).
+ * Basis Data Konstelasi Pengetahuan "The Data Atlas Crypt" (/atlas).
  *
  * Berisi tepat 36 Simpul Pengetahuan (Knowledge Nodes) dan 52 Sinapsis (Edges)
  * yang terbagi ke dalam 4 Klaster Keilmuan Farrel Islami Putra:
@@ -302,12 +302,12 @@ export const ATLAS_NODES: readonly AtlasKnowledgeNode[] = Object.freeze([
   {
     id: 'sw-crypto-security',
     code: 'SW-06',
-    title: 'PBKDF2-SHA512, HMAC Sessions, & Input Guards',
+    title: 'Key Derivation, HMAC Sessions, & Input Guards',
     cluster: 'SOFTWARE_AI',
     status: 'Active Exploration',
     summary:
-      'Pertahanan berlapis terhadap SQLi/XSS/Prototype-Pollution, hashing password PBKDF2 100.000 iterasi, dan penguncian perangkat.',
-    technicalNote: 'crypto.pbkdf2Sync + timingSafeEqual + 1-Device-1-Account lock',
+      'Pertahanan berlapis terhadap SQLi/XSS/Prototype-Pollution, derivasi kata sandi kriptografis, dan penguncian perangkat.',
+    technicalNote: 'crypto.pbkdf2Sync + timingSafeEqual + Single-Hunter Lock',
     relatedRoute: '/aethelgrad',
     relatedLabel: 'Masuk Dunia Aethelgrad (/aethelgrad)',
     baseX: 885,
@@ -317,7 +317,7 @@ export const ATLAS_NODES: readonly AtlasKnowledgeNode[] = Object.freeze([
   {
     id: 'sw-pixel-svg-paperdoll',
     code: 'SW-07',
-    title: '7-Layer Crisp Pixel SVG Paper-Doll Composer',
+    title: '16-Bit Pixel Art SVG Paper-Doll Composer',
     cluster: 'SOFTWARE_AI',
     status: 'Primary Focus',
     summary:
@@ -386,7 +386,7 @@ export const ATLAS_NODES: readonly AtlasKnowledgeNode[] = Object.freeze([
       'Agenda riset kuantitatif pada data OHLCV saham Indonesia menggunakan indikator teknikal dasar yang transparan.',
     technicalNote: 'Log returns, rolling volatility, drawdown honesty',
     relatedRoute: '/work',
-    relatedLabel: 'Lihat Blueprint Riset (/work)',
+    relatedLabel: 'Lihat Rencana Riset (/work)',
     baseX: 145,
     baseY: 425,
     radius: 8,
@@ -401,7 +401,7 @@ export const ATLAS_NODES: readonly AtlasKnowledgeNode[] = Object.freeze([
       'Rencana ekstraksi frekuensi topik berita ekonomi dan pengujian korelasi lag terhadap pergerakan indikator makro.',
     technicalNote: 'Time-lagged cross-correlation & noise filtering',
     relatedRoute: '/work',
-    relatedLabel: 'Lihat Blueprint RES-02 (/work)',
+    relatedLabel: 'Lihat Rencana RES-02 (/work)',
     baseX: 115,
     baseY: 515,
     radius: 7,
@@ -518,8 +518,8 @@ export const ATLAS_NODES: readonly AtlasKnowledgeNode[] = Object.freeze([
     summary:
       'Representasi daftar ketetanggaan (adjacency list), pencarian jalur terpendek, dan struktur pohon pencarian.',
     technicalNote: 'O(V + E) graph traversal · Deterministic sorting & ranking',
-    relatedRoute: '/aethelgrad',
-    relatedLabel: 'Pecahkan di Code Sanctum (/aethelgrad)',
+    relatedRoute: '/aethelgrad#trials',
+    relatedLabel: 'Pecahkan di Logic Trials (/aethelgrad#trials)',
     baseX: 745,
     baseY: 420,
     radius: 9,
@@ -587,14 +587,14 @@ export const ATLAS_NODES: readonly AtlasKnowledgeNode[] = Object.freeze([
   {
     id: 'cg-code-sanctum-trials',
     code: 'CG-07',
-    title: 'Algorithmic Spell Verification & Edge-Case Testing',
+    title: 'Algorithmic Trial Verification & Edge-Case Analysis',
     cluster: 'COGNITIVE_STRATEGY',
     status: 'Primary Focus',
     summary:
       'Penyelesaian 24 tantangan logika pemrograman lintas 4 tier yang memberikan buff permanen pada karakter di Aethelgrad.',
-    technicalNote: '24 Code Spells · Deterministic AST/Output verification',
-    relatedRoute: '/aethelgrad',
-    relatedLabel: 'Uji Logika di Code Sanctum (/aethelgrad)',
+    technicalNote: '24 Logic Trials · Deterministic AST/Output verification',
+    relatedRoute: '/aethelgrad#trials',
+    relatedLabel: 'Uji Logika di Trials (/aethelgrad#trials)',
     baseX: 790,
     baseY: 520,
     radius: 8,

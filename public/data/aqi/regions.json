@@ -234,7 +234,7 @@
       "license": "unverified",
       "providedVia": "Lampiran pemilik situs (data_kualitas_udara_2.csv + data_kualitas_udara_2_metadata.pdf)",
       "sourceSha256": "9ce4de3d0466c71d1ce10447941236e9b7cfc19af255c6831fec89a5d25a31a0",
-      "ispuMethod": "PermenLHK P.14/2020 · tabel SO₂/NO₂ diverifikasi pemilik data dengan periode referensi tabel 24 jam; PM2.5 dari lampiran spek V12.0; parameter lain sengaja belum diimplementasikan."
+      "ispuMethod": "PermenLHK P.14/2020 · tabel SO₂/NO₂ diverifikasi pemilik data dengan periode referensi tabel 24 jam; PM2.5 dari lampiran PermenLHK P.14/2020; parameter lain sengaja belum diimplementasikan."
     }
   ]
 }

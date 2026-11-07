@@ -496,7 +496,7 @@ function createCsvExplorer(root) {
     if (columns.length === 0) {
       const option = document.createElement('option');
       option.value = '';
-      option.textContent = `${emptyLabel} — tidak tersedia`;
+      option.textContent = `${emptyLabel} · tidak tersedia`;
       option.disabled = true;
       option.selected = true;
       select.appendChild(option);

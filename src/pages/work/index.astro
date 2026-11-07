@@ -5,20 +5,10 @@ import ReservedCard from '../../components/work/ReservedCard.astro';
 import { getCollection } from 'astro:content';
 import '../../styles/home.css';
 import '../../styles/work.css';
-/* V12.2: integrity gate lintas-entri berjalan juga di /work index sehingga
-   validasi tetap menutup build meski tidak ada entri routeable sama sekali. */
 import { assertWorkIntegrity } from '../../data/content-integrity.js';
 
-/* Fase 4.2 + perbaikan V7.2 Fase 2: halaman /work. Filter kategori + grid
-   semua proyek. Grid awal KINI dirender statis saat build dari Content
-   Collections (kartu + slot reserved tampil sejak HTML, tanpa menunggu
-   JavaScript), dengan state awal filter "All". Interaksi filter tetap
-   memakai renderProjects() dari work.js yang mengganti isi grid dengan
-   markup identik (perilaku V6.7 dipertahankan penuh). */
 const entries = await getCollection('work');
 assertWorkIntegrity(entries, 'work/index.astro');
-/* Proyek nyata dulu, lalu slot reserved (urutan sama dengan DATA:
-   reserved hanya tampil di view All dan tidak pernah dihitung). */
 const projects = entries.filter((e) => e.data.status !== 'RESERVED');
 const reserved = entries.filter((e) => e.data.status === 'RESERVED');
 ---

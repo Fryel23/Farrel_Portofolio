@@ -314,6 +314,33 @@
   height: 24px;
 }
 
+@media (max-width: 1180px) {
+  .site-header {
+    padding: 0 20px;
+    gap: 12px;
+  }
+
+  .brand-mark {
+    min-width: 0;
+  }
+
+  .main-nav {
+    gap: 14px;
+  }
+
+  .header-actions {
+    gap: 6px;
+  }
+
+  .world-status-friendly {
+    display: none;
+  }
+
+  .header-portal-dive-btn span:not(.header-portal-dive-dot) {
+    font-size: 11px;
+  }
+}
+
 @media (min-width: 981px) {
   .mobile-menu-drawer {
     display: none !important;

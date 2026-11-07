@@ -1,13 +1,5 @@
 ---
-/* V12.3 - CSV Explorer (halaman /lab/csv).
-   Tool analisis CSV yang berjalan SEPENUHNYA di browser: parsing &
-   statistik dieksekusi Web Worker (src/scripts/lab/workers/csv-worker.js),
-   Chart.js dimuat dynamic oleh entry src/scripts/lab/csv.js hanya ketika
-   grafik dirender. File pengguna tidak pernah dikirim ke server, tidak
-   disimpan, dan tidak dicatat - arsitektur ini diverifikasi di FASE 9/10
-   V12.3, sehingga klaim "diproses lokal" yang tampil di halaman adalah
-   klaim yang benar-benar didukung implementasi.
-   Modul entry TIDAK diimpor halaman lain -> route isolation (spec §10.1). */
+/* CSV Explorer (halaman /lab/csv). */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import '../../styles/lab.css';
 import '../../styles/lab/csv.css';
@@ -144,7 +136,7 @@ import '../../styles/lab/csv.css';
         menghentikan Worker, menghancurkan grafik, dan melepas referensi file.
       </p>
       <p class="csv-privacy-note">
-        <strong>Batasan V12.3:</strong> ukuran file maksimum 10 MiB; maksimum
+        <strong>Batasan Teknis:</strong> ukuran file maksimum 10 MiB; maksimum
         100 kolom, 100.000 baris, 500.000 sel; grafik menampilkan maksimum
         5.000 titik (sampling deterministik, titik awal &amp; akhir
         dipertahankan); hanya delimiter koma; hanya encoding UTF-8; format

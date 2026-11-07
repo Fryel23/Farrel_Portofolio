@@ -1,16 +1,11 @@
 ---
 /**
- * Header.astro: Header sitewide (V15.0-AETHELGRAD-OMEGA "Trunk & Branch Architecture").
- *
- * Arsitektur Navigasi V15.0:
- *  - 4 item navigasi primer manusiawi di .main-nav:
+ * Header.astro: Header navigasi utama portofolio.
+ *  - 4 item navigasi primer di .main-nav:
  *      Beranda (/), Proyek (/work), Tentang (/about), Kontak (/connect)
- *  - Tombol "Eksplorasi ▾" (#menu-dots) membuka Two-Column Progressive
- *    Disclosure Mega-Drawer (#quick-menu / #quick-menu-panel):
+ *  - Tombol "Eksplorasi ▾" (#menu-dots) membuka laci dua kolom (#quick-menu / #quick-menu-panel):
  *      Kolom 1: EKSPLORASI INTERAKTIF & ARSIP PERSONAL
  *      Kolom 2: PETA PENGETAHUAN & GERBANG DUNIA VIRTUAL (The Data Atlas Crypt + Portal Aethelgrad)
- *  - Zero Source-Code / Meta-Documentation Leak: Tidak ada tautan ke dokumentasi
- *    arsitektur internal atau kode sumber repositori portofolio.
  */
 import { DATA } from '../../data/content.js';
 
@@ -188,7 +183,6 @@ const isExploreRouteActive =
     </button>
   </div>
 
-  <!-- V15.0 Trunk & Branch Mega-Drawer -->
   <div class="quick-menu" id="quick-menu" role="region" aria-label="Menu eksplorasi dan gerbang dunia virtual" hidden>
     <div class="quick-menu-panel" id="quick-menu-panel">
       <span class="quick-now-playing" id="quick-now-playing" hidden></span>
@@ -234,15 +228,14 @@ const isExploreRouteActive =
               </a>
             ))}
 
-            <!-- Kartu Portal Khusus: Masuk Dunia Aethelgrad -->
             <div class="header-portal-dive-card" id="header-portal-dive-card">
               <div class="header-portal-dive-head">
-                <span class="header-portal-dive-kicker">VR RPG BRANCH · ISOLATED UNIVERSE</span>
+                <span class="header-portal-dive-kicker">DUNIA INTERAKTIF</span>
                 <span class="header-portal-dive-badge">AETHELGRAD ✦</span>
               </div>
-              <strong class="header-portal-dive-title">Masuk Dunia: Aethelgrad ✦</strong>
+              <strong class="header-portal-dive-title">Masuk Dunia: Aethelgrad</strong>
               <p class="header-portal-dive-desc">
-                Dunia virtual RPG mandiri: 24 Hero Pixel SVG 7-Layer, 50 Equipment, Grimoire Koleksi, Code Sanctum, &amp; Spire Colosseum.
+                Eksplorasi dunia RPG interaktif dengan koleksi pahlawan piksel, tantangan logika, dan arena peringkat.
               </p>
               <div class="header-portal-dive-actions">
                 <button
@@ -250,7 +243,7 @@ const isExploreRouteActive =
                   class="portal-dive-trigger header-portal-dive-btn"
                   data-portal-dive="/aethelgrad"
                 >
-                  DIVE INTO AETHELGRAD ✦
+                  Masuk Dunia: Aethelgrad
                 </button>
                 <a href="/aethelgrad" class="header-portal-fallback-link">
                   Buka Langsung (/aethelgrad) →
@@ -325,7 +318,7 @@ const isExploreRouteActive =
           class="portal-dive-trigger header-portal-dive-btn"
           data-portal-dive="/aethelgrad"
         >
-          Masuk Dunia: Aethelgrad ✦ (DIVE)
+          Masuk Dunia: Aethelgrad
         </button>
       </nav>
     </div>

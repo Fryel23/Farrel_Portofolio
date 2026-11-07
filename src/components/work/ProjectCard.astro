@@ -1,11 +1,5 @@
 ---
-/* ProjectCard: mirror persis projectCardMarkup() di work.js V6.7
-   (struktur class sama), dirender saat build dari Content Collection.
-   Hanya proyek nyata; slot reserved memakai ReservedCard.astro.
-   V7.4 Fase 2: `id` (id entri collection, mis. "aqi-cirebon") wajib
-   diteruskan pemanggil; dipakai sebagai nama transisi view transition
-   yang identik dengan .case-study-cover di halaman detail, sehingga
-   gambar kartu "terbang" membesar menjadi cover case study. */
+/* ProjectCard: kartu proyek nyata dari Content Collection. */
 interface Props {
   project: {
     id: string;

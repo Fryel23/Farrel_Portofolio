@@ -3,11 +3,11 @@ title: "Air Quality Index Trends · Cirebon (2021–2025)"
 category: "Data & Research"
 tag: "Research / Data Analysis"
 status: "IN PROGRESS"
-# V12.2: identifier semantik stabil untuk relasi antarkonten. Sengaja
+# Identifier semantik stabil untuk relasi antarkonten. Sengaja
 # sama dengan nama file (entry id) - keduanya tetap konsep berbeda:
 # entry.id = dasar URL /work/<slug>, contentId = target relasi.
 contentId: "aqi-cirebon"
-# V12.2: taxonomy kanonis (id dari src/data/taxonomy.js; label dirender
+# Taxonomy kanonis (id dari src/data/taxonomy.js; label dirender
 # dari definisi kanonis, bukan free-text). Hanya yang terbukti:
 # pipeline aktual berupa JavaScript/Astro/Chart.js + ingestion Node.js.
 disciplines: ["data-analysis"]
@@ -18,16 +18,16 @@ image: "/assets/project-aqi.svg"
 link: "https://opendata.cirebonkota.go.id/dataset/data-kualitas-udara"
 linkLabel: "Buka Sumber Dataset"
 kicker: "01 / RESEARCH IN PROGRESS"
-# V12.2: field editorial - hanya fakta yang terverifikasi dari
-# implementasi V12.0 (build script, dataset JSON, halaman methodology).
+# Field editorial - hanya fakta yang terverifikasi dari
+# implementasi aktual (skrip kompilasi, dataset JSON, halaman methodology).
 context: "Riset ini berjalan di atas data resmi DLH Kota Cirebon 2021–2025 (SO₂ dan NO₂ dalam µg/Nm³, 23 lokasi, dua tahap pengukuran per tahun; data tahun 2025 bersifat parsial pada 4 titik stasiun pengukuran). Eksplorasinya kini hidup sebagai The Data Lab di /lab: explorer statis yang menampilkan pengukuran apa adanya, menghitung ISPU terderivasi dengan rumus Permen LHK P.14/2020, dan menampilkan keterbatasan data sebagai bagian dari halaman - bukan menyembunyikannya."
 methodology:
-  - "Dataset sumber: CSV resmi DLH Kota Cirebon 2021–2025 (200 baris, 23 lokasi, TAHAP I & TAHAP II); tersimpan di data/sources/ dengan sha256 tercatat pada audit ingest."
+  - "Dataset sumber: CSV resmi DLH Kota Cirebon 2021–2025 (200 baris, 23 lokasi, TAHAP I & TAHAP II); tersimpan di data/sources/ dengan sha256 tercatat pada manifest ingest."
   - "Script ingestion Node.js mem-parsing CSV, memvalidasi header, dan menormalisasi whitespace nama lokasi tanpa mengubah nilai."
   - "Baris SO₂ dan NO₂ yang terpisah (per tahap pengukuran) diagregasi menjadi satu record per kombinasi lokasi, tahun, dan tahap."
-  - "Sub-indeks dan ISPU dihitung build-time dengan rumus interpolasi Permen LHK P.14/2020 lewat modul bersama yang sama dengan explorer; hasil ditandai sebagai nilai terderivasi karena basis waktu tahap tidak dilaporkan sumber."
+  - "Sub-indeks dan ISPU dihitung secara deterministik dengan rumus interpolasi Permen LHK P.14/2020 lewat modul bersama yang sama dengan explorer; hasil ditandai sebagai nilai terderivasi karena basis waktu tahap tidak dilaporkan sumber."
   - "Nilai kosong dipertahankan sebagai null (tidak diimputasi); nilai 0,0 diperlakukan sebagai pengukuran valid; baris duplikat dicatat pada record, tidak dihapus diam-diam."
-  - "Dataset JSON hasil build divalidasi otomatis (skema, rentang ISPU, provenance sumber) sebelum ditayangkan di explorer."
+  - "Dataset JSON hasil kompilasi divalidasi otomatis (skema, rentang ISPU, provenance sumber) sebelum ditayangkan di explorer."
   - "Explorer /lab merender data statis dengan Chart.js yang diimpor dinamis hanya di rute /lab; gap data tidak pernah disambungkan (spanGaps: false)."
 limitations:
   - "Sumber hanya melaporkan SO₂ dan NO₂; ISPU yang ditampilkan adalah derivasi dua parameter, bukan ISPU resmi tujuh parameter P.14/2020."
@@ -36,7 +36,7 @@ limitations:
   - "Tahun 2024 memuat dua baris NO₂ pada satu lokasi; kemunculan pertama yang dipakai dan semua kemunculan disimpan pada record."
   - "Cakupan 2025 masih parsial (4 lokasi, TAHAP I)."
   - "Koordinat GPS dan metode pengukuran tidak disediakan sumber sehingga tidak ditampilkan."
-# V10.0: 3 scene naratif (Masalah -> Proses -> Temuan), ditulis apa adanya
+# 3 scene naratif (Masalah -> Proses -> Temuan), ditulis apa adanya
 # sesuai nada jujur arsip. Tanpa image -> placeholder arsip yang dirender
 # komponen CaseNarrative.
 narrative:

@@ -760,7 +760,7 @@ try {
     { name: 'ReferenceDock aside & iframe sandbox', ok: homeHtml.includes('id="world-reference-dock"') && homeHtml.includes('sandbox=""') },
     { name: 'Data Atlas Crypt canvas & telemetry HUD', ok: atlasHtml.includes('id="atlas-network-canvas"') && atlasHtml.includes('id="atlas-telemetry-hud"') },
     { name: 'Atlas accessible node directory & inspector', ok: atlasHtml.includes('id="atlas-inspector-panel"') && atlasHtml.includes('id="atlas-node-list"') },
-    { name: 'Aethelgrad isolated world & smart auth gate', ok: aethelHtml.includes('id="aethelgrad-auth-gate"') && aethelHtml.includes('id="col-2-gacha-grotto"') },
+    { name: 'Aethelgrad isolated world & smart auth gate', ok: aethelHtml.includes('id="aethelgrad-auth-gate"') && aethelHtml.includes('id="aethelgrad-stage"') },
     { name: 'Responsive media queries & local table overflow', ok: dockCss.includes('@media (min-width: 1024px)') && atlasCss.includes('@media (max-width:') },
   ];
 

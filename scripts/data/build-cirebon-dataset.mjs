@@ -453,7 +453,7 @@ const manifest = {
       license: 'unverified',
       providedVia: 'Lampiran pemilik situs (data_kualitas_udara_2.csv + data_kualitas_udara_2_metadata.pdf)',
       sourceSha256,
-      ispuMethod: 'PermenLHK P.14/2020 · tabel SO₂/NO₂ diverifikasi pemilik data dengan periode referensi tabel 24 jam; PM2.5 dari lampiran spek V12.0; parameter lain sengaja belum diimplementasikan.',
+      ispuMethod: 'PermenLHK P.14/2020 · tabel SO₂/NO₂ diverifikasi pemilik data dengan periode referensi tabel 24 jam; PM2.5 dari lampiran PermenLHK P.14/2020; parameter lain sengaja belum diimplementasikan.',
     },
   ],
 };

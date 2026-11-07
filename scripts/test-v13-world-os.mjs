@@ -101,7 +101,7 @@ test('5. Command parser hanya menerima command yang diizinkan (:warp, :split, :a
     ok: true,
     action: 'warp',
     targetPath: '/aethelgrad',
-    territoryLabel: 'Aethelgrad // The Infinite Spire',
+    territoryLabel: 'Aethelgrad',
   });
 
   const warpAtlas = parseWorldCommand('  :WARP   /atlas  ');

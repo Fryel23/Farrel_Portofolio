@@ -1,5 +1,5 @@
 /*!
- * src/lib/world-os-core.ts - Pure Domain Logic for World OS Layer (V13.0-D).
+ * src/lib/world-os-core.ts - Pure Domain Logic for World OS Layer.
  *
  * Menyediakan:
  *  1. WORLD_TERRITORIES dan WORLD_COMMANDS kanonis.
@@ -133,11 +133,11 @@ export const WORLD_TERRITORIES: readonly WorldTerritoryItem[] = [
   {
     id: 'aethelgrad',
     sectorCode: '04',
-    label: 'Aethelgrad // The Infinite Spire',
+    label: 'Aethelgrad',
     path: '/aethelgrad',
-    description: 'Dunia Virtual RPG Mandiri: 24 Hero Pixel SVG 7-Layer, 50 Item Equipment, Grimoire Koleksi, Code Sanctum, & Spire Colosseum.',
+    description: 'Eksplorasi dunia RPG interaktif dengan koleksi pahlawan piksel, tantangan logika, dan arena peringkat.',
     kind: 'knowledge',
-    searchTerms: ['aethelgrad', 'spire', 'gacha', 'colosseum', 'sanctum', 'rpg', 'world', 'dive'],
+    searchTerms: ['aethelgrad', 'outpost', 'summon', 'barracks', 'grimoire', 'trials', 'arena', 'rpg'],
   },
   {
     id: 'archive',

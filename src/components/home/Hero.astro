@@ -1,10 +1,4 @@
 ---
-/* Hero homepage: markup identik dengan V6.7, hanya tautan antar
-   section yang menjadi rute halaman (CTA + scroll cue -> /work).
-   V11.1: HeroCanvas (SVG fallback + canvas WebGL) di-mount dalam
-   .hero-visual sebagai signature visual. Fallback-first: SVG hadir
-   sejak initial HTML; WebGL murni enhancement via hero-webgl/index.js
-   (dynamic import, guards >700px + reduced motion). */
 import HeroCanvas from './HeroCanvas.astro';
 ---
 
@@ -12,7 +6,6 @@ import HeroCanvas from './HeroCanvas.astro';
   <div class="geo geo-two" aria-hidden="true"></div>
   <div class="geo geo-three geo-blue" aria-hidden="true"></div>
 
-  <!-- V14.0 Swiss Technical Grid & Registration Marks (+) -->
   <div class="hero-swiss-grid" aria-hidden="true">
     <span class="hero-reg-mark hero-reg-mark--tl">+</span>
     <span class="hero-reg-mark hero-reg-mark--tr">+</span>
@@ -20,8 +13,6 @@ import HeroCanvas from './HeroCanvas.astro';
     <span class="hero-reg-mark hero-reg-mark--br">+</span>
   </div>
 
-  <!-- V5 §4.2 Observatory: garis pengukur tepi tipis dengan label arsip.
-       Dekorasi murni; disembunyikan CSS pada viewport kecil. -->
   <div class="hero-ruler" aria-hidden="true">
     <span class="hero-ruler-label">01 / PERKENALAN</span>
     <span class="hero-ruler-line"></span>
@@ -40,7 +31,6 @@ import HeroCanvas from './HeroCanvas.astro';
       <a class="button button-primary magnetic-button" id="hero-cta" href="/work">Lihat Proyek Utama <span aria-hidden="true">↗</span></a>
       <a class="button button-outline magnetic-button" id="hero-docs" href="/about">Tentang Saya <span aria-hidden="true">→</span></a>
 
-      <!-- V14.0 Quick Topic Navigator & Quick Jump Pills -->
       <div class="archive-search-wrap">
         <label class="archive-search-label" for="search-input">LOMPAT CEPAT KE TOPIK ATAU HALAMAN</label>
         <form class="search-box" id="project-search" role="search" aria-label="Pencarian cepat bagian arsip">
@@ -59,7 +49,7 @@ import HeroCanvas from './HeroCanvas.astro';
           <a class="hero-quick-pill" href="/lab"><span>02</span> Penjelajah Data AQI (/lab)</a>
           <a class="hero-quick-pill" href="/lab/csv"><span>03</span> CSV Profiler (/lab/csv)</a>
           <a class="hero-quick-pill" href="/atlas"><span>04</span> The Data Atlas Crypt (/atlas)</a>
-          <button type="button" class="hero-quick-pill portal-dive-trigger" data-portal-dive="/aethelgrad"><span>05</span> Dunia Virtual Aethelgrad ✦</button>
+          <button type="button" class="hero-quick-pill portal-dive-trigger" data-portal-dive="/aethelgrad"><span>05</span> Masuk Dunia: Aethelgrad</button>
         </div>
       </div>
     </div>
@@ -67,8 +57,6 @@ import HeroCanvas from './HeroCanvas.astro';
   </div>
 
   <div class="hero-visual">
-    <!-- V6.3 §5.1: ornamen crosshair orbital. Piring dekoratif di belakang
-         atlas; reduced motion membuatnya statis. -->
     <div class="ornament ornament-hero-crosshair" aria-hidden="true">
       <svg viewBox="0 0 120 120" focusable="false">
         <circle cx="60" cy="60" r="40" fill="none" stroke="currentColor" stroke-width="1" opacity="0.6"></circle>
@@ -110,10 +98,6 @@ import HeroCanvas from './HeroCanvas.astro';
       </svg>
     </div>
 
-    <!-- V11.1 Signature Hero: Glass Vessel (fallback SVG + canvas WebGL).
-         Wrapper absolute (hero-webgl.css), pointer-events none, di ATAS
-         Data Atlas (z 0) dan DI BAWAH pixel card / sticker (z lokal 2-3):
-         profile card tetap identity plate yang terbaca (spek §2.3.1). -->
     <HeroCanvas />
 
     <div class="floating-tool tool-one" aria-hidden="true">Py</div>
@@ -130,7 +114,7 @@ import HeroCanvas from './HeroCanvas.astro';
             <small>DATA · SOFTWARE · AI · IOT</small>
           </div>
         </div>
-        <div class="profile-bottom"><span>ARSIP PERSONAL / V15.0</span><span class="tiny-arrow" aria-hidden="true">↗</span></div>
+        <div class="profile-bottom"><span>CATATAN BELAJAR · UNIKOM</span><span class="tiny-arrow" aria-hidden="true">↗</span></div>
       </div>
     </div>
     <div class="hero-sticker">Stay curious.<br />Stay <b>rigorous.</b></div>

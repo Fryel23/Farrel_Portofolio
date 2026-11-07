@@ -1,14 +1,14 @@
 ---
 /**
  * src/pages/atlas/index.astro
- * THE DATA ATLAS CRYPT (/atlas - V15.0-AETHELGRAD-OMEGA).
+ * THE DATA ATLAS CRYPT (/atlas).
  *
- * Ruang Pengetahuan & Telemetri Performa Real-Time (Di Luar Dunia Game):
+ * Ruang Pengetahuan & Telemetri Performa Real-Time:
  *  - 36 Simpul Pengetahuan (Knowledge Nodes) & 52 Sinapsis (Edges)
  *    lintas 4 Klaster Keilmuan Farrel Islami Putra.
  *  - Kanvas Konstelasi Interaktif (#atlas-network-canvas) + Inspector Panel (#atlas-inspector-panel).
  *  - Live Performance Telemetry HUD (FPS, Frame Time ms, JS Heap, Active Nodes/Synapses).
- *  - Jembatan Portal menuju Cabang Dunia Virtual Mandiri (/aethelgrad).
+ *  - Jembatan Portal menuju Dunia Aethelgrad (/aethelgrad).
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import {
@@ -30,7 +30,7 @@ const initialNode = ATLAS_NODES[0];
     <!-- ==================== 01 / HERO & LIVE PERFORMANCE TELEMETRY HUD ==================== -->
     <header class="atlas-crypt-hero" aria-labelledby="atlas-page-heading">
       <div class="atlas-hero-copy">
-        <p class="atlas-kicker">CRYPT-01 // THE DATA ATLAS CRYPT · KNOWLEDGE CONSTELLATION</p>
+        <p class="atlas-kicker">CRYPT-01 · THE DATA ATLAS CRYPT · KNOWLEDGE CONSTELLATION</p>
         <h1 class="atlas-title" id="atlas-page-heading">
           Peta Konstelasi <em>Pengetahuan</em> &amp; Telemetri Sistem.
         </h1>
@@ -127,7 +127,7 @@ const initialNode = ATLAS_NODES[0];
           aria-label="Graf konstelasi interaktif 36 simpul pengetahuan Farrel Islami Putra"
         ></canvas>
         <div class="atlas-canvas-caption">
-          <span>TIP: Klik simpul untuk melihat rumus/spesifikasi teknis dan daftar sinapsis yang terhubung.</span>
+          <span>TIP: Klik simpul untuk melihat rumus/catatan teknis dan daftar sinapsis yang terhubung.</span>
           <span>REDUCED-MOTION SAFE</span>
         </div>
       </div>
@@ -146,7 +146,7 @@ const initialNode = ATLAS_NODES[0];
         <p class="atlas-insp-summary" id="atlas-insp-summary">{initialNode.summary}</p>
 
         <div class="atlas-insp-tech-box">
-          <span class="atlas-insp-box-label">SPESIFIKASI / CATATAN TEKNIS</span>
+          <span class="atlas-insp-box-label">FORMULA / CATATAN TEKNIS</span>
           <code id="atlas-insp-tech">{initialNode.technicalNote}</code>
         </div>
 
@@ -168,7 +168,7 @@ const initialNode = ATLAS_NODES[0];
     <!-- ==================== 04 / ACCESSIBLE 4-CLUSTER DIRECTORY ==================== -->
     <section class="atlas-directory-section" aria-labelledby="atlas-directory-heading">
       <div class="atlas-section-head">
-        <p class="atlas-kicker">02 // COMPLETE KNOWLEDGE LEDGER · ACCESSIBLE NODE INDEX</p>
+        <p class="atlas-kicker">02 · COMPLETE KNOWLEDGE LEDGER · ACCESSIBLE NODE INDEX</p>
         <h2 class="atlas-section-title" id="atlas-directory-heading">
           Direktori Lengkap 36 Simpul Pengetahuan
         </h2>
@@ -209,15 +209,14 @@ const initialNode = ATLAS_NODES[0];
       </div>
     </section>
 
-    <!-- ==================== 05 / PORTAL BRIDGE TO AETHELGRAD ==================== -->
     <section class="atlas-portal-banner" aria-labelledby="atlas-portal-heading">
       <div class="atlas-portal-copy">
-        <p class="atlas-kicker">BRANCH GATEWAY // ISOLATED VR RPG UNIVERSE</p>
+        <p class="atlas-kicker">GERBANG EKSPEDISI · AETHELGRAD</p>
         <h2 class="atlas-portal-title" id="atlas-portal-heading">
-          Ingin Menjelajahi Cabang Dunia Virtual <em>Aethelgrad // The Infinite Spire</em>?
+          Masuk Dunia: <em>Aethelgrad</em>
         </h2>
         <p class="atlas-portal-desc">
-          Masuki dunia fantasi siber-kristal mandiri dengan 24 Hero Pixel SVG 7-Layer, 50 Equipment yang mengubah wujud karakter secara real-time, Grimoire Koleksi, Code-Spell Sanctum, dan Spire Colosseum.
+          Eksplorasi dunia RPG interaktif dengan koleksi pahlawan piksel, tantangan logika, dan arena peringkat.
         </p>
       </div>
       <div class="atlas-portal-actions">
@@ -226,7 +225,7 @@ const initialNode = ATLAS_NODES[0];
           class="atlas-portal-dive-btn portal-dive-trigger"
           data-portal-dive="/aethelgrad"
         >
-          DIVE INTO AETHELGRAD ✦
+          Masuk Dunia: Aethelgrad
         </button>
         <a href="/lab" class="atlas-portal-secondary-btn">
           Kembali ke Data Lab (/lab) →

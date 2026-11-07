@@ -1,13 +1,7 @@
 ---
 /**
- * PortalDiveModal.astro: VR Neural Dive Sequence Overlay (V15.0-AETHELGRAD-OMEGA).
- *
- * Menghubungkan Batang Utama Portofolio (The Trunk) dengan Cabang Dunia Virtual
- * Mandiri (/aethelgrad - AETHELGRAD // THE INFINITE SPIRE):
- *  - Fase 1 (Reality Fracture, ~750ms): Efek retakan kaca kristal & aberasi kromatik.
- *  - Fase 2 (Quantum Warp Tunnel, ~1100ms): Terowongan partikel bintang radial
- *    dengan pembacaan telemetri neural link sebelum mendarat di /aethelgrad.
- *  - Menghormati prefers-reduced-motion: reduce (navigasi langsung tanpa efek).
+ * PortalDiveModal.astro: Overlay transisi portal menuju dunia Aethelgrad (/aethelgrad).
+ * Menghormati prefers-reduced-motion: reduce (navigasi langsung tanpa efek).
  */
 ---
 
@@ -16,12 +10,11 @@
   class="portal-dive-overlay"
   role="dialog"
   aria-modal="true"
-  aria-label="VR Neural Dive Sequence to Aethelgrad"
+  aria-label="Transisi menuju dunia Aethelgrad"
   hidden
   aria-hidden="true"
   transition:persist="portal-dive-overlay"
 >
-  <!-- Fase 1: Reality Fracture (Retakan Realitas) -->
   <div id="portal-fracture-stage" class="portal-fracture-stage" aria-hidden="true">
     <svg class="portal-fracture-svg" viewBox="0 0 1200 800" preserveAspectRatio="none" focusable="false">
       <defs>
@@ -46,22 +39,20 @@
     <div class="portal-fracture-flash"></div>
   </div>
 
-  <!-- Fase 2: Quantum Warp Tunnel -->
   <canvas id="portal-warp-canvas" class="portal-warp-canvas" width="1280" height="720" aria-hidden="true"></canvas>
 
-  <!-- HUD Telemetri Dive -->
   <div class="portal-dive-hud">
-    <p class="portal-dive-kicker" id="portal-dive-phase-label">PHASE 01 // REALITY FRACTURE DETECTED</p>
-    <h2 class="portal-dive-title">AETHELGRAD // THE INFINITE SPIRE</h2>
+    <p class="portal-dive-kicker" id="portal-dive-phase-label">STARLIGHT GATEWAY</p>
+    <h2 class="portal-dive-title">Aethelgrad</h2>
     <p class="portal-dive-sub" id="portal-dive-sub">
-      MEMUTUSKAN TAUTAN DARI PERMUKAAN PORTOFOLIO · MENYINKRONKAN NEURAL GATEWAY...
+      Membuka jalur ekspedisi menuju pos terdepan Aethelgrad...
     </p>
     <div class="portal-dive-progress" aria-hidden="true">
       <span id="portal-dive-progress-bar" class="portal-dive-progress-bar"></span>
     </div>
     <div class="portal-dive-telemetry">
-      <span>PROTOCOL: ISOLATED_VR_BRANCH</span>
-      <span>GUARD: 1_DEVICE_1_HUNTER</span>
+      <span>WILAYAH: OUTPOST AETHELGRAD</span>
+      <span>GUILD REGISTRY</span>
       <span id="portal-dive-pct">0%</span>
     </div>
   </div>

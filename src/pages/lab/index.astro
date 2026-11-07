@@ -1,11 +1,5 @@
 ---
-/* V12.0 - The Data Lab / AQI Explorer (halaman utama).
-   Sumber data: /data/aqi/regions.json + dataset tahunan (statis, historis,
-   bukan real-time). Chart.js dimuat dynamic oleh src/scripts/lab.js →
-   lab/charts/chart-loader.js; modul halaman ini TIDAK menyentuh Chart.js
-   secara statis sehingga homepage tidak pernah memuat chunk-nya.
-   Semua panel dirancang untuk kondisi nyata: loading, partial, no-data,
-   dan error; missing selalu tampil sebagai gap/dash, bukan nol. */
+/* The Data Lab / AQI Explorer (halaman utama). */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import '../../styles/lab.css';
 ---
@@ -15,7 +9,6 @@ import '../../styles/lab.css';
   pageKey="lab"
   description="Explorer data kualitas udara Kota Cirebon 2021–2025 (DLH): konsentrasi SO₂/NO₂, sub-indeks & ISPU terderivasi PermenLHK P.14/2020, statistik, tabel data mentah, dan metodologi yang transparan."
 >
-  <!-- ============ HERO / EDITORIAL INTRODUCTION (spec §9.2-A) ============ -->
   <section class="lab-hero" aria-labelledby="lab-heading">
     <div class="section-shell">
       <p class="section-kicker">THE DATA LAB / AQI EXPLORER</p>
@@ -38,9 +31,7 @@ import '../../styles/lab.css';
     </div>
   </section>
 
-  <!-- ============ EXPLORER (spec §9.2-B … §9.2-G + V14.0 Air Aware Workbench) ============ -->
   <section class="lab-section section-shell" data-lab-root aria-label="Explorer kualitas udara Kota Cirebon">
-    <!-- V14.0 Human-First Onboarding Strip -->
     <aside class="lab-onboarding-strip" aria-labelledby="lab-onboarding-title">
       <div class="lab-onboarding-header">
         <div>
@@ -76,7 +67,6 @@ import '../../styles/lab.css';
     <div class="lab-panel" data-lab-controls data-busy="false">
       <h2 class="lab-panel-title">KONTROL &amp; FILTER CEPAT</h2>
 
-      <!-- V14.0 Segmented Toggle Pills synced with native <select> -->
       <div class="lab-quick-toggles">
         <div class="lab-pill-block">
           <span class="lab-pill-label">PILIH TAHUN CEPAT</span>
@@ -134,7 +124,6 @@ import '../../styles/lab.css';
     <!-- D. Metrics grid (maksimal 4, hanya yang didukung data) -->
     <div class="lab-metrics-grid" data-lab-metrics aria-label="Ringkasan metrik tahun terpilih"></div>
 
-    <!-- E. V14.0 Split Workbench: Chart Section (Left) + Spatial Station Map (Right) -->
     <div class="lab-workbench-grid">
       <div class="lab-panel lab-chart-panel">
         <h2 class="lab-panel-title">GRAFIK &amp; PITA AMBANG ISPU</h2>
@@ -281,10 +270,6 @@ import '../../styles/lab.css';
     </div>
   </section>
 
-  <!-- ============ NAVIGASI TOOL LAB (V12.3 FASE 8) ============
-       Pintasan ke CSV Explorer. Header sengaja TIDAK diubah: navigasi
-       utama memakai tautan tunggal "Data Lab" → /lab (keputusan V12.0),
-       sehingga tool-tool Lab saling menaut dari halaman hub ini. -->
   <section class="lab-section section-shell" aria-label="Tool Lab lainnya">
     <div class="lab-panel">
       <h2 class="lab-panel-title">TOOL LAB LAINNYA</h2>

@@ -1,6 +1,0 @@
-PASS  BASELINE (no ?v105=)  {"attr":null,"flag":null,"dialogOpen":true,"overlay":false}
-PASS  HARNESS A1 (retained as documentation)  {"attr":"A1","flag":"A1","dialogOpen":true}
-PASS  OTHER PAGE /work (harness inactive)  {"attr":null,"flag":null}
-V10.5 FINAL VERIFICATION: ALL PASS
-2026-10-31 08:20 UTC
-SERVER/ENV: astro build 9 pages + astro preview :4321; Chrome 156.0.8078.73; baseline sanity LCP referensi 5.273/5.276 ms (V10.4)

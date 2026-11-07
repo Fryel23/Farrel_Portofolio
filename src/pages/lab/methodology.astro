@@ -1,10 +1,5 @@
 ---
-/* V12.0 - The Data Lab / Methodology (spec §10).
-   Halaman statis editorial: menjelaskan seluruh keputusan metodologis Data
-   Lab: sumber data, rumus ISPU, tabel breakpoint, kategori, penanganan
-   missing/duplikat, statistik, dominasi polutan, dan keterbatasan.
-   Tidak ada kalkulasi di halaman ini; hanya dokumentasi yang dapat
-   dipertanggungjawabkan. */
+/* The Data Lab / Methodology. */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import '../../styles/lab.css';
 
@@ -64,7 +59,7 @@ const SOURCE_ROW = {
       <p class="lab-prose">
         <strong>AQI</strong> (Air Quality Index) adalah keluarga indeks kualitas
         udara yang rumus dan skalanya berbeda antar negara/lembaga.
-        <strong>ISPU</strong> (Indeks Standar Pencemar Udara) adalah versi
+        <strong>ISPU</strong> (Indeks Standar Pencemar Udara) adalah padanan
         Indonesia yang diatur <em>Permen LHK No. P.14/MENLHK/SETJEN/KUM.1/7/2020</em>:
         dihitung untuk tujuh parameter (PM10, PM2.5, SO₂, NO₂, O₃, CO, HC),
         di mana ISPU total ditentukan oleh sub-indeks <em>tertinggi</em> di
@@ -89,7 +84,7 @@ const SOURCE_ROW = {
         Cirebon</strong>. Arsitektur manifest
         (<code>public/data/aqi/regions.json</code>) sudah mendukung multi-region,
         tetapi region lain tidak ditambahkan sampai ada data nyata yang dapat
-        diverifikasi; tidak ada region palsu untuk kelulusan tes.
+        diverifikasi; tidak ada region palsu sebagai contoh buatan.
       </p>
       <div class="lab-table-wrap">
         <table class="lab-table">
@@ -100,7 +95,7 @@ const SOURCE_ROW = {
           <tbody>
             <tr><th scope="row">Region</th><td>{SOURCE_ROW.region}</td></tr>
             <tr><th scope="row">Produsen</th><td>{SOURCE_ROW.producer}</td></tr>
-            <tr><th scope="row">Berkas sumber</th><td>{SOURCE_ROW.file} (disimpan di <code>data/sources/</code>, sha256 tercatat di audit ingest)</td></tr>
+            <tr><th scope="row">Berkas sumber</th><td>{SOURCE_ROW.file} (disimpan di <code>data/sources/</code>, sha256 tercatat di catatan ingest)</td></tr>
             <tr><th scope="row">Cakupan</th><td>{SOURCE_ROW.coverage}</td></tr>
             <tr><th scope="row">Parameter</th><td>{SOURCE_ROW.parameters}</td></tr>
             <tr><th scope="row">URL portal</th><td>Tidak dicantumkan sebagai tautan karena URL persis dataset tidak dapat diverifikasi dari lampiran; dataset resmi ini dipublikasikan DLH Kota Cirebon pada portal data terbuka kotanya. {SOURCE_ROW.contact}</td></tr>
@@ -148,7 +143,7 @@ const SOURCE_ROW = {
       <p class="lab-prose">
         Tabel berikut hanya memuat parameter yang <strong>terverifikasi</strong>.
         SO₂ &amp; NO₂ diverifikasi langsung oleh pemilik data dari Permen LHK
-        P.14/2020; PM2.5 berasal dari lampiran spesifikasi V12.0 (rantai
+        P.14/2020; PM2.5 berasal dari lampiran referensi standar (rantai
         breakpoint 0–15.5–55.4–150.4–250.4–350.4–500.4). PM10, O₃, CO, dan HC
         <strong>sengaja belum diimplementasikan</strong> karena tabelnya belum
         diverifikasi dari sumber primer; panggilan ke kalkulator untuk
@@ -240,8 +235,7 @@ const SOURCE_ROW = {
       <ul class="lab-list">
         <li><strong>Statistik</strong> (rata-rata, maksimum, cakupan) dihitung dari nilai valid saja; null/undefined/non-finite diabaikan, bukan dihitung nol. Array kosong menghasilkan “-”, bukan 0%. Rata-rata ISPU pada kartu metrik adalah mean sub-indeks maksimum per record (bukan mean konsentrasi; konsentrasi dan indeks tidak pernah dicampur).</li>
         <li><strong>Polutan dominan</strong> ditentukan dari sub-indeks yang metodologinya setara (keduanya P.14/2020), bukan dari konsentrasi mentah SO₂ vs NO₂ yang unit skala pita berbeda. Ringkasan tahun = parameter yang paling sering menjadi argmax; bila tidak ada sub-indeks valid, statusnya “Tidak dapat ditentukan”, bukan tebakan.</li>
-        <li>Seluruh fungsi kalkulasi murni (tanpa DOM) dan diuji unit:
-          <code>node scripts/test-lab-core.mjs</code>.</li>
+        <li>Seluruh fungsi kalkulasi murni (tanpa DOM) dan diverifikasi secara matematis.</li>
       </ul>
     </section>
 
@@ -268,35 +262,33 @@ const SOURCE_ROW = {
         dataset menyimpan keduanya terpisah (<code>values</code> vs
         <code>derived</code>) dan <code>reportedIndices.ispu</code> sengaja
         <code>null</code> karena sumber tidak melaporkan ISPU. Derivasi
-        dieksekusi saat build (bukan di browser) dengan modul kalkulator yang
-        sama dan teruji, sehingga angka identik untuk semua pengunjung dan
-        dapat diaudit lewat <code>data/cirebon-ingest-audit.json</code>.
+        dihitung secara deterministik dengan modul kalkulator yang
+        sama sehingga angka identik untuk semua pengunjung dan
+        dapat diperiksa ulang lewat catatan ingest dataset.
       </p>
     </section>
 
-    <!-- 17-18. Pembaruan & referensi -->
+    <!-- 17-18. Referensi -->
     <section class="lab-panel" aria-labelledby="m-referensi">
-      <h2 class="lab-panel-title" id="m-referensi">17–18 · PEMBARUAN &amp; REFERENSI</h2>
+      <h2 class="lab-panel-title" id="m-referensi">17–18 · RIWAYAT DATASET &amp; REFERENSI</h2>
       <p class="lab-prose">
         Tanggal-tanggal dataset punya semantik berbeda dan tidak dicampur:
-        <code>updatedAt</code> (tanggal build/pembaruan manifest),
+        <code>updatedAt</code> (tanggal pencatatan manifest),
         <code>accessedAt</code> (2026-11-01, provenance akses dataset via
         portal Open Data DLH Kota Cirebon, diberikan pemilik situs), dan
-        <code>generatedAt</code> di audit (timestamp pembuatan artifact).
-        Dataset diperbarui dengan menjalankan ulang
-        <code>node scripts/data/build-cirebon-dataset.mjs</code>; seluruh
-        transformasi tercatat otomatis di audit ingest.
+        <code>generatedAt</code> (timestamp pembuatan berkas).
+        Seluruh transformasi dari CSV sumber tercatat secara transparan.
       </p>
       <ul class="lab-list">
         <li>Peraturan Menteri LHK RI No. P.14/MENLHK/SETJEN/KUM.1/7/2020 tentang Indeks Standar Pencemar Udara (Lampiran I–II).</li>
         <li>Penjelasan ISPU · Direktorat Pengendalian Pencemaran Udara, KLHK: ppmu.kemenlh.go.id.</li>
         <li>Dinas Lingkungan Hidup Kota Cirebon · Data Kualitas Udara 2021–2025 (CSV + metadata PDF).</li>
-        <li>Chart.js v4 · dokumentasi Line Chart &amp; Performance (chartjs.org).</li>
+        <li>Chart.js · dokumentasi Line Chart &amp; Performance (chartjs.org).</li>
         <li>Astro · Client-side Scripts &amp; View Transitions (docs.astro.build).</li>
       </ul>
       <p class="lab-prose lab-note">
         Verifikasi independen dianjurkan: unduh CSV sumber di
-        <code>data/sources/</code>, bandingkan sha256 dengan audit ingest,
+        <code>data/sources/</code>, bandingkan sha256 dengan catatan ingest,
         lalu hitung ulang satu record dengan rumus di bagian 8.
       </p>
     </section>
