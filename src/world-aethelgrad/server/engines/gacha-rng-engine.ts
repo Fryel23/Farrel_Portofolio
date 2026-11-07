@@ -74,7 +74,7 @@ export function executeGachaSummon(
     ticketsSpent = pullCount;
   } else {
     throw new Error(
-      `Astral Gems tidak mencukupi (Butuh ${gemsRequired} Gems atau ${pullCount} Summon Ticket). Selesaikan tantangan di Code-Spell Sanctum atau Colosseum untuk mendapatkan Gems!`
+      `Astral Gems tidak mencukupi (Butuh ${gemsRequired} Gems atau ${pullCount} Summon Ticket). Selesaikan tantangan di Logic Trials atau Colosseum untuk mendapatkan Gems!`
     );
   }
 

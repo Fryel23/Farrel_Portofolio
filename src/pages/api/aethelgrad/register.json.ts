@@ -1,6 +1,6 @@
 /**
  * src/pages/api/aethelgrad/register.json.ts
- * Endpoint pendaftaran Hunter baru + penguncian permanen 1-Device-1-Account.
+ * Endpoint pendaftaran Hunter baru + penguncian permanen Satu-Perangkat-Satu-Akun.
  */
 
 import type { APIRoute } from 'astro';

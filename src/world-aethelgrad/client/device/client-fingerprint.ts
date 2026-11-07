@@ -1,12 +1,12 @@
 /**
  * src/world-aethelgrad/client/device/client-fingerprint.ts
- * Pengumpul Sinyal Perangkat Keras & Kriptografis Klien untuk Kebijakan 1-Device-1-Account.
+ * Pengumpul Sinyal Perangkat Klien untuk Registri Hunter Aethelgrad.
  */
 
 import type { DeviceSignalPayload } from '../../types/auth.types.ts';
 
-const LOCAL_DEVICE_SEED_KEY = 'aethelgrad_device_hardware_seed_v15';
-export const KNOWN_HUNTER_STORAGE_KEY = 'aethelgrad_bound_hunter_username_v15';
+const LOCAL_DEVICE_SEED_KEY = 'aethelgrad_device_hardware_seed';
+export const KNOWN_HUNTER_STORAGE_KEY = 'aethelgrad_bound_hunter_username';
 
 function simpleHashHex(input: string): string {
   let h1 = 0xdeadbeef ^ input.length;

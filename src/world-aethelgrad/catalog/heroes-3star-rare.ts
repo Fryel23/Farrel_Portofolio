@@ -169,7 +169,7 @@ export const HEROES_3STAR_RARE: readonly HeroCatalogEntry[] = Object.freeze([
     maxStars: 5,
     element: 'CHRONO_AETHER',
     role: 'ASTRAL_ARCHMAGE',
-    lore: 'Juru tulis mantra di Code-Spell Sanctum yang membantu para Hunter menyusun logika pertarungan.',
+    lore: 'Juru tulis mantra di Logic Trials yang membantu para Hunter menyusun logika pertarungan.',
     signatureQuote: 'Mantra yang ditulis dengan rapi tidak akan pernah gagal dieksekusi.',
     passiveSkillName: 'Structured Syntax',
     passiveSkillDesc: 'Meningkatkan ATK +10% dan DEF +10%.',

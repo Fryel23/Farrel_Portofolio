@@ -1,6 +1,6 @@
 /**
  * src/pages/api/aethelgrad/colosseum-duel.json.ts
- * Endpoint pertarungan 1v1 Turn-Based Spire Colosseum & pembaruan Leaderboard.
+ * Endpoint pertarungan 1v1 Turn-Based Arena Colosseum & perubahan Leaderboard.
  */
 
 import type { APIRoute } from 'astro';

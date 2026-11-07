@@ -3,10 +3,10 @@
  * Repository Persisten Otoritatif untuk Dunia Aethelgrad (`data/aethelgrad/world-vault.json`).
  *
  * Menangani:
- *  - Pendaftaran Hunter baru + Penguncian 1-Device-1-Account (PBKDF2-SHA512 + Device Lock)
+ *  - Pendaftaran Hunter baru + Penguncian Satu-Perangkat-Satu-Akun (PBKDF2-SHA512 + Device Lock)
  *  - Smart Login Gate untuk Returning Hunter
  *  - Penyimpanan & pembacaan state profil Hunter, Gacha, Equipment Loadout, Forge,
- *    Code Sanctum, dan Live Spire Colosseum Leaderboard.
+ *    Logic Trials, dan Live Arena Colosseum Leaderboard.
  */
 
 import fs from 'node:fs';
@@ -234,7 +234,7 @@ export function createStarterHunterProfile(
     arenaLosses: 0,
     highestSpireFloor: 1,
     recentActivityLog: [
-      `[SYSTEM] Hunter ${username} memasuki Aethelgrad // The Infinite Spire.`,
+      `[SYSTEM] Hunter ${username} memasuki Aethelgrad.`,
       `[GIFT] Menerima 1.800 Astral Gems, 5 Summon Tickets, & Starfall Blade [★5].`,
     ],
     updatedAtIso: nowIso,
@@ -316,7 +316,7 @@ export function resolveAuthGateStatus(input: {
 
 /**
  * Mendaftarkan akun Hunter baru dan mengikatkannya secara permanen ke perangkat ini
- * (1 Device = 1 Account Policy).
+ * (Satu Perangkat Satu Akun Policy).
  */
 export function registerHunterAccount(input: {
   readonly username: unknown;
@@ -365,7 +365,7 @@ export function registerHunterAccount(input: {
       ok: false,
       status: 403,
       code: 'DEVICE_ALREADY_BOUND',
-      message: `Perangkat ini sudah terikat pada akun Hunter "${eligibility.existingUsername}". Kebijakan Aethelgrad hanya mengizinkan 1 Akun per Perangkat. Silakan masuk (Login) menggunakan akun Anda.`,
+      message: `Perangkat ini sudah terikat pada akun Hunter "${eligibility.existingUsername}". Kebijakan Aethelgrad hanya mengizinkan Satu Akun pada Perangkat Ini. Silakan masuk (Login) menggunakan akun Anda.`,
       boundUsername: eligibility.existingUsername || undefined,
     };
   }
@@ -620,7 +620,7 @@ export function equipHunterLoadout(
 }
 
 /**
- * Membangun daftar Papan Peringkat (Leaderboard) Spire Colosseum yang menggabungkan
+ * Membangun daftar Papan Peringkat (Leaderboard) Arena Colosseum yang menggabungkan
  * seluruh 12 NPC Tower Guardians dan seluruh akun Hunter asli yang terdaftar,
  * diurutkan secara menurun berdasarkan Combat Power (CP).
  */

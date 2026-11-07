@@ -1,6 +1,6 @@
 /**
  * src/world-aethelgrad/server/persistence/seed-guardians.ts
- * 12 Pre-Seeded NPC Tower Guardians & Veteran Hunters di Spire Colosseum Leaderboard.
+ * 12 Pre-Seeded NPC Tower Guardians & Veteran Hunters di Arena Colosseum Leaderboard.
  */
 
 import type { LeaderboardCombatantEntry } from '../../types/colosseum.types.ts';

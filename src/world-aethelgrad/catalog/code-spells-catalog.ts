@@ -1,6 +1,6 @@
 /**
  * src/world-aethelgrad/catalog/code-spells-catalog.ts
- * 24 Tantangan Logika & Algoritma "The Code-Spell Sanctum" (4 Tiers x 6 Spells).
+ * 24 Tantangan Logika & Algoritma "Logic Trials" (4 Tiers x 6 Spells).
  * Setiap tantangan yang berhasil dipecahkan memberikan Astral Gems, Starlight Dust,
  * dan Permanent Arcane Code Buff (+ATK%, +HP%, +DEF%, +CRIT%) untuk seluruh Hero!
  */
@@ -11,8 +11,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
   // ==================== TIER 1: NOVICE RUNES (6 Spells) ====================
   {
     id: 'spell-01-exorcise-bug',
-    code: 'SPELL-101',
-    title: 'Spell: Exorcise Bug (Zero-Division Guard)',
+    code: 'Trial 01',
+    title: 'Trial 01 · Zero-Division Ward',
     tier: 'TIER_1_NOVICE',
     category: 'Defensive Logic & Guard Clauses',
     lorePrompt: 'Inti mana altar terganggu oleh pembagian nol saat menghitung rasio energi kristal.',
@@ -25,10 +25,10 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
       '}',
     ].join('\n'),
     testCases: [
-      { label: 'Test Case 1', inputPreview: 'calculateRatio(50, 100)', expectedOutput: '50' },
-      { label: 'Test Case 2', inputPreview: 'calculateRatio(75, 0)', expectedOutput: '0 (Safe Guard)' },
-      { label: 'Test Case 3', inputPreview: 'calculateRatio(0, 0)', expectedOutput: '0 (No NaN)' },
-      { label: 'Test Case 4', inputPreview: 'calculateRatio(30, 60)', expectedOutput: '50' },
+      { label: 'Kasus Uji 1', inputPreview: 'calculateRatio(50, 100)', expectedOutput: '50' },
+      { label: 'Kasus Uji 2', inputPreview: 'calculateRatio(75, 0)', expectedOutput: '0 (Safe Guard)' },
+      { label: 'Kasus Uji 3', inputPreview: 'calculateRatio(0, 0)', expectedOutput: '0 (No NaN)' },
+      { label: 'Kasus Uji 4', inputPreview: 'calculateRatio(30, 60)', expectedOutput: '50' },
     ],
     options: [
       {
@@ -55,8 +55,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
   },
   {
     id: 'spell-02-array-dedupe',
-    code: 'SPELL-102',
-    title: 'Spell: Purify Duplicate Runes',
+    code: 'Trial 02',
+    title: 'Trial 02 · Array Equilibrium',
     tier: 'TIER_1_NOVICE',
     category: 'Sets & Linear Filtering',
     lorePrompt: 'Segel gerbang menerima daftar ID kristal yang terduplikasi dan harus dimurnikan dengan urutan asli terjaga.',
@@ -68,9 +68,9 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
       '}',
     ].join('\n'),
     testCases: [
-      { label: 'Test Case 1', inputPreview: '[4, 2, 4, 1, 2]', expectedOutput: '[4, 2, 1]' },
-      { label: 'Test Case 2', inputPreview: '["sol", "sol", "void"]', expectedOutput: '["sol", "void"]' },
-      { label: 'Test Case 3', inputPreview: '[]', expectedOutput: '[]' },
+      { label: 'Kasus Uji 1', inputPreview: '[4, 2, 4, 1, 2]', expectedOutput: '[4, 2, 1]' },
+      { label: 'Kasus Uji 2', inputPreview: '["sol", "sol", "void"]', expectedOutput: '["sol", "void"]' },
+      { label: 'Kasus Uji 3', inputPreview: '[]', expectedOutput: '[]' },
     ],
     options: [
       {
@@ -97,8 +97,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
   },
   {
     id: 'spell-03-palindrome-sigil',
-    code: 'SPELL-103',
-    title: 'Spell: Mirror Sigil Verification',
+    code: 'Trial 03',
+    title: 'Trial 03 · Mirror Sigil Ward',
     tier: 'SPELL-103' ? 'TIER_1_NOVICE' : 'TIER_1_NOVICE',
     category: 'Two-Pointer String Logic',
     lorePrompt: 'Mantra cermin hanya aktif jika rangkaian rune dibaca identik dari depan maupun belakang.',
@@ -111,9 +111,9 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
       '}',
     ].join('\n'),
     testCases: [
-      { label: 'Test Case 1', inputPreview: '"LEVEL"', expectedOutput: 'true' },
-      { label: 'Test Case 2', inputPreview: '"AETHEL"', expectedOutput: 'false' },
-      { label: 'Test Case 3', inputPreview: '"RADAR"', expectedOutput: 'true' },
+      { label: 'Kasus Uji 1', inputPreview: '"LEVEL"', expectedOutput: 'true' },
+      { label: 'Kasus Uji 2', inputPreview: '"AETHEL"', expectedOutput: 'false' },
+      { label: 'Kasus Uji 3', inputPreview: '"RADAR"', expectedOutput: 'true' },
     ],
     options: [
       {
@@ -140,8 +140,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
   },
   {
     id: 'spell-04-clamp-mana',
-    code: 'SPELL-104',
-    title: 'Spell:Mana Overflow Limiter',
+    code: 'Trial 04',
+    title: 'Trial 04 · Mana Overflow Limiter',
     tier: 'TIER_1_NOVICE',
     category: 'Boundary Arithmetic',
     lorePrompt: 'Reaktor mana akan meledak jika nilai energi turun di bawah min atau melampaui batas max.',
@@ -153,9 +153,9 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
       '}',
     ].join('\n'),
     testCases: [
-      { label: 'Test Case 1', inputPreview: 'clampMana(140, 0, 100)', expectedOutput: '100' },
-      { label: 'Test Case 2', inputPreview: 'clampMana(-25, 0, 100)', expectedOutput: '0' },
-      { label: 'Test Case 3', inputPreview: 'clampMana(65, 0, 100)', expectedOutput: '65' },
+      { label: 'Kasus Uji 1', inputPreview: 'clampMana(140, 0, 100)', expectedOutput: '100' },
+      { label: 'Kasus Uji 2', inputPreview: 'clampMana(-25, 0, 100)', expectedOutput: '0' },
+      { label: 'Kasus Uji 3', inputPreview: 'clampMana(65, 0, 100)', expectedOutput: '65' },
     ],
     options: [
       {
@@ -182,8 +182,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
   },
   {
     id: 'spell-05-null-coalesce-telemetry',
-    code: 'SPELL-105',
-    title: 'Spell: Honest Null Telemetry Filter',
+    code: 'Trial 05',
+    title: 'Trial 05 · Null Crystal Filter',
     tier: 'TIER_1_NOVICE',
     category: 'Data Hygiene & Null Safety',
     lorePrompt: 'Sensor menara mengirimkan nilai 0 yang valid serta nilai null saat sensor mati. Nilai 0 tidak boleh dianggap hilang!',
@@ -195,8 +195,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
       '}',
     ].join('\n'),
     testCases: [
-      { label: 'Test Case 1', inputPreview: '[12, 0, null, 8, undefined]', expectedOutput: '[12, 0, 8]' },
-      { label: 'Test Case 2', inputPreview: '[0, 0, null]', expectedOutput: '[0, 0]' },
+      { label: 'Kasus Uji 1', inputPreview: '[12, 0, null, 8, undefined]', expectedOutput: '[12, 0, 8]' },
+      { label: 'Kasus Uji 2', inputPreview: '[0, 0, null]', expectedOutput: '[0, 0]' },
     ],
     options: [
       {
@@ -223,8 +223,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
   },
   {
     id: 'spell-06-linear-search-sentinel',
-    code: 'SPELL-106',
-    title: 'Spell: First Threshold Breach Index',
+    code: 'Trial 06',
+    title: 'Trial 06 · Sentinel Breach Index',
     tier: 'TIER_1_NOVICE',
     category: 'Array Scanning',
     lorePrompt: 'Temukan indeks waktu pertama saat gelombang energi musuh melampaui ambang perisai.',
@@ -236,8 +236,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
       '}',
     ].join('\n'),
     testCases: [
-      { label: 'Test Case 1', inputPreview: '([40, 85, 120, 95], 100)', expectedOutput: '2' },
-      { label: 'Test Case 2', inputPreview: '([10, 20, 30], 50)', expectedOutput: '-1' },
+      { label: 'Kasus Uji 1', inputPreview: '([40, 85, 120, 95], 100)', expectedOutput: '2' },
+      { label: 'Kasus Uji 2', inputPreview: '([10, 20, 30], 50)', expectedOutput: '-1' },
     ],
     options: [
       {
@@ -266,8 +266,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
   // ==================== TIER 2: ADEPT ALGORITHMS (6 Spells) ====================
   {
     id: 'spell-07-binary-search-floor',
-    code: 'SPELL-201',
-    title: 'Spell: Logarithmic Spire Floor Locator',
+    code: 'Trial 07',
+    title: 'Trial 07 · Logarithmic Floor Locator',
     tier: 'TIER_2_ADEPT',
     category: 'Binary Search O(log n)',
     lorePrompt: 'Menara memiliki ribuan lantai terurut; pencarian linier terlalu lambat untuk menemukan portal teleportasi.',
@@ -280,8 +280,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
       '}',
     ].join('\n'),
     testCases: [
-      { label: 'Test Case 1', inputPreview: '([10, 20, 35, 50, 88], 50)', expectedOutput: '3' },
-      { label: 'Test Case 2', inputPreview: '([10, 20, 35, 50, 88], 42)', expectedOutput: '-1' },
+      { label: 'Kasus Uji 1', inputPreview: '([10, 20, 35, 50, 88], 50)', expectedOutput: '3' },
+      { label: 'Kasus Uji 2', inputPreview: '([10, 20, 35, 50, 88], 42)', expectedOutput: '-1' },
     ],
     options: [
       {
@@ -309,8 +309,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
   },
   {
     id: 'spell-08-two-sum-resonance',
-    code: 'SPELL-202',
-    title: 'Spell: Harmonic Crystal Pair (Hash Map O(n))',
+    code: 'Trial 08',
+    title: 'Trial 08 · Harmonic Crystal Pair',
     tier: 'TIER_2_ADEPT',
     category: 'Hash Map Lookup',
     lorePrompt: 'Dua kristal harus digabungkan agar jumlah energinya tepat sama dengan frekuensi resonansi altar.',
@@ -323,8 +323,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
       '}',
     ].join('\n'),
     testCases: [
-      { label: 'Test Case 1', inputPreview: '([2, 7, 11, 15], 9)', expectedOutput: '[0, 1]' },
-      { label: 'Test Case 2', inputPreview: '([3, 2, 4], 6)', expectedOutput: '[1, 2]' },
+      { label: 'Kasus Uji 1', inputPreview: '([2, 7, 11, 15], 9)', expectedOutput: '[0, 1]' },
+      { label: 'Kasus Uji 2', inputPreview: '([3, 2, 4], 6)', expectedOutput: '[1, 2]' },
     ],
     options: [
       {
@@ -352,8 +352,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
   },
   {
     id: 'spell-09-balanced-runes-stack',
-    code: 'SPELL-203',
-    title: 'Spell: Balanced Bracket Ward',
+    code: 'Trial 09',
+    title: 'Trial 09 · Balanced Rune Brackets',
     tier: 'TIER_2_ADEPT',
     category: 'Stack LIFO Verification',
     lorePrompt: 'Mantra pelindung menggunakan kurung (), {}, dan [] yang harus dibuka dan ditutup dalam urutan LIFO yang sah.',
@@ -367,9 +367,9 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
       '}',
     ].join('\n'),
     testCases: [
-      { label: 'Test Case 1', inputPreview: '"{[()]}"', expectedOutput: 'true' },
-      { label: 'Test Case 2', inputPreview: '"{[(])}"', expectedOutput: 'false' },
-      { label: 'Test Case 3', inputPreview: '"((("', expectedOutput: 'false' },
+      { label: 'Kasus Uji 1', inputPreview: '"{[()]}"', expectedOutput: 'true' },
+      { label: 'Kasus Uji 2', inputPreview: '"{[(])}"', expectedOutput: 'false' },
+      { label: 'Kasus Uji 3', inputPreview: '"((("', expectedOutput: 'false' },
     ],
     options: [
       {
@@ -397,8 +397,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
   },
   {
     id: 'spell-10-sliding-window-dps',
-    code: 'SPELL-204',
-    title: 'Spell: Peak Burst Window (Sliding Window)',
+    code: 'Trial 10',
+    title: 'Trial 10 · Peak Burst Window',
     tier: 'TIER_2_ADEPT',
     category: 'Sliding Window O(n)',
     lorePrompt: 'Hitung total kerusakan maksimum dalam k detik berturut-turut tanpa menghitung ulang seluruh sub-array dari awal.',
@@ -410,8 +410,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
       '}',
     ].join('\n'),
     testCases: [
-      { label: 'Test Case 1', inputPreview: '([2, 1, 5, 1, 3, 2], 3)', expectedOutput: '9 (5+1+3)' },
-      { label: 'Test Case 2', inputPreview: '([4, 2, 1, 7, 8, 1, 2], 2)', expectedOutput: '15 (7+8)' },
+      { label: 'Kasus Uji 1', inputPreview: '([2, 1, 5, 1, 3, 2], 3)', expectedOutput: '9 (5+1+3)' },
+      { label: 'Kasus Uji 2', inputPreview: '([4, 2, 1, 7, 8, 1, 2], 2)', expectedOutput: '15 (7+8)' },
     ],
     options: [
       {
@@ -439,8 +439,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
   },
   {
     id: 'spell-11-ispu-piecewise-lerp',
-    code: 'SPELL-205',
-    title: 'Spell: Piecewise Linear Aether Index',
+    code: 'Trial 11',
+    title: 'Trial 11 · Piecewise Aether Scale',
     tier: 'TIER_2_ADEPT',
     category: 'Numerical Interpolation',
     lorePrompt: 'Konversikan kerapatan mana mentah Xx menjadi indeks standar menggunakan batas bawah (Xb, Ib) dan batas atas (Xa, Ia).',
@@ -452,8 +452,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
       '}',
     ].join('\n'),
     testCases: [
-      { label: 'Test Case 1', inputPreview: 'interpolateIndex(55, 50, 100, 50, 100)', expectedOutput: '55' },
-      { label: 'Test Case 2', inputPreview: 'interpolateIndex(125, 100, 150, 100, 200)', expectedOutput: '150' },
+      { label: 'Kasus Uji 1', inputPreview: 'interpolateIndex(55, 50, 100, 50, 100)', expectedOutput: '55' },
+      { label: 'Kasus Uji 2', inputPreview: 'interpolateIndex(125, 100, 150, 100, 200)', expectedOutput: '150' },
     ],
     options: [
       {
@@ -480,8 +480,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
   },
   {
     id: 'spell-12-csv-formula-shield',
-    code: 'SPELL-206',
-    title: 'Spell: Grimoire Scroll Injection Sanitizer',
+    code: 'Trial 12',
+    title: 'Trial 12 · Scroll Rune Sanitizer',
     tier: 'TIER_2_ADEPT',
     category: 'Security Engineering',
     lorePrompt: 'Penyusup mencoba menyisipkan formula berbahaya (=CMD, +SUM, @IMPORT) ke dalam gulungan log guild.',
@@ -493,8 +493,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
       '}',
     ].join('\n'),
     testCases: [
-      { label: 'Test Case 1', inputPreview: '"=1+1"', expectedOutput: "\'=1+1" },
-      { label: 'Test Case 2', inputPreview: '"Normal Text"', expectedOutput: '"Normal Text"' },
+      { label: 'Kasus Uji 1', inputPreview: '"=1+1"', expectedOutput: "\'=1+1" },
+      { label: 'Kasus Uji 2', inputPreview: '"Normal Text"', expectedOutput: '"Normal Text"' },
     ],
     options: [
       {
@@ -523,8 +523,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
   // ==================== TIER 3: MAGUS GRAPH & DP (6 Spells) ====================
   {
     id: 'spell-13-bfs-shortest-spire',
-    code: 'SPELL-301',
-    title: 'Spell: Shortest Astral Warp Path (BFS)',
+    code: 'Trial 13',
+    title: 'Trial 13 · Shortest Astral Path',
     tier: 'TIER_3_MAGUS',
     category: 'Graph Breadth-First Search',
     lorePrompt: 'Temukan jumlah lompatan portal minimum dari ruang awal menuju ruang tahta pada graf tak berbobot.',
@@ -538,8 +538,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
       '}',
     ].join('\n'),
     testCases: [
-      { label: 'Test Case 1', inputPreview: 'A->B->D, A->C->D (start A, goal D)', expectedOutput: '2 hops' },
-      { label: 'Test Case 2', inputPreview: 'Disconnected node Z', expectedOutput: '-1' },
+      { label: 'Kasus Uji 1', inputPreview: 'A->B->D, A->C->D (start A, goal D)', expectedOutput: '2 hops' },
+      { label: 'Kasus Uji 2', inputPreview: 'Disconnected node Z', expectedOutput: '-1' },
     ],
     options: [
       {
@@ -567,8 +567,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
   },
   {
     id: 'spell-14-dp-staircase-ascension',
-    code: 'SPELL-302',
-    title: 'Spell: Spire Staircase Combinatorics (DP)',
+    code: 'Trial 14',
+    title: 'Trial 14 · Staircase Ascension',
     tier: 'TIER_3_MAGUS',
     category: 'Dynamic Programming O(n)',
     lorePrompt: 'Seorang Hunter dapat melompat 1 atau 2 anak tangga sekaligus. Hitung jumlah cara berbeda mencapai anak tangga ke-n.',
@@ -581,9 +581,9 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
       '}',
     ].join('\n'),
     testCases: [
-      { label: 'Test Case 1', inputPreview: 'n = 3', expectedOutput: '3' },
-      { label: 'Test Case 2', inputPreview: 'n = 5', expectedOutput: '8' },
-      { label: 'Test Case 3', inputPreview: 'n = 10', expectedOutput: '89' },
+      { label: 'Kasus Uji 1', inputPreview: 'n = 3', expectedOutput: '3' },
+      { label: 'Kasus Uji 2', inputPreview: 'n = 5', expectedOutput: '8' },
+      { label: 'Kasus Uji 3', inputPreview: 'n = 10', expectedOutput: '89' },
     ],
     options: [
       {
@@ -611,8 +611,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
   },
   {
     id: 'spell-15-kadane-aether-surge',
-    code: 'SPELL-303',
-    title: 'Spell: Maximum Contiguous Aether Surge (Kadane)',
+    code: 'Trial 15',
+    title: 'Trial 15 · Contiguous Aether Surge',
     tier: 'TIER_3_MAGUS',
     category: 'Dynamic Programming / Kadane',
     lorePrompt: 'Aliran energi menara berfluktuasi positif dan negatif. Temukan rentang waktu kontinu dengan total lonjakan terbesar.',
@@ -625,8 +625,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
       '}',
     ].join('\n'),
     testCases: [
-      { label: 'Test Case 1', inputPreview: '[-2, 1, -3, 4, -1, 2, 1, -5, 4]', expectedOutput: '6 ([4, -1, 2, 1])' },
-      { label: 'Test Case 2', inputPreview: '[5, 4, -1, 7, 8]', expectedOutput: '23' },
+      { label: 'Kasus Uji 1', inputPreview: '[-2, 1, -3, 4, -1, 2, 1, -5, 4]', expectedOutput: '6 ([4, -1, 2, 1])' },
+      { label: 'Kasus Uji 2', inputPreview: '[5, 4, -1, 7, 8]', expectedOutput: '23' },
     ],
     options: [
       {
@@ -654,8 +654,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
   },
   {
     id: 'spell-16-merge-intervals-shield',
-    code: 'SPELL-304',
-    title: 'Spell: Coalesce Overlapping Shield Windows',
+    code: 'Trial 16',
+    title: 'Trial 16 · Shield Window Merger',
     tier: 'TIER_3_MAGUS',
     category: 'Sorting & Interval Merging',
     lorePrompt: 'Beberapa ksatria mengaktifkan perisai pada rentang waktu yang saling tumpang tindih. Gabungkan menjadi interval bersih.',
@@ -669,8 +669,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
       '}',
     ].join('\n'),
     testCases: [
-      { label: 'Test Case 1', inputPreview: '[[1,3], [2,6], [8,10]]', expectedOutput: '[[1,6], [8,10]]' },
-      { label: 'Test Case 2', inputPreview: '[[1,4], [4,5]]', expectedOutput: '[[1,5]]' },
+      { label: 'Kasus Uji 1', inputPreview: '[[1,3], [2,6], [8,10]]', expectedOutput: '[[1,6], [8,10]]' },
+      { label: 'Kasus Uji 2', inputPreview: '[[1,4], [4,5]]', expectedOutput: '[[1,5]]' },
     ],
     options: [
       {
@@ -698,8 +698,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
   },
   {
     id: 'spell-17-topological-craft-order',
-    code: 'SPELL-305',
-    title: 'Spell: Forge Dependency Resolution (Kahn DAG)',
+    code: 'Trial 17',
+    title: 'Trial 17 · Forge Order Resolution',
     tier: 'TIER_3_MAGUS',
     category: 'Directed Acyclic Graphs',
     lorePrompt: 'Resep senjata mitos membutuhkan material prasyarat yang harus ditempa tanpa siklus dependensi.',
@@ -712,8 +712,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
       '}',
     ].join('\n'),
     testCases: [
-      { label: 'Test Case 1', inputPreview: '0 -> 1 -> 2', expectedOutput: '[0, 1, 2] (0 has in-degree 0)' },
-      { label: 'Test Case 2', inputPreview: 'Cycle 0 <-> 1', expectedOutput: '[] (Cycle detected)' },
+      { label: 'Kasus Uji 1', inputPreview: '0 -> 1 -> 2', expectedOutput: '[0, 1, 2] (0 has in-degree 0)' },
+      { label: 'Kasus Uji 2', inputPreview: 'Cycle 0 <-> 1', expectedOutput: '[] (Cycle detected)' },
     ],
     options: [
       {
@@ -741,8 +741,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
   },
   {
     id: 'spell-18-hyndman-fan-quartile',
-    code: 'SPELL-306',
-    title: 'Spell: Type-7 Continuous Quantile Interpolator',
+    code: 'Trial 18',
+    title: 'Trial 18 · Quantile Crystal Scale',
     tier: 'TIER_3_MAGUS',
     category: 'Statistical Computing',
     lorePrompt: 'Katalog statistik Menara harus menghasilkan nilai kuartil yang identik dengan NumPy dan R metode Type 7.',
@@ -755,8 +755,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
       '}',
     ].join('\n'),
     testCases: [
-      { label: 'Test Case 1', inputPreview: '([10, 20, 30, 40], 0.25)', expectedOutput: '17.5' },
-      { label: 'Test Case 2', inputPreview: '([10, 20, 30, 40], 0.50)', expectedOutput: '25' },
+      { label: 'Kasus Uji 1', inputPreview: '([10, 20, 30, 40], 0.25)', expectedOutput: '17.5' },
+      { label: 'Kasus Uji 2', inputPreview: '([10, 20, 30, 40], 0.50)', expectedOutput: '25' },
     ],
     options: [
       {
@@ -786,8 +786,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
   // ==================== TIER 4: ARCHON SOVEREIGN TRIALS (6 Spells) ====================
   {
     id: 'spell-19-timing-safe-hmac',
-    code: 'SPELL-401',
-    title: 'Spell: Constant-Time Signature Shield',
+    code: 'Trial 19',
+    title: 'Trial 19 · Constant-Time Seal',
     tier: 'TIER_4_ARCHON',
     category: 'Cryptographic Security',
     lorePrompt: 'Gerbang Sovereign memverifikasi tanda tangan HMAC. Perbandingan string biasa (===) rentan terhadap serangan timing side-channel!',
@@ -799,8 +799,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
       '}',
     ].join('\n'),
     testCases: [
-      { label: 'Test Case 1', inputPreview: 'Matching 32-byte HMACs', expectedOutput: 'true (Constant-time)' },
-      { label: 'Test Case 2', inputPreview: 'Differs at byte 0 vs byte 31', expectedOutput: 'false (Equal duration)' },
+      { label: 'Kasus Uji 1', inputPreview: 'Matching 32-byte HMACs', expectedOutput: 'true (Constant-time)' },
+      { label: 'Kasus Uji 2', inputPreview: 'Differs at byte 0 vs byte 31', expectedOutput: 'false (Equal duration)' },
     ],
     options: [
       {
@@ -828,8 +828,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
   },
   {
     id: 'spell-20-dijkstra-aether-network',
-    code: 'SPELL-402',
-    title: 'Spell: Weighted Spire Conduit Routing (Dijkstra)',
+    code: 'Trial 20',
+    title: 'Trial 20 · Conduit Shortest Route',
     tier: 'TIER_4_ARCHON',
     category: 'Shortest Path on Weighted Graphs',
     lorePrompt: 'Setiap koridor menara memiliki biaya kehilangan mana non-negatif. Temukan rute dengan kehilangan mana terkecil.',
@@ -840,7 +840,7 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
       '// Current node u with distance dist[u], edge (u -> v) of weight w >= 0',
     ].join('\n'),
     testCases: [
-      { label: 'Test Case 1', inputPreview: 'Direct A->C cost 10 vs A->B->C cost 3+4=7', expectedOutput: '7 via B' },
+      { label: 'Kasus Uji 1', inputPreview: 'Direct A->C cost 10 vs A->B->C cost 3+4=7', expectedOutput: '7 via B' },
     ],
     options: [
       {
@@ -868,8 +868,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
   },
   {
     id: 'spell-21-knapsack-relic-loadout',
-    code: 'SPELL-403',
-    title: 'Spell: Optimal Relic Capacity (0/1 Knapsack DP)',
+    code: 'Trial 21',
+    title: 'Trial 21 · Optimal Relic Loadout',
     tier: 'TIER_4_ARCHON',
     category: 'Combinatorial Optimization',
     lorePrompt: 'Kantung dimensi memiliki kapasitas beban W. Pilih kombinasi relik untuk memaksimalkan total Combat Power.',
@@ -881,7 +881,7 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
       '}',
     ].join('\n'),
     testCases: [
-      { label: 'Test Case 1', inputPreview: 'W=5, items=[(w:2,v:3),(w:3,v:4)]', expectedOutput: '7 (each item used at most once)' },
+      { label: 'Kasus Uji 1', inputPreview: 'W=5, items=[(w:2,v:3),(w:3,v:4)]', expectedOutput: '7 (each item used at most once)' },
     ],
     options: [
       {
@@ -909,8 +909,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
   },
   {
     id: 'spell-22-lru-grimoire-cache',
-    code: 'SPELL-404',
-    title: 'Spell: O(1) Astral Memory Cache (LRU)',
+    code: 'Trial 22',
+    title: 'Trial 22 · Astral Memory Cache',
     tier: 'TIER_4_ARCHON',
     category: 'System Design & Data Structures',
     lorePrompt: 'Perpustakaan Archon hanya menyimpan K gulungan aktif di memori cepat. Saat penuh, gulungan yang paling lama tidak diakses harus dikeluarkan.',
@@ -923,7 +923,7 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
       '}',
     ].join('\n'),
     testCases: [
-      { label: 'Test Case 1', inputPreview: 'Cap=2: put(1), put(2), get(1), put(3)', expectedOutput: 'Key 2 evicted, Key 1 kept' },
+      { label: 'Kasus Uji 1', inputPreview: 'Cap=2: put(1), put(2), get(1), put(3)', expectedOutput: 'Key 2 evicted, Key 1 kept' },
     ],
     options: [
       {
@@ -951,8 +951,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
   },
   {
     id: 'spell-23-fenwick-prefix-mana',
-    code: 'SPELL-405',
-    title: 'Spell: Binary Indexed Tree Range Pulse',
+    code: 'Trial 23',
+    title: 'Trial 23 · Prefix Mana Pulse',
     tier: 'TIER_4_ARCHON',
     category: 'Advanced Trees / Fenwick',
     lorePrompt: 'Pantau akumulasi energi lantai 1..idx secara real-time dalam O(log n) menggunakan Fenwick Tree (Binary Indexed Tree).',
@@ -965,7 +965,7 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
       '}',
     ].join('\n'),
     testCases: [
-      { label: 'Test Case 1', inputPreview: 'idx = 7 (binary 0111)', expectedOutput: 'tree[7] + tree[6] + tree[4]' },
+      { label: 'Kasus Uji 1', inputPreview: 'idx = 7 (binary 0111)', expectedOutput: 'tree[7] + tree[6] + tree[4]' },
     ],
     options: [
       {
@@ -992,8 +992,8 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
   },
   {
     id: 'spell-24-deterministic-pity-prng',
-    code: 'SPELL-406',
-    title: 'Spell: Sovereign Pity Convergence Proof',
+    code: 'Trial 24',
+    title: 'Trial 24 · Starlight Convergence',
     tier: 'TIER_4_ARCHON',
     category: 'Probability & Game Systems',
     lorePrompt: 'Altar Gacha menjamin ★5 pada tarikan ke-50 (Hard Pity) dan menaikkan peluang sebesar +4.5% per tarikan mulai tarikan ke-35 (Soft Pity).',
@@ -1005,9 +1005,9 @@ export const CODE_SPELLS_CATALOG: readonly CodeSpellChallenge[] = Object.freeze(
       '}',
     ].join('\n'),
     testCases: [
-      { label: 'Test Case 1', inputPreview: 'pullNumber = 10', expectedOutput: '0.03 (3%)' },
-      { label: 'Test Case 2', inputPreview: 'pullNumber = 40', expectedOutput: '0.30 (3% + 6 * 4.5%)' },
-      { label: 'Test Case 3', inputPreview: 'pullNumber = 50', expectedOutput: '1.00 (100% Guaranteed)' },
+      { label: 'Kasus Uji 1', inputPreview: 'pullNumber = 10', expectedOutput: '0.03 (3%)' },
+      { label: 'Kasus Uji 2', inputPreview: 'pullNumber = 40', expectedOutput: '0.30 (3% + 6 * 4.5%)' },
+      { label: 'Kasus Uji 3', inputPreview: 'pullNumber = 50', expectedOutput: '1.00 (100% Guaranteed)' },
     ],
     options: [
       {

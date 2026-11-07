@@ -122,3 +122,40 @@ export function playSpellCastSfx(passed: boolean): void {
 export function playBattleSlashSfx(isCrit: boolean): void {
   playTone(isCrit ? 640 : 420, 120, 0.14, 'sawtooth', isCrit ? 0.09 : 0.06, 0);
 }
+
+export function isSoundMuted(): boolean {
+  return isAethelgradAudioMuted();
+}
+
+export function toggleSoundMute(): boolean {
+  const next = !isAethelgradAudioMuted();
+  setAethelgradAudioMuted(next);
+  if (typeof window !== 'undefined') {
+    try {
+      window.localStorage.setItem('fip-audio-muted', next ? '1' : '0');
+    } catch {
+      // ignore
+    }
+  }
+  return next;
+}
+
+export function playUiClickSound(): void {
+  playTone(660, 880, 0.06, 'sine', 0.05, 0);
+}
+
+export function playEquipClinkSound(): void {
+  playEquipClinkSfx();
+}
+
+export function playGachaBeamFanfare(stars: HeroRarityStars): void {
+  playGachaBeamSfx(stars);
+}
+
+export function playCodeSanctumSuccessChime(): void {
+  playSpellCastSfx(true);
+}
+
+export function playBattleSlashFanfare(isCrit: boolean = false): void {
+  playBattleSlashSfx(isCrit);
+}

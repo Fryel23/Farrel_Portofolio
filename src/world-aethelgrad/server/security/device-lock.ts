@@ -1,6 +1,6 @@
 /**
  * src/world-aethelgrad/server/security/device-lock.ts
- * Sistem Anti-Multi-Account (1 Device = 1 Account Lock) untuk Aethelgrad.
+ * Sistem Anti-Multi-Account (Satu Perangkat Satu Akun Lock) untuk Aethelgrad.
  *
  * Menggabungkan sinyal perangkat keras klien (clientFingerprintHash, platform,
  * screenGeometry, timezone, language) ke dalam SHA-256 Device Lock Hash yang

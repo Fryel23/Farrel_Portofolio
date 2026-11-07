@@ -1,6 +1,6 @@
 /**
  * src/pages/api/aethelgrad/code-sanctum.json.ts
- * Endpoint verifikasi tantangan algoritma The Code-Spell Sanctum (24 Spells).
+ * Endpoint verifikasi tantangan algoritma The Logic Trials (24 Spells).
  */
 
 import type { APIRoute } from 'astro';

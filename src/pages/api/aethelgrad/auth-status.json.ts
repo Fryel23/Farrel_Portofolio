@@ -1,6 +1,6 @@
 /**
  * src/pages/api/aethelgrad/auth-status.json.ts
- * Endpoint pemeriksaan status Smart Auth Gate & 1-Device-1-Account Lock.
+ * Endpoint pemeriksaan status Smart Auth Gate & Satu-Perangkat-Satu-Akun Lock.
  */
 
 import type { APIRoute } from 'astro';

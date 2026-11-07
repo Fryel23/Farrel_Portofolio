@@ -1,6 +1,6 @@
 /**
  * src/world-aethelgrad/types/sanctum.types.ts
- * Domain contracts untuk The Code-Spell Sanctum (24 Tantangan Algoritma & Buff Permanen).
+ * Domain contracts untuk The Logic Trials (24 Tantangan Algoritma & Buff Permanen).
  */
 
 export type CodeSpellTier = 'TIER_1_NOVICE' | 'TIER_2_ADEPT' | 'TIER_3_MAGUS' | 'TIER_4_ARCHON';

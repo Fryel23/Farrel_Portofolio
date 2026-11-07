@@ -1,6 +1,6 @@
 /**
  * src/world-aethelgrad/server/engines/colosseum-battle-simulator.ts
- * Simulator Pertarungan 1v1 Turn-Based "Spire Colosseum" dengan Log Giliran & Burst Skills.
+ * Simulator Pertarungan 1v1 Turn-Based "Arena Colosseum" dengan Log Giliran & Burst Skills.
  */
 
 import { getHeroById, HEROES_CATALOG } from '../../catalog/heroes-index.ts';

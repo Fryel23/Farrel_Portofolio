@@ -1,6 +1,5 @@
 /**
- * src/world-aethelgrad/server/engines/code-spell-verifier.ts
- * Verifikator Tantangan Algoritma "The Code-Spell Sanctum" (24 Spells).
+ * Evaluasi Solusi Logic Trials (24 Tantangan Logika Aethelgrad).
  */
 
 import { getCodeSpellById } from '../../catalog/code-spells-catalog.ts';
@@ -21,7 +20,7 @@ export function verifyAndApplyCodeSpell(
 } {
   const spell = getCodeSpellById(input.spellId);
   if (!spell) {
-    throw new Error(`Mantra kode "${input.spellId}" tidak ditemukan di arsip Sanctum.`);
+    throw new Error(`Tantangan "${input.spellId}" tidak ditemukan di ruang Trials.`);
   }
 
   let passed = false;
@@ -43,7 +42,7 @@ export function verifyAndApplyCodeSpell(
         firstTimeClear: false,
         testCasesPassed: Math.max(1, totalTests - 2),
         totalTestCases: totalTests,
-        feedbackMessage: `Mantra gagal dieksekusi pada kasus batas (Edge Cases). Periksa kembali kondisi logika untuk ${spell.title}.`,
+        feedbackMessage: `Solusi belum memenuhi seluruh kondisi batas pada ${spell.title}. Periksa kembali logika rune Anda.`,
         gemsAwarded: 0,
         dustAwarded: 0,
         totalSolvedCount: profile.solvedSpellIds.length,
@@ -62,8 +61,8 @@ export function verifyAndApplyCodeSpell(
     : [...profile.solvedSpellIds, spell.id];
 
   const logLine = firstTimeClear
-    ? `[CODE SANCTUM] Berhasil memecahkan ${spell.code}: ${spell.title} (+${gemsAwarded} Gems & Buff Permanen!)`
-    : `[CODE SANCTUM] Latihan ulang ${spell.code} berhasil (+${gemsAwarded} Gems)`;
+    ? `[TRIALS] Menyelesaikan ${spell.title} (+${gemsAwarded} Gems & Berkat Rune Permanen!)`
+    : `[TRIALS] Latihan ulang ${spell.title} selesai (+${gemsAwarded} Gems)`;
 
   const updatedProfile: HunterProfileState = {
     ...profile,
@@ -71,7 +70,6 @@ export function verifyAndApplyCodeSpell(
     starlightDust: profile.starlightDust + dustAwarded,
     solvedSpellIds: nextSolved,
     recentActivityLog: [logLine, ...profile.recentActivityLog].slice(0, 12),
-    updatedAtIso: new Date().toISOString(),
   };
 
   const stats = calculateHunterCombatStats(updatedProfile);
@@ -85,8 +83,8 @@ export function verifyAndApplyCodeSpell(
       testCasesPassed: totalTests,
       totalTestCases: totalTests,
       feedbackMessage: firstTimeClear
-        ? `Semua ${totalTests}/${totalTests} Test Cases PASS! Arcane Code Buff (+${spell.permanentBuffPct.atkPct}% ATK, +${spell.permanentBuffPct.critPct}% CRIT) diaktifkan permanen!`
-        : `Semua ${totalTests}/${totalTests} Test Cases PASS! Anda memperoleh bonus latihan +${gemsAwarded} Gems.`,
+        ? `Seluruh ${totalTests}/${totalTests} Kasus Uji berhasil! Berkat Rune (+${spell.permanentBuffPct.atkPct}% ATK, +${spell.permanentBuffPct.critPct}% CRIT) diaktifkan permanen!`
+        : `Seluruh ${totalTests}/${totalTests} Kasus Uji berhasil! Anda memperoleh bonus latihan +${gemsAwarded} Gems.`,
       gemsAwarded,
       dustAwarded,
       totalSolvedCount: nextSolved.length,

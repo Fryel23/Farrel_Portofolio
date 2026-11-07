@@ -59,9 +59,9 @@ export function triggerNeuralDiveSequence(targetUrl: string = '/aethelgrad'): vo
     if (pctLabel) pctLabel.textContent = `${pct}%`;
 
     if (elapsed > 520 && phaseLabel && subLabel) {
-      phaseLabel.textContent = 'PHASE 02 // QUANTUM WARP TUNNEL ENGAGED';
+      phaseLabel.textContent = 'MEMBUKA GERBANG AETHELGRAD';
       subLabel.textContent =
-        'MEMBUKA GERBANG MENARA AETHELGRAD · MEMUAT PROTOKOL PAPER-DOLL & COLOSSEUM...';
+        'Menyeberangi perbatasan menuju pos terdepan Aethelgrad...';
     }
 
     if (ctx && canvas) {

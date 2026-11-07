@@ -1,6 +1,6 @@
 /**
  * src/world-aethelgrad/types/auth.types.ts
- * Domain contracts untuk autentikasi Hunter, sesi HMAC, dan penguncian 1-Device-1-Account.
+ * Domain contracts untuk autentikasi Hunter, sesi HMAC, dan penguncian Satu-Perangkat-Satu-Akun.
  */
 
 export type AuthGateMode = 'AUTHENTICATED' | 'LOGIN_BOUND_DEVICE' | 'REGISTER_NEW_DEVICE';

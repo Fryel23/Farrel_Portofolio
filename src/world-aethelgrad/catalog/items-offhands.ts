@@ -29,7 +29,7 @@ export const ITEMS_OFFHANDS: readonly EquipmentCatalogEntry[] = Object.freeze([
   },
   {
     id: 'off-akashic-tome',
-    name: 'Codex of the Infinite Spire',
+    name: 'Codex of the Astral Sanctum',
     slot: 'OFFHAND',
     rarityStars: 5,
     element: 'CHRONO_AETHER',

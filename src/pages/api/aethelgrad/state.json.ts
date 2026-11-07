@@ -21,7 +21,7 @@ export const GET: APIRoute = async ({ request }) => {
   const session = verifyHunterSessionToken(cookies[SESSION_COOKIE_NAME]);
   const profile =
     (session && getHunterProfileById(session.hunterId)) ||
-    createStarterHunterProfile('hunter-preview-vanguard', 'Vanguard-702');
+    createStarterHunterProfile('hunter-outpost-vanguard', 'Vanguard-702');
 
   const combatStats = calculateHunterCombatStats(profile);
   const leaderboard = buildColosseumLeaderboard(profile);
@@ -60,7 +60,7 @@ export const POST: APIRoute = async ({ request }) => {
   const session = verifyHunterSessionToken(token);
   const profile =
     (session && getHunterProfileById(session.hunterId)) ||
-    createStarterHunterProfile('hunter-preview-vanguard', 'Vanguard-702');
+    createStarterHunterProfile('hunter-outpost-vanguard', 'Vanguard-702');
 
   const combatStats = calculateHunterCombatStats(profile);
   const leaderboard = buildColosseumLeaderboard(profile);

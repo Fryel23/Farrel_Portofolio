@@ -1,326 +1,207 @@
-/* Opening Title Screen & Smart Auth Gate Overlays */
+/* ==========================================================================
+   src/styles/aethelgrad/neural-dive-auth.css
+   Title Screen (#aethelgrad-title-screen) & Guild Registry Auth Gate
+   ========================================================================== */
+
 .aethelgrad-title-screen,
 .aethelgrad-auth-gate {
   position: fixed;
   inset: 0;
-  z-index: 200;
+  z-index: 95;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
   background:
-    radial-gradient(circle at 50% 28%, rgba(37, 99, 235, 0.36), transparent 55%),
-    radial-gradient(circle at 50% 80%, rgba(168, 85, 247, 0.22), transparent 50%),
-    linear-gradient(180deg, #040711 0%, #091328 55%, #040711 100%);
-  transition: opacity 0.4s ease, visibility 0.4s ease;
+    radial-gradient(circle at 50% 25%, rgba(212, 175, 106, 0.14) 0%, transparent 55%),
+    rgba(14, 16, 21, 0.94);
+  backdrop-filter: blur(14px);
 }
 
 .aethelgrad-title-screen.is-dismissed,
 .aethelgrad-auth-gate.is-dismissed {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
+  display: none !important;
 }
 
-.title-screen-card {
-  width: min(680px, 94vw);
-  padding: 2.6rem 2.2rem;
+.title-screen-card,
+.auth-gate-card {
+  width: 100%;
+  max-width: 520px;
+  background: var(--ag-bg-panel);
+  border: 1px solid var(--ag-gold-border-strong);
   border-radius: 16px;
-  background: rgba(9, 17, 36, 0.9);
-  border: 1px solid rgba(96, 165, 250, 0.65);
-  box-shadow: 0 0 60px rgba(37, 99, 235, 0.35), 0 24px 64px rgba(0, 0, 0, 0.85);
+  padding: 2rem 1.85rem;
   text-align: center;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 0.9rem;
 }
 
 .title-emblem-ring {
-  width: 84px;
-  height: 84px;
+  width: 54px;
+  height: 54px;
   border-radius: 50%;
-  border: 2px solid #38bdf8;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.35), rgba(15, 23, 42, 0.95));
-  display: grid;
-  place-items: center;
-  font-size: 2.2rem;
-  color: #fbbf24;
-  box-shadow: 0 0 28px rgba(56, 189, 248, 0.5);
-  animation: pulseSpireEmblem 3s ease-in-out infinite;
-}
-
-@keyframes pulseSpireEmblem {
-  0%, 100% { transform: scale(1); box-shadow: 0 0 24px rgba(56, 189, 248, 0.45); }
-  50% { transform: scale(1.06); box-shadow: 0 0 38px rgba(251, 191, 36, 0.65); }
+  background: rgba(212, 175, 106, 0.12);
+  border: 1px solid var(--ag-gold-border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  color: var(--ag-gold-bright);
 }
 
 .title-eyebrow {
-  font-family: 'JetBrains Mono', monospace;
   font-size: 0.72rem;
-  letter-spacing: 0.22em;
-  color: #38bdf8;
-  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--ag-gold-accent);
 }
 
 .title-main-heading {
+  font-family: var(--ag-font-serif);
+  font-size: 2.4rem;
+  font-weight: 600;
   margin: 0;
-  font-size: clamp(1.9rem, 4vw, 2.75rem);
-  font-weight: 900;
-  letter-spacing: 0.14em;
-  color: #ffffff;
-  text-shadow: 0 0 24px rgba(56, 189, 248, 0.55);
+  color: var(--ag-text-primary);
 }
 
 .title-lore-desc {
   margin: 0;
-  max-width: 52ch;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   line-height: 1.6;
-  color: #cbd5e1;
+  color: var(--ag-text-secondary);
 }
 
 .title-feature-pills {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.5rem;
-  margin: 0.35rem 0;
+  gap: 0.45rem;
+  margin: 0.25rem 0;
 }
 
 .title-feature-pills span {
-  padding: 0.28rem 0.68rem;
+  padding: 0.28rem 0.65rem;
   border-radius: 999px;
-  background: rgba(30, 58, 138, 0.45);
-  border: 1px solid rgba(96, 165, 250, 0.4);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.68rem;
-  color: #e2e8f0;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--ag-hairline);
+  font-size: 0.74rem;
+  color: var(--ag-text-secondary);
 }
 
-.title-enter-cta {
-  margin-top: 0.5rem;
-  padding: 0.85rem 2.2rem;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
-  border: 1px solid #93c5fd;
-  color: #ffffff;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.88rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+.title-enter-cta,
+.auth-submit-cta {
+  appearance: none;
+  width: 100%;
+  margin-top: 0.35rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #DFBE7D 0%, #B89149 100%);
+  color: #11131A;
+  font-family: var(--ag-font-sans);
+  font-size: 0.9rem;
+  font-weight: 700;
+  border: 1px solid rgba(255, 238, 199, 0.42);
   cursor: pointer;
-  box-shadow: 0 0 28px rgba(59, 130, 246, 0.55);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 6px 20px rgba(212, 175, 106, 0.24);
+  transition: filter 0.18s ease, transform 0.18s ease;
 }
 
-.title-enter-cta:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 36px rgba(251, 191, 36, 0.65);
+.title-enter-cta:hover,
+.auth-submit-cta:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
 }
 
-/* Smart Auth Gate Card */
 .auth-gate-card {
-  width: min(500px, 94vw);
-  padding: 2rem;
-  border-radius: 14px;
-  background: rgba(10, 18, 38, 0.94);
-  border: 1px solid rgba(96, 165, 250, 0.65);
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.85);
-  display: flex;
-  flex-direction: column;
-  gap: 0.9rem;
+  text-align: left;
+  align-items: stretch;
 }
 
-.auth-security-header {
+.auth-guild-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.68rem;
-  color: #34d399;
-}
-
-.auth-returning-badge {
-  padding: 0.45rem 0.75rem;
-  border-radius: 6px;
-  background: rgba(16, 185, 129, 0.16);
-  border: 1px solid rgba(16, 185, 129, 0.5);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.74rem;
-  color: #6ee7b7;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--ag-gold-accent);
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--ag-hairline);
 }
 
 .auth-gate-card h2 {
-  margin: 0;
-  font-size: 1.2rem;
-  letter-spacing: 0.06em;
-  color: #ffffff;
+  font-family: var(--ag-font-serif);
+  font-size: 1.5rem;
+  margin: 0.15rem 0 0;
 }
 
 .auth-gate-card p {
   margin: 0;
   font-size: 0.82rem;
-  color: #94a3b8;
   line-height: 1.5;
+  color: var(--ag-text-secondary);
 }
 
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
 }
 
 .auth-field {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.3rem;
 }
 
 .auth-field label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
-  color: #cbd5e1;
-  text-transform: uppercase;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--ag-text-secondary);
 }
 
 .auth-field input {
-  padding: 0.68rem 0.85rem;
-  border-radius: 7px;
-  border: 1px solid rgba(59, 130, 246, 0.42);
-  background: rgba(6, 11, 24, 0.9);
-  color: #ffffff;
-  font-family: 'JetBrains Mono', monospace;
+  width: 100%;
+  padding: 0.62rem 0.8rem;
+  border-radius: 8px;
+  background: #0B0D12;
+  border: 1px solid var(--ag-hairline);
+  color: var(--ag-text-primary);
+  font-family: var(--ag-font-sans);
   font-size: 0.85rem;
 }
 
 .auth-field input:focus {
   outline: none;
-  border-color: #38bdf8;
-  box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
-}
-
-.auth-submit-cta {
-  padding: 0.78rem 1rem;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  border: 1px solid #60a5fa;
-  color: #ffffff;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.8rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  cursor: pointer;
-}
-
-.auth-switch-mode-btn {
-  background: transparent;
-  border: none;
-  color: #38bdf8;
-  font-size: 0.78rem;
-  text-decoration: underline;
-  cursor: pointer;
-  padding: 0.3rem;
+  border-color: var(--ag-gold-accent);
 }
 
 .auth-feedback-box {
-  padding: 0.55rem 0.75rem;
-  border-radius: 6px;
-  font-size: 0.76rem;
-  min-height: 1.2rem;
+  font-size: 0.78rem;
+  color: var(--ag-gold-bright);
+  min-height: 1rem;
 }
 
-.auth-feedback-box.is-error {
-  background: rgba(127, 29, 29, 0.38);
-  border: 1px solid rgba(239, 68, 68, 0.55);
-  color: #fca5a5;
-}
-
-.auth-feedback-box.is-success {
-  background: rgba(6, 78, 59, 0.4);
-  border: 1px solid rgba(16, 185, 129, 0.55);
-  color: #6ee7b7;
-}
-
-/* Post-Login 4-Step Cinematic World Tour Modal */
-.aethelgrad-tour-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 210;
-  background: rgba(4, 8, 18, 0.9);
-  backdrop-filter: blur(12px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
-}
-
-.aethelgrad-tour-modal[hidden] {
-  display: none !important;
-}
-
-.tour-cinematic-card {
-  width: min(640px, 94vw);
-  padding: 2rem;
-  border-radius: 16px;
-  background: linear-gradient(180deg, #0d1834 0%, #080f22 100%);
-  border: 1px solid #fbbf24;
-  box-shadow: 0 0 50px rgba(251, 191, 36, 0.28);
+.auth-switch-mode-btn {
+  appearance: none;
+  background: transparent;
+  border: none;
+  color: var(--ag-text-secondary);
+  font-family: var(--ag-font-sans);
+  font-size: 0.78rem;
+  cursor: pointer;
   text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.9rem;
+  padding: 0.3rem;
 }
 
-.tour-act-eyebrow {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.72rem;
-  letter-spacing: 0.16em;
-  color: #fbbf24;
+.auth-switch-mode-btn:hover {
+  color: var(--ag-gold-bright);
 }
 
-.tour-cinematic-card h3 {
-  margin: 0;
-  font-size: 1.25rem;
-  color: #ffffff;
-}
-
-.tour-cinematic-card p {
-  margin: 0;
-  font-size: 0.88rem;
-  color: #cbd5e1;
-  line-height: 1.6;
-}
-
-.tour-stage-showcase {
-  padding: 0.8rem;
-  border-radius: 12px;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.24), rgba(10, 18, 36, 0.9));
-  border: 1px solid rgba(96, 165, 250, 0.45);
-}
-
-.tour-progress-dots {
-  display: flex;
-  gap: 0.45rem;
-}
-
-.tour-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: rgba(148, 163, 184, 0.35);
-}
-
-.tour-dot.is-active {
-  background: #fbbf24;
-  box-shadow: 0 0 10px #fbbf24;
-}
-
-.tour-action-row {
-  display: flex;
-  gap: 0.75rem;
-  margin-top: 0.4rem;
+.hidden {
+  display: none !important;
 }

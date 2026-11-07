@@ -159,7 +159,7 @@ export const ITEMS_ARMORS: readonly EquipmentCatalogEntry[] = Object.freeze([
     slot: 'ARMOR',
     rarityStars: 3,
     element: 'CHRONO_AETHER',
-    lore: 'Jubah tenun juru tulis Code-Spell Sanctum.',
+    lore: 'Jubah tenun juru tulis Logic Trials.',
     bonusHp: 440,
     bonusAtk: 68,
     bonusDef: 85,

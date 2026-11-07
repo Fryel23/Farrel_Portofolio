@@ -1,6 +1,6 @@
 /**
  * src/world-aethelgrad/types/colosseum.types.ts
- * Domain contracts untuk Spire Colosseum, Live Leaderboard, & Turn-Based Auto-Battle.
+ * Domain contracts untuk Arena Colosseum, Live Leaderboard, & Turn-Based Auto-Battle.
  */
 
 import type { EquippedLoadoutMap, OwnedEquipmentState } from './equipment.types.ts';

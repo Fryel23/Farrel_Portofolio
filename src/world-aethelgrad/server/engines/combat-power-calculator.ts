@@ -119,7 +119,7 @@ export function calculateHunterCombatStats(profile: HunterProfileState): CombatS
   }
   const grimoireBonusPct = grimoireAtkPct + grimoireHpPct + grimoireDefPct + grimoireCritPct;
 
-  // Bonus permanen dari Code-Spell Sanctum
+  // Bonus permanen dari Logic Trials
   const solvedSet = new Set(profile.solvedSpellIds);
   let codeAtkPct = 0;
   let codeHpPct = 0;

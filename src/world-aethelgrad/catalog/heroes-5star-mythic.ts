@@ -1,6 +1,6 @@
 /**
  * src/world-aethelgrad/catalog/heroes-5star-mythic.ts
- * 6 Mythic Sovereign Heroes (★5 Base Rarity) dari Aethelgrad // The Infinite Spire.
+ * 6 Mythic Sovereign Heroes (★5 Base Rarity) dari Aethelgrad.
  */
 
 import type { HeroCatalogEntry } from '../types/hero.types.ts';
@@ -177,7 +177,7 @@ export const HEROES_5STAR_MYTHIC: readonly HeroCatalogEntry[] = Object.freeze([
     lore: 'Ratu pemanah petir kosmik yang busurnya ditempa dari kilat gerhana seribu tahun.',
     signatureQuote: 'Busurku tidak membidik tubuhmu, melainkan takdirmu.',
     passiveSkillName: 'Thunderbolt Overdrive',
-    passiveSkillDesc: 'Meningkatkan ATK +20% dan SPD +15% saat bertarung di Spire Colosseum.',
+    passiveSkillDesc: 'Meningkatkan ATK +20% dan SPD +15% saat bertarung di Arena Colosseum.',
     burstSkillName: 'Valhalla Storm Barrage',
     burstSkillDesc: 'Melepaskan hujan anak panah halilintar ungu yang menyambar tanpa henti.',
     baseHp: 4350,
