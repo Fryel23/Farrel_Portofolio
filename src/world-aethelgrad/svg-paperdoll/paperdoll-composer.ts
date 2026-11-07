@@ -1,10 +1,5 @@
 /**
- * src/world-aethelgrad/svg-paperdoll/paperdoll-composer.ts
- * Komposer 7-Layer Crisp Pixel SVG Paper-Doll Engine (64x64 Grid).
- *
- * Setiap kali pemain mengganti Hero atau memasang/melepas item pada salah satu
- * dari 5 slot (WEAPON, ARMOR, HELMET, OFFHAND, RELIC_CAPE), fungsi ini merakit
- * ulang ketujuh layer SVG secara deterministik dan instan!
+ * Komposer 7-Layer 16-Bit Pixel SVG Paper-Doll Engine (64x64 Grid, crispEdges).
  */
 
 import { getEquipmentById } from '../catalog/items-index.ts';
@@ -34,15 +29,17 @@ export function composeHeroPaperDollSvg(options: PaperDollRenderOptions): string
   const loadout = options.equippedLoadout || {};
 
   const weaponItem =
-    getEquipmentById(loadout.WEAPON) ||
-    (hero.signatureWeaponId ? getEquipmentById(hero.signatureWeaponId) : undefined);
-  const armorItem = getEquipmentById(loadout.ARMOR);
-  const helmetItem = getEquipmentById(loadout.HELMET);
-  const offhandItem = getEquipmentById(loadout.OFFHAND);
-  const relicItem = getEquipmentById(loadout.RELIC_CAPE);
+    loadout.WEAPON === null
+      ? undefined
+      : getEquipmentById(loadout.WEAPON) ||
+        (hero.signatureWeaponId ? getEquipmentById(hero.signatureWeaponId) : undefined);
+  const armorItem = loadout.ARMOR === null ? undefined : getEquipmentById(loadout.ARMOR);
+  const helmetItem = loadout.HELMET === null ? undefined : getEquipmentById(loadout.HELMET);
+  const offhandItem = loadout.OFFHAND === null ? undefined : getEquipmentById(loadout.OFFHAND);
+  const relicItem = loadout.RELIC_CAPE === null ? undefined : getEquipmentById(loadout.RELIC_CAPE);
 
   const size = options.sizePx || 160;
-  const cls = options.className ? ` class="${options.className}"` : '';
+  const cls = options.className ? ` class="ag-pixel-sprite ${options.className}"` : ' class="ag-pixel-sprite"';
   const showPedestal = options.showPedestal !== false;
 
   const l0 = renderLayer0BackAura(hero, stars, relicItem, showPedestal);
@@ -54,7 +51,7 @@ export function composeHeroPaperDollSvg(options: PaperDollRenderOptions): string
   const l6 = renderLayer6MainWeapon(hero, weaponItem);
 
   return [
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="${size}" height="${size}" shape-rendering="crispEdges"${cls} role="img" aria-label="${hero.name} (${stars} Stars) Pixel Paper-Doll">`,
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="${size}" height="${size}" shape-rendering="crispEdges"${cls} role="img" aria-label="${hero.name}">`,
     l0,
     l1,
     l2,
